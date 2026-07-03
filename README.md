@@ -7,7 +7,11 @@
 
 Audit everything after anything. godaudits is a single-command AI agent skill that inspects an existing codebase end to end and emits one master audit report (`.godaudits/AUDIT.mdx`): per-domain scores, evidence-backed findings, and an agent-executable remediation plan.
 
-Most audit tooling checks one dimension at a time and hands back prose. godaudits runs every dimension the aihxp auditors cover (code quality, security, database, LLM integration, SEO, UI, UX) plus every discipline the aihxp arc tiers enforce (product reality, architecture, stack, repo, build completeness, delivery, deploy, observability, launch), verifies each finding at file:line, scores each domain with risk caps, and converts the findings into checkbox remediation tasks with verify commands that any coding agent can execute. It is the mirror of [godplans](https://github.com/aihxp/godplans): godplans inverts audit checks into plan-time requirements (R-SEC-3); godaudits runs the same checks forward against real code (A-SEC-3). Same numbering, same task grammar, closed loop.
+Audit tooling usually checks one thing at a time: a security scan here, a code-quality report there, an accessibility pass somewhere else. Run several against the same repository and each one re-reads the code from scratch, they disagree on vocabulary and severity, the same root cause gets billed three times, and whole questions go unasked: does the product actually do what its README promises, does the deploy pipeline have a tested way back, are half the endpoints stubs returning fake data. Worst of all, the reports end in prose, and prose is not something a coding agent can execute.
+
+godaudits replaces that pile with one command. It reads the repository once, works out what kind of project it is and which of eighteen audit domains apply (from security, database use, and code quality through UX, accessibility, search visibility, and AI-model integration, out to the build-reality questions above), and audits each applicable domain against a written checklist. Every finding is verified at the exact file and line before it ships, every domain gets a 0 to 100 score with caps so one critical hole cannot be averaged away, and the second half of the report is not prose: it is a remediation plan of checkbox tasks, each with the files to touch, acceptance criteria, and a command that proves the fix, executable by any coding agent. The specific auditor and planning skills godaudits draws from are named under [Lineage](#lineage) below.
+
+godaudits is also the mirror of [godplans](https://github.com/aihxp/godplans), a sibling skill that plans a project before any code is written. The two share one numbering system: what godplans writes into a plan as requirement `R-SEC-3`, godaudits later verifies in the code as check `A-SEC-3`. Plan with one, audit with the other, and the loop closes.
 
 ## Quickstart
 
@@ -147,7 +151,7 @@ Details in [references/compliance.md](skills/godaudits/references/compliance.md)
 
 **What if my project has no UI / no LLM / no public pages?** Every domain is either audited or excluded with a stated reason in the applicability matrix. A CLI tool excludes seo with a reason; it never gets a hollow SEO section or a padded score.
 
-**How is this different from running the seven auditors separately?** One command, one fingerprint pass instead of seven, an ownership map so one root cause is never billed in four domains, one combined scorecard with caps, and one remediation plan in a single executable grammar, plus the eleven arc-tier and memory dimensions the standalone auditors never covered.
+**How is this different from running seven separate audit skills?** One command, one read of the repository instead of seven, an ownership map so one root cause is never billed in four domains, one combined scorecard with caps, and one remediation plan in a single executable grammar. It also audits what single-dimension tools never look at: product promises, architecture reality, delivery, deployment, observability, launch readiness, and the project's AI-instruction files. The standalone skills it grew from are in [Lineage](#lineage).
 
 ## License
 
