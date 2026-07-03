@@ -1,0 +1,153 @@
+---
+name: PROJECT-SLUG
+audit_version: 1
+status: reported
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+mode: fresh
+plan_aware: false
+commit: COMMIT-SHA
+archetype: ARCHETYPE
+scale: SCALE
+domains_applicable: []
+domains_excluded:
+  - name: DOMAIN
+    reason: one line on why this domain does not apply
+scores:
+  overall: 0
+  verdict: ""
+  domains: {}
+counts:
+  findings_total: 0
+  critical: 0
+  high: 0
+  medium: 0
+  low: 0
+  tasks_total: 0
+  tasks_done: 0
+---
+
+# PROJECT-NAME audit
+
+One paragraph, under 120 words: the overall score, the verdict band, the single
+biggest risk, and the single biggest strength. A reader who stops here still
+knows where the project stands.
+
+## Scope and method
+
+Commit audited, date, mode (fresh or re-audit), what was examined and what was
+not. Read-only statement: this audit made no source edits, ran no application
+code, connected to no live systems, and called no models.
+
+## Compliance gate
+
+Result: pass, or the compliance findings injected with their finding IDs.
+Screened: YYYY-MM-DD per compliance.md.
+
+## Applicability matrix
+
+Every domain, applicable or excluded, with reason. Excluded domains appear here
+and nowhere else. Scale calibration: weekend | side-project | funded-product | enterprise.
+
+| Domain | Status | Reason |
+|---|---|---|
+| DOMAIN | applicable-or-excluded | one line |
+
+## Scorecard
+
+Weights and re-normalization per intake.md. Caps: any open Critical caps its
+domain at 69 and the overall at 79; a domain below 50 caps the overall at 84.
+Re-audits open this section with a `### Delta` subsection.
+
+| Domain | Score | Cap applied | Reason |
+|---|---|---|---|
+| DOMAIN | 0 | none-or-cap | one line |
+
+Overall: 0. Verdict: band used verbatim (90-100 audit-proof, 80-89 solid,
+70-79 needs work, 50-69 at risk, 0-49 critical condition).
+
+## Strengths
+
+What the codebase does well, with the same file:line evidence standard as
+findings. Strengths tell the remediating agent what not to break.
+
+## Findings
+
+One H3 per applicable domain, at most 12 findings per domain (cluster the rest
+under a parent finding: one root cause, N sites in Evidence). Domains with zero
+findings state that in one line with what was checked. Never renumber or delete
+a finding, even across re-audits.
+
+### DOMAIN-NAME
+
+#### F-DOM-1 One-line defect statement [Severity | Confidence | Effort]
+
+- Where: exact/path.ext:LINE
+- Evidence: `quoted code or config; enough to confirm without opening the file`
+- Impact: the concrete failure for a user, operator, or the business
+- Fix: the specific change, named safe pattern included
+- Verify the fix: `exact command` or the exact manual path
+- Checks: A-DOM-n (plus R-DOM-n when plan_aware)
+- Status: open
+- Remediation: GA-101
+
+## Remediation plan
+
+Phases in priority order: 1 Stop the bleeding (all Criticals), 2 Quick wins
+(High or Medium at S effort), 3 Plan now (structural, M or L), 4 Verify first
+(Tentative findings), 5 Backlog (Low worth recording). Empty phases are omitted.
+No phase over 12 tasks. Every Critical and High maps to at least one task.
+
+## Phase 1: Stop the bleeding
+
+Goal: zero Critical findings remain open. Blocks every other phase.
+
+### Wave 1.1
+
+- [ ] GA-101 [W1.1] Imperative title of the fix
+  - Files: exact/existing/paths.ext (invented paths are a defect)
+  - Depends on: none
+  - Reuses: what already exists; do not write a second one
+  - Fixes: F-DOM-1
+  - Acceptance: 2 to 4 grep-verifiable or observable conditions
+  - Verify: `exact command` (inherited from the finding's Verify-the-fix line)
+  - Checks: A-DOM-n
+
+## Phase N: Re-audit
+
+Goal: prove the remediation moved the score. Always the final phase.
+
+### Wave N.1
+
+- [ ] GA-N01 [WN.1] Re-run godaudits at the new commit
+  - Files: none (re-runs the audit, not the code)
+  - Depends on: every prior phase
+  - Fixes: none (final gate; confirms every resolved finding stayed resolved)
+  - Acceptance: expected score movement named, e.g. "DOMAIN 61 to 85 or better, no Critical findings open"
+  - Verify: `re-run /godaudits and compare the Scorecard`
+  - Checks: none
+
+## Accepted risks and open questions
+
+Exactly one such section, under 10 entries. Each entry: the risk or question,
+options, a recommended default, and who decided or must decide. Accepted risks
+name their acceptor and the finding that points here.
+
+## Rules for remediating agents
+
+> [!IMPORTANT]
+> This audit is the source of truth. The chat is not.
+>
+> 1. Before any work: read the frontmatter, then find the first unchecked task in wave order. Re-derive state from checkboxes; trust nothing remembered.
+> 2. One task at a time. Respect Depends on. Run tasks marked [P] concurrently only when their Files lists are disjoint.
+> 3. Run the task's Verify command. Only after it passes, flip [ ] to [x], set every finding in its Fixes line to `Status: resolved`, and update the frontmatter counters and `updated:` date in the same edit. Never batch check-offs.
+> 4. If Verify fails: the box stays unchecked. Append an indented `- Note (YYYY-MM-DD):` line under the task saying what happened.
+> 5. Fix the root cause the finding names, not the symptom the evidence quotes. If the true fix differs from the task's Fix line, patch the audit first (new task id, superseded task struck through with a reason), then execute the patch.
+> 6. Never renumber, reword, or uncheck a completed task; never delete or renumber a finding.
+> 7. Do not "improve" code beyond the task's Files and Acceptance; opportunistic refactors invalidate the audit's evidence lines.
+> 8. At session end: append one line to `## Session log`: date, tasks completed, findings resolved, what is next.
+> 9. When all phases are done, run the final Re-audit task before declaring victory.
+
+## Session log
+
+- YYYY-MM-DD audit created (godaudits v1.0.0)

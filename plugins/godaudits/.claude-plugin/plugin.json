@@ -1,0 +1,10 @@
+{
+  "name": "godaudits",
+  "description": "Audit an existing codebase end to end in one command and emit a master audit report (AUDIT.mdx) with per-domain scores, evidence-backed findings, and an agent-executable remediation plan. One command fingerprints the repo, audits product reality, architecture, stack, database, security, LLM integration, UX, UI, SEO, code quality, style genome, agent memory, repo hygiene, build completeness, delivery, deployment, observability, and launch readiness, verifies every finding at file:line, and converts findings into checkbox remediation tasks with verify commands. Plan-aware: audits conformance against a godplans PLAN.mdx when present. Read-only: never edits source, runs the app, or calls models. Descends from the seven aihxp auditors (code, sec, db, llm, seo, ui, ux), arc-ready, ready-suite, pillars, codedna, and godplans. Refuses audit theater, vague findings, and criticism without a remediation path.",
+  "version": "1.0.0",
+  "author": { "name": "aihxp", "url": "https://github.com/aihxp" },
+  "homepage": "https://github.com/aihxp/godaudits",
+  "repository": "https://github.com/aihxp/godaudits",
+  "license": "MIT",
+  "keywords": ["godaudits", "audit", "code-audit", "security-audit", "agent-skills", "remediation", "technical-debt", "scored-report", "mdx", "checkbox-plan"]
+}

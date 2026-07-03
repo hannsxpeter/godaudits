@@ -1,0 +1,43 @@
+{
+  "name": "godaudits",
+  "version": "1.0.0",
+  "description": "Audit everything after anything. A single-command AI agent skill that audits an existing codebase end to end and emits a master audit report (AUDIT.mdx) with per-domain scores, evidence-backed findings, and an agent-executable remediation plan.",
+  "keywords": [
+    "agent-skills",
+    "ai-agents",
+    "audit",
+    "code-audit",
+    "security-audit",
+    "claude-code",
+    "codex",
+    "cursor",
+    "opencode",
+    "technical-debt",
+    "mdx",
+    "remediation",
+    "code-quality"
+  ],
+  "homepage": "https://github.com/aihxp/godaudits",
+  "bugs": "https://github.com/aihxp/godaudits/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aihxp/godaudits.git"
+  },
+  "license": "MIT",
+  "author": "aihxp (https://github.com/aihxp)",
+  "files": [
+    "skills",
+    "install.sh",
+    "scripts",
+    "PROMPT.md",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "lint": "bash scripts/lint.sh --all --verbose",
+    "build:prompt": "bash scripts/build-prompt.sh",
+    "install:skill": "sh install.sh",
+    "postpack": "echo 'Install the skill with: sh install.sh (or npx skills add aihxp/godaudits)'"
+  }
+}

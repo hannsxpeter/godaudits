@@ -1,0 +1,19 @@
+{
+  "name": "godaudits",
+  "owner": {
+    "name": "aihxp",
+    "url": "https://github.com/aihxp"
+  },
+  "metadata": {
+    "description": "godaudits: audit everything after anything. A single-command audit superskill emitting scored, evidence-backed audit reports with agent-executable remediation plans.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "godaudits",
+      "source": "./plugins/godaudits",
+      "description": "Audit an existing codebase end to end in one command: 18 audit domains, evidence-backed findings at file:line, per-domain scores with risk caps, and a checkbox remediation plan any coding agent can execute.",
+      "category": "quality"
+    }
+  ]
+}
