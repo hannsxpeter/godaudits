@@ -3,7 +3,7 @@
 [![lint](https://github.com/aihxp/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/aihxp/godaudits/actions/workflows/lint.yml)
 [![version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
-[![license](https://img.shields.io/github/license/aihxp/godaudits)](LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Audit everything after anything. godaudits is a single-command AI agent skill that inspects an existing codebase end to end and emits one master audit report (`.godaudits/AUDIT.mdx`): per-domain scores, evidence-backed findings, and an agent-executable remediation plan.
 
