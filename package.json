@@ -1,7 +1,7 @@
 {
   "name": "godaudits",
-  "version": "1.0.0",
-  "description": "Audit everything after anything. A single-command AI agent skill that audits an existing codebase end to end and emits a master audit report (AUDIT.mdx) with per-domain scores, evidence-backed findings, and an agent-executable remediation plan.",
+  "version": "2.0.0",
+  "description": "Evidence-first codebase auditing with a deterministic check catalog, validated audit state, computed scores, benchmarks, MDX reports, and SARIF output.",
   "keywords": [
     "agent-skills",
     "ai-agents",
@@ -17,27 +17,43 @@
     "remediation",
     "code-quality"
   ],
-  "homepage": "https://github.com/aihxp/godaudits",
-  "bugs": "https://github.com/aihxp/godaudits/issues",
+  "homepage": "https://github.com/hannsxpeter/godaudits",
+  "bugs": "https://github.com/hannsxpeter/godaudits/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aihxp/godaudits.git"
+    "url": "git+https://github.com/hannsxpeter/godaudits.git"
   },
   "license": "MIT",
-  "author": "aihxp (https://github.com/aihxp)",
+  "author": "aihxp (https://github.com/hannsxpeter)",
   "files": [
+    "bin",
+    "benchmarks",
     "skills",
     "install.sh",
     "scripts",
     "PROMPT.md",
+    "PROMPT.full.md",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
   ],
+  "bin": {
+    "godaudits": "bin/godaudits.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "lint": "bash scripts/lint.sh --all --verbose",
+    "test": "node --test test/*.test.js",
+    "benchmark": "node bin/godaudits.js benchmark",
+    "catalog": "node scripts/build-catalog.js",
+    "catalog:check": "node scripts/build-catalog.js --check",
     "build:prompt": "bash scripts/build-prompt.sh",
+    "prompt:check": "bash scripts/build-prompt.sh --check",
+    "lint": "bash scripts/lint.sh --all --verbose",
+    "check": "npm run test && npm run benchmark && npm run lint",
     "install:skill": "sh install.sh",
-    "postpack": "echo 'Install the skill with: sh install.sh (or npx skills add aihxp/godaudits)'"
+    "prepack": "npm run check",
+    "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'"
   }
 }

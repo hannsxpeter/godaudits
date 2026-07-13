@@ -1,10 +1,10 @@
 # Agent memory audit module
 
-Audits the agent memory a repository ships for AI coding agents: the `AGENTS.md` loader, the `agents/` pillar tree, and every tool-native instruction file, checked against the code they describe. Feeds findings `F-MEM-n` and a 0-100 domain score into AUDIT.mdx. The orchestrator loads this module for every archetype: the pillar set varies, but loader discipline, floor pillars, and exclusion hygiene are universal. It carries the smallest weight in `intake.md` (2) because its blast radius is the next agent session, not the end user. Exclusion is rare: only a repo whose policy demonstrably forbids AI-agent contribution (stated in `CONTRIBUTING.md` or equivalent) may exclude it, with that reason recorded in the applicability matrix.
+Audits the agent memory a repository ships for AI coding agents: the `AGENTS.md` loader, the `agents/` pillar tree, and every tool-native instruction file, checked against the code they describe. Feeds findings `F-MEM-n` and a 0-100 domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for every archetype: the pillar set varies, but loader discipline, floor pillars, and exclusion hygiene are universal. It carries the smallest weight in `intake.md` (2) because its blast radius is the next agent session, not the end user. Exclusion is rare: only a repo whose policy demonstrably forbids AI-agent contribution (stated in `CONTRIBUTING.md` or equivalent) may exclude it, with that reason recorded in the applicability matrix.
 
 ## Lineage
 
-Descends from the Pillars standard (github.com/aihxp/pillars, spec v1.0.1) and its three operational skills: pillars-init (archetype detection, loader drop, exclusion defaults), pillars-author (evidence-based drafting, no-fabrication rule), and, most directly, pillars-verify, whose method DNA this module preserves: evidence-driven claim walking (stack claims against manifests, path claims against the tree, convention claims against 3-5 sampled files with a 2-of-5 failure threshold), the drift / rule-violation / minor severity ladder (mapped here to Medium / Medium / Low), and the false-positive guards (read imprecise claims at their most natural interpretation, stubs claim nothing so they cannot drift, exclusions are intentional and not gaps). The godplans agent-memory module inverted pillars-verify into plan-time truth-by-construction; this module runs the verify pass forward again against real code, with A-MEM numbering aligned one to one to those R-MEM requirements. The ancestor's read-only, no-auto-fix discipline binds: findings quote evidence, remediation is a task, never an edit.
+Descends from the Pillars standard (github.com/hannsxpeter/pillars, spec v1.0.1) and its three operational skills: pillars-init (archetype detection, loader drop, exclusion defaults), pillars-author (evidence-based drafting, no-fabrication rule), and, most directly, pillars-verify, whose method DNA this module preserves: evidence-driven claim walking (stack claims against manifests, path claims against the tree, convention claims against 3-5 sampled files with a 2-of-5 failure threshold), the drift / rule-violation / minor severity ladder (mapped here to Medium / Medium / Low), and the false-positive guards (read imprecise claims at their most natural interpretation, stubs claim nothing so they cannot drift, exclusions are intentional and not gaps). The godplans agent-memory module inverted pillars-verify into plan-time truth-by-construction; this module runs the verify pass forward again against real code, with A-MEM numbering aligned one to one to those R-MEM requirements. The ancestor's read-only, no-auto-fix discipline binds: findings quote evidence, remediation is a task, never an edit.
 
 ## Surface map
 
@@ -93,7 +93,7 @@ Weights derive from the godplans agent-memory self-audit rubric. Dimensions mark
 - Drift (15, conditional): A-MEM-11, A-MEM-12.
 - Lifecycle and CI (15): A-MEM-14, A-MEM-16, A-MEM-17.
 
-Any open Critical finding caps this domain at 69.
+Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

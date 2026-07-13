@@ -1,6 +1,6 @@
 # Deploy audit module
 
-Audits the shipping mechanics actually wired into the repo: whether a build reaches production the same way twice, whether promotion is a promotion or a per-environment rebuild, whether rollback is real or theater, and whether schema changes ship on an expand/contract calendar or in one lock-taking cutover. It runs the deploy-ready disciplines forward against workflows, deploy configs, migration files, and health endpoints instead of against a plan, and feeds findings `F-DEPLOY-n` and a 0-100 domain score (weight 6 per `intake.md`) into AUDIT.mdx. The orchestrator loads this module for any archetype that runs a service users hit (saas-dashboard, api-service, marketing-site with a server, ml-pipeline serving, mobile-app backend). Library and local-only cli archetypes exclude it with the reason "distribution is packaging and release, not deployment"; extension archetypes reduce it to store publishing. Every exclusion is recorded in the applicability matrix. In plan-aware mode every check also cites its `R-DEPLOY-n` twin from `.godplans/PLAN.mdx`.
+Audits the shipping mechanics actually wired into the repo: whether a build reaches production the same way twice, whether promotion is a promotion or a per-environment rebuild, whether rollback is real or theater, and whether schema changes ship on an expand/contract calendar or in one lock-taking cutover. It runs the deploy-ready disciplines forward against workflows, deploy configs, migration files, and health endpoints instead of against a plan, and feeds findings `F-DEPLOY-n` and a 0-100 domain score (weight 6 per `intake.md`) into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for any archetype that runs a service users hit (saas-dashboard, api-service, marketing-site with a server, ml-pipeline serving, mobile-app backend). Library and local-only cli archetypes exclude it with the reason "distribution is packaging and release, not deployment"; extension archetypes reduce it to store publishing. Every exclusion is recorded in the applicability matrix. In plan-aware mode every check also cites its `R-DEPLOY-n` twin from `.godplans/PLAN.mdx`.
 
 ## Lineage
 
@@ -91,7 +91,7 @@ Weighted dimensions summing to 100. Derived from the godplans deploy module's se
 | Pipeline gates and secrets | 15 | A-DEPLOY-7, A-DEPLOY-8, A-DEPLOY-9, A-DEPLOY-10, A-DEPLOY-20, A-DEPLOY-21 |
 | First-deploy and post-deploy discipline | 10 | A-DEPLOY-12, A-DEPLOY-15, A-DEPLOY-17 |
 
-Migration calendar and guardrails applies only when the data-forward surface is present; when the repo carries no migrations and no schema, drop it and re-normalize the rest to 100. Any open Critical finding caps this domain at 69.
+Migration calendar and guardrails applies only when the data-forward surface is present; when the repo carries no migrations and no schema, drop it and re-normalize the rest to 100. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

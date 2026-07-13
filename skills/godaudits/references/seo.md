@@ -1,6 +1,6 @@
 # SEO audit module
 
-Audits how the codebase makes its website visible to classic search engines and citable by AI answer engines: crawl and index controls, the rendering path that decides what reaches non-JS crawlers, canonical and URL discipline, structured data honesty, the AI-crawler policy, and the regression net around all of it. It emits findings `F-SEO-n` and a 0-100 domain score into AUDIT.mdx. The orchestrator loads it during the domain passes whenever the applicability matrix marks seo applicable, which requires a public crawlable surface per intake.md; cli-tool, library, api-service, ml-pipeline, extension, game, and mobile-app archetypes may exclude it with the reason recorded in the applicability matrix (a store listing or registry page is not a crawl surface this module owns).
+Audits how the codebase makes its website visible to classic search engines and citable by AI answer engines: crawl and index controls, the rendering path that decides what reaches non-JS crawlers, canonical and URL discipline, structured data honesty, the AI-crawler policy, and the regression net around all of it. It emits findings `F-SEO-n` and a 0-100 domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads it during the domain passes whenever the applicability matrix marks seo applicable, which requires a public crawlable surface per intake.md; cli-tool, library, api-service, ml-pipeline, extension, game, and mobile-app archetypes may exclude it with the reason recorded in the applicability matrix (a store listing or registry page is not a crawl surface this module owns).
 
 ## Lineage
 
@@ -115,7 +115,7 @@ Weighted dimensions, summing to 100. When a conditional dimension is absent, dro
 - Internationalization (5, conditional): A-SEO-18.
 - Feeds and installability (4, conditional): A-SEO-19.
 
-A-SEO-22 sweep results score inside the dimension that owns each instance. Visibility-floor findings (sitewide deindex reaching prod, CSR-only indexable content, cloaking, canonical collapse, blocking citation bots while courting AI visibility) are Critical regardless of arithmetic. Any open Critical finding caps this domain at 69.
+A-SEO-22 sweep results score inside the dimension that owns each instance. Visibility-floor findings (sitewide deindex reaching prod, CSR-only indexable content, cloaking, canonical collapse, blocking citation bots while courting AI visibility) are Critical regardless of arithmetic. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

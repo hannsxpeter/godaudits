@@ -1,6 +1,6 @@
 # Observe audit module
 
-Audits whether the deployed system is monitorable by promise, not by chart count: are the SLOs real, do the pages derive from burn rate, do the runbooks execute, and does the observability surface survive the incident it describes. It runs the observe-ready disciplines forward against alert rules, dashboard JSON, logger modules, and collector configs instead of against a plan, and feeds findings `F-OBS-n` and a 0-100 domain score (weight 5 per `intake.md`) into AUDIT.mdx. The orchestrator loads this module for any archetype running a deployed service with users depending on it (saas-dashboard, api-service, ml-pipeline, mobile-app backend, cli with a hosted component); pure libraries and static marketing sites without uptime promises exclude it, with the reason recorded in the applicability matrix. In plan-aware mode every check also cites its `R-OBS-n` twin from `.godplans/PLAN.mdx`.
+Audits whether the deployed system is monitorable by promise, not by chart count: are the SLOs real, do the pages derive from burn rate, do the runbooks execute, and does the observability surface survive the incident it describes. It runs the observe-ready disciplines forward against alert rules, dashboard JSON, logger modules, and collector configs instead of against a plan, and feeds findings `F-OBS-n` and a 0-100 domain score (weight 5 per `intake.md`) into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for any archetype running a deployed service with users depending on it (saas-dashboard, api-service, ml-pipeline, mobile-app backend, cli with a hosted component); pure libraries and static marketing sites without uptime promises exclude it, with the reason recorded in the applicability matrix. In plan-aware mode every check also cites its `R-OBS-n` twin from `.godplans/PLAN.mdx`.
 
 ## Lineage
 
@@ -100,7 +100,7 @@ Weighted dimensions summing to 100, derived from observe-ready's 4-tier model vi
 | Runbook and incident loop | 15 | A-OBS-17, 18, 19 |
 | Cost and cardinality (conditional) | 5 | A-OBS-13 |
 
-Cost and cardinality applies only when a metrics backend exists and prices per time series; on wide-event backends drop it and re-normalize the rest to 100. When the cross-service sub-surface is absent, A-OBS-11 scores on `trace_id` continuity alone. Any open Critical finding caps this domain at 69.
+Cost and cardinality applies only when a metrics backend exists and prices per time series; on wide-event backends drop it and re-normalize the rest to 100. When the cross-service sub-surface is absent, A-OBS-11 scores on `trace_id` continuity alone. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

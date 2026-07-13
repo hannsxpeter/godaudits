@@ -1,6 +1,6 @@
 # Stack audit module
 
-Audits whether the technology bundle actually in the repo is coherent, alive, constraint-honest, and traceable to a recorded decision. It runs the stack-ready disciplines forward against manifests, lockfiles, and import sites instead of against a proposal, and feeds findings `F-STACK-n` and a 0-100 domain score (weight 4 per `intake.md`) into AUDIT.mdx. The orchestrator loads this module for every archetype whose repo carries a dependency manifest; the only legitimate exclusion is a repo with no manifests and no dependency surface at all (pure content or data repos), with that reason recorded in the applicability matrix. In plan-aware mode every check also cites its `R-STACK-n` twin from `.godplans/PLAN.mdx`.
+Audits whether the technology bundle actually in the repo is coherent, alive, constraint-honest, and traceable to a recorded decision. It runs the stack-ready disciplines forward against manifests, lockfiles, and import sites instead of against a proposal, and feeds findings `F-STACK-n` and a 0-100 domain score (weight 4 per `intake.md`) into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for every archetype whose repo carries a dependency manifest; the only legitimate exclusion is a repo with no manifests and no dependency surface at all (pure content or data repos), with that reason recorded in the applicability matrix. In plan-aware mode every check also cites its `R-STACK-n` twin from `.godplans/PLAN.mdx`.
 
 ## Lineage
 
@@ -100,7 +100,7 @@ Weighted dimensions summing to 100. Derived from the godplans stack module's sel
 | Cost realism | 8 | A-STACK-15 |
 | Migration discipline (conditional) | 7 | A-STACK-19 |
 
-Migration discipline applies only when a migration is in flight; when the sub-surface is absent, drop it and re-normalize the rest to 100. Any open Critical finding caps this domain at 69.
+Migration discipline applies only when a migration is in flight; when the sub-surface is absent, drop it and re-normalize the rest to 100. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

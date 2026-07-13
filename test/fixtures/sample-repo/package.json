@@ -1,0 +1,7 @@
+{
+  "name": "sample-api",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js"
+  }
+}

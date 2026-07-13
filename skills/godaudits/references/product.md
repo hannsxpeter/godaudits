@@ -1,10 +1,10 @@
 # Product audit module
 
-Audits whether the codebase can still answer the questions a PRD exists to settle: what problem, for whom, what counts as done, and what was refused. It runs the prd-ready disciplines forward against a live repo: does a product record exist, does the code keep the promises the record and the README make, and is success measured by instrumentation that actually emits. Findings ship as F-PRD-n blocks and a 0-100 product score into `.godaudits/AUDIT.mdx`. The orchestrator loads this module first in the domain-pass order for every archetype, because every later domain scores the code against what the product claims to be. No archetype excludes product by default; the only defensible exclusion is a repo with no product of its own (a dotfiles mirror, a config sync repo), and the applicability matrix must record that specific reason.
+Audits whether the codebase can still answer the questions a PRD exists to settle: what problem, for whom, what counts as done, and what was refused. It runs the prd-ready disciplines forward against a live repo: does a product record exist, does the code keep the promises the record and the README make, and is success measured by instrumentation that actually emits. Findings ship as F-PRD-n blocks and a 0-100 product score into `.godaudits/AUDIT.json` and its generated AUDIT.mdx view. The orchestrator loads this module first in the domain-pass order for every archetype, because every later domain scores the code against what the product claims to be. No archetype excludes product by default; the only defensible exclusion is a repo with no product of its own (a dotfiles mirror, a config sync repo), and the applicability matrix must record that specific reason.
 
 ## Lineage
 
-Descends from aihxp prd-ready, the top of the ready-suite planning tier, by way of the godplans product module that inverted it into R-PRD-1 through R-PRD-17. The disciplines that carry into audit time: the three-label test (every product sentence is a decision, a hypothesis, or an owned open question), the substitution test against two named competitors, the MoSCoW caps (at most 50% Must, hard cap 7), sourced metrics with named instrumentation, the ten-dimension NFR sweep, separate risk and assumption registers, the banned-phrase grep, and the have-nots list, which becomes this module's severity convention: a have-not that blocks a PRD at plan time is at least Medium when found live in a shipped codebase. prd-ready is not one of the seven aihxp auditors, but it carries audit DNA in its Mode C protocol (quote the failing sentence, name the dominant failure mode, list the remediation); this module runs Mode C against the whole repo instead of one document.
+Descends from aihxp prd-ready, the top of the ready-suite planning tier, by way of the godplans product module that inverted it into R-PRD-1 through R-PRD-17. The disciplines that carry into audit time: the three-label test (every product sentence is a decision, a hypothesis, or an owned open question), the substitution test against two named competitors, the MoSCoW caps (at most 50% Must, hard cap 7), sourced metrics with named instrumentation, the ten-dimension NFR sweep, separate risk and assumption registers, the banned-phrase grep, and the have-nots list, which becomes this module's severity convention: a have-not that blocks a PRD at plan time is at least Medium when found live in a shipped codebase. prd-ready is not one of the seven hannsxpeter auditors, but it carries audit DNA in its Mode C protocol (quote the failing sentence, name the dominant failure mode, list the remediation); this module runs Mode C against the whole repo instead of one document.
 
 ## Surface map
 
@@ -96,7 +96,7 @@ Weights derive from the godplans product self-audit rubric, collapsed into audit
 - Registers and question hygiene (A-PRD-9 to A-PRD-11): 10.
 - Lifecycle, prior art, and closure (A-PRD-12 to A-PRD-17): 5. Conditional: never-shipped repos drop A-PRD-17 and score this dimension on change control and prior art alone.
 
-Any open Critical finding caps this domain at 69.
+Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

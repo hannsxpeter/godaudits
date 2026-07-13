@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "profiles": {
+    "balanced": {
+      "description": "General product risk weighted by user blast radius.",
+      "weights": {
+        "security": 15,
+        "code-quality": 9,
+        "build": 9,
+        "database": 7,
+        "architecture": 7,
+        "product": 6,
+        "ux": 6,
+        "llm": 5,
+        "deploy": 5,
+        "observe": 4,
+        "repo": 4,
+        "stack": 4,
+        "ui": 4,
+        "roadmap": 4,
+        "seo": 3,
+        "launch": 3,
+        "style-genome": 3,
+        "agent-memory": 2
+      }
+    },
+    "security-critical": {
+      "description": "Systems handling regulated data, money, identity, privileged actions, or multi-tenant workloads.",
+      "weights": {
+        "security": 23,
+        "code-quality": 9,
+        "build": 7,
+        "database": 9,
+        "architecture": 9,
+        "product": 4,
+        "ux": 4,
+        "llm": 7,
+        "deploy": 7,
+        "observe": 5,
+        "repo": 4,
+        "stack": 3,
+        "ui": 2,
+        "roadmap": 2,
+        "seo": 1,
+        "launch": 1,
+        "style-genome": 2,
+        "agent-memory": 1
+      }
+    },
+    "growth": {
+      "description": "Public products where activation, trust, visibility, conversion, and launch execution dominate.",
+      "weights": {
+        "security": 10,
+        "code-quality": 7,
+        "build": 7,
+        "database": 5,
+        "architecture": 5,
+        "product": 11,
+        "ux": 11,
+        "llm": 3,
+        "deploy": 3,
+        "observe": 3,
+        "repo": 3,
+        "stack": 3,
+        "ui": 7,
+        "roadmap": 4,
+        "seo": 7,
+        "launch": 7,
+        "style-genome": 3,
+        "agent-memory": 1
+      }
+    },
+    "library": {
+      "description": "Libraries and developer tools where API quality, compatibility, maintainability, and repository discipline dominate.",
+      "weights": {
+        "security": 14,
+        "code-quality": 18,
+        "build": 5,
+        "database": 2,
+        "architecture": 11,
+        "product": 7,
+        "ux": 7,
+        "llm": 4,
+        "deploy": 2,
+        "observe": 1,
+        "repo": 9,
+        "stack": 7,
+        "ui": 1,
+        "roadmap": 2,
+        "seo": 1,
+        "launch": 1,
+        "style-genome": 6,
+        "agent-memory": 2
+      }
+    }
+  }
+}

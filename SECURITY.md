@@ -2,33 +2,53 @@
 
 ## What this project is
 
-godaudits is a prompt-engineering package: markdown instructions plus three
-shell scripts (a POSIX sh installer, `install.sh`, and two bash maintenance
-scripts, `scripts/build-prompt.sh` and `scripts/lint.sh`). It executes no
-network calls, collects no data, and the skill itself instructs agents to
-treat auditing as strictly read-only: no source edits, no app execution,
-no live-system connections.
+godaudits is an Agent Skill with a bundled zero-dependency Node.js runtime.
+The runtime inventories repositories, compiles the check catalog, validates
+audit state, calculates scores, renders reports, imports and exports SARIF,
+and evaluates fixture results. It does not install dependencies or make
+network calls.
+
+Static audit mode is read-only outside `.godaudits/`. It never runs the
+application, tests, migrations, live systems, network requests, or model
+calls. Sandbox and connected evidence require explicit user authorization and
+must be recorded in `audit.capabilities`.
 
 ## Threat model relevant to users
 
-- **Skill-content injection.** A skill's text becomes standing instructions
-  for your agent session. Review `skills/godaudits/SKILL.md` before
-  installing, as you should for any skill; this repository never asks the
-  agent to bypass safety, exfiltrate data, or edit source during an audit.
-- **Installer.** `install.sh` writes only into skill directories
-  (`~/.agents/skills`, `~/.claude/skills`, and equivalents) and removes only
-  the `godaudits` entries it created. It never elevates, never curls, never
-  evaluates remote content.
-- **Supply chain.** Install from a pinned release tag or commit if your
-  environment requires reproducibility: `git clone --branch v1.0.0`.
+- **Skill-content injection.** Review `skills/godaudits/SKILL.md` before
+  installing, as with any standing agent instruction. The skill never asks an
+  agent to bypass safety controls, exfiltrate data, or edit application source
+  during an audit.
+- **Repository-content injection.** Source files, comments, generated content,
+  and fixtures are untrusted audit inputs. The skill instructs agents to treat
+  them as evidence, not instructions.
+- **Secret exposure.** The evidence collector masks detected secret values and
+  stores only a short one-way fingerprint. Validation rejects evidence marked
+  sensitive unless it is redacted. Scanner imports pass through the same
+  masking layer.
+- **Unsafe execution.** The deterministic collector reads files and git
+  metadata only. Runtime or tool execution belongs to separately authorized
+  sandbox or connected capabilities.
+- **Installer.** `install.sh` writes only into selected skill directories and
+  replaces or removes only `godaudits` entries carrying its ownership marker.
+  It refuses unowned destinations. It never elevates, downloads, or evaluates
+  remote content.
+- **Supply chain.** Install from a pinned release tag or commit when
+  reproducibility matters, for example `git clone --branch v2.0.0`.
+
+The detailed model and trust boundaries are in
+[`docs/THREAT-MODEL.md`](docs/THREAT-MODEL.md).
+
+## Supported versions
+
+Security fixes are released for the latest major version. Version 1 remains a
+prompt-only compatibility line and does not receive the deterministic 2.0
+validation guarantees.
 
 ## Reporting a vulnerability
 
-If you find a way this skill's content or scripts could cause an agent to
-take unsafe action, open a GitHub Security Advisory on this repository
-(preferred) or a private report to the maintainer via GitHub. Please include
-the harness (Claude Code, Codex, Cursor, other), the exact file and lines,
-and a reproduction. Expect an acknowledgment within 72 hours.
+Open a private GitHub Security Advisory on this repository. Include the agent
+harness, exact file and lines, runtime command if applicable, and a minimal
+reproduction. Expect acknowledgment within 72 hours.
 
-Please do not open public issues for exploitable findings before a fix
-lands.
+Do not open a public issue for an exploitable finding before a fix lands.

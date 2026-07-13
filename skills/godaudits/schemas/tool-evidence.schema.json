@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/tool-evidence.schema.json",
+  "title": "godaudits imported tool evidence",
+  "type": "object",
+  "required": ["schema_version", "source", "evidence"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "source": { "type": "string", "minLength": 1 },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "tool", "tool_version", "command", "quote", "sensitive", "redacted"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^E-[0-9]+$" },
+          "type": { "const": "tool" },
+          "tool": { "type": "string", "minLength": 1 },
+          "tool_version": { "type": "string", "minLength": 1 },
+          "command": { "type": "string", "minLength": 1 },
+          "quote": { "type": "string", "minLength": 1 },
+          "path": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "scope": { "type": "string" },
+          "sensitive": { "type": "boolean" },
+          "redacted": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

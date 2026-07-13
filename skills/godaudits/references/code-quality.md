@@ -1,6 +1,6 @@
 # Code quality audit module
 
-Audits the maintainability core of a codebase: layering conventions in the code, quality budgets, typing strictness, test quality, error handling, performance shapes, dependency hygiene, docs drift, and code-level operability hooks. Emits findings `F-CODE-n` and a 0-100 domain score into AUDIT.mdx. The orchestrator loads it in the domain-pass phase for every repo that ships application code. No archetype may exclude it: per intake.md, code-quality is never excluded, it scales down with the calibration instead, and the applicability matrix records the scale applied.
+Audits the maintainability core of a codebase: layering conventions in the code, quality budgets, typing strictness, test quality, error handling, performance shapes, dependency hygiene, docs drift, and code-level operability hooks. Emits findings `F-CODE-n` and a 0-100 domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads it in the domain-pass phase for every repo that ships application code. No archetype may exclude it: per intake.md, code-quality is never excluded, it scales down with the calibration instead, and the applicability matrix records the scale applied.
 
 ## Lineage
 
@@ -109,7 +109,7 @@ Dimensions derive from codeauditor's weight table with SEC removed (security own
 - Docs and drift: 6 (A-CODE-18)
 - Operability hooks: 6, conditional (A-CODE-19, A-CODE-20); re-normalize for non-service archetypes
 
-Score each dimension against its findings, weight, and sum. Any open Critical finding caps this domain at 69.
+Score each dimension against its findings, weight, and sum. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

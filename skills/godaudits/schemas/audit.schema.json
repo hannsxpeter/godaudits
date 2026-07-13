@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/audit.schema.json",
+  "title": "godaudits audit state",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "audit",
+    "compliance",
+    "domains",
+    "evidence",
+    "strengths",
+    "findings",
+    "tasks",
+    "accepted_risks",
+    "open_questions",
+    "session_log"
+  ],
+  "properties": {
+    "schema_version": { "const": "2.0" },
+    "audit": {
+      "type": "object",
+      "required": [
+        "name",
+        "audit_version",
+        "status",
+        "created",
+        "updated",
+        "mode",
+        "plan_aware",
+        "commit",
+        "archetype",
+        "scale",
+        "risk_profile",
+        "engine_version",
+        "pack_version",
+        "capabilities",
+        "assumptions"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "audit_version": { "type": "integer", "minimum": 1 },
+        "status": { "enum": ["reported", "remediating", "resolved"] },
+        "created": { "type": "string", "format": "date" },
+        "updated": { "type": "string", "format": "date" },
+        "mode": { "enum": ["fresh", "re-audit"] },
+        "plan_aware": { "type": "boolean" },
+        "commit": { "type": "string", "minLength": 1 },
+        "archetype": { "type": "string", "minLength": 1 },
+        "scale": { "enum": ["weekend", "side-project", "funded-product", "enterprise"] },
+        "risk_profile": { "enum": ["balanced", "security-critical", "growth", "library"] },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "pack_version": { "type": "string", "minLength": 1 },
+        "capabilities": { "type": "array", "minItems": 1, "items": { "enum": ["static", "sandbox", "connected"] }, "uniqueItems": true },
+        "assumptions": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "compliance": {
+      "type": "object",
+      "required": ["result", "screened", "policy_pack"],
+      "properties": {
+        "result": { "enum": ["pass", "findings-injected", "unknown"] },
+        "screened": { "type": "string", "format": "date" },
+        "policy_pack": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "domains": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/domain" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "strengths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "evidence", "preserve"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "evidence": { "$ref": "#/$defs/evidenceReferences" },
+          "preserve": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/task" }
+    },
+    "accepted_risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding", "summary", "owner", "accepted_on", "expires", "review"],
+        "properties": {
+          "finding": { "type": "string", "pattern": "^F-[A-Z]+-[0-9]+$" },
+          "summary": { "type": "string", "minLength": 1 },
+          "owner": { "type": "string", "minLength": 1 },
+          "accepted_on": { "type": "string", "format": "date" },
+          "expires": { "type": "string", "format": "date" },
+          "review": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["question", "owner", "due", "default"],
+        "properties": {
+          "question": { "type": "string", "minLength": 1 },
+          "owner": { "type": "string", "minLength": 1 },
+          "due": { "type": "string", "format": "date" },
+          "default": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "session_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "summary"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "summary": { "type": "string", "minLength": 1, "maxLength": 140 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "computed": { "type": "object", "readOnly": true }
+  },
+  "$defs": {
+    "evidenceReferences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^E-[0-9]+$" },
+      "uniqueItems": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["id", "type", "redacted"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^E-[0-9]+$" },
+        "type": { "enum": ["source", "absence", "tool", "runtime", "human"] },
+        "path": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "symbol": { "type": "string" },
+        "quote": { "type": "string" },
+        "command": { "type": "string" },
+        "scope": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "sensitive": { "type": "boolean" },
+        "redacted": { "type": "boolean" },
+        "tool": { "type": "string" },
+        "tool_version": { "type": "string" },
+        "recorded_by": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "source" } }, "required": ["type"] },
+          "then": { "required": ["path", "line", "quote", "sha256"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "absence" } }, "required": ["type"] },
+          "then": { "required": ["scope", "command", "quote"] }
+        },
+        {
+          "if": { "properties": { "type": { "enum": ["tool", "runtime"] } }, "required": ["type"] },
+          "then": { "required": ["tool", "tool_version", "command", "quote"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "human" } }, "required": ["type"] },
+          "then": { "required": ["recorded_by", "quote"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "required": ["id", "outcome", "confidence", "weight", "evidence", "finding_ids"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" },
+        "outcome": { "enum": ["pass", "fail", "unknown", "not-applicable"] },
+        "confidence": { "enum": ["Certain", "Firm", "Tentative"] },
+        "weight": { "type": "number", "minimum": 0, "maximum": 100 },
+        "evidence": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^E-[0-9]+$" },
+          "uniqueItems": true
+        },
+        "finding_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^F-[A-Z]+-[0-9]+$" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "domain": {
+      "type": "object",
+      "required": ["id", "status", "weight", "checks"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["applicable", "excluded"] },
+        "weight": { "type": "number", "minimum": 1 },
+        "reason": { "type": "string" },
+        "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "id",
+        "domain",
+        "title",
+        "severity",
+        "confidence",
+        "effort",
+        "evidence",
+        "impact",
+        "fix",
+        "verify",
+        "checks",
+        "status",
+        "remediation"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^F-[A-Z]+-[0-9]+$" },
+        "domain": { "type": "string" },
+        "title": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["Critical", "High", "Medium", "Low"] },
+        "confidence": { "enum": ["Certain", "Firm", "Tentative"] },
+        "effort": { "enum": ["S", "M", "L"] },
+        "evidence": { "$ref": "#/$defs/evidenceReferences" },
+        "impact": { "type": "string", "minLength": 1 },
+        "fix": { "type": "string", "minLength": 1 },
+        "verify": { "type": "string", "minLength": 1 },
+        "checks": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" }, "uniqueItems": true },
+        "status": { "enum": ["open", "resolved", "accepted-risk", "superseded"] },
+        "remediation": { "type": "array", "items": { "type": "string", "pattern": "^GA-[0-9]{3,}$" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "required": [
+        "id",
+        "phase",
+        "wave",
+        "title",
+        "parallel",
+        "files",
+        "depends_on",
+        "reuses",
+        "fixes",
+        "acceptance",
+        "verify",
+        "checks",
+        "status"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^GA-[0-9]{3,}$" },
+        "phase": { "type": "integer", "minimum": 1 },
+        "wave": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+        "title": { "type": "string", "minLength": 1 },
+        "parallel": { "type": "boolean" },
+        "files": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "depends_on": { "type": "array", "items": { "type": "string", "pattern": "^GA-[0-9]{3,}$" }, "uniqueItems": true },
+        "reuses": { "type": "string", "minLength": 1 },
+        "fixes": { "type": "array", "items": { "type": "string", "pattern": "^F-[A-Z]+-[0-9]+$" }, "uniqueItems": true },
+        "acceptance": { "type": "array", "minItems": 1, "maxItems": 4, "items": { "type": "string" }, "uniqueItems": true },
+        "verify": { "type": "string", "minLength": 1 },
+        "checks": { "type": "array", "items": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" }, "uniqueItems": true },
+        "status": { "enum": ["open", "done", "superseded"] },
+        "final_gate": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

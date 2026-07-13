@@ -1,158 +1,292 @@
 # godaudits
 
-[![lint](https://github.com/aihxp/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/aihxp/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-1.0.0-blue)](CHANGELOG.md)
+[![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
+[![version](https://img.shields.io/badge/version-2.0.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Audit everything after anything. godaudits is a single-command AI agent skill that inspects an existing codebase end to end and emits one master audit report (`.godaudits/AUDIT.mdx`): per-domain scores, evidence-backed findings, and an agent-executable remediation plan.
+Audit everything after anything. godaudits is an evidence-first codebase audit
+system that combines a 414-check Agent Skill with a zero-dependency runtime. It
+produces validated machine state, computed scores and coverage, a standalone
+remediation report, and optional SARIF annotations.
 
-Audit tooling usually checks one thing at a time: a security scan here, a code-quality report there, an accessibility pass somewhere else. Run several against the same repository and each one re-reads the code from scratch, they disagree on vocabulary and severity, the same root cause gets billed three times, and whole questions go unasked: does the product actually do what its README promises, does the deploy pipeline have a tested way back, are half the endpoints stubs returning fake data. Worst of all, the reports end in prose, and prose is not something a coding agent can execute.
+Version 2.0 closes the trust gap in prompt-only audits. The model still performs
+the work that requires judgment: tracing code paths, testing competing
+explanations, clustering root causes, calibrating impact, and prescribing a
+specific fix. The runtime performs work that should never depend on model mood:
+catalog compilation, repository fingerprinting, secret-safe signal collection,
+check completeness, score arithmetic, cross-reference validation, dependency
+cycle detection, rendering, re-audit diffs, and benchmark metrics.
 
-godaudits replaces that pile with one command. It reads the repository once, works out what kind of project it is and which of eighteen audit domains apply (from security, database use, and code quality through UX, accessibility, search visibility, and AI-model integration, out to the build-reality questions above), and audits each applicable domain against a written checklist. Every finding is verified at the exact file and line before it ships, every domain gets a 0 to 100 score with caps so one critical hole cannot be averaged away, and the second half of the report is not prose: it is a remediation plan of checkbox tasks, each with the files to touch, acceptance criteria, and a command that proves the fix, executable by any coding agent. The specific auditor and planning skills godaudits draws from are named under [Lineage](#lineage) below.
+## What makes it different
 
-godaudits is also the mirror of [godplans](https://github.com/aihxp/godplans), a sibling skill that plans a project before any code is written. The two share one numbering system: what godplans writes into a plan as requirement `R-SEC-3`, godaudits later verifies in the code as check `A-SEC-3`. Plan with one, audit with the other, and the loop closes.
+- 18 domains and 414 versioned checks, each with inspection and failure
+  guidance.
+- Every applicable check records `pass`, `fail`, `unknown`, or
+  `not-applicable`. Uninspected never means pass.
+- Quality score and audit coverage are separate. Low coverage caps the verdict.
+- Evidence supports source, absence, tool, runtime, and human records.
+- Source evidence carries a content hash. Secret evidence is masked and
+  fingerprinted.
+- Scores are computed from catalog weights and outcomes, with Critical,
+  weak-domain, and coverage caps.
+- Findings and remediation tasks are reciprocal and validator-enforced.
+- Accepted risks require an owner, acceptance date, expiry, and review command.
+- Re-audits preserve ids and produce structured added, resolved, reopened,
+  changed, removed-id, score, and coverage deltas.
+- MDX and SARIF are generated views. JSON is the source of truth.
+- SARIF scanners can be imported as redacted evidence without promoting their
+  conclusions into findings.
+- A multi-language fixture corpus and metric evaluator test the auditor itself.
 
 ## Quickstart
 
+Install the Agent Skill:
+
 ```bash
-# recommended: the skills package manager (installs for your tools)
-npx skills add aihxp/godaudits
-
-# or: clone and run the installer
-git clone https://github.com/aihxp/godaudits
-cd godaudits && sh install.sh
+npx skills add hannsxpeter/godaudits
 ```
 
-Then, in your coding agent, in any project directory:
+Or clone and install it for detected tools:
 
+```bash
+git clone https://github.com/hannsxpeter/godaudits
+cd godaudits
+sh install.sh
 ```
+
+The installer marks managed copies and refuses to replace or uninstall an
+unowned `godaudits` directory. Move a pre-existing custom directory aside
+explicitly before installation.
+
+Then invoke it inside an existing project:
+
+```text
 /godaudits
 ```
 
-One command. godaudits screens the product against the Anthropic Usage Policy, fingerprints the repo (archetype, scale, surfaces), audits every applicable domain against its module's checks, adversarially verifies each finding at the cited file and line, scores each domain 0 to 100, and emits `.godaudits/AUDIT.mdx` with the remediation plan built in.
+The runtime is bundled inside the skill. Agents use the installed `godaudits`
+command when available, or run `runtime/godaudits.js` beside SKILL.md with Node
+18 or newer.
 
-## What you get
+## Outputs
 
-One file, `.godaudits/AUDIT.mdx`, containing:
+All audit writes stay under `.godaudits/`:
 
-- A verdict paragraph: overall score, verdict band, the biggest risk and the biggest strength.
-- Scope and method: the commit audited, what was examined, and the read-only guarantee (no source edits, no app execution, no live systems, no model calls).
-- The compliance gate result and the applicability matrix (every domain audited or excluded with a reason).
-- A scorecard: every applicable domain scored with a one-line reason, caps applied (any open Critical caps its domain at 69 and the overall at 79), overall as a weighted mean.
-- Strengths, held to the same file:line evidence standard as faults.
-- Findings with stable ids (F-SEC-3), a severity triple (Severity | Confidence | Effort), quoted evidence at file:line, concrete impact, a specific fix, and the exact command that verifies the fix.
-- A remediation plan in phases: Stop the bleeding (all Criticals), Quick wins, Plan now, Verify first, Backlog, and a final Re-audit phase with the expected score movement. Every task: a stable GA-number, exact files, dependencies, the findings it fixes, grep-verifiable acceptance criteria, one verify command, and check traceability.
-- Embedded rules for remediating agents and an append-only session log.
+| Artifact | Role |
+|---|---|
+| `EVIDENCE.json` | Deterministic file inventory, hashes, signals, absences, archetype inference, and limitations |
+| `AUDIT.json` | Canonical schema-versioned check, evidence, finding, task, risk, and computed state |
+| `AUDIT.mdx` | Generated standalone report and remediation handoff |
+| `AUDIT.sarif` | Optional SARIF 2.1.0 output for code-host annotations |
+| `TOOL-EVIDENCE.json` | Optional secret-safe evidence imported from SARIF scanners |
+| `archive/` | Paired prior JSON and MDX versions for re-audit history |
 
-The audit is the handoff: any coding agent (the same one, or a different tool entirely) executes the remediation checkbox by checkbox. Progress is machine-checkable with grep. Interrupted work resumes by re-reading the file, not the chat.
+`AUDIT.json` is authoritative. MDX and SARIF are disposable derived views.
+
+## The audit workflow
 
 ```mermaid
-graph TD
-  A[existing codebase] --> B[compliance gate]
-  B --> C[intake: mode, archetype, applicability, fingerprint]
-  C --> D[18 domain passes: checks A-DOM-n]
-  D --> E[adversarial verification at file:line]
-  E --> F[scoring with risk caps]
-  F --> G[remediation plan: GA checkbox tasks]
-  G --> H[.godaudits/AUDIT.mdx]
-  H --> I[any agent remediates, checkbox by checkbox]
-  I --> J[re-audit: the loop ends with a number]
+flowchart TD
+  A[Repository] --> B[Static evidence fingerprint]
+  B --> C[Applicability and risk profile]
+  C --> D[Complete 414-check ledger]
+  D --> E[18 domain evaluators]
+  E --> F[Independent refutation and clustering]
+  F --> G[Validated audit JSON]
+  G --> H[Computed scores and coverage]
+  H --> I[MDX report]
+  H --> J[SARIF output]
+  I --> K[Agent-executable remediation]
+  K --> L[Re-audit and structured delta]
 ```
 
-## The godplans loop
+The normal command sequence is:
 
-godplans and godaudits share one numbering system and one task grammar:
+```bash
+godaudits doctor
+godaudits evidence . --output .godaudits/EVIDENCE.json
+godaudits init --name my-project --archetype api-service --scale funded-product --profile security-critical --applicable all --output .godaudits/AUDIT.json
+godaudits validate .godaudits/AUDIT.json --write
+godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
+godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
+```
 
-- **Plan first**: godplans emits `.godplans/PLAN.mdx` where requirement `R-SEC-3` demands ownership predicates in every query.
-- **Build**: any agent executes the plan.
-- **Audit**: godaudits runs check `A-SEC-3` against the code. In plan-aware mode (it detects `.godplans/PLAN.mdx` automatically) every finding also cites the plan requirement it violates, and plan drift (checked tasks whose acceptance no longer holds) is audited as a first-class concern.
-- **Remediate and re-audit**: the emitted remediation plan uses the same GA task grammar, and its final task is always a re-audit, so the loop ends with a score delta, not a feeling.
+Import existing SARIF scanner results as evidence leads, never automatic
+findings:
 
-Either skill works alone. Together they close the loop.
+```bash
+godaudits import-sarif scanner.sarif --start 1000 --output .godaudits/TOOL-EVIDENCE.json
+```
 
-## Modes
+The Agent Skill orchestrates these commands and performs the domain judgment
+between initialization and validation.
 
-- **Fresh audit**: the full method against a codebase with no prior audit.
-- **Re-audit**: `.godaudits/AUDIT.mdx` exists; every open finding is re-inspected at the new commit, statuses flip with evidence, new findings get new ids, history is never rewritten, and the scorecard opens with a delta table.
-- **Plan-aware overlay**: `.godplans/PLAN.mdx` exists; conformance checks run inside every domain pass and findings carry R-ids next to A-ids.
+## Capability modes
+
+Static mode is the default:
+
+- Reads repository source and git metadata.
+- Writes only under `.godaudits/`.
+- Does not run the application, tests, migrations, live systems, product
+  network requests, or product model calls.
+
+Two stronger evidence modes are available only with explicit authority:
+
+- Sandbox: commands run in a disposable environment with outbound network
+  disabled and no production credentials.
+- Connected: explicitly authorized read-only evidence from CI, observability,
+  database metadata, or trackers, with query and provenance recorded.
+
+Static inference is never presented as runtime fact. Claims requiring stronger
+evidence stay Tentative or unknown.
+
+## Check catalog and scoring
+
+The generated catalog at
+[`skills/godaudits/catalog/checks.json`](skills/godaudits/catalog/checks.json)
+contains all checks, source modules, source lines, inspection guidance, failure
+guidance, scoring dimensions, routing behavior, and default weights.
+
+Risk profiles live in
+[`skills/godaudits/catalog/profiles.json`](skills/godaudits/catalog/profiles.json):
+
+- `balanced`: default general product risk.
+- `security-critical`: identity, money, regulated data, privileged actions, and
+  multi-tenant workloads.
+- `growth`: public products dominated by activation, visibility, conversion,
+  and launch execution.
+- `library`: libraries and developer tools dominated by compatibility, API
+  quality, maintainability, and repository discipline.
+
+The chosen profile is recorded in the audit and cannot be switched to improve a
+score without changing the machine state and audit trail. Every profile's
+domain weights total 100 and are validated with the generated catalog.
+
+## Validation
+
+`godaudits validate` rejects:
+
+- Missing domains or checks, unknown ids, stale pack versions, or modified
+  catalog weights.
+- Pass, fail, and not-applicable outcomes without evidence.
+- Failed checks without findings or open findings attached to passing checks.
+- Missing, duplicate, malformed, or unredacted sensitive evidence.
+- Certain Critical or High findings without two independent evidence paths.
+- One-way finding-task links, missing Critical or High closure, dependency
+  cycles, unsafe parallel file overlap, and incomplete final re-audit
+  dependencies.
+- Invalid, expired, or ownerless risk and open-question records.
+- Unknown compliance results without an owned question, or injected compliance
+  results without a finding and task.
+- Hand-authored scores or counters that disagree with derived state.
+
+Coverage caps prevent a polished subset from masquerading as a full audit.
+
+## Evaluation and benchmarks
+
+The built-in corpus covers Node API, Python worker, Go CLI, and clean Rust
+library fixtures. It tests deterministic evidence collection, archetype
+classification, absence evidence, clean controls, and secret redaction:
+
+```bash
+npm run benchmark
+```
+
+When an expected-finding manifest exists, evaluate an actual audit:
+
+```bash
+godaudits evaluate .godaudits/AUDIT.json expected.json
+```
+
+Metrics include recall, precision, severity accuracy, citation validity,
+remediation closure, clean-control rate, misses, and false positives. The
+built-in corpus is a runtime regression net, not proof that an unseen model
+audit is accurate.
+
+## Re-audits
+
+Re-audit mode preserves historical ids and compares compiled states:
+
+```bash
+godaudits diff .godaudits/archive/AUDIT-v1.json .godaudits/AUDIT.json
+```
+
+The delta reports added, resolved, reopened, changed, and improperly removed
+findings plus task, score, and coverage movement. It exits nonzero on project
+mismatch, invalid re-audit metadata, or removed finding and task history.
+Evidence hashes identify changed or moved source.
+
+## Portable prompts
+
+- `PROMPT.md` is compact. It contains the orchestrator and core contracts. It
+  is only suitable for focused audits when the requested domain modules are
+  separately available.
+- `PROMPT.full.md` contains all 18 modules and the report contract. Use it for a
+  standalone full audit when the client context window permits it.
+
+The compact prompt explicitly requires unavailable checks to remain unknown. It
+cannot silently claim a full audit.
 
 ## Tool support
 
-The canonical skill lives at `skills/godaudits/` in the Agent Skills format and works in every Agent Skills client. `install.sh` exploits path convergence, so six destinations cover the ecosystem:
-
-| Tool | Install path | Invoke |
+| Tool | Skill path | Invoke |
 |---|---|---|
 | Claude Code | `~/.claude/skills/godaudits` | `/godaudits` |
-| Codex CLI | `~/.agents/skills/godaudits` | `$godaudits` |
-| Cursor | reads `.agents` and `.claude` paths | `/godaudits` |
-| VS Code / Copilot | reads `.claude` and `.agents` paths; project `.github/skills` | `/godaudits` |
-| Zed | `~/.agents/skills/godaudits` | `/godaudits` |
-| OpenCode | reads `.claude` and `.agents` paths | auto |
-| Windsurf | reads compat paths; native `~/.codeium/windsurf/skills` | `@godaudits` |
-| Gemini CLI | `~/.agents/skills/godaudits` (or `gemini skills install <git-url>`) | auto |
-| Amp | reads `.agents` and `.claude` paths | auto |
+| Codex, Cursor, Zed, Gemini CLI, OpenCode, Amp | `~/.agents/skills/godaudits` | tool-native or auto |
 | Factory Droid | `~/.factory/skills/godaudits` | `/godaudits` |
 | Cline | `~/.cline/skills/godaudits` | auto |
-| T3 Chat | no skill support: paste [PROMPT.md](PROMPT.md) into Settings, Customization, or attach it to a chat | manual |
-| Aider | `aider --read PROMPT.md` | manual |
-| Any chat UI | paste [PROMPT.md](PROMPT.md) as the system prompt | manual |
+| Windsurf | `~/.codeium/windsurf/skills/godaudits` | `@godaudits` |
+| VS Code or Copilot project install | `.github/skills/godaudits` | `/godaudits` |
+| Aider or plain chat | `PROMPT.full.md` | attach or read |
 
-`PROMPT.md` is the generated single-file fallback (SKILL.md plus the load-bearing references, flattened). Regenerate with `bash scripts/build-prompt.sh`.
+The runtime is inside the canonical skill directory, so skill-only installs do
+not lose validation or rendering support.
 
-## Lineage
+## The godplans loop
 
-godaudits consolidates twelve skills into one command:
+godaudits mirrors [godplans](https://github.com/hannsxpeter/godplans):
 
-| Source | What carries over |
-|---|---|
-| [codeauditor](https://github.com/aihxp/codeauditor) | Code-quality lenses, the 7-phase audit method, scored reports |
-| [secauditor](https://github.com/aihxp/secauditor) | OWASP/CWE-grounded dimensions, paper-control hunting, automatic-Critical caps |
-| [dbauditor](https://github.com/aihxp/dbauditor) | Schema, indexing, transactions, migrations, data protection |
-| [llmauditor](https://github.com/aihxp/llmauditor) | LLM-integration dimensions: prompts, routing, cost, evals, guardrails |
-| [seoauditor](https://github.com/aihxp/seoauditor) | Search and AI-answer-engine visibility from the code alone |
-| [uiauditor](https://github.com/aihxp/uiauditor) | Accessibility, semantics, design-system consistency |
-| [uxauditor](https://github.com/aihxp/uxauditor) | Journeys, workflows, error states |
-| [arc-ready](https://github.com/aihxp/arc-ready) / [ready-suite](https://github.com/aihxp/ready-suite) | The tier disciplines audited as reality checks: PRD, architecture, roadmap, stack, repo, build, deploy, observe, launch, harden |
-| [pillars](https://github.com/aihxp/pillars) | The agent-memory standard, audited for presence and truthfulness |
-| [codedna](https://github.com/aihxp/codedna) | The style genome, fingerprinted and checked for drift |
-| [godplans](https://github.com/aihxp/godplans) | The shared R/A numbering, the task grammar, GFM-safe MDX, executor rules |
+- godplans requirement `R-SEC-3` demands ownership predicates.
+- godaudits check `A-SEC-3` evaluates them in built code.
+- Plan-aware findings carry both ids.
+- Remediation tasks preserve that traceability.
+- The final task is always a compiled re-audit.
 
-## Anthropic policy awareness
-
-godaudits is built to keep accounts clean, per the [Anthropic Usage Policy](https://www.anthropic.com/legal/aup):
-
-- A compliance gate screens every product before auditing it: prohibited purposes are refused with the policy category named (improving a prohibited product is facilitating it), and policy-risk components found in the code (undisclosed AI chat, subscription OAuth tokens wired into cron, scrapers without robots.txt respect) become mandatory compliance findings with remediation tasks.
-- The skill never coaches a model past a refusal and never suggests routing subscription OAuth outside official clients, the two behaviors most correlated with real-world account bans. Any remediation task that automates model calls specifies API-key auth.
-- The same screening logic applies in non-Claude harnesses; every provider has an equivalent policy.
-
-Details in [references/compliance.md](skills/godaudits/references/compliance.md).
+Either tool works alone. Together they close plan, build, audit, remediate, and
+verify into one id system.
 
 ## Repository map
 
 | Path | Role |
 |---|---|
-| `skills/godaudits/SKILL.md` | The orchestrator: ground rules, the 8-phase method, modes, refusals |
-| `skills/godaudits/references/` | 22 modules: 18 domain playbooks plus audit-format, intake, compliance, exemplar |
-| `skills/godaudits/templates/AUDIT.template.mdx` | The audit skeleton |
-| `.agents/skills/`, `.claude/skills/` | Symlink projections of the canonical skill |
-| `install.sh` | Six-destination installer; `--project`, `--tools`, `--copy`, `--uninstall` |
-| `PROMPT.md` | Generated portable fallback |
-| `scripts/lint.sh` | Meta-linter: unicode cleanliness, version parity, module contracts, PROMPT freshness |
-| `docs/ABOUT.md` | The long-form writeup: why godaudits exists and how it was designed |
+| `skills/godaudits/SKILL.md` | Canonical orchestrator |
+| `skills/godaudits/references/` | Core contracts and 18 domain modules |
+| `skills/godaudits/catalog/` | Generated checks and versioned risk profiles |
+| `skills/godaudits/schemas/` | Audit, evidence, and benchmark schemas |
+| `skills/godaudits/runtime/` | Self-contained zero-dependency engine |
+| `skills/godaudits/policies/` | Versioned compliance policy packs |
+| `benchmarks/` | Multi-language deterministic corpus |
+| `test/` | Compiler, evidence, renderer, evaluator, init, diff, and SARIF tests |
+| `scripts/lint.sh` | Repository, runtime, catalog, schema, benchmark, and prompt gates |
+| `docs/ENGINE.md` | Runtime architecture and invariants |
+| `docs/EVALUATION.md` | Benchmark and accuracy methodology |
+| `docs/MIGRATION-2.0.md` | Version 1 to version 2 migration |
+| `docs/THREAT-MODEL.md` | Auditor safety and evidence threat model |
 
-## FAQ
+## Development
 
-**Why MDX?** The audit drops into MDX pipelines (Docusaurus, Nextra, Fumadocs) and MDX-native viewers, but the body is written GFM-safe: plain GitHub-flavored markdown that is simultaneously valid MDX. Rename to `AUDIT.md` any time for GitHub rich rendering; nothing is lost.
+```bash
+npm test
+npm run benchmark
+npm run catalog
+npm run build:prompt
+npm run check
+```
 
-**Does godaudits fix the findings?** No. It audits, then plans the fix. The emitted AUDIT.mdx carries its own executor rules, so any coding agent can remediate from it. That separation is deliberate: an auditor that edits while it audits invalidates its own evidence.
-
-**Is it safe to run on production code?** Yes, by construction: godaudits never edits source, never runs the application or its tests, never connects to a live database, never calls a model, and writes only under `.godaudits/`.
-
-**What if my project has no UI / no LLM / no public pages?** Every domain is either audited or excluded with a stated reason in the applicability matrix. A CLI tool excludes seo with a reason; it never gets a hollow SEO section or a padded score.
-
-**How is this different from running seven separate audit skills?** One command, one read of the repository instead of seven, an ownership map so one root cause is never billed in four domains, one combined scorecard with caps, and one remediation plan in a single executable grammar. It also audits what single-dimension tools never look at: product promises, architecture reality, delivery, deployment, observability, launch readiness, and the project's AI-instruction files. The standalone skills it grew from are in [Lineage](#lineage).
+Generated catalog and prompts have non-mutating freshness checks in CI. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE). Contributions welcome; read [CONTRIBUTING.md](CONTRIBUTING.md) first, especially the mechanically enforced style rules.
+[MIT](LICENSE)

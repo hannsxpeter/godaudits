@@ -1,6 +1,6 @@
 # Architecture audit module
 
-Runs the architecture discipline forward against built code: does the system have a defensible shape, real boundaries, arithmetic behind its NFR claims, and decision records that match what actually ships. Findings land as F-ARCH-n and a 0-100 domain score in AUDIT.mdx. The orchestrator loads this module during the architecture domain pass for every archetype except pure marketing sites with a single static deployable, where the load-bearing check fails and the exclusion is recorded in the applicability matrix with that reason.
+Runs the architecture discipline forward against built code: does the system have a defensible shape, real boundaries, arithmetic behind its NFR claims, and decision records that match what actually ships. Findings land as F-ARCH-n and a 0-100 domain score in AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module during the architecture domain pass for every archetype except pure marketing sites with a single static deployable, where the load-bearing check fails and the exclusion is recorded in the applicability matrix with that reason.
 
 ## Lineage
 
@@ -103,7 +103,7 @@ Weighted dimensions summing to 100. Conditional dimensions drop out and the rest
 - Trust boundary placement (A-ARCH-13): 15, conditional on a network surface the project owns
 - Decision records and drift (A-ARCH-14 to A-ARCH-19): 10
 
-Any open Critical finding caps this domain at 69.
+Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

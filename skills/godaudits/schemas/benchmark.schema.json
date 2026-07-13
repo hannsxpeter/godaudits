@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/benchmark.schema.json",
+  "title": "godaudits benchmark expectation",
+  "type": "object",
+  "required": ["required_findings", "clean_checks"],
+  "properties": {
+    "required_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check", "severity", "path"],
+        "properties": {
+          "check": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" },
+          "severity": { "enum": ["Critical", "High", "Medium", "Low"] },
+          "path": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "clean_checks": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

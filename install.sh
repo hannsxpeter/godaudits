@@ -4,7 +4,7 @@
 # Usage:
 #   ./install.sh                       install globally for every detected tool
 #   ./install.sh --project [dir]       install into a project (default: cwd)
-#   ./install.sh --tools claude,codex  limit targets (agents,claude,factory,cline,windsurf,copilot-cloud)
+#   ./install.sh --tools claude,agents limit targets (agents,claude,factory,cline,windsurf,copilot-cloud)
 #   ./install.sh --copy                copy instead of symlink (Windows, some CI)
 #   ./install.sh --uninstall           remove exactly what this script created
 #
@@ -36,6 +36,7 @@ PROJECT_DIR=""
 TOOLS="all"
 LINK_MODE="symlink"
 ACTION="install"
+PLACED=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -56,6 +57,23 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+if [ "$TOOLS" != "all" ]; then
+  old_ifs=$IFS
+  IFS=,
+  for tool in $TOOLS; do
+    case "$tool" in
+      agents|claude|factory|cline|windsurf|copilot-cloud) ;;
+      *) echo "Unknown tool: $tool (try --help)" >&2; exit 1 ;;
+    esac
+  done
+  IFS=$old_ifs
+fi
+if [ "$MODE" = "global" ] && [ "$TOOLS" != "all" ]; then
+  case ",$TOOLS," in
+    *,copilot-cloud,*) echo "copilot-cloud requires --project" >&2; exit 1 ;;
+  esac
+fi
+
 wants() {
   [ "$TOOLS" = "all" ] && return 0
   case ",$TOOLS," in *",$1,"*) return 0 ;; *) return 1 ;; esac
@@ -65,8 +83,15 @@ place() {
   label=$1
   dest_root=$2
   dest="$dest_root/$SKILL_NAME"
+  if [ -L "$dest" ] || [ -e "$dest" ]; then
+    if [ ! -f "$dest/INSTALLER-MANAGED" ] || ! grep -qx 'godaudits install.sh managed destination' "$dest/INSTALLER-MANAGED"; then
+      echo "Refusing to replace or remove unowned destination: $dest" >&2
+      echo "Move it aside manually, then run the installer again." >&2
+      return 1
+    fi
+  fi
   if [ "$ACTION" = "uninstall" ]; then
-    if [ -L "$dest" ] || [ -d "$dest" ]; then
+    if [ -L "$dest" ] || [ -e "$dest" ]; then
       rm -rf "$dest"
       echo "Removed $dest ($label)"
     fi
@@ -80,6 +105,7 @@ place() {
     cp -R "$SKILL_SRC" "$dest"
     echo "Copied  $SKILL_SRC -> $dest ($label)"
   fi
+  PLACED=$((PLACED + 1))
 }
 
 if [ "$MODE" = "project" ]; then
@@ -96,10 +122,16 @@ else
 fi
 
 if [ "$ACTION" = "install" ] && [ -x "$SRC_DIR/scripts/build-prompt.sh" ]; then
-  "$SRC_DIR/scripts/build-prompt.sh" >/dev/null 2>&1 || true
+  if ! "$SRC_DIR/scripts/build-prompt.sh" --check >/dev/null 2>&1; then
+    echo "Warning: generated portable prompts are stale; run npm run build:prompt." >&2
+  fi
 fi
 
 if [ "$ACTION" = "install" ]; then
+  if [ "$PLACED" -eq 0 ]; then
+    echo "No matching tool destinations were available." >&2
+    exit 1
+  fi
   cat <<EOF
 
 godaudits v$VERSION installed.
@@ -107,11 +139,11 @@ godaudits v$VERSION installed.
 Invoke: /godaudits (Claude Code, Cursor, VS Code, Zed, Factory)
         \$godaudits (Codex)   @godaudits (Windsurf)   auto-trigger elsewhere
 
-Alternative install: npx skills add aihxp/godaudits
+Alternative install: npx skills add hannsxpeter/godaudits
 
 No-skill-support tools:
-  T3 Chat: paste PROMPT.md into Settings > Customization, or attach it to a chat.
-  Aider:   aider --read PROMPT.md   (or add to .aider.conf.yml read: list)
-  Any chat UI: paste PROMPT.md as the system prompt.
+  T3 Chat: use PROMPT.md for focused audits or attach PROMPT.full.md for all domains.
+  Aider:   aider --read PROMPT.full.md
+  Any chat UI: attach PROMPT.full.md when the context window permits it.
 EOF
 fi

@@ -1,0 +1,4 @@
+[project]
+name = "benchmark-worker"
+version = "0.0.0"
+dependencies = ["requests"]
