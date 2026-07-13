@@ -3,6 +3,7 @@
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const { validateProjectContextCatalog } = require('./project-context');
 
 const MODULES = [
   ['product', 'product.md'],
@@ -31,6 +32,7 @@ const ROUTING_CHECKS = new Set([
   'A-SEC-2',
   'A-SEC-24',
   'A-SEC-25',
+  'A-SEC-28',
   'A-LLM-23',
   'A-UX-20',
   'A-SEO-22',
@@ -160,7 +162,13 @@ function buildCatalog(root) {
   const skillRoot = resolveSkillRoot(root);
   const references = path.join(skillRoot, 'references');
   const profilesSource = fs.readFileSync(path.join(skillRoot, 'catalog/profiles.json'), 'utf8');
+  const standardsSource = fs.readFileSync(path.join(skillRoot, 'catalog/standards.json'), 'utf8');
+  const projectContextSource = fs.readFileSync(path.join(skillRoot, 'catalog/project-context.json'), 'utf8');
   const profiles = JSON.parse(profilesSource).profiles;
+  const standards = JSON.parse(standardsSource);
+  const projectContext = JSON.parse(projectContextSource);
+  const projectContextErrors = validateProjectContextCatalog(projectContext);
+  if (projectContextErrors.length) throw new Error(projectContextErrors.join('; '));
   const domainNames = MODULES.map(([domain]) => domain);
   for (const [name, profile] of Object.entries(profiles)) {
     const keys = Object.keys(profile.weights || {}).sort();
@@ -191,12 +199,39 @@ function buildCatalog(root) {
     sources.push(`${module}\n${source}`);
   }
   sources.push(`profiles.json\n${profilesSource}`);
+  sources.push(`standards.json\n${standardsSource}`);
+  sources.push(`project-context.json\n${projectContextSource}`);
 
   const duplicates = checks
     .map((check) => check.id)
     .filter((id, index, all) => all.indexOf(id) !== index);
   if (duplicates.length) {
     throw new Error(`duplicate check ids: ${[...new Set(duplicates)].join(', ')}`);
+  }
+
+  if (standards.schema_version !== '1.0' || !standards.frameworks || typeof standards.frameworks !== 'object') {
+    throw new Error('standards catalog must use schema_version 1.0 and define frameworks');
+  }
+  const checkMap = new Map(checks.map((check) => [check.id, check]));
+  for (const check of checks) check.standards = [];
+  for (const [frameworkId, framework] of Object.entries(standards.frameworks)) {
+    if (!framework.name || !Array.isArray(framework.categories) || framework.categories.length === 0) {
+      throw new Error(`standards framework ${frameworkId} requires a name and categories`);
+    }
+    const categoryIds = new Set();
+    for (const category of framework.categories) {
+      if (!category.id || !category.title || !Array.isArray(category.checks) || category.checks.length === 0) {
+        throw new Error(`standards framework ${frameworkId} contains an incomplete category`);
+      }
+      if (categoryIds.has(category.id)) throw new Error(`duplicate standards category ${frameworkId}/${category.id}`);
+      categoryIds.add(category.id);
+      if (new Set(category.checks).size !== category.checks.length) throw new Error(`${frameworkId}/${category.id} contains duplicate checks`);
+      for (const id of category.checks) {
+        const check = checkMap.get(id);
+        if (!check) throw new Error(`${frameworkId}/${category.id} references unknown check ${id}`);
+        check.standards.push(`${frameworkId}/${category.id}`);
+      }
+    }
   }
 
   const domainMap = new Map(domains.map((domain) => [domain.id, domain]));
@@ -242,6 +277,12 @@ function buildCatalog(root) {
     domain_count: domains.length,
     check_count: checks.length,
     profiles,
+    standards,
+    project_context: {
+      source: projectContext.source,
+      form_count: projectContext.forms.length,
+      profile_count: projectContext.profiles.length
+    },
     domains,
     checks
   };

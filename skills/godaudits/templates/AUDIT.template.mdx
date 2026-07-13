@@ -9,10 +9,13 @@ mode: fresh
 plan_aware: false
 commit: "COMMIT-SHA"
 archetype: ARCHETYPE
+project_form: PROJECT-FORM
+evidence_fingerprint_sha256: "SHA-256"
+evidence_commit: "COMMIT-SHA"
 scale: SCALE
 risk_profile: balanced
-engine_version: "2.0.0"
-pack_version: "2.0.0"
+engine_version: "2.1.0"
+pack_version: "2.1.0"
 overall: 0
 verdict: "critical condition"
 coverage: 0
@@ -59,6 +62,15 @@ All 18 domains appear. Excluded domains appear nowhere else.
 |---|---:|---|---:|
 | DOMAIN | 0 | none-or-cap | 0/0 |
 | Overall | 0 | coverage, critical, weak-domain caps | 0/0 |
+
+## Standards coverage
+
+| Framework | Category | Disposition | Checks | Evidence | Findings |
+|---|---|---|---|---|---|
+| owasp-web-2025 | A01:2025 Broken Access Control | pass-fail-unknown-not-applicable | A-SEC-n | E-n or none for unknown | F-SEC-n or none |
+
+All ten OWASP Web Top 10:2025 categories appear in a 2.1 initialized audit.
+Standards coverage routes to owning checks and adds no score weight.
 
 ## Check ledger
 

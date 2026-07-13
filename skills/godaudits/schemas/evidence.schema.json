@@ -9,6 +9,8 @@
     "root",
     "commit",
     "archetype",
+    "project_context",
+    "pillars",
     "manifests",
     "lockfiles",
     "languages",
@@ -19,27 +21,349 @@
     "fingerprint_sha256"
   ],
   "properties": {
-    "schema_version": { "const": "1.0" },
+    "schema_version": { "const": "1.1" },
     "mode": { "const": "static" },
-    "root": { "type": "string" },
-    "commit": { "type": "string" },
+    "root": { "$ref": "#/$defs/path" },
+    "commit": { "type": "string", "minLength": 1 },
     "archetype": {
       "type": "object",
       "required": ["primary", "confidence"],
       "properties": {
-        "primary": { "type": "string" },
-        "confidence": { "enum": ["Certain", "Firm", "Tentative"] }
+        "primary": { "type": "string", "minLength": 1 },
+        "confidence": { "$ref": "#/$defs/confidence" }
       },
       "additionalProperties": false
     },
-    "manifests": { "type": "array", "items": { "type": "string" } },
-    "lockfiles": { "type": "array", "items": { "type": "string" } },
-    "languages": { "type": "object", "additionalProperties": { "type": "integer" } },
-    "files": { "type": "array", "items": { "type": "object" } },
-    "signals": { "type": "array", "items": { "type": "object" } },
-    "absence_evidence": { "type": "array", "items": { "type": "object" } },
-    "limitations": { "type": "array", "items": { "type": "string" } },
-    "fingerprint_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+    "project_context": { "$ref": "#/$defs/projectContext" },
+    "pillars": { "$ref": "#/$defs/pillars" },
+    "manifests": { "type": "array", "items": { "$ref": "#/$defs/path" }, "uniqueItems": true },
+    "lockfiles": { "type": "array", "items": { "$ref": "#/$defs/path" }, "uniqueItems": true },
+    "languages": {
+      "type": "object",
+      "propertyNames": { "minLength": 1 },
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "files": { "type": "array", "items": { "$ref": "#/$defs/file" } },
+    "signals": { "type": "array", "items": { "$ref": "#/$defs/signal" } },
+    "absence_evidence": { "type": "array", "items": { "$ref": "#/$defs/absence" } },
+    "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+    "fingerprint_sha256": { "$ref": "#/$defs/hash" }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*(?:^|/)\\.\\.(?:/|$)).+$" },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nullableHash": { "oneOf": [{ "$ref": "#/$defs/hash" }, { "type": "null" }] },
+    "confidence": { "enum": ["Certain", "Firm", "Tentative"] },
+    "formEvidence": {
+      "type": "object",
+      "required": ["signal_id", "kind", "path", "weight", "reason"],
+      "properties": {
+        "signal_id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["path", "content"] },
+        "path": { "$ref": "#/$defs/path" },
+        "weight": { "type": "number", "minimum": 0 },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "formCandidate": {
+      "type": "object",
+      "required": ["id", "label", "score", "confidence", "evidence"],
+      "properties": {
+        "id": { "enum": ["unknown", "web-application", "api-service", "cli-sdk", "mobile-desktop", "data-ml", "infrastructure-iac"] },
+        "label": { "type": "string", "minLength": 1 },
+        "score": { "type": "number", "minimum": 0 },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/formEvidence" } }
+      },
+      "additionalProperties": false
+    },
+    "profileEvidence": {
+      "type": "object",
+      "required": ["kind", "path", "signal", "reason"],
+      "properties": {
+        "kind": { "const": "content" },
+        "path": { "$ref": "#/$defs/path" },
+        "signal": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "profileCandidate": {
+      "type": "object",
+      "required": ["profile_id", "slug", "name", "stack_profile", "common_forms", "status", "confidence", "score", "reasons", "evidence"],
+      "properties": {
+        "profile_id": { "type": "integer", "minimum": 1, "maximum": 37 },
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "stack_profile": { "type": "string", "minLength": 1 },
+        "common_forms": { "type": "array", "items": { "enum": ["web-application", "api-service", "cli-sdk", "mobile-desktop", "data-ml", "infrastructure-iac"] }, "uniqueItems": true },
+        "status": { "const": "candidate" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "score": { "type": "number", "minimum": 1 },
+        "reasons": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/profileEvidence" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "regulatoryCandidate": {
+      "type": "object",
+      "required": ["id", "label", "status", "confidence", "reasons", "evidence"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "label": { "type": "string", "minLength": 1 },
+        "status": { "const": "candidate" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "reasons": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/profileEvidence" }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["id", "tier", "path", "source", "present", "bytes", "sha256", "mtime_ms", "changed_at_ms", "timestamp_source", "empty", "unreadable"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "tier": { "type": ["string", "null"] },
+        "path": { "$ref": "#/$defs/path" },
+        "source": { "enum": ["arc-ready", "ready-suite-legacy", "arc-ready-companion"] },
+        "present": { "type": "boolean" },
+        "bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/nullableHash" },
+        "mtime_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "changed_at_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "timestamp_source": { "enum": ["git-last-change", "filesystem-mtime-fallback", null] },
+        "empty": { "type": ["boolean", "null"] },
+        "unreadable": { "type": "boolean" },
+        "replaced_by": { "$ref": "#/$defs/path" }
+      },
+      "additionalProperties": false
+    },
+    "contextIssue": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "tier": { "type": ["string", "null"] },
+        "status": { "type": "string" },
+        "path": { "type": "string" },
+        "upstream": { "$ref": "#/$defs/path" },
+        "depends_on": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "ledgerStatus": {
+      "type": "object",
+      "required": ["tier", "label", "status", "declared_artifacts"],
+      "properties": {
+        "step": { "type": "integer", "minimum": 1 },
+        "tier": { "type": "string", "minLength": 1 },
+        "tier_name": { "type": "string", "minLength": 1 },
+        "label": { "type": ["string", "null"] },
+        "status": { "enum": ["pending", "in-flight", "done", "skipped", "imported", "failed", "re-invoked"] },
+        "declared_artifacts": { "type": "array", "items": { "$ref": "#/$defs/path" }, "uniqueItems": true },
+        "invocation_ts": { "type": ["string", "null"] },
+        "verification_ts": { "type": ["string", "null"] },
+        "disk_state_hash": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "projectContext": {
+      "type": "object",
+      "required": ["schema_version", "catalog_source", "mode", "root", "project_forms", "product_archetype", "industry_overlays", "regulatory_overlays", "artifacts", "limitations", "fingerprint_sha256"],
+      "properties": {
+        "schema_version": { "const": "1.0" },
+        "catalog_source": { "const": "arc-ready@1.1.0" },
+        "mode": { "const": "static-local" },
+        "root": { "$ref": "#/$defs/path" },
+        "project_forms": {
+          "type": "object",
+          "required": ["primary", "secondary", "candidates"],
+          "properties": {
+            "primary": { "$ref": "#/$defs/formCandidate" },
+            "secondary": { "type": "array", "items": { "$ref": "#/$defs/formCandidate" } },
+            "candidates": { "type": "array", "items": { "$ref": "#/$defs/formCandidate" } }
+          },
+          "additionalProperties": false
+        },
+        "product_archetype": {
+          "type": "object",
+          "required": ["primary", "candidates"],
+          "properties": {
+            "primary": { "oneOf": [{ "$ref": "#/$defs/profileCandidate" }, { "type": "null" }] },
+            "candidates": { "type": "array", "items": { "$ref": "#/$defs/profileCandidate" } }
+          },
+          "additionalProperties": false
+        },
+        "industry_overlays": { "type": "array", "items": { "$ref": "#/$defs/profileCandidate" } },
+        "regulatory_overlays": { "type": "array", "items": { "$ref": "#/$defs/regulatoryCandidate" } },
+        "artifacts": {
+          "type": "object",
+          "required": ["canonical", "legacy", "discovered", "ledger", "freshness", "prepublication"],
+          "properties": {
+            "canonical": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+            "legacy": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+            "discovered": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+            "ledger": {
+              "type": "object",
+              "required": ["source", "format", "statuses", "issues"],
+              "properties": {
+                "source": { "oneOf": [{ "$ref": "#/$defs/path" }, { "type": "null" }] },
+                "format": { "enum": ["arc-ready-1.1-table", "legacy-bullets", null] },
+                "statuses": { "type": "array", "items": { "$ref": "#/$defs/ledgerStatus" } },
+                "issues": { "type": "array", "items": { "$ref": "#/$defs/contextIssue" } }
+              },
+              "additionalProperties": false
+            },
+            "freshness": {
+              "type": "object",
+              "required": ["method", "issues"],
+              "properties": {
+                "method": { "const": "git-last-change-with-mtime-fallback" },
+                "issues": { "type": "array", "items": { "$ref": "#/$defs/contextIssue" } }
+              },
+              "additionalProperties": false
+            },
+            "prepublication": {
+              "type": "object",
+              "required": ["present", "status", "issues"],
+              "properties": {
+                "present": { "type": "boolean" },
+                "status": { "enum": ["not-recorded", "pass", "block", "invalid"] },
+                "checked_at": { "type": ["string", "null"] },
+                "hardening_revision": { "type": ["string", "null"] },
+                "hardening_revision_matches_content": { "type": ["boolean", "null"] },
+                "hardening_revision_match_kind": { "enum": ["content-sha256", "git-revision", null] },
+                "verdict": { "enum": ["pass", "block", null] },
+                "issues": { "type": "array", "items": { "$ref": "#/$defs/contextIssue" } }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "fingerprint_sha256": { "$ref": "#/$defs/hash" }
+      },
+      "additionalProperties": false
+    },
+    "pillarFinding": {
+      "type": "object",
+      "required": ["severity", "code", "path", "message"],
+      "properties": {
+        "severity": { "enum": ["error", "warning"] },
+        "code": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "path": { "$ref": "#/$defs/path" },
+        "message": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "pillarScope": {
+      "type": "object",
+      "required": ["label", "root", "pillars", "excluded", "absent", "always_loaded"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "root": { "$ref": "#/$defs/path" },
+        "pillars": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "excluded": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "absent": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "always_loaded": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "pillarRouteDetail": {
+      "type": "object",
+      "required": ["qualified", "scope", "identity", "status", "always_load", "path", "reasons", "effective"],
+      "properties": {
+        "qualified": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "identity": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["present", "stub"] },
+        "always_load": { "type": "boolean" },
+        "path": { "$ref": "#/$defs/path" },
+        "reasons": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "effective": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "pillarRouting": {
+      "type": "object",
+      "required": ["load", "primaries", "absent", "stubs", "reasons", "winners", "details", "applicable_scopes"],
+      "properties": {
+        "load": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "primaries": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "absent": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "stubs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "reasons": {
+          "type": "object",
+          "additionalProperties": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true }
+        },
+        "winners": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+        "details": { "type": "array", "items": { "$ref": "#/$defs/pillarRouteDetail" } },
+        "applicable_scopes": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "pillars": {
+      "type": "object",
+      "required": ["standard", "version", "present", "compatible", "scopes", "routing", "findings"],
+      "properties": {
+        "standard": { "const": "Pillars" },
+        "version": { "const": "1.1.0" },
+        "present": { "type": "boolean" },
+        "root": { "const": "." },
+        "target": { "$ref": "#/$defs/path" },
+        "task": { "type": "string" },
+        "compatible": { "type": ["boolean", "null"] },
+        "scopes": { "type": "array", "items": { "$ref": "#/$defs/pillarScope" } },
+        "routing": { "oneOf": [{ "$ref": "#/$defs/pillarRouting" }, { "type": "null" }] },
+        "findings": { "type": "array", "items": { "$ref": "#/$defs/pillarFinding" } },
+        "errors": { "type": "array", "items": { "$ref": "#/$defs/pillarFinding" } },
+        "warnings": { "type": "array", "items": { "$ref": "#/$defs/pillarFinding" } }
+      },
+      "additionalProperties": false
+    },
+    "file": {
+      "type": "object",
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "lines": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/nullableHash" },
+        "binary": { "const": true },
+        "skipped": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "signal": {
+      "type": "object",
+      "required": ["id", "kind", "path", "line", "quote", "sha256", "redacted"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S-[0-9]{4,}$" },
+        "kind": { "enum": ["possible-secret", "possible-private-key", "deferred-work", "empty-catch", "dangerous-eval", "unsafe-html", "shell-execution", "outbound-http", "database-access", "model-call", "api-surface"] },
+        "path": { "$ref": "#/$defs/path" },
+        "line": { "type": "integer", "minimum": 1 },
+        "quote": { "type": "string", "maxLength": 240 },
+        "sha256": { "$ref": "#/$defs/hash" },
+        "redacted": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "absence": {
+      "type": "object",
+      "required": ["id", "subject", "query", "scope", "result_count"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^A-[0-9]{4,}$" },
+        "subject": { "enum": ["continuous-integration", "test-suite", "dependency-lockfile", "agent-instructions"] },
+        "query": { "type": "string", "minLength": 1 },
+        "scope": { "const": "repository file inventory" },
+        "result_count": { "const": 0 }
+      },
+      "additionalProperties": false
+    }
+  }
 }

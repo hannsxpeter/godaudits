@@ -1,0 +1,3 @@
+name: audit_data_fixture
+model-paths:
+  - models

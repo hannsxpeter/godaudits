@@ -4,13 +4,14 @@ Runs the architecture discipline forward against built code: does the system hav
 
 ## Lineage
 
-Descends from architecture-ready (aihxp ready-suite, consolidated in arc-ready) through the godplans architecture module, whose R-ARCH numbering this module mirrors one to one. What carries over into audit time: every box, arrow, and ADR must have a flip point and blast radius or it is decoration; storage shape precedes database name; NFR claims are arithmetic, not adjectives; trust boundaries are placements the threat model can copy verbatim; the substitution test cuts horoscope prose; and the paper-control hunt (fitness functions named but never wired, diagrams that diagram nothing shipped) is the method DNA. godplans forced these as plan-time requirements; this module checks whether the code, not the plan, honors them.
+Descends from architecture-ready through arc-ready 1.1 and the godplans architecture module, whose R-ARCH numbering this module mirrors one to one. What carries over into audit time: every box, arrow, and ADR must have a flip point and blast radius or it is decoration; storage shape precedes database name; NFR claims are arithmetic, not adjectives; trust boundaries are placements the threat model can copy verbatim; the substitution test cuts horoscope prose; and the paper-control hunt (fitness functions named but never wired, diagrams that diagram nothing shipped) is the method DNA. Arc-ready 1.1 adds canonical artifact inventory and dependency-aware freshness: architecture claims are checked against `.arc-ready/PROGRESS.md`, upstream requirement artifacts, and downstream roadmap and stack timestamps. godplans forced these as plan-time requirements; this module checks whether the code, not the plan, honors them.
 
 ## Surface map
 
 Inventory before any check runs. The intake fingerprint already lists entry points, deployables, the data layer, HTTP surfaces, and monorepo layout: cite it, never re-scan.
 
 - Architecture records: `docs/adr/`, `docs/architecture/`, `.architecture-ready/`, `ARCH.md`, and in plan-aware mode the architecture section of `.godplans/PLAN.mdx`.
+- Arc-ready state: `.arc-ready/PROGRESS.md` as the canonical tier ledger, with `.kickoff-ready/PROGRESS.md` accepted only as a legacy import alias. Record missing claimed artifacts, unclaimed artifacts, invalid status values, and downstream artifacts older than changed architecture inputs.
 - Diagram sources: `*.mmd`, `*.puml`, `*.d2`, `structurizr*`, mermaid fences inside docs; also image-only exports (`docs/**/*.png` with no text source).
 - Deployable count beyond the fingerprint: `Dockerfile*`, `docker-compose*.yml`, `Procfile`, `serverless.yml`, `k8s/`, `helm/`, `fly.toml`, workspace packages with their own start scripts.
 - Heavy pattern signals: `kafkajs`, `kafka-python`, `confluent` in manifests; `istio`/`linkerd` configs; API gateway configs; event-store or CQRS libraries.

@@ -4,6 +4,8 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
+const { analyzeProjectContext, isExcludedContextPath } = require('./project-context');
+const { analyzePillars } = require('./pillars');
 
 const EXCLUDED = new Set(['.git', '.godaudits', 'node_modules', 'vendor', 'dist', 'build', 'coverage', '.next', 'target']);
 const TEXT_EXTENSIONS = new Set(['.c', '.cc', '.cpp', '.cs', '.css', '.go', '.h', '.html', '.java', '.js', '.jsx', '.json', '.kt', '.md', '.mdx', '.php', '.prisma', '.py', '.rb', '.rs', '.scss', '.sh', '.sql', '.swift', '.toml', '.ts', '.tsx', '.vue', '.xml', '.yaml', '.yml']);
@@ -111,6 +113,7 @@ function fingerprintRepository(root) {
   const signals = [];
   const languages = {};
   const sourceContents = [];
+  const contentsByPath = {};
 
   for (const relative of paths) {
     const absolute = path.join(absoluteRoot, relative);
@@ -132,6 +135,7 @@ function fingerprintRepository(root) {
     const lines = content.split(/\r?\n/);
     files.push({ path: relative, bytes: stat.size, lines: lines.length, sha256: digest });
     sourceContents.push(content);
+    contentsByPath[relative] = content;
     const language = languageFor(relative);
     if (language) languages[language] = (languages[language] || 0) + lines.length;
     for (let index = 0; index < lines.length; index += 1) {
@@ -171,12 +175,21 @@ function fingerprintRepository(root) {
     result_count: 0
   }));
 
-  return {
-    schema_version: '1.0',
+  const projectContext = analyzeProjectContext(absoluteRoot, paths, contentsByPath);
+  const contextPaths = paths.filter((relative) => !isExcludedContextPath(relative));
+  const hasPillars = contextPaths.some((relative) => /(^|\/)AGENTS\.md$/.test(relative))
+    && contextPaths.some((relative) => /(^|\/)agents\/.*\.md$/.test(relative));
+  const pillars = hasPillars
+    ? analyzePillars(absoluteRoot, { task: '', target: '.' })
+    : { standard: 'Pillars', version: '1.1.0', present: false, compatible: null, scopes: [], routing: null, findings: [] };
+  const result = {
+    schema_version: '1.1',
     mode: 'static',
     root: path.basename(absoluteRoot),
     commit: gitCommit(absoluteRoot),
     archetype: detectArchetype(paths, sourceContents),
+    project_context: projectContext,
+    pillars,
     manifests: paths.filter((file) => MANIFESTS.has(path.basename(file))),
     lockfiles: paths.filter((file) => LOCKFILES.has(path.basename(file))),
     languages,
@@ -186,8 +199,17 @@ function fingerprintRepository(root) {
     limitations: [
       'Static evidence only. No application code, tests, live systems, models, or network requests were executed.',
       'Regex signals are inventory leads, not findings. A domain evaluator must trace and refute them.'
-    ],
-    fingerprint_sha256: hash(JSON.stringify({ paths: files.map((file) => [file.path, file.sha256]), signals, absenceEvidence }))
+    ]
+  };
+  return {
+    ...result,
+    fingerprint_sha256: hash(JSON.stringify({
+      paths: files.map((file) => [file.path, file.sha256]),
+      signals,
+      absenceEvidence,
+      project_context: projectContext.fingerprint_sha256,
+      pillars
+    }))
   };
 }
 

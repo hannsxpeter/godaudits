@@ -1,6 +1,6 @@
 # Audit state and report contract
 
-godaudits 2.0 separates machine state from presentation:
+godaudits 2.1 separates machine state from presentation while keeping 2.0 audit documents valid:
 
 - `.godaudits/AUDIT.json` is the canonical, schema-versioned source of truth.
 - `.godaudits/AUDIT.mdx` is a generated standalone human and agent report.
@@ -29,7 +29,7 @@ After intake determines name, archetype, scale, and applicability, initialize
 the state from the generated catalog:
 
 ```bash
-godaudits init --name PROJECT --archetype ARCHETYPE --scale SCALE --profile PROFILE --applicable all --output .godaudits/AUDIT.json
+godaudits init --name PROJECT --archetype ARCHETYPE --scale SCALE --profile PROFILE --applicable all --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
 ```
 
 Focused audits pass a comma-separated domain list. The initializer writes all
@@ -43,6 +43,8 @@ coverage until evaluated.
 
 - `name`, `audit_version`, `status`, `created`, `updated`, and `mode`.
 - `plan_aware`, audited `commit`, `archetype`, `scale`, and `risk_profile`.
+- Optional `project_form`, `secondary_forms`, and `domain_overlays` preserve the four-axis intake result while `archetype` remains the compatibility field.
+- Optional `evidence_fingerprint_sha256` and `evidence_commit` bind the audit to the evidence snapshot. Release and re-audit gates require them.
 - `engine_version` and `pack_version`.
 - `capabilities`: static, plus explicitly authorized sandbox or connected
   evidence capabilities.
@@ -50,6 +52,10 @@ coverage until evaluated.
 
 The compiler writes `computed`: coverage, domain scores, caps, overall score,
 verdict, and counters. Computed state is derived and may always be rebuilt.
+
+## Standards ledger
+
+The optional `standards` array records framework, category, title, disposition, mapped checks, evidence, and finding ids. Version 2.1 initialization emits all ten OWASP Web Top 10:2025 categories. A category may be pass, fail, unknown, or not-applicable. Pass, fail, and not-applicable require evidence; fail also requires a finding. Standards checks do not add score. They expose coverage and route defects to the existing weighted owning checks.
 
 ## Evidence grammar
 
@@ -243,7 +249,7 @@ Verdict bands remain: 90-100 audit-proof, 80-89 solid, 70-79 needs work,
 ## Compile, validate, and render
 
 ```bash
-godaudits validate .godaudits/AUDIT.json --write
+godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 ```
@@ -252,7 +258,7 @@ Validation checks structure plus cross-record semantics: catalog completeness,
 pack version, ids, evidence, weights, check outcomes, finding closure,
 reciprocal links, dependency cycles, final-gate closure, accepted-risk expiry
 shape, compliance ownership, parallel file isolation, session-log size, scores,
-counters, and secret redaction. `not-applicable` requires absence evidence.
+counters, standards coverage, evidence freshness, and secret redaction. `not-applicable` requires absence evidence.
 Certain Critical and High findings require two independent evidence paths.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII

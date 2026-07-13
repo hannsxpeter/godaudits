@@ -34,7 +34,7 @@ must be recorded in `audit.capabilities`.
   It refuses unowned destinations. It never elevates, downloads, or evaluates
   remote content.
 - **Supply chain.** Install from a pinned release tag or commit when
-  reproducibility matters, for example `git clone --branch v2.0.0`.
+  reproducibility matters, for example `git clone --branch v2.1.0`.
 
 The detailed model and trust boundaries are in
 [`docs/THREAT-MODEL.md`](docs/THREAT-MODEL.md).
@@ -42,7 +42,7 @@ The detailed model and trust boundaries are in
 ## Supported versions
 
 Security fixes are released for the latest major version. Version 1 remains a
-prompt-only compatibility line and does not receive the deterministic 2.0
+prompt-only compatibility line and does not receive the deterministic 2.x
 validation guarantees.
 
 ## Reporting a vulnerability

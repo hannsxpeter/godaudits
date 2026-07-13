@@ -39,6 +39,36 @@ function initAudit(catalog, options) {
       })) : []
     };
   });
+  const standards = Object.entries(catalog.standards.frameworks).flatMap(([framework, definition]) => (
+    definition.categories.map((category) => ({
+      framework,
+      category: category.id,
+      title: category.title,
+      status: 'unknown',
+      checks: [...category.checks],
+      evidence: [],
+      finding_ids: []
+    }))
+  ));
+  const evidenceMetadata = options.evidence ? {
+    evidence_fingerprint_sha256: options.evidence.fingerprint_sha256,
+    evidence_commit: options.evidence.commit,
+    ...(options.evidence.project_context ? {
+      project_form: options.evidence.project_context.project_forms.primary.id,
+      secondary_forms: options.evidence.project_context.project_forms.secondary.map((form) => form.id),
+      domain_overlays: [
+        ...options.evidence.project_context.product_archetype.candidates.map((item) => ({
+          axis: 'product', id: item.slug, status: item.status, confidence: item.confidence, requires_verification: false
+        })),
+        ...options.evidence.project_context.industry_overlays.map((item) => ({
+          axis: 'industry', id: item.slug, status: item.status, confidence: item.confidence, requires_verification: false
+        })),
+        ...options.evidence.project_context.regulatory_overlays.map((item) => ({
+          axis: 'regulatory', id: item.id, status: item.status, confidence: item.confidence, requires_verification: true
+        }))
+      ]
+    } : {})
+  } : {};
   return {
     schema_version: '2.0',
     audit: {
@@ -55,6 +85,7 @@ function initAudit(catalog, options) {
       risk_profile: riskProfile,
       engine_version: catalog.pack_version,
       pack_version: catalog.pack_version,
+      ...evidenceMetadata,
       capabilities: ['static'],
       assumptions: []
     },
@@ -64,6 +95,7 @@ function initAudit(catalog, options) {
       policy_pack: options.policyPack || 'provider-neutral@1'
     },
     domains,
+    standards,
     evidence: [],
     strengths: [],
     findings: [],

@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "frameworks": {
+    "owasp-web-2025": {
+      "name": "OWASP Web Top 10:2025",
+      "source": "https://owasp.org/Top10/2025/",
+      "categories": [
+        {
+          "id": "A01:2025",
+          "title": "Broken Access Control",
+          "checks": ["A-SEC-3", "A-SEC-4", "A-SEC-5", "A-SEC-10"]
+        },
+        {
+          "id": "A02:2025",
+          "title": "Security Misconfiguration",
+          "checks": ["A-SEC-15", "A-SEC-16", "A-SEC-22"]
+        },
+        {
+          "id": "A03:2025",
+          "title": "Software Supply Chain Failures",
+          "checks": ["A-SEC-17", "A-SEC-18", "A-SEC-26"]
+        },
+        {
+          "id": "A04:2025",
+          "title": "Cryptographic Failures",
+          "checks": ["A-SEC-11", "A-SEC-12", "A-SEC-13"]
+        },
+        {
+          "id": "A05:2025",
+          "title": "Injection",
+          "checks": ["A-SEC-8", "A-SEC-9", "A-SEC-10"]
+        },
+        {
+          "id": "A06:2025",
+          "title": "Insecure Design",
+          "checks": ["A-SEC-1", "A-SEC-2", "A-SEC-16", "A-SEC-24", "A-SEC-25"]
+        },
+        {
+          "id": "A07:2025",
+          "title": "Authentication Failures",
+          "checks": ["A-SEC-6", "A-SEC-7"]
+        },
+        {
+          "id": "A08:2025",
+          "title": "Software or Data Integrity Failures",
+          "checks": ["A-SEC-10", "A-SEC-17", "A-SEC-19", "A-SEC-22"]
+        },
+        {
+          "id": "A09:2025",
+          "title": "Security Logging and Alerting Failures",
+          "checks": ["A-SEC-20", "A-OBS-7", "A-OBS-8", "A-OBS-9", "A-OBS-22"]
+        },
+        {
+          "id": "A10:2025",
+          "title": "Mishandling Exceptional Conditions",
+          "checks": ["A-SEC-28", "A-CODE-12", "A-CODE-13", "A-CODE-14", "A-ARCH-8", "A-ARCH-9", "A-DB-14", "A-DB-15", "A-DEPLOY-4", "A-DEPLOY-16", "A-OBS-22"]
+        }
+      ]
+    }
+  }
+}

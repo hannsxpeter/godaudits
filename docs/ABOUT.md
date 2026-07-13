@@ -11,11 +11,15 @@ Version 1 established the judgment discipline: evidence at file and line,
 adversarial refutation, root-cause clustering, one owning domain, calibrated
 severity, risk caps, strengths, and executable remediation tasks.
 
-Version 2 makes that discipline enforceable. The system now has two halves.
+Version 2 makes that discipline enforceable. Version 2.1 adds context and
+artifact truth: the auditor understands how a project is delivered, what
+domain overlays are only candidates, which agent memory actually loads, and
+whether upstream planning and hardening evidence is stale. The system has two
+halves.
 
 ## Judgment layer
 
-The Agent Skill and 18 reference modules define 414 checks across product,
+The Agent Skill and 18 reference modules define 419 checks across product,
 architecture, stack, database, security, LLM integration, UX, UI, SEO, code
 quality, style genome, agent memory, repository, build completeness, roadmap,
 deployment, observability, and launch readiness.
@@ -31,6 +35,9 @@ The bundled runtime performs operations where discretion is a liability:
 - Compile the authored modules into a versioned check catalog.
 - Fingerprint repository files, hashes, manifests, languages, signals, and
   absences without executing product code.
+- Detect six project forms, secondary surfaces, 37 arc-ready profile candidates,
+  and regulatory candidates without asserting legal applicability.
+- Validate Pillars 1.1 routing and arc-ready 1.1 artifact state.
 - Initialize every selected check as unknown.
 - Validate outcomes, evidence, ids, weights, reciprocal links, task DAGs, risk
   expiry, and final-gate closure.
@@ -42,7 +49,7 @@ The bundled runtime performs operations where discretion is a liability:
 ## Why the split matters
 
 A model is good at interpreting code in context. It should not be trusted to
-remember 414 checks, maintain counters by hand, reproduce score arithmetic,
+remember 419 checks, maintain counters by hand, reproduce score arithmetic,
 notice every broken cross-reference, or keep generated views synchronized.
 
 A deterministic program is good at those invariants. It cannot decide whether
@@ -58,6 +65,11 @@ requests. Runtime and connected evidence require explicit authority and retain
 their provenance. Secret values are masked before entering audit artifacts.
 Unknown stays visible and caps the verdict rather than being converted into a
 convenient pass.
+
+Evidence is also time-bound. Release-grade validation compares both repository
+fingerprint and commit, and the arc-ready launch gate compares its recorded
+hardening revision to current content. A formerly true audit cannot silently
+survive repository drift.
 
 ## The closed loop
 

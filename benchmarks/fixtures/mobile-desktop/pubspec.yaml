@@ -1,0 +1,3 @@
+name: audit_mobile_fixture
+flutter:
+  uses-material-design: true

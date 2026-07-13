@@ -5,6 +5,7 @@
       "name": "node-api-secret-and-route",
       "repo": "fixtures/node-api",
       "expected_archetype": "api-service",
+      "expected_project_form": "api-service",
       "required_signals": ["possible-secret", "api-surface"],
       "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"],
       "secret_fragments": ["benchmark-only-secret", "benchmark-only-password"]
@@ -20,6 +21,7 @@
       "name": "go-cli",
       "repo": "fixtures/go-cli",
       "expected_archetype": "cli-tool",
+      "expected_project_form": "cli-sdk",
       "required_signals": [],
       "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
     },
@@ -29,6 +31,38 @@
       "expected_archetype": "library",
       "required_signals": [],
       "forbidden_signals": ["possible-secret", "dangerous-eval", "shell-execution"]
+    },
+    {
+      "name": "web-application-form",
+      "repo": "fixtures/web-application",
+      "expected_archetype": "saas-dashboard",
+      "expected_project_form": "web-application",
+      "required_signals": [],
+      "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
+    },
+    {
+      "name": "mobile-desktop-form",
+      "repo": "fixtures/mobile-desktop",
+      "expected_archetype": "saas-dashboard",
+      "expected_project_form": "mobile-desktop",
+      "required_signals": [],
+      "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
+    },
+    {
+      "name": "data-ml-form",
+      "repo": "fixtures/data-ml",
+      "expected_archetype": "library",
+      "expected_project_form": "data-ml",
+      "required_signals": [],
+      "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
+    },
+    {
+      "name": "infrastructure-iac-form",
+      "repo": "fixtures/infrastructure-iac",
+      "expected_archetype": "library",
+      "expected_project_form": "infrastructure-iac",
+      "required_signals": [],
+      "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
     }
   ]
 }

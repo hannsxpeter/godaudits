@@ -13,15 +13,18 @@ const { initAudit } = require('./lib/init');
 const { renderAudit } = require('./lib/render');
 const { auditToSarif } = require('./lib/sarif');
 const { importSarif } = require('./lib/sarif-import');
+const { analyzePillars } = require('./lib/pillars');
+const { validateProjectContextCatalog } = require('./lib/project-context');
 
 const skillRoot = path.resolve(__dirname, '..');
 const packageRoot = path.resolve(skillRoot, '..', '..');
 
 function usage() {
   return `godaudits evidence [repo] [--output file]
+godaudits pillars [repo] --task "work description" [--target path] [--output file]
 godaudits catalog [--output file]
-godaudits init --name slug --archetype type --scale scale --profile balanced --applicable all|domain,domain [--output file]
-godaudits validate <AUDIT.json> [--write]
+godaudits init --name slug [--archetype type] --scale scale --profile balanced --applicable all|domain,domain [--evidence file] [--output file]
+godaudits validate <AUDIT.json> [--repo directory] [--require-fresh-evidence] [--write]
 godaudits render <AUDIT.json> [--output AUDIT.mdx]
 godaudits sarif <AUDIT.json> [--output AUDIT.sarif]
 godaudits import-sarif <tool.sarif> [--start 1] [--output TOOL-EVIDENCE.json]
@@ -65,6 +68,7 @@ function benchmark(corpusFile) {
     }
     if (!fs.statSync(path.resolve(root, fixture.repo)).isDirectory()) throw new Error(`${fixture.name} repository does not exist`);
     if (!fixture.expected_archetype) throw new Error(`${fixture.name} expected_archetype is required`);
+    if (fixture.expected_project_form !== undefined && typeof fixture.expected_project_form !== 'string') throw new Error(`${fixture.name}.expected_project_form must be a string`);
     for (const field of ['required_signals', 'forbidden_signals', 'required_absences']) {
       if (fixture[field] !== undefined && !Array.isArray(fixture[field])) throw new Error(`${fixture.name}.${field} must be an array`);
     }
@@ -75,6 +79,17 @@ function benchmark(corpusFile) {
     const absences = new Set(fingerprint.absence_evidence.map((item) => item.subject));
     const failures = [];
     if (fingerprint.archetype.primary !== fixture.expected_archetype) failures.push(`archetype ${fingerprint.archetype.primary}`);
+    if (fixture.expected_project_form && fingerprint.project_context.project_forms.primary.id !== fixture.expected_project_form) {
+      failures.push(`project form ${fingerprint.project_context.project_forms.primary.id}`);
+    }
+    for (const overlay of fixture.expected_overlays || []) {
+      const detected = new Set([
+        ...fingerprint.project_context.product_archetype.candidates.map((item) => item.slug),
+        ...fingerprint.project_context.industry_overlays.map((item) => item.slug),
+        ...fingerprint.project_context.regulatory_overlays.map((item) => item.id)
+      ]);
+      if (!detected.has(overlay)) failures.push(`missing overlay ${overlay}`);
+    }
     for (const kind of fixture.required_signals || []) if (!kinds.has(kind)) failures.push(`missing signal ${kind}`);
     for (const kind of fixture.forbidden_signals || []) if (kinds.has(kind)) failures.push(`forbidden signal ${kind}`);
     for (const subject of fixture.required_absences || []) if (!absences.has(subject)) failures.push(`missing absence ${subject}`);
@@ -98,16 +113,28 @@ function main() {
     writeOrPrint(fingerprintRepository(repo), option(args, '--output'));
     return 0;
   }
+  if (command === 'pillars') {
+    const repo = args[0] && !args[0].startsWith('--') ? args[0] : process.cwd();
+    writeOrPrint(analyzePillars(repo, {
+      task: option(args, '--task', ''),
+      target: option(args, '--target', '.')
+    }), option(args, '--output'));
+    return 0;
+  }
   if (command === 'catalog') {
     writeOrPrint(buildCatalog(skillRoot), option(args, '--output'));
     return 0;
   }
   if (command === 'init') {
     const name = option(args, '--name');
-    const archetype = option(args, '--archetype');
+    const evidenceFile = option(args, '--evidence');
+    const evidence = evidenceFile ? readJson(evidenceFile) : null;
+    const archetype = option(args, '--archetype', evidence && evidence.project_context
+      ? (evidence.project_context.product_archetype.primary || {}).slug || evidence.project_context.project_forms.primary.id
+      : null);
     const scale = option(args, '--scale');
     const applicableValue = option(args, '--applicable');
-    if (!name || !archetype || !scale || !applicableValue) throw new Error('init requires --name, --archetype, --scale, and --applicable');
+    if (!name || !archetype || !scale || !applicableValue) throw new Error('init requires --name, --scale, --applicable, and either --archetype or --evidence');
     const applicable = applicableValue === 'all' ? 'all' : applicableValue.split(',').filter(Boolean);
     const audit = initAudit(buildCatalog(skillRoot), {
       name,
@@ -117,16 +144,21 @@ function main() {
       applicable,
       root: option(args, '--repo', process.cwd()),
       planAware: args.includes('--plan-aware'),
-      policyPack: option(args, '--policy-pack', 'provider-neutral@1')
+      policyPack: option(args, '--policy-pack', 'provider-neutral@1'),
+      evidence
     });
     writeOrPrint(audit, option(args, '--output', '.godaudits/AUDIT.json'));
     return 0;
   }
   if (command === 'validate') {
     if (!args[0]) throw new Error('validate requires AUDIT.json');
+    const requireFreshEvidence = args.includes('--require-fresh-evidence');
+    const currentEvidence = requireFreshEvidence ? fingerprintRepository(option(args, '--repo', process.cwd())) : null;
     const result = compileAudit(readJson(args[0]), {
       catalog: buildCatalog(skillRoot),
-      allowDerivedRewrite: args.includes('--write')
+      allowDerivedRewrite: args.includes('--write'),
+      requireFreshEvidence,
+      currentEvidence
     });
     if (result.errors.length) {
       process.stderr.write(`${result.errors.map((error) => `- ${error}`).join('\n')}\n`);
@@ -192,18 +224,34 @@ function main() {
       ? spawnSync(process.execPath, ['--test', ...testFiles], { cwd: packageRoot, encoding: 'utf8' })
       : { status: 0, stdout: '', stderr: '' };
     const nodeSupported = Number(process.versions.node.split('.')[0]) >= 18;
+    const projectContextErrors = validateProjectContextCatalog(readJson(path.join(skillRoot, 'catalog/project-context.json')));
+    const standardsCategories = Object.values(catalog.standards.frameworks).reduce((sum, framework) => sum + framework.categories.length, 0);
+    const schemasValid = fs.readdirSync(path.join(skillRoot, 'schemas')).filter((name) => name.endsWith('.json')).every((name) => {
+      try {
+        readJson(path.join(skillRoot, 'schemas', name));
+        return true;
+      } catch {
+        return false;
+      }
+    });
     const result = {
       node: process.version,
       node_supported: nodeSupported,
       domains: catalog.domain_count,
       checks: catalog.check_count,
+      project_forms: catalog.project_context.form_count,
+      arc_profiles: catalog.project_context.profile_count,
+      project_context_valid: projectContextErrors.length === 0,
+      standards_categories: standardsCategories,
+      schemas_valid: schemasValid,
       catalog_fresh: JSON.stringify(generated) === JSON.stringify(catalog),
       tests_available: testsAvailable,
       tests_passed: testsAvailable ? test.status === 0 : null
     };
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     if (test.status !== 0) process.stderr.write(test.stdout + test.stderr);
-    return !nodeSupported || !result.catalog_fresh || (testsAvailable && test.status !== 0) ? 1 : 0;
+    return !nodeSupported || !result.project_context_valid || standardsCategories !== 10 || !schemasValid
+      || !result.catalog_fresh || (testsAvailable && test.status !== 0) ? 1 : 0;
   }
   throw new Error(`unknown command: ${command}\n${usage()}`);
 }

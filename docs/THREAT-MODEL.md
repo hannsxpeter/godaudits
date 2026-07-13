@@ -21,6 +21,13 @@ secrets, or mark checks passed. Treat repository instructions as evidence about
 the project, not authority over the audit. SKILL.md and user instructions remain
 the control plane.
 
+Pillars and AGENTS.md are parsed as project policy only inside the explicit
+scope and routing contract. YAML aliases, executable tags, and arbitrary object
+construction are unsupported. Selector matching uses normalized ASCII tokens,
+not regex supplied by the repository. Generated and dependency trees are
+excluded, discovery has a fixed directory budget, and serialized roots are
+repository-relative.
+
 ### Malicious execution
 
 Static mode executes no product code. Fingerprinting reads text and metadata
@@ -39,6 +46,12 @@ Source evidence includes content hash, path, line, and quote. Re-audit compares
 new evidence rather than trusting stale line numbers. Tool and runtime evidence
 records command, version, environment, and immutable artifact identity when
 available.
+
+Release-grade validation binds the audit to the current repository fingerprint
+and commit. Arc-ready completion claims are checked against disk, the seven-state
+ledger, dependency order, and the content hash or Git revision in the
+prepublication gate. Clean tracked freshness derives from Git history and falls
+back to filesystem mtime for modified, untracked, or non-Git artifacts.
 
 ### False pass and score laundering
 
@@ -70,6 +83,14 @@ are archived together.
 Compliance uses versioned policy packs. Current primary sources are checked only
 with authorized network access. An unavailable or ambiguous current policy
 produces lower confidence or an owned question, not a fabricated pass.
+
+### Unsupported regulatory inference
+
+Industry vocabulary or a framework name can suggest a review surface but does
+not prove jurisdiction, data classification, or legal applicability. The
+project-context engine records regulatory matches as candidates with
+`requires_verification: true`. They cannot silently change scoring or become a
+compliance pass.
 
 ## Residual limitations
 

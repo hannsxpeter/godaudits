@@ -4,30 +4,30 @@ Audits the agent memory a repository ships for AI coding agents: the `AGENTS.md`
 
 ## Lineage
 
-Descends from the Pillars standard (github.com/hannsxpeter/pillars, spec v1.0.1) and its three operational skills: pillars-init (archetype detection, loader drop, exclusion defaults), pillars-author (evidence-based drafting, no-fabrication rule), and, most directly, pillars-verify, whose method DNA this module preserves: evidence-driven claim walking (stack claims against manifests, path claims against the tree, convention claims against 3-5 sampled files with a 2-of-5 failure threshold), the drift / rule-violation / minor severity ladder (mapped here to Medium / Medium / Low), and the false-positive guards (read imprecise claims at their most natural interpretation, stubs claim nothing so they cannot drift, exclusions are intentional and not gaps). The godplans agent-memory module inverted pillars-verify into plan-time truth-by-construction; this module runs the verify pass forward again against real code, with A-MEM numbering aligned one to one to those R-MEM requirements. The ancestor's read-only, no-auto-fix discipline binds: findings quote evidence, remediation is a task, never an edit.
+Descends from the Pillars standard (github.com/hannsxpeter/pillars, spec v1.1.0) and its operational tooling. The 1.1 contract adds portable trigger matching, path-derived sub-pillar identities, local absent catalogs, nested scopes with nearest-scope precedence, context budgets, and executable routing fixtures while preserving 1.0 single-scope behavior. The module also retains pillars-verify's evidence-driven claim walking (stack claims against manifests, path claims against the tree, convention claims against 3-5 sampled files with a 2-of-5 failure threshold), the drift / rule-violation / minor severity ladder (mapped here to Medium / Medium / Low), and the false-positive guards (read imprecise claims at their most natural interpretation, stubs claim nothing so they cannot drift, exclusions are intentional and not gaps). The godplans agent-memory module inverted pillars-verify into plan-time truth-by-construction; this module runs the verify pass forward against real code, with A-MEM-1 through A-MEM-18 aligned one to one to those R-MEM requirements. The ancestor's read-only, no-auto-fix discipline binds: findings quote evidence, remediation is a task, never an edit.
 
 ## Surface map
 
 Inventory before any check runs. The intake fingerprint already locates the instruction surface ("Conventions already recorded: `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/`, `agents/` pillars") and the code-side facts claims are checked against (manifests, lockfiles, directory shape, entry points); cite the fingerprint, do not re-scan.
 
-- Loader and tree: `AGENTS.md` at root, `agents/*.md`, `agents/**/*.md` sub-pillars. Declare present or absent; absence is a finding, not a skip.
+- Loader and tree: every directory containing both `AGENTS.md` and `agents/` is a Pillars scope. Inventory the root plus nested scopes, `agents/**/*.md`, and optional `agents/catalog.yaml`. Declare present or absent; absence is a finding, not a skip.
 - Tool-native files: `CLAUDE.md`, `.cursorrules`, `.cursor/rules/**`, `.github/copilot-instructions.md`, `.windsurfrules`, `.clinerules`, `GEMINI.md`. Each found file is classified redirect, fork, or sole memory.
 - Frontmatter fields per pillar: `pillar`, `status`, `always_load`, `covers`, `triggers`, `must_read_with`, `see_also`.
-- Conditional sub-surfaces, each declared with a reason when absent: `.godplans/PLAN.mdx` (activates plan-aware R-id tagging), CI workflows that could run a validator (`.github/workflows/*.yml`), sub-pillar directories (`agents/data/`, `agents/integrations/`), and a validator script (`scripts/validate_pillars.py` or equivalent).
+- Conditional sub-surfaces, each declared with a reason when absent: `.godplans/PLAN.mdx` (activates plan-aware R-id tagging), CI workflows that could run a validator (`.github/workflows/*.yml`), nested scopes, sub-pillar directories (`agents/data/`, `agents/integrations/`), local absent catalogs, routing fixtures, and a validator script (`scripts/validate_pillars.py` or equivalent).
 - Git signals for freshness: `git log --follow -1 --format=%cs agents/<file>.md` per pillar, compared with recent commits touching that pillar's domain.
 
 ## Checks
 
-Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. When the repo uses a non-Pillars memory convention, run A-MEM-19 first and re-scope the structural checks to their equivalents as it directs. In plan-aware mode, tag each finding with the matching R-MEM id.
+Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. A-MEM-19 onward are audit-only checks. When the repo uses a non-Pillars memory convention, run A-MEM-19 first and re-scope the structural checks to their equivalents as it directs. In plan-aware mode, tag findings from A-MEM-1 through A-MEM-18 with the matching R-MEM id.
 
 1. A-MEM-1: The declared archetype matches the code. The project type stated in `agents/context.md` (or PLAN.mdx when plan-aware) must agree with at least two file signals pillars-init would detect.
    Look: `agents/context.md`, `AGENTS.md` `excluded:` block, manifests and directory shape from the fingerprint.
    Fail: declared archetype contradicted by two or more code signals (a "CLI tool" with `next` in `package.json` and an `app/` router). Medium.
-2. A-MEM-2: `AGENTS.md` exists at root with exactly the four canonical elements: Pillars standard reference, 6-step loading protocol, 4-state missing-pillar table, structured `excluded:` block; and it enumerates no pillar names outside that block.
-   Look: `AGENTS.md`; `grep -n 'excluded:' AGENTS.md`; compare section list against the canonical four.
+2. A-MEM-2: Root `AGENTS.md` carries the current Pillars protocol: standard reference, 6-step loading protocol, present/stub/excluded/absent/unknown behavior, structured `excluded:` block, portable matcher, and nested-scope precedence when nested scopes exist; it enumerates no present pillar names.
+   Look: root `AGENTS.md`; `grep -n 'excluded:\|Portable matcher\|Resolve scopes' AGENTS.md`; compare the protocol with the detected topology while accepting a valid Pillars 1.0 single-scope loader as backward-compatible.
    Fail: no loader at all on a repo where agents work: High. Missing element or pillar enumeration in the loader: Medium.
-3. A-MEM-3: Every Tier 1 Core pillar (stack, arch, data, api, ui, auth, quality, deploy, observe) is present in `agents/`, stubbed, or listed in `excluded:`; none is silently absent.
-   Look: `ls agents/` against the nine names; `excluded:` block for the rest.
+3. A-MEM-3: Every Core concern (stack, arch, data, api, ui, auth, quality, development, release, deploy, observe) is present, stubbed, excluded, or declared absent in the local catalog; none with live code is silently unknown.
+   Look: each scope's tree, exclusions, and local catalog against the eleven Core identities and the code surfaces they represent.
    Fail: a Core pillar neither present, stubbed, nor excluded while its area has code (auth routes exist, no `auth.md` anywhere). Medium.
 4. A-MEM-4: Exclusions use structured `{name, reason}` form with project-specific reasons that survive the substitution test.
    Look: the `excluded:` block in `AGENTS.md`.
@@ -38,9 +38,9 @@ Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. When
 6. A-MEM-6: The pillar inventory covers the product's defining concern: `cli.md` for CLI tools, `ml.md` for pipelines, `payments.md` for e-commerce, `realtime.md` for collab apps; sub-pillars where the pattern warrants (`data/multi-tenant.md`, `integrations/<service>.md` past 3-5 integrations).
    Look: `agents/` tree against the archetype and the fingerprint's surfaces.
    Fail: the concern that defines the product has no pillar and no exclusion entry. Medium.
-7. A-MEM-7: Every pillar's frontmatter is complete and valid: `pillar` equals filename, `covers` present, `triggers` present unless `always_load: true`, `must_read_with` capped at 3 with every reference resolving to an existing pillar or an excluded name.
-   Look: frontmatter of all `agents/**/*.md`; resolve each `must_read_with` entry against the tree and the `excluded:` block.
-   Fail: name/filename mismatch, missing `covers` or `triggers`, or a dangling `must_read_with` reference. Medium.
+7. A-MEM-7: Every pillar's frontmatter is complete and valid: `pillar` equals the leaf filename, selectors are non-empty and collision-free after portable normalization, sub-pillars use path-qualified identities, `must_read_with` is capped at 3, and references resolve inside their declaring scope.
+   Look: frontmatter of all `agents/**/*.md`; derive identities from paths; resolve hard references against local pillars and exclusions and soft references against local pillars, exclusions, or catalog entries.
+   Fail: name/filename mismatch, invalid or ambiguous identity, duplicate selector, missing `covers` or `triggers`, self-reference, or dangling hard reference. Medium.
 8. A-MEM-8: Pillar bodies carry the exact 8 sections in order (Scope, Context, Decisions, Rules, Workflows, Watchouts, Touchpoints, Gaps), unearned sections marked `(none)`, no custom sections, Touchpoints mirroring frontmatter in prose.
    Look: H2 headings of each present pillar body.
    Fail: reordered, missing, or invented sections in a present pillar. Low.
@@ -56,8 +56,8 @@ Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. When
 12. A-MEM-12: Content sits in its owning pillar per the boundary tiebreakers: secrets guidance in `config.md` not `auth.md`, product analytics apart from system observe, layout in `repo.md` vs module shape in `arch.md`, CLI UX in `cli.md` not `ui.md`; cross-boundary references go through Touchpoints, not duplicated prose.
     Look: grep pillar bodies for the tiebreaker concerns; diff near-identical paragraphs across pillars.
     Fail: misplaced content or the same guidance duplicated in two pillars. Low.
-13. A-MEM-13: The coupling graph is clean: no pillar exceeds 3 `must_read_with` entries, no shared dependency hides across 3 or more pillars unpromoted, `always_load: true` limited to the floor, sub-pillars declare `must_read_with: [parent]`.
-    Look: all frontmatter; count `must_read_with` lengths and cross-pillar repeats; `grep -c 'always_load: true' agents/**/*.md`.
+13. A-MEM-13: The coupling graph is clean per scope: no pillar exceeds 3 `must_read_with` entries, no shared dependency hides across 3 or more pillars unpromoted, `always_load: true` is limited to the floor, and dependencies never leak across scope boundaries.
+    Look: all frontmatter grouped by scope; count `must_read_with` lengths and cross-pillar repeats; resolve every hard and soft reference locally; `grep -c 'always_load: true' agents/**/*.md`.
     Fail: any of the four smells above. Low.
 14. A-MEM-14: No stale exclusions: every `excluded:` name still has zero code in its area.
     Look: each exclusion against the tree (`ui` excluded but `src/components/` holds 30 files; `observe` excluded but a `sentry` dependency landed).
@@ -65,14 +65,14 @@ Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. When
 15. A-MEM-15: Tool-native instruction files are one-line redirects to `AGENTS.md` and `./agents/`, never parallel instruction documents.
     Look: every file found under the tool-native globs in the surface map; count non-empty lines; diff any rules content against the pillar tree.
     Fail: a fork carrying its own rules alongside `AGENTS.md` (two memories drifting independently). Medium; Low when the fork's content is identical boilerplate.
-16. A-MEM-16: Structural validation runs in CI: a validator (vendored `validate_pillars.py` or equivalent) checks frontmatter schema, heading order, floor pillars, and reference resolution, and fails the build on ERROR.
+16. A-MEM-16: Structural and routing validation runs in CI: a validator checks frontmatter, headings, identities, selectors, floors, exclusions, local catalogs, references, budgets, nested scopes, and representative task-to-load-set fixtures, and fails the build on ERROR.
     Look: `scripts/validate_pillars.py`, `grep -rn 'validate_pillars' .github/workflows/`.
     Fail: pillar tree present but no CI job validates it. Low.
 17. A-MEM-17: Maintenance is real, not aspirational: pillars update alongside the code they describe; Gaps entries answered by code are removed; Watchouts accumulate where incident evidence exists.
     Look: `git log --follow -1 --format=%cs` per pillar vs latest commits touching its domain paths; Gaps entries against the tree.
     Fail: a pillar untouched across a refactor that changed its domain, or a Gaps question the code has long since answered. Medium.
-18. A-MEM-18: The memory system is operable end to end: an agent following the 6-step protocol computes a deterministic load set with no contradictions (no excluded name that also exists as a file, no invalid `status` enum, no stub carrying full prescriptive content, loader and pillars never disagree). Plan-aware: PLAN.mdx's Agent memory section states the protocol as binding.
-    Look: cross-check `excluded:` names against `agents/` files; `status` values against the `present|stub` enum; stub bodies for content beyond Scope.
+18. A-MEM-18: The memory system is operable end to end: the portable matcher and depth-1 protocol compute deterministic scope-labeled load, primary, and absent sets with no contradictions. Plan-aware: PLAN.mdx's Agent memory section states the protocol as binding.
+    Look: compute representative load sets; cross-check exclusions against files and catalogs; validate status values; inspect stub bodies; apply outer-to-inner scope precedence and child exclusions.
     Fail: any loader/tree contradiction that makes the protocol ambiguous. Medium.
 19. A-MEM-19: (audit-only) Non-Pillars memory is graded on equivalents, not zeroed: a lone `CLAUDE.md`, `.cursor/rules/`, or copilot-instructions file is audited for accuracy against code (as A-MEM-11), size discipline, and single-source-of-truth (as A-MEM-15); record the convention in the audit and re-scope A-MEM-2 through A-MEM-8 to it.
     Look: the classified tool-native files from the surface map; line counts; claim spot-checks.
@@ -80,18 +80,30 @@ Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. When
 20. A-MEM-20: (audit-only) No unsafe instruction content: memory must not direct agents to bypass verification or safety ("skip tests", "force-push to main", "auto-approve all commands", piping remote scripts to shell) and must not embed credentials (the secret itself is cross-referenced to `F-SEC` per the ownership map; the instruction placement is the MEM finding).
     Look: `grep -rniE 'force-push|--no-verify|skip (the )?tests|curl .*\| *(ba)?sh' AGENTS.md CLAUDE.md agents/ .cursor/ 2>/dev/null`.
     Fail: an instruction a compliant agent would follow into destructive or unreviewable action. High.
+21. A-MEM-21: (audit-only) Portable routing is executable and stable: representative tasks preserve the deterministic ASCII minimum result even when a semantic matcher adds recall.
+    Look: task-to-load-set fixtures, or generate tasks for each trigger, direct dependency, conditional `see_also`, and unrelated concern; compare two independent runs.
+    Fail: normalized selector collisions, substring matching (`api` matching `capital`), unstable ordering, transitive dependency expansion, or a fixture mismatch. Medium.
+22. A-MEM-22: (audit-only) Nested scope inheritance is coherent: applicable scopes resolve root to leaf, nearest guidance wins conflicts, child exclusions suppress inherited routed pillars, and references remain local to their declaring scope.
+    Look: every nested `AGENTS.md` plus adjacent `agents/`; compute load sets for paths inside and outside each child scope.
+    Fail: a child task silently ignores ancestor guidance, an ancestor overrides the child, a child exclusion leaves the inherited pillar active, or a dependency resolves across scopes. Medium.
+23. A-MEM-23: (audit-only) Local absent catalogs are internally consistent and truthful: version 1, unique valid identities, required triggers, no present or excluded duplicates, no floor identities, and every entry still absent.
+    Look: every `agents/catalog.yaml` against local pillar paths, local exclusions, and live code surfaces.
+    Fail: malformed catalog or present/excluded/floor conflict: Medium; an entry left absent after its pillar was created: Low.
+24. A-MEM-24: (audit-only) Routed context stays within the Pillars 1.1 budgets unless a specific exception is documented: always-loaded files at most 1,000 words and 8 KiB, scope floor at most 2,000 words and 16 KiB, task-routed files at most 2,000 words and 16 KiB.
+    Look: byte and word counts per pillar and per scope; documented exception beside each overage.
+    Fail: undocumented always-loaded overage: Medium because every task pays it; routed overage: Low unless it causes recurrent irrelevant instruction loading.
 
 ## Scoring
 
 Weights derive from the godplans agent-memory self-audit rubric. Dimensions marked conditional re-normalize when their sub-surface is absent; on a non-Pillars convention, Loader, Floor, and Format score against the A-MEM-19 equivalents. A repo with no agent memory at all fails A-MEM-2, A-MEM-3, and A-MEM-5 outright; Truthfulness and Drift then re-normalize away rather than award free points for claiming nothing.
 
 - Archetype and applicability (15): A-MEM-1, A-MEM-3, A-MEM-4, A-MEM-6.
-- Loader and topology (15): A-MEM-2, A-MEM-15, A-MEM-18.
+- Loader and topology (15): A-MEM-2, A-MEM-15, A-MEM-18, A-MEM-22.
 - Floor pillars (10): A-MEM-5.
-- Format conformance (15, conditional): A-MEM-7, A-MEM-8, A-MEM-13.
+- Format conformance (15, conditional): A-MEM-7, A-MEM-8, A-MEM-13, A-MEM-21, A-MEM-24.
 - Truthfulness (15): A-MEM-9, A-MEM-10, A-MEM-20.
 - Drift (15, conditional): A-MEM-11, A-MEM-12.
-- Lifecycle and CI (15): A-MEM-14, A-MEM-16, A-MEM-17.
+- Lifecycle and CI (15): A-MEM-14, A-MEM-16, A-MEM-17, A-MEM-23.
 
 Any active Critical finding, including an accepted risk, caps this domain at 69.
 
@@ -101,7 +113,7 @@ Seeds use the task grammar from `audit-format.md`; at audit time the agent adds 
 
 - [ ] GA-xxx Write the canonical AGENTS.md loader at repo root
   - Files: AGENTS.md
-  - Acceptance: contains the Pillars standard reference, 6-step protocol, 4-state table, and structured `excluded:` block; enumerates no pillar names outside that block; total size stays constant as pillars are added
+  - Acceptance: contains the Pillars 1.1 reference, scope resolution, 6-step protocol, 5-state behavior, portable matcher, and structured `excluded:` block; enumerates no present pillar names; total size stays constant as pillars are added
   - Verify: `grep -q 'excluded:' AGENTS.md && grep -qi 'always_load' AGENTS.md && test -d agents`
   - Checks: A-MEM-2, A-MEM-4
 
@@ -143,7 +155,7 @@ Seeds use the task grammar from `audit-format.md`; at audit time the agent adds 
 
 ## Anti-patterns hunted
 
-- Silent pillar absence: a Core pillar with live code in its area but no file, no stub, no exclusion entry. Hunt via the nine-name sweep in A-MEM-3; the finding names the code that proves the area exists.
+- Silent pillar absence: a Core concern with live code in its area but no file, stub, exclusion, or local catalog entry. Hunt via the eleven-name sweep in A-MEM-3; the finding names the code that proves the area exists.
 - Loader bloat: `AGENTS.md` enumerating pillars or accumulating rules, growing with the project. Hunt via line count over time (`git log --oneline --stat AGENTS.md`) and content beyond the canonical four elements.
 - Drifted memory: Context claims describing a stack, path, or convention the tree no longer has. Hunt via the 3a-3d claim walk; every drift finding quotes both the claim and the contradicting evidence.
 - Fabricated rationale: Decisions praising a dependency that never shipped, or Watchouts invented to fill sections. Hunt via manifest and git-history cross-checks; unverifiable rationale is flagged Tentative, never asserted.
