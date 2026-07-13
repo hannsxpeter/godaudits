@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
-    name: meta-linter
+  verify:
+    name: engine, corpus, package, and skill contracts
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -17,14 +17,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run meta-linter
-        run: bash scripts/lint.sh --all --verbose
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run engine tests
+        run: npm test
+
+      - name: Run benchmark corpus
+        run: npm run benchmark
+
+      - name: Run repository contracts
+        run: npm run lint
 
       - name: Installer smoke test
         run: |
           tmp_home=$(mktemp -d)
-          HOME="$tmp_home" AGENTS_SKILLS_DIR="$tmp_home/.agents/skills" CLAUDE_SKILLS_DIR="$tmp_home/.claude/skills" sh install.sh --tools agents,claude
+          HOME="$tmp_home" AGENTS_SKILLS_DIR="$tmp_home/.agents/skills" CLAUDE_SKILLS_DIR="$tmp_home/.claude/skills" sh install.sh --tools agents,claude --copy
           test -f "$tmp_home/.agents/skills/godaudits/SKILL.md"
           test -f "$tmp_home/.claude/skills/godaudits/SKILL.md"
+          test -f "$tmp_home/.agents/skills/godaudits/runtime/godaudits.js"
+          node "$tmp_home/.agents/skills/godaudits/runtime/godaudits.js" doctor
           HOME="$tmp_home" AGENTS_SKILLS_DIR="$tmp_home/.agents/skills" CLAUDE_SKILLS_DIR="$tmp_home/.claude/skills" sh install.sh --tools agents,claude --uninstall
           test ! -e "$tmp_home/.agents/skills/godaudits"
+          unowned="$tmp_home/unowned/skills/godaudits"
+          mkdir -p "$unowned"
+          echo preserve > "$unowned/sentinel"
+          if HOME="$tmp_home" AGENTS_SKILLS_DIR="$tmp_home/unowned/skills" sh install.sh --tools agents --copy; then exit 1; fi
+          test -f "$unowned/sentinel"
+          if HOME="$tmp_home" AGENTS_SKILLS_DIR="$tmp_home/unowned/skills" sh install.sh --tools agents --uninstall; then exit 1; fi
+          test -f "$unowned/sentinel"
+
+      - name: Package smoke test
+        run: |
+          npm pack --dry-run
+          node bin/godaudits.js doctor

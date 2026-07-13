@@ -17,7 +17,11 @@
 #   references-exist     every references/<file>.md named in SKILL.md exists.
 #   modules-complete     every reference module has the six contract sections.
 #   symlinks-valid       .agents/skills and .claude/skills projections resolve.
-#   prompt-fresh         PROMPT.md exists and matches build-prompt.sh output.
+#   catalog-fresh        the generated 414-check machine catalog is current.
+#   schemas-valid        every committed JSON and schema document parses.
+#   runtime-tests        compiler, renderer, evidence, eval, and interop tests pass.
+#   benchmark            the deterministic multi-language corpus passes.
+#   prompt-fresh         both portable prompts match build-prompt.sh output.
 #
 # Usage: bash scripts/lint.sh [check-name | --all] [--verbose]
 # Bash 3.2 compatible (macOS default).
@@ -42,7 +46,7 @@ authored_files() {
   find "$REPO_DIR" \
     -path "$REPO_DIR/.git" -prune -o \
     -path "$REPO_DIR/node_modules" -prune -o \
-    -type f \( -name '*.md' -o -name '*.mdx' -o -name '*.sh' -o -name '*.json' -o -name '*.yml' \) -print
+    -type f \( -name '*.md' -o -name '*.mdx' -o -name '*.sh' -o -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.js' -o -name '*.toml' -o -name '*.py' -o -name '*.go' -o -name '*.rs' \) -print
 }
 
 check_unicode_clean() {
@@ -68,9 +72,15 @@ check_frontmatter_version() {
   fm=$(awk -F'"' '/^  version:/ { print $2; exit }' "$SKILL_DIR/SKILL.md")
   ch=$(grep -m1 '^## \[' "$REPO_DIR/CHANGELOG.md" | sed 's/^## \[\([^]]*\)\].*/\1/')
   body=$(grep -m1 '^## Skill version:' "$SKILL_DIR/SKILL.md" | sed 's/^## Skill version: //')
+  pkg=$(node -p "require('$REPO_DIR/package.json').version")
+  plugin=$(node -p "require('$REPO_DIR/plugins/godaudits/.claude-plugin/plugin.json').version")
+  market=$(node -p "require('$REPO_DIR/.claude-plugin/marketplace.json').metadata.version")
   if [ "$fm" != "$ch" ]; then fail "SKILL.md version ($fm) != CHANGELOG top entry ($ch)"; fi
   if [ "$fm" != "$body" ]; then fail "SKILL.md frontmatter version ($fm) != body Skill version line ($body)"; fi
-  [ "$fm" = "$ch" ] && [ "$fm" = "$body" ] && pass
+  if [ "$fm" != "$pkg" ]; then fail "SKILL.md version ($fm) != package.json ($pkg)"; fi
+  if [ "$fm" != "$plugin" ]; then fail "SKILL.md version ($fm) != plugin.json ($plugin)"; fi
+  if [ "$fm" != "$market" ]; then fail "SKILL.md version ($fm) != marketplace.json ($market)"; fi
+  [ "$fm" = "$ch" ] && [ "$fm" = "$body" ] && [ "$fm" = "$pkg" ] && [ "$fm" = "$plugin" ] && [ "$fm" = "$market" ] && pass
 }
 
 check_description_length() {
@@ -142,19 +152,27 @@ check_symlinks_valid() {
 
 check_prompt_fresh() {
   CHECK=prompt-fresh
-  if [ ! -f "$REPO_DIR/PROMPT.md" ]; then
-    fail "PROMPT.md missing; run scripts/build-prompt.sh"
-    return
-  fi
-  tmp=$(mktemp -d)
-  cp "$REPO_DIR/PROMPT.md" "$tmp/PROMPT.before"
-  bash "$SCRIPT_DIR/build-prompt.sh" >/dev/null
-  if ! cmp -s "$tmp/PROMPT.before" "$REPO_DIR/PROMPT.md"; then
-    fail "PROMPT.md was stale; regenerated now, commit the diff"
-  else
-    pass
-  fi
-  rm -rf "$tmp"
+  if bash "$SCRIPT_DIR/build-prompt.sh" --check >/dev/null; then pass; else fail "portable prompts are stale; run npm run build:prompt"; fi
+}
+
+check_catalog_fresh() {
+  CHECK=catalog-fresh
+  if node "$SCRIPT_DIR/build-catalog.js" --check >/dev/null; then pass; else fail "check catalog is stale; run npm run catalog"; fi
+}
+
+check_schemas_valid() {
+  CHECK=schemas-valid
+  if node -e 'const fs=require("fs"),path=require("path"); const roots=process.argv.slice(1); for(const root of roots){for(const file of fs.readdirSync(root)){if(file.endsWith(".json")) JSON.parse(fs.readFileSync(path.join(root,file),"utf8"));}}' "$SKILL_DIR/schemas" "$SKILL_DIR/catalog"; then pass; else fail "schema or catalog JSON did not parse"; fi
+}
+
+check_runtime_tests() {
+  CHECK=runtime-tests
+  if node --test "$REPO_DIR"/test/*.test.js >/dev/null; then pass; else fail "runtime regression tests failed"; fi
+}
+
+check_benchmark() {
+  CHECK=benchmark
+  if node "$REPO_DIR/bin/godaudits.js" benchmark >/dev/null; then pass; else fail "benchmark corpus failed"; fi
 }
 
 TARGET="${1:---all}"
@@ -167,6 +185,10 @@ case "$TARGET" in
     check_references_exist
     check_modules_complete
     check_symlinks_valid
+    check_catalog_fresh
+    check_schemas_valid
+    check_runtime_tests
+    check_benchmark
     check_prompt_fresh
     ;;
   unicode-clean) check_unicode_clean ;;
@@ -176,6 +198,10 @@ case "$TARGET" in
   references-exist) check_references_exist ;;
   modules-complete) check_modules_complete ;;
   symlinks-valid) check_symlinks_valid ;;
+  catalog-fresh) check_catalog_fresh ;;
+  schemas-valid) check_schemas_valid ;;
+  runtime-tests) check_runtime_tests ;;
+  benchmark) check_benchmark ;;
   prompt-fresh) check_prompt_fresh ;;
   *) echo "Unknown check: $TARGET" >&2; exit 1 ;;
 esac

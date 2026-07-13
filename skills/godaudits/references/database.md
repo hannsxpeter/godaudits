@@ -1,6 +1,6 @@
 # Database audit module
 
-Audits the data layer of a shipped codebase: schema and data model, relationships, indexing, query and access patterns, transactions, migrations, data protection at the database tier, search, and scale. It reads schema files, migrations, ORM models, and query sites as written; it never connects to a live database, runs a migration, or executes `EXPLAIN` against a server. Findings are emitted as `F-DB-n` and a 0-100 domain score into AUDIT.mdx. The orchestrator loads this module for any archetype that persists state (saas-dashboard, api-service, mobile-app backend, ml-pipeline metadata); stateless CLIs, static marketing sites, and pure libraries may exclude it with the reason recorded in the applicability matrix.
+Audits the data layer of a shipped codebase: schema and data model, relationships, indexing, query and access patterns, transactions, migrations, data protection at the database tier, search, and scale. It reads schema files, migrations, ORM models, and query sites as written; it never connects to a live database, runs a migration, or executes `EXPLAIN` against a server. Findings are emitted as `F-DB-n` and a 0-100 domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for any archetype that persists state (saas-dashboard, api-service, mobile-app backend, ml-pipeline metadata); stateless CLIs, static marketing sites, and pure libraries may exclude it with the reason recorded in the applicability matrix.
 
 ## Lineage
 
@@ -107,7 +107,7 @@ Weights carry over from dbauditor's dimension table. Conditional dimensions whos
 - Search (4, conditional: a search surface exists): A-DB-20.
 - Scale and operations (2, re-weight up on strong growth signals): A-DB-21, A-DB-23.
 
-Hard Criticals regardless of the weighted mean: float money, app-only tenancy, plaintext PII or stored CVV, a payment path with no idempotency UNIQUE, a public database binding, CASCADE destroying financial or audit data, an unprotected read-modify-write on money. Any open Critical finding caps this domain at 69.
+Hard Criticals regardless of the weighted mean: float money, app-only tenancy, plaintext PII or stored CVV, a payment path with no idempotency UNIQUE, a public database binding, CASCADE destroying financial or audit data, an unprotected read-modify-write on money. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

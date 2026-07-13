@@ -1,0 +1,7 @@
+{
+  "name": "benchmark-node-api",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js"
+  }
+}

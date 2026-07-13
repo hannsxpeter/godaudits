@@ -1,10 +1,10 @@
 # Intake module: orient, fingerprint, applicability, ownership
 
-Loaded in Phase 0 and Phase 2. Turns a repository into the facts the domain passes need: mode, archetype, scale, the applicability matrix, the ownership map, and the domain weights. Intake is where godaudits earns the single-command promise: the repo answers almost every question; the user answers at most three.
+Loaded in Phase 0 and Phase 2. Turns a repository into the facts the domain passes need: mode, archetype, scale, risk profile, applicability, ownership, and deterministic evidence. Intake is where godaudits earns the single-command promise: the repository answers almost every question; the user answers at most three.
 
 ## Mode detection (Phase 0)
 
-- `.godaudits/AUDIT.mdx` exists -> **re-audit**. Follow the re-audit protocol in `audit-format.md`.
+- `.godaudits/AUDIT.json` exists -> **re-audit**. Follow the re-audit protocol in `audit-format.md`.
 - Source manifests exist (`package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `Gemfile`, `pom.xml`, `mix.exs`, `Package.swift`) or source trees exist -> **fresh audit**.
 - Neither -> **refuse politely**: there is nothing to audit. Point the user at godplans; auditing an empty directory is planning, and planning is the sibling skill's job.
 
@@ -14,7 +14,7 @@ Record the commit: `git rev-parse --short HEAD`, or `no-git` (and a High repo fi
 
 ## The fingerprint (read-only, before any domain pass)
 
-Inventory once, share with every domain pass:
+Run `godaudits evidence . --output .godaudits/EVIDENCE.json`, then review the output. Inventory once and share with every domain pass:
 
 - Stack and versions from manifests and lockfiles; monorepo layout if any.
 - Directory shape, module boundaries, entry points (main, server bootstrap, route registration, CLI entry, background workers, queue consumers).
@@ -24,7 +24,7 @@ Inventory once, share with every domain pass:
 - Conventions already recorded: `AGENTS.md`, `CLAUDE.md`, `.cursor/rules/`, `agents/` pillars, lint and format configs.
 - Git signals for scale calibration: `git shortlog -sn` contributor count, commit recency, tags and releases.
 
-The fingerprint is evidence collection, not judgment. Judgments happen inside domain passes, against module checks, so every claim lands with a check id attached.
+The fingerprint is evidence collection, not judgment. Regex signals are leads and can never become findings without path tracing and refutation. The fingerprint records file hashes, absence searches, secret-safe masking, archetype confidence, and static-mode limitations. Judgments happen inside domain passes, so every pass and failure lands in the check ledger with evidence ids.
 
 ## Archetype detection
 
@@ -59,9 +59,16 @@ Every domain gets a row. Applicable means the domain pass runs and its checks bi
 
 Hard rules: security, code-quality, style-genome, repo are never excluded (they scale down instead). seo requires a public crawlable surface. llm requires model calls in the code; a langchain import with no call site is a stack finding, not an llm pass. ui requires rendered pixels the project owns. roadmap applies whenever a plan, roadmap, or issue tracker artifact exists in or beside the repo; otherwise it reduces to one delivery-reality check inside repo.
 
-## Domain weights
+## Risk profiles and domain weights
 
-Overall score = sum(domain score x weight) / sum(weights), over applicable domains only (re-normalization is automatic: excluded domains simply drop out). Then apply the caps from `audit-format.md`.
+Overall score = sum(domain score x profile weight) / sum(active profile weights), over applicable domains only. Excluded domains drop out. Profiles live in `catalog/profiles.json`, are versioned with the check pack, and are validated mechanically. Choose one during intake:
+
+- `balanced`: general product risk, the default.
+- `security-critical`: regulated data, money, identity, privileged actions, or multi-tenant workloads.
+- `growth`: public products dominated by activation, trust, visibility, conversion, and launch execution.
+- `library`: libraries and developer tools dominated by API quality, compatibility, maintainability, and repository discipline.
+
+The balanced profile is:
 
 | Domain | Weight |
 |---|---|
@@ -84,7 +91,7 @@ Overall score = sum(domain score x weight) / sum(weights), over applicable domai
 | style-genome | 3 |
 | agent-memory | 2 |
 
-The weights encode blast radius, not importance to feelings: a security hole hurts users; a missing AGENTS.md hurts the next agent session.
+Profile selection must cite repository evidence and may not be changed to improve the score. Weights encode the product's blast radius. The audit records the profile, catalog version, and active weights so a reader can reproduce the overall score.
 
 ## The ownership map
 
@@ -119,7 +126,7 @@ Good questions: "Is this deployed to real users today? Default: yes, the deploy 
 
 ## Output of intake
 
-By the end of Phase 2 the following exist, ready for the domain passes: mode (plus plan-aware flag and commit), archetype with hybrid note, scale calibration with its signals, the applicability matrix complete with reasons, the fingerprint inventory, the ownership map understood (it is this file; domain passes cite it), and assumptions recorded.
+By the end of Phase 2 the following exist: mode and capabilities, plan-aware flag and commit, archetype with confidence and hybrid note, scale calibration, risk profile, complete applicability matrix, EVIDENCE.json, initialized AUDIT.json with selected checks unknown, ownership map, and recorded assumptions.
 
 ## Anti-patterns refused
 

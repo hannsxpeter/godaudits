@@ -1,153 +1,143 @@
 ---
-name: PROJECT-SLUG
+name: "PROJECT-SLUG"
+schema_version: "2.0"
 audit_version: 1
 status: reported
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 mode: fresh
 plan_aware: false
-commit: COMMIT-SHA
+commit: "COMMIT-SHA"
 archetype: ARCHETYPE
 scale: SCALE
-domains_applicable: []
-domains_excluded:
-  - name: DOMAIN
-    reason: one line on why this domain does not apply
-scores:
-  overall: 0
-  verdict: ""
-  domains: {}
-counts:
-  findings_total: 0
-  critical: 0
-  high: 0
-  medium: 0
-  low: 0
-  tasks_total: 0
-  tasks_done: 0
+risk_profile: balanced
+engine_version: "2.0.0"
+pack_version: "2.0.0"
+overall: 0
+verdict: "critical condition"
+coverage: 0
+findings_total: 0
+tasks_total: 1
 ---
 
 # PROJECT-NAME audit
 
-One paragraph, under 120 words: the overall score, the verdict band, the single
-biggest risk, and the single biggest strength. A reader who stops here still
-knows where the project stands.
+This file is a generated view. `.godaudits/AUDIT.json` is the machine source of
+truth. Run `godaudits validate` and `godaudits render`; do not author this view
+by hand.
+
+One verdict paragraph under 120 words: score, verdict, coverage, biggest risk,
+and biggest evidence-backed strength.
 
 ## Scope and method
 
-Commit audited, date, mode (fresh or re-audit), what was examined and what was
-not. Read-only statement: this audit made no source edits, ran no application
-code, connected to no live systems, and called no models.
+Commit, date, mode, archetype, scale, capability list, tool and pack versions,
+assumptions, what was examined, and what was not. Static-mode statement: no
+application code, tests, live systems, network requests, or product models ran.
+
+Coverage: evaluated checks divided by applicable checks. Unknown checks are
+reported and cap the verdict.
+
+Assumptions are listed explicitly. No assumptions means `none`.
 
 ## Compliance gate
 
-Result: pass, or the compliance findings injected with their finding IDs.
-Screened: YYYY-MM-DD per compliance.md.
+Result, policy pack and version, checked date, authorization context when
+relevant, and injected compliance finding ids.
 
 ## Applicability matrix
 
-Every domain, applicable or excluded, with reason. Excluded domains appear here
-and nowhere else. Scale calibration: weekend | side-project | funded-product | enterprise.
-
 | Domain | Status | Reason |
 |---|---|---|
-| DOMAIN | applicable-or-excluded | one line |
+| DOMAIN | applicable-or-excluded | repository-specific reason |
+
+All 18 domains appear. Excluded domains appear nowhere else.
 
 ## Scorecard
 
-Weights and re-normalization per intake.md. Caps: any open Critical caps its
-domain at 69 and the overall at 79; a domain below 50 caps the overall at 84.
-Re-audits open this section with a `### Delta` subsection.
+| Domain | Score | Cap | Evaluated |
+|---|---:|---|---:|
+| DOMAIN | 0 | none-or-cap | 0/0 |
+| Overall | 0 | coverage, critical, weak-domain caps | 0/0 |
 
-| Domain | Score | Cap applied | Reason |
-|---|---|---|---|
-| DOMAIN | 0 | none-or-cap | one line |
+## Check ledger
 
-Overall: 0. Verdict: band used verbatim (90-100 audit-proof, 80-89 solid,
-70-79 needs work, 50-69 at risk, 0-49 critical condition).
+| Check | Outcome | Confidence | Weight | Evidence |
+|---|---|---|---:|---|
+| A-DOM-1 | pass-fail-unknown-not-applicable | Certain-Firm-Tentative | 0 | E-1 |
+
+Every selected catalog check appears exactly once. A pass without evidence and
+an uninspected pass are validation defects.
+
+## Evidence ledger
+
+| Evidence | Type | Location or scope | Provenance | Quote or result | SHA-256 | Redacted |
+|---|---|---|---|---|---|---|
+| E-1 | source-absence-tool-runtime-human | exact location | command, tool version, or recorder | normalized secret-safe evidence | content hash or none | yes-or-no |
+
+Every evidence id referenced by a check, finding, strength, or task is expanded
+here. Pass and not-applicable support remains inspectable without opening chat.
 
 ## Strengths
 
-What the codebase does well, with the same file:line evidence standard as
-findings. Strengths tell the remediating agent what not to break.
+- Evidence-backed strength, evidence id and source location, plus the pattern
+  nearby remediation must preserve.
 
 ## Findings
 
-One H3 per applicable domain, at most 12 findings per domain (cluster the rest
-under a parent finding: one root cause, N sites in Evidence). Domains with zero
-findings state that in one line with what was checked. Never renumber or delete
-a finding, even across re-audits.
-
 ### DOMAIN-NAME
 
-#### F-DOM-1 One-line defect statement [Severity | Confidence | Effort]
+#### F-DOM-1 Specific root-cause statement [Severity | Confidence | Effort]
 
 - Where: exact/path.ext:LINE
-- Evidence: `quoted code or config; enough to confirm without opening the file`
-- Impact: the concrete failure for a user, operator, or the business
-- Fix: the specific change, named safe pattern included
-- Verify the fix: `exact command` or the exact manual path
-- Checks: A-DOM-n (plus R-DOM-n when plan_aware)
+- Evidence: stable evidence ids, quotes, hashes, and second path when available
+- Impact: concrete user, operator, security, reliability, or business failure
+- Fix: specific safe change at real locations
+- Verify the fix: `exact command` or exact manual path
+- Checks: A-DOM-n
 - Status: open
 - Remediation: GA-101
 
 ## Remediation plan
 
-Phases in priority order: 1 Stop the bleeding (all Criticals), 2 Quick wins
-(High or Medium at S effort), 3 Plan now (structural, M or L), 4 Verify first
-(Tentative findings), 5 Backlog (Low worth recording). Empty phases are omitted.
-No phase over 12 tasks. Every Critical and High maps to at least one task.
-
 ## Phase 1: Stop the bleeding
-
-Goal: zero Critical findings remain open. Blocks every other phase.
 
 ### Wave 1.1
 
-- [ ] GA-101 [W1.1] Imperative title of the fix
-  - Files: exact/existing/paths.ext (invented paths are a defect)
+- [ ] GA-101 [W1.1] Imperative root-cause fix
+  - Files: exact existing paths and explicitly named new test path
   - Depends on: none
-  - Reuses: what already exists; do not write a second one
+  - Reuses: an existing control or pattern
   - Fixes: F-DOM-1
-  - Acceptance: 2 to 4 grep-verifiable or observable conditions
-  - Verify: `exact command` (inherited from the finding's Verify-the-fix line)
+  - Acceptance: 2 to 4 observable conditions
+  - Verify: `exact command`
   - Checks: A-DOM-n
 
 ## Phase N: Re-audit
 
-Goal: prove the remediation moved the score. Always the final phase.
-
 ### Wave N.1
 
-- [ ] GA-N01 [WN.1] Re-run godaudits at the new commit
-  - Files: none (re-runs the audit, not the code)
-  - Depends on: every prior phase
-  - Fixes: none (final gate; confirms every resolved finding stayed resolved)
-  - Acceptance: expected score movement named, e.g. "DOMAIN 61 to 85 or better, no Critical findings open"
-  - Verify: `re-run /godaudits and compare the Scorecard`
+- [ ] GA-N01 [WN.1] Re-run godaudits at the remediated commit
+  - Files: none
+  - Depends on: every active non-final task
+  - Reuses: the current catalog and evidence fingerprint
+  - Fixes: none (final gate)
+  - Acceptance: expected score and coverage movement, no open Critical findings
+  - Verify: `godaudits validate .godaudits/AUDIT.json`
   - Checks: none
 
 ## Accepted risks and open questions
 
-Exactly one such section, under 10 entries. Each entry: the risk or question,
-options, a recommended default, and who decided or must decide. Accepted risks
-name their acceptor and the finding that points here.
+Accepted risks name finding, owner, acceptance date, expiry, and review command.
+Open questions name owner, due date, and recommended default.
 
 ## Rules for remediating agents
 
 > [!IMPORTANT]
-> This audit is the source of truth. The chat is not.
->
-> 1. Before any work: read the frontmatter, then find the first unchecked task in wave order. Re-derive state from checkboxes; trust nothing remembered.
-> 2. One task at a time. Respect Depends on. Run tasks marked [P] concurrently only when their Files lists are disjoint.
-> 3. Run the task's Verify command. Only after it passes, flip [ ] to [x], set every finding in its Fixes line to `Status: resolved`, and update the frontmatter counters and `updated:` date in the same edit. Never batch check-offs.
-> 4. If Verify fails: the box stays unchecked. Append an indented `- Note (YYYY-MM-DD):` line under the task saying what happened.
-> 5. Fix the root cause the finding names, not the symptom the evidence quotes. If the true fix differs from the task's Fix line, patch the audit first (new task id, superseded task struck through with a reason), then execute the patch.
-> 6. Never renumber, reword, or uncheck a completed task; never delete or renumber a finding.
-> 7. Do not "improve" code beyond the task's Files and Acceptance; opportunistic refactors invalidate the audit's evidence lines.
-> 8. At session end: append one line to `## Session log`: date, tasks completed, findings resolved, what is next.
-> 9. When all phases are done, run the final Re-audit task before declaring victory.
+> AUDIT.json is the machine source of truth. AUDIT.mdx is generated.
+> Run Verify before changing task or finding state, preserve ids and reciprocal
+> links, regenerate derived views, and finish with the re-audit gate.
 
 ## Session log
 
-- YYYY-MM-DD audit created (godaudits v1.0.0)
+- YYYY-MM-DD summary under 140 characters

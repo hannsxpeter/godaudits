@@ -1,6 +1,6 @@
 # Build audit module
 
-Audits whether the app is real or a museum: every visible feature wired end to end to a live backend, auth that actually gates, CTAs whose chains complete, and zero scaffold shipped as product. Emits findings `F-BUILD-n` and a 0-100 build score into AUDIT.mdx. The orchestrator loads it for saas-dashboard, api-service, mobile-app, and any repo with auth, navigation, and CRUD over domain data; marketing-site, library, and single-component repos may exclude it with the reason recorded in the applicability matrix.
+Audits whether the app is real or a museum: every visible feature wired end to end to a live backend, auth that actually gates, CTAs whose chains complete, and zero scaffold shipped as product. Emits findings `F-BUILD-n` and a 0-100 build score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads it for saas-dashboard, api-service, mobile-app, and any repo with auth, navigation, and CRUD over domain data; marketing-site, library, and single-component repos may exclude it with the reason recorded in the applicability matrix.
 
 ## Lineage
 
@@ -104,7 +104,7 @@ Weighted dimensions, summing to 100. Derived from the production-ready tier tabl
 - Supply chain and hardening (10): A-BUILD-14, A-BUILD-15, A-BUILD-21.
 - Session state and closure (10): A-BUILD-1, A-BUILD-17, A-BUILD-18, A-BUILD-20.
 
-Any open Critical finding caps this domain at 69.
+Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

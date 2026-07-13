@@ -1,6 +1,6 @@
 # Repository audit module
 
-Audits whether the repository itself is real: files that serve a purpose, CI that runs the actual pipeline, docs a stranger can act on, tooling that matches the stack, and an agent-safety layer for the agents that will execute against it. It runs the repo-ready disciplines forward against the tree on disk instead of against a plan, and feeds findings `F-REPO-n` and a 0-100 domain score (weight 5 per `intake.md`) into AUDIT.mdx. The orchestrator loads this module for every archetype: repo is never excluded per the intake hard rules; it scales down with the calibration instead, and the applicability matrix records the scale, not an exclusion. In plan-aware mode every check also cites its `R-REPO-n` twin from `.godplans/PLAN.mdx`.
+Audits whether the repository itself is real: files that serve a purpose, CI that runs the actual pipeline, docs a stranger can act on, tooling that matches the stack, and an agent-safety layer for the agents that will execute against it. It runs the repo-ready disciplines forward against the tree on disk instead of against a plan, and feeds findings `F-REPO-n` and a 0-100 domain score (weight 5 per `intake.md`) into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for every archetype: repo is never excluded per the intake hard rules; it scales down with the calibration instead, and the applicability matrix records the scale, not an exclusion. In plan-aware mode every check also cites its `R-REPO-n` twin from `.godplans/PLAN.mdx`.
 
 ## Lineage
 
@@ -98,7 +98,7 @@ Weighted dimensions summing to 100. Derived from repo-ready's 42-point Mode C ta
 | Release machinery (conditional) | 12 | A-REPO-13, A-REPO-14, A-REPO-23 |
 | Agent safety | 8 | A-REPO-15 |
 
-Release machinery applies only when the release sub-surface exists; a tier-1 repo that publishes nothing and declares the stop drops it, re-normalizing the rest to 100. A-REPO-5 is skipped in single-language repos without re-weighting its dimension. Any open Critical finding caps this domain at 69.
+Release machinery applies only when the release sub-surface exists; a tier-1 repo that publishes nothing and declares the stop drops it, re-normalizing the rest to 100. A-REPO-5 is skipped in single-language repos without re-weighting its dimension. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

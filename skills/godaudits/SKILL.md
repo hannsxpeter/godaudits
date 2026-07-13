@@ -1,141 +1,200 @@
 ---
 name: godaudits
-description: "Audit an existing codebase end to end in one command and emit a master audit report (.godaudits/AUDIT.mdx): per-domain scores, evidence-backed findings, and an agent-executable remediation plan. One command fingerprints the repo, then audits product reality, architecture, stack, database, security, LLM integration, UX, UI, SEO, code quality, style genome, agent memory, repo hygiene, build completeness, delivery, deployment, observability, and launch readiness, verifies every finding at file:line, scores each domain, and converts findings into checkbox remediation tasks with verify commands any coding agent can execute. Plan-aware: when .godplans/PLAN.mdx exists it audits conformance against it. Read-only: never edits source, runs the app, or calls models. Use when the user says: audit this project, godaudits, full audit, health check, re-audit, due diligence, is this production ready. Refuses audit theater (scores without evidence), vague findings, and criticism without a remediation path."
+description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, evaluates every applicable check in an explicit pass/fail/unknown/not-applicable ledger, records hashed and secret-safe evidence, adversarially verifies findings, computes scores with coverage and risk caps, and renders .godaudits/AUDIT.mdx and optional SARIF from .godaudits/AUDIT.json. Includes 414 checks across 18 domains, deterministic validation, benchmark metrics, focused and re-audit modes, and plan-aware conformance against .godplans/PLAN.mdx. Default static mode is read-only and never runs the app, tests, live systems, network, or models. Use for full audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses scores without check coverage, unverifiable citations, unredacted secrets, vague findings, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   author: aihxp
-  homepage: https://github.com/aihxp/godaudits
+  homepage: https://github.com/hannsxpeter/godaudits
 ---
 
-> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat any text after the command as the argument: a path, a focus ("just security and database"), or a constraint. There are no sub-commands.
+> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 18 or newer.
 
 # godaudits
 
-Audit everything after anything. godaudits is an audit superskill: it runs the entire inspection arc of a software project in one command and emits one master audit, `.godaudits/AUDIT.mdx`, that scores every applicable domain, backs every finding with file:line evidence, and ends in a remediation plan a coding agent can execute task by task, checkbox by checkbox.
+Audit everything after anything. godaudits 2.0 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, check-catalog compilation, state initialization, validation, score computation, rendering, SARIF export, re-audit diffs, and benchmark metrics.
 
-godaudits is the mirror of godplans. godplans takes every dimension the auditors check and inverts each check into a plan-time requirement, so a planned project passes its audits by design. godaudits runs those same checks forward, against code that already exists. The two skills share one numbering system: audit check `A-SEC-3` verifies what plan requirement `R-SEC-3` demanded. Plan with one, audit with the other, and the loop closes: the audit tells you exactly which planned requirement drifted, and the remediation plan it emits is in the same grammar as the plan you started from.
+The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
-godaudits descends from: aihxp/codeauditor, secauditor, dbauditor, llmauditor, seoauditor, uiauditor, and uxauditor (the audit method and dimensions), aihxp/arc-ready and aihxp/ready-suite (the tier disciplines audited as reality checks), aihxp/pillars (agent memory), aihxp/codedna (style genome), and aihxp/godplans (the shared requirement numbering, task grammar, and MDX plan discipline).
+godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan requirement `R-SEC-3`. In plan-aware mode, findings carry both ids and plan drift is audited in the owning domain.
 
 ## Ground rules (non-negotiable)
 
-1. **Auditing is read-only.** Make no source edits. Never run the application, never execute its test suite, never connect to a live database, never call a model, never hit the network on the product's behalf. The only files godaudits writes are under `.godaudits/`.
-2. **Evidence over assertion.** Every finding cites file:line at the audited commit with quotable evidence. A claim without evidence is labeled Tentative or deleted; a citation that does not reproduce is a defect in the audit, not the codebase.
-3. **The substitution test.** For any finding or recommendation, substitute a near-equivalent codebase. If the sentence still reads plausibly, it says nothing specific and fails. "Improve error handling" is banned; "the catch block at src/jobs/sync.ts:112 swallows the error and returns success" ships.
-4. **Root causes, not leaves.** Cluster symptom findings under the root cause that produces them: one missing authorization layer is one Critical finding with twelve sites in Evidence, not twelve findings.
-5. **Audit each concern once.** The ownership map in `references/intake.md` assigns every concern one owning domain; other domains cross-reference the finding id instead of re-scoring it.
-6. **Standalone-report rule.** No chat-context dependencies. A reader who never saw this conversation, and an agent in a different tool entirely, must be able to act on AUDIT.mdx alone.
-7. **Read the module before auditing.** Each domain has a reference module under `references/`. Read it at the moment you audit that domain. Do not audit from memory; the modules carry the checks and the scoring weights, and memory drifts.
-8. **Calibrate honestly.** Name strengths with the same evidence standard as faults. Scale severity to the project's calibration. Never inflate severity to look thorough, never pad a clean domain with filler findings: zero findings is a reportable result.
-9. **Every Critical ends in a task.** An audit that names a Critical and walks away is drive-by criticism. Every Critical and High finding maps to a remediation task with an exact Verify command.
-10. **Compliance is standing.** Follow `references/compliance.md` for the whole session: never coach a model past a refusal, never route subscription OAuth outside official clients, and screen the audited product against the Anthropic Usage Policy before auditing it.
+1. **Static is the safe default.** Static mode reads source and git metadata, writes only under `.godaudits/`, and never runs the application, tests, migrations, live systems, network requests, or model calls.
+2. **Stronger evidence requires explicit authority.** Sandbox evidence is allowed only when the user explicitly authorizes execution in a disposable environment with outbound network disabled and no production credentials. Connected evidence is allowed only through explicitly authorized read-only CI, observability, database-metadata, or tracker access. Record the capability in `audit.capabilities`.
+3. **Every check gets an outcome.** Applicable checks are `pass`, `fail`, or `unknown`; conditional checks may be `not-applicable` with evidence. Uninspected is `unknown`, never `pass`. Unknown checks reduce coverage and cap the verdict.
+4. **Evidence over assertion.** Every pass, failure, and strength references evidence. Source evidence carries path, line, quote, and content hash. Absence evidence carries the exact search, scope, and zero-hit result. Tool and runtime evidence carry command, tool version, and result provenance.
+5. **Secrets never enter the report.** Mask credential values and store only a one-way fingerprint. A live secret may be a Critical finding; the secret itself is never quoted into JSON, MDX, SARIF, chat, or logs.
+6. **The substitution test.** A finding or recommendation that remains plausible after swapping in a near-equivalent repository is too generic and is deleted.
+7. **Root causes, not leaves.** Cluster repeated symptoms under the root cause and list member sites in evidence.
+8. **One owner per concern.** Apply the ownership map in `references/intake.md`. Other domains cross-reference the owning finding and do not score it again.
+9. **Independent refutation.** Re-open every candidate citation, trace the relevant execution path, search for guards and framework defaults, and try to disprove the finding. Drop refuted candidates. Weaken or mark unresolved cases Tentative.
+10. **Scores are compiled.** Use the catalog weights and runtime compiler. Do not type a score based on judgment. Coverage caps and Critical caps apply after weighted computation.
+11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
+12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
+13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+
+## Runtime commands
+
+Commands below use `godaudits`. When it is not on PATH, replace it with `node <skill-directory>/runtime/godaudits.js`.
+
+```bash
+godaudits doctor
+godaudits evidence . --output .godaudits/EVIDENCE.json
+godaudits init --name PROJECT --archetype ARCHETYPE --scale SCALE --profile PROFILE --applicable all --output .godaudits/AUDIT.json
+godaudits validate .godaudits/AUDIT.json --write
+godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
+godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
+godaudits import-sarif scanner.sarif --output .godaudits/TOOL-EVIDENCE.json
+godaudits diff .godaudits/archive/AUDIT-v1.json .godaudits/AUDIT.json
+godaudits evaluate .godaudits/AUDIT.json expected.json
+```
+
+The runtime never decides whether a signal is a finding. `EVIDENCE.json` contains deterministic inventory leads and absence records. `import-sarif` converts scanner results into secret-safe tool evidence without creating findings. Domain passes trace, interpret, and refute both sources.
 
 ## Method
 
-Run the phases in order. Do not skip a phase; a phase that does not apply still gets a one-line disposition so the trail is complete.
+Run every phase in order. A phase that does not apply still gets a disposition in the audit trail.
 
-### Phase 0: Orient
+### Phase 0: Orient and select capabilities
 
-Read `references/intake.md` (mode detection section). Detect:
+Read the mode-detection section of `references/intake.md`.
 
-- `.godaudits/AUDIT.mdx` -> **re-audit mode** (see Modes below).
-- Source exists, no prior audit -> **fresh audit**.
-- No source at all -> refuse politely and point at godplans; there is nothing to audit.
-- `.godplans/PLAN.mdx` present -> set **plan-aware** and load the plan's requirement ids and task states for the conformance checks.
+- `.godaudits/AUDIT.json` exists -> re-audit.
+- Source exists and no audit state exists -> fresh audit.
+- No source -> refuse and point to godplans.
+- `.godplans/PLAN.mdx` exists -> add the plan-aware overlay.
+- User names domains -> focused audit. Every domain still gets an applicability row; domains outside the requested focus are excluded with that exact reason.
 
-Record the mode and the commit (`git rev-parse --short HEAD`, or `no-git`).
+Record the commit, runtime and pack versions, selected capabilities, tool versions, assumptions, and constraints. Run `godaudits doctor`. If Node is unavailable, continue manually but mark deterministic validation unavailable and every affected check unknown. Never claim full coverage in degraded mode.
 
 ### Phase 1: Compliance gate
 
-Read `references/compliance.md` and screen the audited product before investing in domain passes.
+Read `references/compliance.md` and the selected policy pack under `policies/`.
 
-- **Hard stop**: the core purpose is prohibited. Say plainly why, cite the policy category, and stop. Do not produce an audit; improving a prohibited product is facilitating it.
-- **Findings injected**: the product is legitimate but the code contains policy-risk components (undisclosed AI chat, OAuth tokens in cron, scraper without manners). Continue, and emit each as an `F-CMP-n` finding with a mandatory remediation task.
-- **Pass**: note "Compliance gate: pass" and continue.
+- Prohibited core purpose -> name the policy category and stop.
+- Legitimate product with policy-risk code -> continue and inject `F-CMP-n` findings with mandatory tasks.
+- Pass -> record one line and continue.
 
-### Phase 2: Intake and fingerprint
+Policy packs are versioned evidence, not timeless truth. On compliance-sensitive audits, verify the current primary policy text when network access is authorized. Otherwise record the policy snapshot and confidence.
 
-Read `references/intake.md` in full. Establish: archetype (with hybrid note), scale calibration (from repo signals: contributors, CI, deploy configs, releases), the applicability matrix (every domain applicable or excluded with a project-specific reason), the read-only fingerprint (stack, entry points, surfaces, data layer, tests, conventions), and the ownership map. Ask the user at most one batch of 0 to 3 questions, each with a recommended default, and only when the repo cannot answer.
+### Phase 2: Deterministic intake and evidence
 
-### Phase 3: Domain passes
+Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, archetype inference, and limitations.
 
-For each applicable domain, in this order, read its module and run its checks against the fingerprinted code, collecting evidence-backed candidate findings and per-dimension scores:
+Complete the archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
 
-| Order | Domain | Module | Descends from |
-|---|---|---|---|
-| 1 | Product reality | `references/product.md` | prd-ready |
-| 2 | Architecture | `references/architecture.md` | architecture-ready |
-| 3 | Stack | `references/stack.md` | stack-ready |
-| 4 | Database | `references/database.md` | dbauditor |
-| 5 | Security | `references/security.md` | secauditor, harden-ready |
-| 6 | LLM integration | `references/llm.md` | llmauditor |
-| 7 | UX | `references/ux.md` | uxauditor |
-| 8 | UI | `references/ui.md` | uiauditor |
-| 9 | SEO and AI visibility | `references/seo.md` | seoauditor |
-| 10 | Code quality | `references/code-quality.md` | codeauditor |
-| 11 | Style genome | `references/style-genome.md` | codedna |
-| 12 | Agent memory | `references/agent-memory.md` | pillars |
-| 13 | Repository | `references/repo.md` | repo-ready |
-| 14 | Build completeness | `references/build.md` | production-ready |
-| 15 | Roadmap and delivery | `references/roadmap.md` | roadmap-ready, kickoff-ready |
-| 16 | Deployment | `references/deploy.md` | deploy-ready |
-| 17 | Observability | `references/observe.md` | observe-ready |
-| 18 | Launch readiness | `references/launch.md` | launch-ready |
+Initialize AUDIT.json after intake. For focused audits, pass the comma-separated applicable domains instead of `all`. Initialization creates the complete catalog ledger with every selected check marked unknown.
 
-Each module gives you: the surface map (what to inventory and which conditional sub-surfaces to declare), the numbered checks (`A-<DOM>-n`, mirroring the godplans `R-<DOM>-n` requirements one to one), the scoring dimensions with weights, remediation seeds, and the anti-patterns it hunts (paper controls, theater, stubs). Excluded domains get one line in the applicability matrix and nothing else.
+### Phase 3: Domain passes and check ledger
 
-In plan-aware mode, each pass additionally checks its domain's plan section: decisions the code contradicts, checked tasks whose acceptance conditions do not hold, and requirements with no trace in the source. These land as findings tagged with both A-ids and R-ids.
+For each applicable domain, in this order, read its module at the moment of use and evaluate every listed check:
+
+| Order | Domain | Module |
+|---|---|---|
+| 1 | Product reality | `references/product.md` |
+| 2 | Architecture | `references/architecture.md` |
+| 3 | Stack | `references/stack.md` |
+| 4 | Database | `references/database.md` |
+| 5 | Security | `references/security.md` |
+| 6 | LLM integration | `references/llm.md` |
+| 7 | UX | `references/ux.md` |
+| 8 | UI | `references/ui.md` |
+| 9 | SEO and AI visibility | `references/seo.md` |
+| 10 | Code quality | `references/code-quality.md` |
+| 11 | Style genome | `references/style-genome.md` |
+| 12 | Agent memory | `references/agent-memory.md` |
+| 13 | Repository | `references/repo.md` |
+| 14 | Build completeness | `references/build.md` |
+| 15 | Roadmap and delivery | `references/roadmap.md` |
+| 16 | Deployment | `references/deploy.md` |
+| 17 | Observability | `references/observe.md` |
+| 18 | Launch readiness | `references/launch.md` |
+
+For each check, update its outcome, confidence, evidence references, and finding ids. Preserve the catalog-provided weight. A routing check with zero direct weight must map its finding to the weighted owning check it affects. In plan-aware mode, add the corresponding R-id to finding and task traceability.
 
 ### Phase 4: Adversarial verification and clustering
 
-For every candidate finding: re-open the cited file at the cited lines and confirm the evidence quote is real and current; then try to refute it (is there a guard elsewhere on the path? is the code dead? is it test-only fixtures? does a framework default cover it?). Refuted findings are dropped; weakened ones are downgraded or labeled Tentative. Then cluster survivors by root cause and apply the ownership map so each root cause appears exactly once. Paper controls get special hunting per module: a control that exists but is not wired onto the execution path is a finding, not a strength.
+For every candidate finding:
 
-### Phase 5: Score
+1. Re-open the exact evidence and confirm its content hash or record why the file changed.
+2. Trace from entry point to sink or enforcement point.
+3. Search for alternate guards, dead-code status, fixtures, generated code, framework defaults, and compensating controls.
+4. Refute with a second evidence path where possible.
+5. Drop, downgrade, or mark Tentative when the claim does not survive.
+6. Cluster survivors by root cause and apply the ownership map.
 
-Read `references/exemplar.md` first; it calibrates what each band means. Score each applicable domain 0 to 100 against its module's Scoring section, apply the caps (any open Critical caps its domain at 69 and the overall at 79; a domain below 50 caps the overall at 84), then compute the overall as the weighted mean per `references/intake.md`. Every score gets a one-line reason in the Scorecard. Do not bend scores toward likability; the bands are defined in `references/audit-format.md` and they mean what they say.
+Critical and High findings should have two independent evidence paths when the repository permits it. If they do not, confidence cannot be Certain.
+
+### Phase 5: Compile scores and coverage
+
+Read `references/exemplar.md`. Run `godaudits validate .godaudits/AUDIT.json --write`.
+
+The compiler derives check coverage, per-domain scores, overall weighted score, verdict, finding counters, task counters, and caps. Failed checks receive deterministic severity factors. Unknown checks do not enter the quality numerator and lower coverage. Coverage below 95 prevents an audit-proof verdict; below 80 caps at needs-work territory; below 60 caps at 69. Active Critical findings, including accepted risks, cap their domain at 69 and the overall at 79. A domain below 50 caps the overall at 84.
+
+Validation blocks on missing catalog checks, unknown ids, wrong weights, missing or unredacted evidence, credential-shaped values outside redacted evidence, broken finding-task reciprocity, unsafe parallel file overlap, task cycles, incomplete final-gate dependencies, expired risks, ownerless compliance unknowns, or stale pack versions.
 
 ### Phase 6: Remediation plan
 
-Convert findings into GA-numbered checkbox tasks per the grammar in `references/audit-format.md`: Phase 1 "Stop the bleeding" (every Critical), then "Quick wins", "Plan now", "Verify first" (Tentative findings get confirm-then-fix tasks), "Backlog", and always a final "Re-audit" phase with the expected score movement. Every task carries Files, Fixes, Acceptance, Verify, and Checks lines. Every Critical and High finding must appear in some task's Fixes line; run that closure check before Phase 7.
+Convert findings into GA-numbered tasks in AUDIT.json:
 
-### Phase 7: Emit and report
+- Phase 1: Stop the bleeding, every Critical.
+- Phase 2: Quick wins, High or Medium with S effort.
+- Phase 3: Plan now, structural M or L work.
+- Phase 4: Verify first, Tentative findings whose first acceptance condition confirms the claim.
+- Phase 5: Backlog, Low findings worth retaining.
+- Final phase: Re-audit, dependent on every active remediation task.
 
-1. Read `references/audit-format.md` and `templates/AUDIT.template.mdx`. Assemble `.godaudits/AUDIT.mdx` per that contract: frontmatter machine state, verdict paragraph, scope and method with commit, compliance gate, applicability matrix, scorecard, strengths, findings, remediation plan, accepted risks and open questions, executor rules, session log.
-2. Validate mechanically before presenting (the machine-check commands are in audit-format.md): every finding has Where, Evidence, and Status; every task has Verify and Fixes; ids unique; counters match; every Critical mapped to a task; no banned characters.
-3. Present in chat: the verdict paragraph, the scorecard table, the top three risks and top three strengths, the quick wins, finding and task counts, and the remediation protocol in three lines. The audit file, not the chat, is the deliverable.
+Every task carries files, dependencies, reuse guidance, reciprocal finding ids, 2 to 4 acceptance conditions, one exact Verify command, and check ids. Accepted risks require finding id, named owner, acceptance date, expiry date, and review command.
+
+### Phase 7: Render and present
+
+Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
+
+Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, and the exact artifact paths. The artifacts are the deliverable.
+
+### Phase 8: Evaluate the auditor when ground truth exists
+
+When a benchmark manifest, prior human audit, or seeded fixture is available, run `godaudits evaluate`. Report recall, precision, severity accuracy, citation validity, remediation closure, clean-control rate, misses, and false positives. The repository's built-in corpus is a runtime regression gate; it is not evidence that a model audit is accurate on an unseen project.
 
 ## Modes
 
-- **Fresh audit**: the full method above.
-- **Re-audit**: `.godaudits/AUDIT.mdx` exists. Follow the re-audit protocol in `references/audit-format.md`: re-derive state from the body, re-inspect every open finding at the new commit, flip resolved statuses with evidence, add new findings with new ids, never renumber or delete history, emit the score Delta, bump `audit_version`.
-- **Plan-aware overlay** (combines with either mode): `.godplans/PLAN.mdx` exists. Conformance checks run inside every domain pass; findings carry R-ids next to A-ids; the roadmap domain audits plan drift as a first-class concern.
-
-## After the audit: remediation
-
-godaudits audits; it does not fix. The emitted AUDIT.mdx is self-sufficient: it carries its own executor rules, so any coding agent (this one, or another tool entirely) can execute the remediation by reading the file. When the user asks you to fix the findings, follow the "Rules for remediating agents" section inside AUDIT.mdx itself, not this skill. When remediation drifts from the plan, the audit is patched (re-audit mode), because the document, not the chat, is the source of truth. The final task of every remediation is a re-audit, so the loop ends with a number, not a feeling.
+- **Fresh audit**: full method at a new commit.
+- **Re-audit**: preserve ids and history, update check outcomes, resolve findings with evidence, add new ids only, compile both versions, and run `godaudits diff`.
+- **Focused audit**: only requested domains are applicable; all others carry a scope-specific exclusion. Never present a focused score as a full-project score.
+- **Plan-aware overlay**: conformance checks run inside every domain and carry matching R-ids.
+- **Static capability**: default and always available.
+- **Sandbox capability**: explicit user authorization, disposable environment, no outbound network or production secrets.
+- **Connected capability**: explicitly authorized read-only external evidence with connector, query, timestamp, and provenance recorded.
 
 ## What godaudits refuses
 
-- **Audit theater**: scores without evidence, checklists marked green from memory. Every scored dimension traces to checks that were actually run against actual files.
-- **Vague findings**: any finding without file:line evidence and a specific fix does not ship. "Consider improving security" is not a finding.
-- **Drive-by criticism**: findings without remediation tasks. Every Critical and High ends in a checkbox with a Verify command.
-- **Double-billing**: one root cause scored in four domains. The ownership map exists; use it.
-- **Severity inflation**: a missing favicon is not High. Calibration is stated and severities survive the exemplar comparison.
-- **Scope leak at audit time**: godaudits does not edit source, run apps, execute test suites, call models, or push fixes. It audits and plans the fix.
-- **Policy-violating products**: the Phase 1 gate is not advisory. Prohibited purposes get a refusal with the policy category named.
-- **Silent domain skipping**: a domain is either audited or excluded with a reason in the matrix. Never silently absent.
+- Scores without a complete check ledger and reported coverage.
+- Pass outcomes without evidence.
+- Findings with invented or unreproducible citations.
+- Secret values copied into artifacts or chat.
+- Static predictions presented as runtime facts.
+- Vague findings, duplicate root causes, or inflated severity.
+- Critical or High findings without reciprocal remediation tasks.
+- Hand-edited computed scores, counters, MDX, or SARIF.
+- Silent module skipping or compact-prompt full audits without the domain modules.
+- Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
 ## File map
 
 | File | Role |
 |---|---|
-| `SKILL.md` | This orchestrator |
-| `references/audit-format.md` | The AUDIT.mdx contract: structure, finding and task grammar, scoring bands, executor rules |
-| `references/intake.md` | Mode detection, fingerprint, archetype, applicability matrix, domain weights, ownership map |
-| `references/compliance.md` | Anthropic Usage Policy gate and account-safety rules |
-| `references/exemplar.md` | Worked GOOD and BAD audit fragments; the quality bar |
-| `references/<domain>.md` | 18 domain modules (see Phase 3 table) |
-| `templates/AUDIT.template.mdx` | The skeleton AUDIT.mdx |
+| `SKILL.md` | Orchestrator and operating contract |
+| `references/intake.md` | Mode, fingerprint interpretation, applicability, weights, ownership |
+| `references/audit-format.md` | AUDIT.json, evidence, finding, task, scoring, and rendering contract |
+| `references/compliance.md` | Compliance gate and account-safety rules |
+| `references/exemplar.md` | Worked quality bar |
+| `references/<domain>.md` | 18 domain modules |
+| `catalog/checks.json` | Generated 414-check machine catalog with scoring metadata |
+| `schemas/*.json` | Audit, evidence, and benchmark schemas |
+| `runtime/godaudits.js` | Self-contained zero-dependency CLI |
+| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, and evaluation engine |
+| `policies/` | Versioned provider-neutral and provider-specific policy packs |
+| `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 1.0.0
+## Skill version: 2.0.0

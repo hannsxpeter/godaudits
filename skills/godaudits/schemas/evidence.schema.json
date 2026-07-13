@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/evidence.schema.json",
+  "title": "godaudits static evidence fingerprint",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "mode",
+    "root",
+    "commit",
+    "archetype",
+    "manifests",
+    "lockfiles",
+    "languages",
+    "files",
+    "signals",
+    "absence_evidence",
+    "limitations",
+    "fingerprint_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "mode": { "const": "static" },
+    "root": { "type": "string" },
+    "commit": { "type": "string" },
+    "archetype": {
+      "type": "object",
+      "required": ["primary", "confidence"],
+      "properties": {
+        "primary": { "type": "string" },
+        "confidence": { "enum": ["Certain", "Firm", "Tentative"] }
+      },
+      "additionalProperties": false
+    },
+    "manifests": { "type": "array", "items": { "type": "string" } },
+    "lockfiles": { "type": "array", "items": { "type": "string" } },
+    "languages": { "type": "object", "additionalProperties": { "type": "integer" } },
+    "files": { "type": "array", "items": { "type": "object" } },
+    "signals": { "type": "array", "items": { "type": "object" } },
+    "absence_evidence": { "type": "array", "items": { "type": "object" } },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "fingerprint_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}

@@ -1,51 +1,59 @@
 # Contributing to godaudits
 
-Thanks for wanting to improve godaudits. This is a prompt-engineering
-repository: the product is markdown that steers AI coding agents, so the
-contribution rules are about discipline, not build systems.
+godaudits combines audit judgment in an Agent Skill with a zero-dependency
+deterministic runtime. Contributions must protect both halves of that contract.
 
 ## Ground rules
 
-1. **The canonical skill lives at `skills/godaudits/`.** The `.agents/` and
-   `.claude/` directories are symlink projections; never edit through them.
-2. **PROMPT.md is generated.** Change `skills/godaudits/SKILL.md` or the
-   inlined references, then run `bash scripts/build-prompt.sh` and commit
-   the regenerated file.
-3. **Style is mechanically enforced.** Run `bash scripts/lint.sh --all`
-   before pushing. ASCII punctuation only: no em or en dashes, no Unicode
-   arrows (write `->`), no emojis, no smart quotes, no box-drawing
-   characters. CI fails on violations.
-4. **Reference modules follow the six-section contract**: Lineage,
-   Surface map, Checks, Scoring, Remediation seeds, Anti-patterns hunted.
-   The linter checks presence; reviewers check substance.
-5. **Every check must be evidence-locatable.** A check whose violation
-   cannot be found by reading the repository (a file, a line, a config, a
-   grep) is opinion, not a check; it will be asked to change.
-6. **The substitution test applies to contributions too.** Prose that reads
-   equally true for any skill (or any project) is filler and gets cut.
+1. The canonical skill lives at `skills/godaudits/`. Do not edit through an
+   installed projection.
+2. Generated files are not hand-edited. Run `npm run catalog` for
+   `skills/godaudits/catalog/checks.json` and `npm run build:prompt` for
+   `PROMPT.md` and `PROMPT.full.md`.
+3. ASCII style is mechanically enforced. Do not add em dashes, en dashes,
+   Unicode arrows, emojis, smart quotes, or box-drawing characters.
+4. Domain modules follow the six-section contract: Lineage, Surface map,
+   Checks, Scoring, Remediation seeds, and Anti-patterns hunted.
+5. Every check must be evidence-locatable. An unobservable opinion is not a
+   check.
+6. Runtime behavior stays zero-dependency, deterministic, secret-safe, and
+   portable inside the skill directory.
+7. A scanner result is evidence, not automatically a finding. Human or agent
+   judgment must trace reachability, ownership, and counterevidence.
+8. The substitution test applies to contributions. Generic advice that fits
+   any repository does not belong in the product.
 
 ## Making a change
 
-1. Fork, branch from `main`.
-2. Make the change in the canonical files.
-3. `bash scripts/lint.sh --all --verbose` until green.
-4. If SKILL.md or an inlined reference changed: `bash scripts/build-prompt.sh`.
-5. If behavior changed: add a CHANGELOG entry under a new version heading and
-   bump the version in SKILL.md frontmatter and its body version line
-   (the linter enforces three-way parity).
-6. Open a PR describing what audit failure the change prevents or what
-   audit dimension it strengthens. "Makes it better" is a substitution-test
-   failure.
+1. Branch from `main`.
+2. Change canonical source files.
+3. Add or update Node test fixtures for behavior changes.
+4. Regenerate the catalog and prompts when their sources change.
+5. Add a CHANGELOG entry and update every version surface for a release.
+6. Run `npm run check` until it passes.
+7. Open a pull request explaining the missed defect, false positive, unsafe
+   behavior, or workflow gap the change prevents.
 
-## Reporting issues
+Useful focused commands:
 
-Best issues name a concrete failure: "audited X, the report missed Y or
-miscited Z, the remediating agent then did W wrong." Attach the AUDIT.mdx
-fragment when possible (redact anything private).
+```sh
+npm test
+npm run benchmark
+npm run catalog:check
+npm run prompt:check
+npm run lint
+```
+
+## Reporting audit quality issues
+
+The best report names a concrete failure: what repository was audited, what
+the audit missed or miscited, and how that affected remediation. Attach the
+smallest sanitized `AUDIT.json` fragment that reproduces the problem. Include
+the rendered MDX only when presentation is relevant. Never attach secrets or
+private source.
 
 ## Scope
 
-godaudits audits; it does not fix, build, or deploy. Features that make
-godaudits edit source, run applications, or push fixes will be declined;
-that work belongs to the remediating agent or to the sibling skill
-godplans, which plans the work upfront.
+godaudits audits and creates a remediation handoff. It does not change the
+audited application, deploy it, or connect to live systems without explicit
+authority. Runtime changes that weaken those boundaries will not be accepted.

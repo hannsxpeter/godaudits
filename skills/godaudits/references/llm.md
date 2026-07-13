@@ -1,10 +1,10 @@
 # LLM audit module
 
-Audits every place the codebase touches a language model: prompt construction and context, model selection and pinning, provider SDK mechanics, reliability, trust boundaries, agents and tools, RAG, structured output, cost, latency, evals, and observability. Feeds findings `F-LLM-n` and a 0-100 domain score into AUDIT.mdx. The orchestrator loads this module whenever the intake fingerprint finds a model or embeddings call site; archetypes with no LLM surface (cli-tool and marketing-site most often) exclude it with the reason recorded in the applicability matrix. Per intake, a provider dependency with no call site is a stack finding, not an llm pass.
+Audits every place the codebase touches a language model: prompt construction and context, model selection and pinning, provider SDK mechanics, reliability, trust boundaries, agents and tools, RAG, structured output, cost, latency, evals, and observability. Feeds findings `F-LLM-n` and a 0-100 domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module whenever the intake fingerprint finds a model or embeddings call site; archetypes with no LLM surface (cli-tool and marketing-site most often) exclude it with the reason recorded in the applicability matrix. Per intake, a provider dependency with no call site is a stack finding, not an llm pass.
 
 ## Lineage
 
-Descends from llmauditor, the read-only end-to-end audit of LLM integrations, and mirrors the godplans LLM module one to one: `A-LLM-n` audits in code exactly what `R-LLM-n` demanded at plan time. The llmauditor disciplines carry over intact: verify against the shipped request payload, never the prompt's wording ("respond only with JSON" is not structured output, "only access this user's records" is not authorization); hunt paper controls as hard as absences; calibrate every severity to the lethal trifecta (private data plus untrusted content plus external action) and to the declared paradigm and exposure; cluster repeated leaves into one root-cause finding; score each defect once under its owning dimension; and let any open Critical cap the domain at 69. Its twelve dimensions (LLMSEC through AGENT) survive as this domain's scoring table.
+Descends from llmauditor, the read-only end-to-end audit of LLM integrations, and mirrors the godplans LLM module one to one: `A-LLM-n` audits in code exactly what `R-LLM-n` demanded at plan time. The llmauditor disciplines carry over intact: verify against the shipped request payload, never the prompt's wording ("respond only with JSON" is not structured output, "only access this user's records" is not authorization); hunt paper controls as hard as absences; calibrate every severity to the lethal trifecta (private data plus untrusted content plus external action) and to the declared paradigm and exposure; cluster repeated leaves into one root-cause finding; score each defect once under its owning dimension; and let any active Critical, including an accepted risk, cap the domain at 69. Its twelve dimensions (LLMSEC through AGENT) survive as this domain's scoring table.
 
 ## Surface map
 
@@ -91,7 +91,7 @@ Weights follow the llmauditor dimension table. RAG and agents are conditional: w
 - Observability: 5 (A-LLM-19)
 - Latency: 4 (A-LLM-16)
 
-A paper control found by A-LLM-23 zeroes the dimension of the control it fakes. Any open Critical finding caps this domain at 69.
+A paper control found by A-LLM-23 zeroes the dimension of the control it fakes. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

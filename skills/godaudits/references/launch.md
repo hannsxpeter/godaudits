@@ -1,6 +1,6 @@
 # Launch audit module
 
-Audits the launch surface of a codebase: positioning and copy honesty, the landing page anatomy, launch-day SEO and OG cards, the waitlist and email funnel, channel plans and their etiquette, launch telemetry and attribution, and the D-7 to D+7 runbook with its sibling couplings. It emits findings `F-LAUNCH-n` and a 0-100 domain score into AUDIT.mdx. The orchestrator loads it during the domain passes whenever the applicability matrix marks launch applicable, which requires a public audience per intake.md; internal tools, private api-services, cli-tool, and library archetypes may exclude it with the reason recorded in the applicability matrix (a registry release page is not a launch surface this module owns).
+Audits the launch surface of a codebase: positioning and copy honesty, the landing page anatomy, launch-day SEO and OG cards, the waitlist and email funnel, channel plans and their etiquette, launch telemetry and attribution, and the D-7 to D+7 runbook with its sibling couplings. It emits findings `F-LAUNCH-n` and a 0-100 domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads it during the domain passes whenever the applicability matrix marks launch applicable, which requires a public audience per intake.md; internal tools, private api-services, cli-tool, and library archetypes may exclude it with the reason recorded in the applicability matrix (a registry release page is not a launch surface this module owns).
 
 ## Lineage
 
@@ -104,7 +104,7 @@ Weighted dimensions, summing to 100. When a conditional dimension is absent, dro
 - Telemetry and attribution (10): A-LAUNCH-16, 17.
 - Runbook and sibling coupling (10): A-LAUNCH-19, 20, 21, 23.
 
-Floor findings from the ancestor's have-nots list (leftover noindex on the shipped landing, fabricated social proof feeding a live funnel) are Critical or High regardless of arithmetic. Any open Critical finding caps this domain at 69.
+Floor findings from the ancestor's have-nots list (leftover noindex on the shipped landing, fabricated social proof feeding a live funnel) are Critical or High regardless of arithmetic. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

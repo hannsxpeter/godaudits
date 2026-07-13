@@ -1,10 +1,10 @@
 # UX audit module
 
-Audits the experience layer of the codebase: actors, journeys, state handling, workflows, forms, navigation, onboarding, and the trust surfaces around billing and consent. Experience is broader than pixels here: CLIs, APIs, and back-office workflows count. The pass feeds findings `F-UX-n` and a 0-100 ux domain score into AUDIT.mdx. The orchestrator loads this module for every archetype with a human-facing, developer-facing, or workflow surface; it is excluded only when no such surface exists (a pure internal library with no CLI, UI, API, or user flow), with the reason recorded in the applicability matrix.
+Audits the experience layer of the codebase: actors, journeys, state handling, workflows, forms, navigation, onboarding, and the trust surfaces around billing and consent. Experience is broader than pixels here: CLIs, APIs, and back-office workflows count. The pass feeds findings `F-UX-n` and a 0-100 ux domain score into AUDIT.json and its generated AUDIT.mdx view. The orchestrator loads this module for every archetype with a human-facing, developer-facing, or workflow surface; it is excluded only when no such surface exists (a pure internal library with no CLI, UI, API, or user flow), with the reason recorded in the applicability matrix.
 
 ## Lineage
 
-Descends from uxauditor, the read-only end-to-end experience auditor among the seven aihxp auditors, by way of the godplans ux module that inverted its checks into R-UX plan requirements; this module runs those same checks forward against code. The method DNA preserved: the eleven-dimension lens set (Nielsen heuristics, WCAG 2.2 AA, journeys, Lean process analysis, IA, interaction design, UX writing, Baymard forms, AARRR activation, RAIL/Doherty responsiveness, deceptive.design trust); evidence over assertion with the substitution test applied to every finding; root-not-leaves clustering (twelve placeholder-as-label fields are one systemic finding with member sites); adversarial refutation before anything is recorded; the static-inference-is-a-prediction discipline (uxauditor's Suspected confidence maps to this suite's Tentative); and the severity convention that a blocking accessibility failure or a confirmed deceptive pattern is Critical, never cosmetic, carrying uxauditor's cap of the dimension and domain when open.
+Descends from uxauditor, the read-only end-to-end experience auditor among the seven hannsxpeter auditors, by way of the godplans ux module that inverted its checks into R-UX plan requirements; this module runs those same checks forward against code. The method DNA preserved: the eleven-dimension lens set (Nielsen heuristics, WCAG 2.2 AA, journeys, Lean process analysis, IA, interaction design, UX writing, Baymard forms, AARRR activation, RAIL/Doherty responsiveness, deceptive.design trust); evidence over assertion with the substitution test applied to every finding; root-not-leaves clustering (twelve placeholder-as-label fields are one systemic finding with member sites); adversarial refutation before anything is recorded; the static-inference-is-a-prediction discipline (uxauditor's Suspected confidence maps to this suite's Tentative); and the severity convention that a blocking accessibility failure or a confirmed deceptive pattern is Critical, never cosmetic, carrying uxauditor's cap of the dimension and domain when open.
 
 ## Surface map
 
@@ -109,7 +109,7 @@ Weights derive from uxauditor's dimension table. Conditional dimensions re-norma
 | Performance and responsiveness | 6 | A-UX-16 |
 | Trust and anti-deception (conditional: billing or consent) | 6 | A-UX-17 |
 
-A-UX-20 scores inside whichever dimensions the non-GUI surface expresses (journeys, content, usability), calibrated to that surface. Any open Critical finding caps this domain at 69.
+A-UX-20 scores inside whichever dimensions the non-GUI surface expresses (journeys, content, usability), calibrated to that surface. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

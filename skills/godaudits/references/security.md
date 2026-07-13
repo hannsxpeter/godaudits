@@ -1,6 +1,6 @@
 # Security audit module
 
-Audits the security posture of the codebase the way secauditor would: read-only, source-to-sink, adversarial. It runs the R-SEC controls forward as A-SEC checks against the code as written, emits findings `F-SEC-n` and a 0-100 security domain score into AUDIT.mdx, and feeds Phase 1 of the remediation plan. The orchestrator loads this module in every domain-pass phase: per the intake hard rule, no archetype excludes security. Weekend-scale repos get calibrated severity, not a skipped pass, and the calibration is recorded in the applicability matrix.
+Audits the security posture of the codebase the way secauditor would: read-only, source-to-sink, adversarial. It runs the R-SEC controls forward as A-SEC checks against the code as written, emits findings `F-SEC-n` and a 0-100 security domain score into AUDIT.json and its generated AUDIT.mdx view, and feeds Phase 1 of the remediation plan. The orchestrator loads this module in every domain-pass phase: per the intake hard rule, no archetype excludes security. Weekend-scale repos get calibrated severity, not a skipped pass, and the calibration is recorded in the applicability matrix.
 
 ## Lineage
 
@@ -119,7 +119,7 @@ Weights are secauditor's dimension table carried forward. Conditional dimensions
 - Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.
 - AI and LLM security (2, conditional on model calls): A-SEC-23.
 
-A-SEC-1, A-SEC-2, A-SEC-24, and A-SEC-25 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any open Critical finding caps this domain at 69.
+A-SEC-1, A-SEC-2, A-SEC-24, and A-SEC-25 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 
