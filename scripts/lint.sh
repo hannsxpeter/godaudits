@@ -17,11 +17,17 @@
 #   references-exist     every references/<file>.md named in SKILL.md exists.
 #   modules-complete     every reference module has the six contract sections.
 #   symlinks-valid       .agents/skills and .claude/skills projections resolve.
-#   catalog-fresh        the generated 414-check machine catalog is current.
+#   catalog-fresh        the generated machine catalog is current.
 #   schemas-valid        every committed JSON and schema document parses.
 #   runtime-tests        compiler, renderer, evidence, eval, and interop tests pass.
 #   benchmark            the deterministic multi-language corpus passes.
+#   eval-suite           the deterministic product evaluations pass.
 #   prompt-fresh         both portable prompts match build-prompt.sh output.
+#   shell-syntax         every authored shell script parses.
+#   actions-pinned       every GitHub Action uses an immutable commit SHA.
+#   skill-size-budget    SKILL.md stays below progressive-disclosure limits.
+#   official-validator  runs the official validator when its binary is available.
+#   tag-release-parity  package version, git tag, and GitHub release agree.
 #
 # Usage: bash scripts/lint.sh [check-name | --all] [--verbose]
 # Bash 3.2 compatible (macOS default).
@@ -44,8 +50,7 @@ pass() { echo "ok   [$CHECK]"; }
 
 authored_files() {
   find "$REPO_DIR" \
-    -path "$REPO_DIR/.git" -prune -o \
-    -path "$REPO_DIR/node_modules" -prune -o \
+    -type d \( -name .git -o -name node_modules -o -name '.venv-*' \) -prune -o \
     -type f \( -name '*.md' -o -name '*.mdx' -o -name '*.sh' -o -name '*.json' -o -name '*.yml' -o -name '*.yaml' -o -name '*.js' -o -name '*.toml' -o -name '*.py' -o -name '*.go' -o -name '*.rs' \) -print
 }
 
@@ -175,6 +180,61 @@ check_benchmark() {
   if node "$REPO_DIR/bin/godaudits.js" benchmark >/dev/null; then pass; else fail "benchmark corpus failed"; fi
 }
 
+check_eval_suite() {
+  CHECK=eval-suite
+  if node "$SCRIPT_DIR/eval.js" >/dev/null; then pass; else fail "deterministic evaluations failed"; fi
+}
+
+check_shell_syntax() {
+  CHECK=shell-syntax
+  if bash -n "$REPO_DIR"/scripts/*.sh "$REPO_DIR/install.sh"; then pass; else fail "a shell script has invalid syntax"; fi
+}
+
+check_actions_pinned() {
+  CHECK=actions-pinned
+  bad=$(awk '/^[[:space:]]*uses:/ && $0 !~ /@[0-9a-f]{40}([[:space:]]|$)/ { print FNR ":" $0 }' "$REPO_DIR"/.github/workflows/*.yml "$REPO_DIR"/.github/workflows/*.yaml 2>/dev/null || true)
+  if [ -n "$bad" ]; then fail "workflow actions must use immutable 40-character SHAs:\n$bad"; else pass; fi
+}
+
+check_skill_size_budget() {
+  CHECK=skill-size-budget
+  lines=$(wc -l < "$SKILL_DIR/SKILL.md" | tr -d ' ')
+  words=$(wc -w < "$SKILL_DIR/SKILL.md" | tr -d ' ')
+  if [ "$lines" -gt 500 ] || [ "$words" -gt 5000 ]; then
+    fail "SKILL.md is $lines lines and $words words; limits are 500 lines and 5000 words"
+  else
+    note "SKILL.md is $lines lines and $words words"
+    pass
+  fi
+}
+
+check_official_validator() {
+  CHECK=official-validator
+  validator="${SKILLS_REF_BIN:-}"
+  if [ -z "$validator" ] && command -v skills-ref >/dev/null 2>&1; then validator="$(command -v skills-ref)"; fi
+  if [ -z "$validator" ]; then
+    note "skills-ref is not installed; scripts/release-check.sh requires it"
+    pass
+  elif "$validator" validate "$SKILL_DIR" >/dev/null; then
+    pass
+  else
+    fail "official Agent Skills validation failed"
+  fi
+}
+
+check_tag_release_parity() {
+  CHECK=tag-release-parity
+  version=$(node -p "require('$REPO_DIR/package.json').version")
+  tag="v$version"
+  if ! git -C "$REPO_DIR" rev-parse "$tag^{commit}" >/dev/null 2>&1; then fail "missing git tag $tag"; return; fi
+  if ! command -v gh >/dev/null 2>&1; then fail "gh is required"; return; fi
+  if ! gh release view "$tag" --repo hannsxpeter/godaudits --json tagName,isDraft,isPrerelease --jq '.tagName + " " + (.isDraft|tostring) + " " + (.isPrerelease|tostring)' 2>/dev/null | grep -q "^$tag false false$"; then
+    fail "GitHub release $tag is missing, draft, or prerelease"
+    return
+  fi
+  pass
+}
+
 TARGET="${1:---all}"
 case "$TARGET" in
   --all|--verbose)
@@ -189,7 +249,12 @@ case "$TARGET" in
     check_schemas_valid
     check_runtime_tests
     check_benchmark
+    check_eval_suite
     check_prompt_fresh
+    check_shell_syntax
+    check_actions_pinned
+    check_skill_size_budget
+    check_official_validator
     ;;
   unicode-clean) check_unicode_clean ;;
   frontmatter-version) check_frontmatter_version ;;
@@ -202,7 +267,13 @@ case "$TARGET" in
   schemas-valid) check_schemas_valid ;;
   runtime-tests) check_runtime_tests ;;
   benchmark) check_benchmark ;;
+  eval-suite) check_eval_suite ;;
   prompt-fresh) check_prompt_fresh ;;
+  shell-syntax) check_shell_syntax ;;
+  actions-pinned) check_actions_pinned ;;
+  skill-size-budget) check_skill_size_budget ;;
+  official-validator) check_official_validator ;;
+  tag-release-parity) check_tag_release_parity ;;
   *) echo "Unknown check: $TARGET" >&2; exit 1 ;;
 esac
 

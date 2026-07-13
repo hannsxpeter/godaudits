@@ -76,6 +76,7 @@ function renderAudit(audit) {
   lines.push(`plan_aware: ${metadata.plan_aware}`);
   lines.push(`commit: ${yamlString(metadata.commit)}`);
   lines.push(`archetype: ${yamlString(metadata.archetype)}`);
+  if (metadata.project_form) lines.push(`project_form: ${yamlString(metadata.project_form)}`);
   lines.push(`scale: ${metadata.scale}`);
   lines.push(`risk_profile: ${metadata.risk_profile}`);
   lines.push(`engine_version: ${yamlString(metadata.engine_version)}`);
@@ -91,7 +92,9 @@ function renderAudit(audit) {
   const strength = audit.strengths[0];
   lines.push(`Score ${computed.overall.score}/100 (${computed.overall.verdict}). ${biggest ? `Biggest risk: ${mdxText(biggest.title)}.` : 'No open findings.'} ${strength ? `Biggest strength: ${mdxText(strength.title)}.` : ''}`.trim(), '');
   lines.push('## Scope and method', '');
-  lines.push(`Commit ${mdxText(metadata.commit)}; ${metadata.mode} audit; ${mdxText(metadata.archetype)} at ${metadata.scale} scale; ${metadata.risk_profile} risk profile. Capabilities: ${metadata.capabilities.map(mdxText).join(', ')}.`);
+  lines.push(`Commit ${mdxText(metadata.commit)}; ${metadata.mode} audit; ${mdxText(metadata.project_form || metadata.archetype)} form at ${metadata.scale} scale; ${metadata.risk_profile} risk profile. Capabilities: ${metadata.capabilities.map(mdxText).join(', ')}.`);
+  if (metadata.secondary_forms && metadata.secondary_forms.length) lines.push(`Secondary forms: ${metadata.secondary_forms.map(mdxText).join(', ')}.`);
+  if (metadata.domain_overlays && metadata.domain_overlays.length) lines.push(`Context candidates: ${metadata.domain_overlays.map((item) => `${mdxText(item.axis)}/${mdxText(item.id)} (${item.confidence}${item.requires_verification ? ', verify' : ''})`).join('; ')}.`);
   lines.push(`Assumptions: ${metadata.assumptions.length ? metadata.assumptions.map(mdxText).join('; ') : 'none'}.`);
   lines.push('The audit made no source edits, ran no application code, connected to no live systems, and called no models unless an explicitly listed capability states otherwise.', '');
   lines.push(`Coverage: ${computed.coverage.evaluated} of ${computed.coverage.applicable} applicable checks evaluated (${computed.coverage.percent}%). Unknown checks never earn points and cap the verdict.`, '');
@@ -108,6 +111,14 @@ function renderAudit(audit) {
     lines.push(`| ${domain.id} | ${score.score} | ${score.cap || 'none'} | ${evaluated}/${domain.checks.filter((check) => check.outcome !== 'not-applicable').length} |`);
   }
   lines.push(`| Overall | ${computed.overall.score} | coverage ${computed.overall.coverage_cap}; critical ${computed.overall.critical_cap}; weak-domain ${computed.overall.weak_domain_cap} | ${computed.coverage.evaluated}/${computed.coverage.applicable} |`, '');
+  if (audit.standards) {
+    lines.push('## Standards coverage', '');
+    lines.push('| Framework | Category | Disposition | Checks | Evidence | Findings |', '|---|---|---|---|---|---|');
+    for (const result of audit.standards) {
+      lines.push(`| ${tableText(result.framework)} | ${tableText(`${result.category} ${result.title}`)} | ${result.status} | ${result.checks.join(', ')} | ${result.evidence.join(', ') || 'none'} | ${result.finding_ids.join(', ') || 'none'} |`);
+    }
+    lines.push('');
+  }
   lines.push('## Check ledger', '');
   lines.push('| Check | Outcome | Confidence | Weight | Evidence |', '|---|---|---|---:|---|');
   for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {

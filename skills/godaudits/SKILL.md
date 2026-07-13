@@ -1,9 +1,9 @@
 ---
 name: godaudits
-description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, evaluates every applicable check in an explicit pass/fail/unknown/not-applicable ledger, records hashed and secret-safe evidence, adversarially verifies findings, computes scores with coverage and risk caps, and renders .godaudits/AUDIT.mdx and optional SARIF from .godaudits/AUDIT.json. Includes 414 checks across 18 domains, deterministic validation, benchmark metrics, focused and re-audit modes, and plan-aware conformance against .godplans/PLAN.mdx. Default static mode is read-only and never runs the app, tests, live systems, network, or models. Use for full audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses scores without check coverage, unverifiable citations, unredacted secrets, vague findings, double-billing, and Critical or High findings without executable tasks."
+description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 419 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.0 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, check-catalog compilation, state initialization, validation, score computation, rendering, SARIF export, re-audit diffs, and benchmark metrics.
+Audit everything after anything. godaudits 2.1 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -41,8 +41,9 @@ Commands below use `godaudits`. When it is not on PATH, replace it with `node <s
 ```bash
 godaudits doctor
 godaudits evidence . --output .godaudits/EVIDENCE.json
-godaudits init --name PROJECT --archetype ARCHETYPE --scale SCALE --profile PROFILE --applicable all --output .godaudits/AUDIT.json
-godaudits validate .godaudits/AUDIT.json --write
+godaudits pillars . --task "TASK" --target PATH
+godaudits init --name PROJECT --scale SCALE --profile PROFILE --applicable all --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
+godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 godaudits import-sarif scanner.sarif --output .godaudits/TOOL-EVIDENCE.json
@@ -80,9 +81,9 @@ Policy packs are versioned evidence, not timeless truth. On compliance-sensitive
 
 ### Phase 2: Deterministic intake and evidence
 
-Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, archetype inference, and limitations.
+Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
 
-Complete the archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
+Complete the primary and secondary project forms, product and industry overlays, regulatory candidates, compatibility archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. A regulatory candidate never establishes legal applicability without verification. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
 
 Initialize AUDIT.json after intake. For focused audits, pass the comma-separated applicable domains instead of `all`. Initialization creates the complete catalog ledger with every selected check marked unknown.
 
@@ -190,11 +191,12 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
 | `references/<domain>.md` | 18 domain modules |
-| `catalog/checks.json` | Generated 414-check machine catalog with scoring metadata |
+| `catalog/checks.json` | Generated 419-check machine catalog with scoring and standards metadata |
+| `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
 | `schemas/*.json` | Audit, evidence, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |
 | `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, and evaluation engine |
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.0.0
+## Skill version: 2.1.0

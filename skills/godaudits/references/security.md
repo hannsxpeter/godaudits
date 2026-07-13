@@ -102,6 +102,9 @@ A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severi
 27. A-SEC-27 (audit-only): Git history secrets sweep run by the auditor itself, not delegated to tooling config: history is scanned, not just HEAD, because a secret deleted from the working tree but never rotated is still live.
     Look: `git log -p` over credential-shaped patterns and deleted `.env` or key files; rotation evidence in later commits or docs.
     Fail: a provider-shaped credential in history with no rotation evidence: Critical when plausibly live, High otherwise.
+28. A-SEC-28 (audit-only): Every OWASP Web Top 10:2025 category receives a pass, fail, unknown, or justified not-applicable disposition backed by its owning checks, including A10 exceptional-condition paths.
+    Look: map A01 through A10 to this module's checks and cross-referenced ARCH, CODE, DB, DEPLOY, and OBS findings; for A10 trace dependency failure, partial writes, resource exhaustion, invalid state transitions, restart recovery, and authorization or validation dependency failure.
+    Fail: any category silently uninspected: Medium. A catch-all that returns success, drops work, bypasses a control, leaks sensitive errors, or permits an unauthorized transition on failure: High (Critical when exploitation crosses a tenant or regulated-data boundary).
 
 ## Scoring
 
@@ -119,7 +122,7 @@ Weights are secauditor's dimension table carried forward. Conditional dimensions
 - Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.
 - AI and LLM security (2, conditional on model calls): A-SEC-23.
 
-A-SEC-1, A-SEC-2, A-SEC-24, and A-SEC-25 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
+A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, and A-SEC-28 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

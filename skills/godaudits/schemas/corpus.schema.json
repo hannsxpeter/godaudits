@@ -16,6 +16,8 @@
           "name": { "type": "string", "minLength": 1 },
           "repo": { "type": "string", "minLength": 1 },
           "expected_archetype": { "type": "string", "minLength": 1 },
+          "expected_project_form": { "type": "string", "minLength": 1 },
+          "expected_overlays": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
           "required_signals": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
           "forbidden_signals": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
           "required_absences": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },

@@ -1,16 +1,18 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.0.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.1.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Audit everything after anything. godaudits is an evidence-first codebase audit
-system that combines a 414-check Agent Skill with a zero-dependency runtime. It
+system that combines a 419-check Agent Skill with a zero-dependency runtime. It
 produces validated machine state, computed scores and coverage, a standalone
 remediation report, and optional SARIF annotations.
 
-Version 2.0 closes the trust gap in prompt-only audits. The model still performs
+Version 2.1 adds form-aware context, Pillars 1.1 routing, arc-ready 1.1 artifact
+truth, evidence freshness, and OWASP Web Top 10:2025 coverage to the validated
+version 2 engine. The model still performs
 the work that requires judgment: tracing code paths, testing competing
 explanations, clustering root causes, calibrating impact, and prescribing a
 specific fix. The runtime performs work that should never depend on model mood:
@@ -20,8 +22,16 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 
 ## What makes it different
 
-- 18 domains and 414 versioned checks, each with inspection and failure
+- 18 domains and 419 versioned checks, each with inspection and failure
   guidance.
+- Six project forms, secondary-form composition, all 37 arc-ready profiles, and
+  conservative product, industry, and regulatory candidates.
+- Pillars 1.1 structural validation and deterministic nested-scope routing with
+  present, stub, excluded, absent, and unknown states.
+- Arc-ready 1.1 table-ledger validation, artifact hashes, dependency-order drift,
+  Git-history freshness with an explicit non-Git fallback, and launch
+  prepublication checks bound to a content hash or Git revision.
+- Explicit OWASP Web Top 10:2025 coverage without duplicate score weight.
 - Every applicable check records `pass`, `fail`, `unknown`, or
   `not-applicable`. Uninspected never means pass.
 - Quality score and audit coverage are separate. Low coverage caps the verdict.
@@ -37,7 +47,10 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 - MDX and SARIF are generated views. JSON is the source of truth.
 - SARIF scanners can be imported as redacted evidence without promoting their
   conclusions into findings.
-- A multi-language fixture corpus and metric evaluator test the auditor itself.
+- An eight-repository fixture corpus, deterministic product evaluations, and
+  live-harness cases test the auditor itself.
+- JSON Schema 2020-12 validation tests real emitted evidence and rejects
+  malformed nested project-context and Pillars contracts.
 
 ## Quickstart
 
@@ -75,8 +88,8 @@ All audit writes stay under `.godaudits/`:
 
 | Artifact | Role |
 |---|---|
-| `EVIDENCE.json` | Deterministic file inventory, hashes, signals, absences, archetype inference, and limitations |
-| `AUDIT.json` | Canonical schema-versioned check, evidence, finding, task, risk, and computed state |
+| `EVIDENCE.json` | Deterministic file inventory, hashes, signals, forms, overlays, arc artifacts, Pillars state, absences, and limitations |
+| `AUDIT.json` | Canonical schema-versioned check, standards, evidence, finding, task, risk, freshness, and computed state |
 | `AUDIT.mdx` | Generated standalone report and remediation handoff |
 | `AUDIT.sarif` | Optional SARIF 2.1.0 output for code-host annotations |
 | `TOOL-EVIDENCE.json` | Optional secret-safe evidence imported from SARIF scanners |
@@ -90,7 +103,7 @@ All audit writes stay under `.godaudits/`:
 flowchart TD
   A[Repository] --> B[Static evidence fingerprint]
   B --> C[Applicability and risk profile]
-  C --> D[Complete 414-check ledger]
+  C --> D[Complete 419-check ledger]
   D --> E[18 domain evaluators]
   E --> F[Independent refutation and clustering]
   F --> G[Validated audit JSON]
@@ -106,8 +119,9 @@ The normal command sequence is:
 ```bash
 godaudits doctor
 godaudits evidence . --output .godaudits/EVIDENCE.json
-godaudits init --name my-project --archetype api-service --scale funded-product --profile security-critical --applicable all --output .godaudits/AUDIT.json
-godaudits validate .godaudits/AUDIT.json --write
+godaudits pillars . --task "audit request routing" --target src/router.js
+godaudits init --name my-project --scale funded-product --profile security-critical --applicable all --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
+godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 ```
@@ -180,17 +194,22 @@ domain weights total 100 and are validated with the generated catalog.
 - Unknown compliance results without an owned question, or injected compliance
   results without a finding and task.
 - Hand-authored scores or counters that disagree with derived state.
+- Stale repository evidence, incomplete OWASP category ledgers, or unsupported
+  form and overlay metadata.
 
 Coverage caps prevent a polished subset from masquerading as a full audit.
 
 ## Evaluation and benchmarks
 
-The built-in corpus covers Node API, Python worker, Go CLI, and clean Rust
-library fixtures. It tests deterministic evidence collection, archetype
-classification, absence evidence, clean controls, and secret redaction:
+The built-in corpus covers Node API, Python worker, Go CLI, clean Rust library,
+web application, mobile or desktop, data or ML, and infrastructure or IaC
+fixtures. It tests deterministic evidence collection, compatibility archetype
+classification, all six project forms, absence evidence, clean controls, and
+secret redaction:
 
 ```bash
 npm run benchmark
+npm run eval
 ```
 
 When an expected-finding manifest exists, evaluate an actual audit:
@@ -202,7 +221,8 @@ godaudits evaluate .godaudits/AUDIT.json expected.json
 Metrics include recall, precision, severity accuracy, citation validity,
 remediation closure, clean-control rate, misses, and false positives. The
 built-in corpus is a runtime regression net, not proof that an unseen model
-audit is accurate.
+audit is accurate. Behavioral cases and the result template live under
+`evals/`; they are never reported as passed without retained harness evidence.
 
 ## Re-audits
 
@@ -262,16 +282,19 @@ verify into one id system.
 |---|---|
 | `skills/godaudits/SKILL.md` | Canonical orchestrator |
 | `skills/godaudits/references/` | Core contracts and 18 domain modules |
-| `skills/godaudits/catalog/` | Generated checks and versioned risk profiles |
+| `skills/godaudits/catalog/` | Generated checks, risk profiles, project context, and standards mappings |
 | `skills/godaudits/schemas/` | Audit, evidence, and benchmark schemas |
 | `skills/godaudits/runtime/` | Self-contained zero-dependency engine |
 | `skills/godaudits/policies/` | Versioned compliance policy packs |
 | `benchmarks/` | Multi-language deterministic corpus |
+| `evals/` | Live-harness behavioral cases and result contract |
 | `test/` | Compiler, evidence, renderer, evaluator, init, diff, and SARIF tests |
 | `scripts/lint.sh` | Repository, runtime, catalog, schema, benchmark, and prompt gates |
+| `scripts/validate-evidence-schema.py` | Pinned JSON Schema 2020-12 evidence validation |
 | `docs/ENGINE.md` | Runtime architecture and invariants |
 | `docs/EVALUATION.md` | Benchmark and accuracy methodology |
 | `docs/MIGRATION-2.0.md` | Version 1 to version 2 migration |
+| `docs/MIGRATION-2.1.md` | Version 2.0 to version 2.1 migration |
 | `docs/THREAT-MODEL.md` | Auditor safety and evidence threat model |
 
 ## Development
@@ -279,9 +302,11 @@ verify into one id system.
 ```bash
 npm test
 npm run benchmark
+npm run eval
 npm run catalog
 npm run build:prompt
 npm run check
+npm run release:check
 ```
 
 Generated catalog and prompts have non-mutating freshness checks in CI. See

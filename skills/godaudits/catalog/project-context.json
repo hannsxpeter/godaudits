@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "name": "arc-ready",
+    "version": "1.1.0",
+    "references": [
+      "references/building/product-form-router.md",
+      "references/building/domain-registry.md",
+      "references/orchestration/artifact-contract.md"
+    ]
+  },
+  "forms": [
+    {
+      "id": "web-application",
+      "label": "Web application",
+      "signals": [
+        { "id": "web-source-tree", "kind": "path", "pattern": "(^|/)(app|pages|src/pages|src/routes|src/components)/.*\\.(js|jsx|ts|tsx|vue|svelte)$", "weight": 3, "reason": "browser UI source tree" },
+        { "id": "web-entry", "kind": "path", "pattern": "(^|/)(public|static)/(index\\.html|manifest\\.webmanifest)$", "weight": 3, "reason": "browser entry artifact" },
+        { "id": "web-framework-config", "kind": "path", "pattern": "(^|/)(next|vite|astro|svelte|nuxt)\\.config\\.|(^|/)angular\\.json$", "weight": 3, "reason": "web framework configuration" },
+        { "id": "web-framework", "kind": "content", "pattern": "react-dom/client|from ['\"]next/|@angular/core|createApp\\(|from ['\"]vue['\"]|from ['\"]svelte", "weight": 3, "reason": "browser framework integration" },
+        { "id": "web-browser-api", "kind": "content", "pattern": "document\\.(querySelector|getElementById)|window\\.(location|history)|navigator\\.", "weight": 1, "reason": "browser API usage" }
+      ]
+    },
+    {
+      "id": "api-service",
+      "label": "API or service",
+      "signals": [
+        { "id": "api-contract", "kind": "path", "pattern": "(^|/)(openapi|swagger)(\\.[^/]+)?\\.(json|ya?ml)$|\\.proto$", "weight": 4, "reason": "versioned service contract" },
+        { "id": "api-source-tree", "kind": "path", "pattern": "(^|/)(api|server|services?|controllers?|routes?|workers?|consumers?)/", "weight": 2, "reason": "service source tree" },
+        { "id": "api-framework", "kind": "content", "pattern": "express\\(|FastAPI\\(|Flask\\(|http\\.HandleFunc|@RestController|grpc\\.|createServer\\(", "weight": 3, "reason": "service framework integration" },
+        { "id": "api-route", "kind": "content", "pattern": "\\.(get|post|put|patch|delete)\\s*\\(\\s*['\"]/|router\\.(get|post|put|patch|delete)|app\\.(get|post|put|patch|delete)", "weight": 2, "reason": "HTTP route declaration" },
+        { "id": "api-worker", "kind": "content", "pattern": "message consumer|event consumer|queue worker|subscribe\\(|consume\\(|@KafkaListener", "weight": 2, "reason": "headless worker or event consumer" }
+      ]
+    },
+    {
+      "id": "cli-sdk",
+      "label": "CLI or SDK",
+      "signals": [
+        { "id": "cli-entry", "kind": "path", "pattern": "(^|/)(bin|cmd|cli)/|(^|/)main\\.(go|rs)$", "weight": 3, "reason": "command-line entry tree" },
+        { "id": "sdk-tree", "kind": "path", "pattern": "(^|/)(sdk|client|clients|packages/sdk|lib/public)/", "weight": 3, "reason": "consumer SDK source tree" },
+        { "id": "cli-package-bin", "kind": "content", "pattern": "['\"]bin['\"]\\s*:|#!/usr/bin/env (node|python|bash|sh)", "weight": 3, "reason": "installable command declaration" },
+        { "id": "cli-framework", "kind": "content", "pattern": "commander|yargs|click\\.command|argparse|cobra\\.Command|clap::|System\\.CommandLine", "weight": 3, "reason": "command-line framework" },
+        { "id": "sdk-contract", "kind": "content", "pattern": "public (class|interface)|exports\\s*=|module\\.exports|export (class|interface|function)|client library|software development kit", "weight": 1, "reason": "public consumer contract" }
+      ]
+    },
+    {
+      "id": "mobile-desktop",
+      "label": "Mobile or desktop",
+      "signals": [
+        { "id": "android-project", "kind": "path", "pattern": "(^|/)AndroidManifest\\.xml$|(^|/)android/app/", "weight": 4, "reason": "Android application project" },
+        { "id": "apple-project", "kind": "path", "pattern": "\\.(xcodeproj|xcworkspace)/|project\\.pbxproj$|(^|/)ios/", "weight": 4, "reason": "Apple application project" },
+        { "id": "desktop-config", "kind": "path", "pattern": "tauri\\.conf\\.(json|json5)$|electron-builder|(^|/)src-tauri/|(^|/)pubspec\\.yaml$", "weight": 3, "reason": "native or desktop packaging configuration" },
+        { "id": "native-framework", "kind": "content", "pattern": "SwiftUI|Jetpack Compose|androidx\\.|react-native|from ['\"]electron['\"]|flutter:|tauri::", "weight": 3, "reason": "mobile or desktop framework integration" },
+        { "id": "native-lifecycle", "kind": "content", "pattern": "applicationDidEnterBackground|onPause\\(|onResume\\(|AppLifecycleState|systemTray|secure storage|Keychain", "weight": 2, "reason": "native lifecycle or platform capability" }
+      ]
+    },
+    {
+      "id": "data-ml",
+      "label": "Data or ML",
+      "signals": [
+        { "id": "data-project", "kind": "path", "pattern": "(^|/)(dbt_project\\.yml|dvc\\.yaml|mlproject|metadata\\.json)$|\\.ipynb$", "weight": 4, "reason": "data or model project artifact" },
+        { "id": "pipeline-tree", "kind": "path", "pattern": "(^|/)(dags|pipelines?|models?|features?|notebooks?|datasets?)/", "weight": 2, "reason": "data pipeline source tree" },
+        { "id": "ml-framework", "kind": "content", "pattern": "scikit-learn|sklearn|tensorflow|torch\\.|pytorch|mlflow|xgboost|transformers", "weight": 3, "reason": "model training or evaluation framework" },
+        { "id": "data-framework", "kind": "content", "pattern": "apache (spark|airflow|beam)|from pyspark|dagster|prefect|dbt_version|data lineage", "weight": 3, "reason": "data transformation or orchestration framework" },
+        { "id": "model-evaluation", "kind": "content", "pattern": "model card|dataset card|evaluation threshold|feature store|drift monitor|experiment tracking", "weight": 2, "reason": "model quality or lineage control" }
+      ]
+    },
+    {
+      "id": "infrastructure-iac",
+      "label": "Infrastructure or IaC",
+      "signals": [
+        { "id": "terraform", "kind": "path", "pattern": "\\.(tf|tfvars)$|(^|/)\\.terraform\\.lock\\.hcl$", "weight": 4, "reason": "Terraform or OpenTofu configuration" },
+        { "id": "kubernetes-package", "kind": "path", "pattern": "(^|/)(charts?|k8s|kubernetes|manifests)/|(^|/)Chart\\.yaml$|kustomization\\.ya?ml$", "weight": 3, "reason": "Kubernetes package or manifest tree" },
+        { "id": "automation-project", "kind": "path", "pattern": "(^|/)(ansible|pulumi|infrastructure|infra)/|(^|/)playbook\\.ya?ml$", "weight": 3, "reason": "infrastructure automation project" },
+        { "id": "iac-language", "kind": "content", "pattern": "resource\\s+['\"][^'\"]+['\"]|terraform\\s*\\{|pulumi\\.|aws-cdk|from ['\"]constructs['\"]|apiVersion:\\s*(apps/|v1)", "weight": 3, "reason": "declarative infrastructure resource" },
+        { "id": "iac-controls", "kind": "content", "pattern": "terraform plan|tofu plan|policy as code|drift detection|remote state|destroy protection", "weight": 2, "reason": "infrastructure delivery control" }
+      ]
+    }
+  ],
+  "profiles": [
+    { "id": 1, "slug": "saas-multitenant", "name": "SaaS / Multi-tenant", "roles": ["product-archetype"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "api-service"], "signals": ["multi-tenant", "multitenant", "tenant_id", "tenantId", "organization_id", "workspace_id"] },
+    { "id": 2, "slug": "ecommerce-retail", "name": "E-commerce / Retail", "roles": ["product-archetype", "industry-overlay"], "stack_profile": "E-commerce / Retail", "common_forms": ["web-application", "mobile-desktop"], "signals": ["e-commerce", "ecommerce", "shopping cart", "checkout", "product catalog", "order fulfillment", "sku"] },
+    { "id": 3, "slug": "cms-content-blog", "name": "CMS / Content / Blog", "roles": ["product-archetype"], "stack_profile": "CMS / Content / Blog", "common_forms": ["web-application"], "signals": ["content management", "editorial workflow", "blog post", "rich text editor", "content slug"] },
+    { "id": 4, "slug": "financial-fintech-accounting", "name": "Financial / Fintech / Accounting", "roles": ["industry-overlay"], "stack_profile": "Fintech / Financial", "common_forms": ["web-application", "api-service"], "signals": ["fintech", "accounting", "general ledger", "double-entry", "transaction reconciliation", "bank account"] },
+    { "id": 5, "slug": "healthcare-medical", "name": "Healthcare / Medical", "roles": ["industry-overlay", "regulatory-overlay"], "stack_profile": "Healthcare / Medical", "common_forms": ["web-application", "mobile-desktop", "api-service"], "signals": ["healthcare", "medical record", "patient record", "clinical workflow", "fhir", "protected health information"] },
+    { "id": 6, "slug": "education-edtech-lms", "name": "Education / EdTech / LMS", "roles": ["industry-overlay"], "stack_profile": "Education / LMS", "common_forms": ["web-application", "mobile-desktop"], "signals": ["learning management", "student enrollment", "course catalog", "gradebook", "teacher portal", "learner"] },
+    { "id": 7, "slug": "travel-hospitality-booking", "name": "Travel / Hospitality / Booking", "roles": ["industry-overlay"], "stack_profile": "Marketplace / Two-sided", "common_forms": ["web-application", "mobile-desktop"], "signals": ["hotel booking", "travel booking", "reservation", "itinerary", "flight availability", "guest stay"] },
+    { "id": 8, "slug": "sports-fitness", "name": "Sports / Fitness", "roles": ["industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "mobile-desktop"], "signals": ["workout", "athlete", "fitness", "training plan", "league", "team roster"] },
+    { "id": 9, "slug": "real-estate-property-management", "name": "Real Estate / Property Management", "roles": ["industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "mobile-desktop"], "signals": ["property management", "tenant lease", "rent roll", "unit occupancy", "real estate listing"] },
+    { "id": 10, "slug": "logistics-supply-chain-fleet", "name": "Logistics / Supply Chain / Fleet", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["web-application", "mobile-desktop", "data-ml"], "signals": ["supply chain", "fleet", "shipment", "waybill", "route optimization", "warehouse"] },
+    { "id": 11, "slug": "hr-people-payroll", "name": "HR / People / Payroll", "roles": ["industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application"], "signals": ["payroll", "employee record", "time off", "benefits enrollment", "people operations"] },
+    { "id": 12, "slug": "project-management-collaboration", "name": "Project Management / Collaboration", "roles": ["product-archetype"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "mobile-desktop"], "signals": ["project management", "task board", "kanban", "sprint planning", "collaboration workspace"] },
+    { "id": 13, "slug": "customer-support-helpdesk", "name": "Customer Support / Helpdesk", "roles": ["product-archetype"], "stack_profile": "Customer Support / Helpdesk", "common_forms": ["web-application"], "signals": ["helpdesk", "support ticket", "service desk", "knowledge base", "support sla"] },
+    { "id": 14, "slug": "marketing-crm-sales", "name": "Marketing / CRM / Sales", "roles": ["product-archetype"], "stack_profile": "CRM / Sales / Marketing", "common_forms": ["web-application", "api-service"], "signals": ["customer relationship management", "sales pipeline", "lead scoring", "marketing campaign", "contact lifecycle"] },
+    { "id": 15, "slug": "iot-device-management", "name": "IoT / Device Management", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["web-application", "api-service", "infrastructure-iac"], "signals": ["internet of things", "device telemetry", "firmware update", "device provisioning", "mqtt"] },
+    { "id": 16, "slug": "restaurant-food-service", "name": "Restaurant / Food Service", "roles": ["industry-overlay"], "stack_profile": "E-commerce / Retail", "common_forms": ["web-application", "mobile-desktop"], "signals": ["restaurant", "menu item", "table reservation", "kitchen display", "food service"] },
+    { "id": 17, "slug": "legal-law-firm", "name": "Legal / Law Firm", "roles": ["industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application"], "signals": ["law firm", "legal matter", "case management", "client trust account", "billable hour"] },
+    { "id": 18, "slug": "nonprofit-fundraising", "name": "Non-profit / Fundraising", "roles": ["industry-overlay"], "stack_profile": "CRM / Sales / Marketing", "common_forms": ["web-application"], "signals": ["non-profit", "nonprofit", "fundraising", "donation", "donor", "grant management"] },
+    { "id": 19, "slug": "media-streaming", "name": "Media / Streaming", "roles": ["industry-overlay"], "stack_profile": "CMS / Content / Blog", "common_forms": ["web-application", "mobile-desktop"], "signals": ["media streaming", "video on demand", "playback", "transcoding", "media asset"] },
+    { "id": 20, "slug": "agriculture-farm-management", "name": "Agriculture / Farm Management", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["mobile-desktop", "data-ml"], "signals": ["farm management", "field boundary", "crop rotation", "livestock", "yield forecast", "pesticide application"] },
+    { "id": 21, "slug": "ai-ml-chat", "name": "AI / ML / Chat", "roles": ["product-archetype"], "stack_profile": "AI / ML / LLM products", "common_forms": ["web-application", "api-service", "data-ml"], "signals": ["large language model", "llm", "model inference", "embedding", "retrieval augmented generation", "chatbot"] },
+    { "id": 22, "slug": "entertainment-events", "name": "Entertainment / Events", "roles": ["industry-overlay"], "stack_profile": "E-commerce / Retail", "common_forms": ["web-application", "mobile-desktop"], "signals": ["event ticket", "venue", "performer", "event management", "ticketing"] },
+    { "id": 23, "slug": "gaming-esports", "name": "Gaming / Esports", "roles": ["industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "api-service"], "signals": ["game server", "player inventory", "matchmaking", "esports", "leaderboard"] },
+    { "id": 24, "slug": "cybersecurity-soc", "name": "Cybersecurity / SOC", "roles": ["industry-overlay"], "stack_profile": "Analytics / BI / Dashboards", "common_forms": ["web-application", "data-ml"], "signals": ["security operations center", "soc analyst", "siem", "security finding", "threat intelligence"] },
+    { "id": 25, "slug": "construction-field-services", "name": "Construction / Field Services", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["mobile-desktop", "web-application"], "signals": ["construction", "field service", "work order", "job site", "contractor dispatch"] },
+    { "id": 26, "slug": "marketplace-platform", "name": "Marketplace / Platform", "roles": ["product-archetype"], "stack_profile": "Marketplace / Two-sided", "common_forms": ["web-application", "mobile-desktop", "api-service"], "signals": ["marketplace", "seller onboarding", "buyer", "vendor onboarding", "two-sided platform"] },
+    { "id": 27, "slug": "insurance-insurtech", "name": "Insurance / InsurTech", "roles": ["industry-overlay"], "stack_profile": "Fintech / Financial", "common_forms": ["web-application", "api-service"], "signals": ["insurance", "policyholder", "underwriting", "premium", "insurance claim", "actuarial"] },
+    { "id": 28, "slug": "telecommunications-isp", "name": "Telecommunications / ISP", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["web-application", "api-service", "infrastructure-iac"], "signals": ["telecommunications", "subscriber", "network operations", "internet service provider", "telecom provisioning"] },
+    { "id": 29, "slug": "energy-utilities", "name": "Energy / Utilities", "roles": ["industry-overlay"], "stack_profile": "Analytics / BI / Dashboards", "common_forms": ["web-application", "data-ml", "infrastructure-iac"], "signals": ["utility meter", "energy grid", "outage", "load forecast", "scada"] },
+    { "id": 30, "slug": "government-public-sector", "name": "Government / Public Sector", "roles": ["industry-overlay", "regulatory-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["web-application", "mobile-desktop"], "signals": ["public sector", "citizen service", "government agency", "municipal", "fedramp"] },
+    { "id": 31, "slug": "recruiting-ats", "name": "Recruiting / ATS", "roles": ["product-archetype", "industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application"], "signals": ["applicant tracking", "candidate", "job requisition", "interview pipeline", "recruiting"] },
+    { "id": 32, "slug": "coworking-shared-office", "name": "Co-working Space / Shared Office", "roles": ["industry-overlay"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "mobile-desktop"], "signals": ["co-working", "coworking", "shared office", "desk booking", "room booking", "access pass"] },
+    { "id": 33, "slug": "workflow-automation-integration", "name": "Workflow Automation / Integration Platform", "roles": ["product-archetype"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["web-application", "api-service"], "signals": ["workflow automation", "integration platform", "workflow trigger", "connector", "workflow run", "webhook"] },
+    { "id": 34, "slug": "data-analytics-bi", "name": "Data / Analytics / BI", "roles": ["product-archetype"], "stack_profile": "Analytics / BI / Dashboards", "common_forms": ["data-ml", "web-application"], "signals": ["business intelligence", "analytics dashboard", "data warehouse", "metric layer", "olap"] },
+    { "id": 35, "slug": "manufacturing-mes", "name": "Manufacturing / MES / Industrial Operations", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["web-application", "mobile-desktop", "infrastructure-iac"], "signals": ["manufacturing execution", "mes", "work center", "bill of materials", "shop floor", "overall equipment effectiveness"] },
+    { "id": 36, "slug": "developer-platform-api-sdk", "name": "Developer Platform / API / SDK", "roles": ["product-archetype"], "stack_profile": "SaaS / Multi-tenant", "common_forms": ["api-service", "cli-sdk", "web-application"], "signals": ["developer platform", "developer portal", "api key", "software development kit", "sdk", "webhook", "rate limit"] },
+    { "id": 37, "slug": "research-lab-lims", "name": "Research / Lab / LIMS", "roles": ["industry-overlay"], "stack_profile": "Internal Tools / Back-office", "common_forms": ["web-application", "data-ml"], "signals": ["laboratory information management", "lims", "sample custody", "specimen", "assay", "instrument provenance", "method version"] }
+  ],
+  "regulations": [
+    { "id": "hipaa", "label": "HIPAA", "patterns": ["\\bHIPAA\\b", "protected health information", "\\bPHI\\b"] },
+    { "id": "hitech", "label": "HITECH Act", "patterns": ["\\bHITECH\\b"] },
+    { "id": "fda", "label": "FDA requirements", "patterns": ["\\bFDA\\b", "food and drug administration"] },
+    { "id": "cfr-21-part-11", "label": "21 CFR Part 11", "patterns": ["21 CFR Part 11", "21CFR11"] },
+    { "id": "gdpr", "label": "GDPR", "patterns": ["\\bGDPR\\b", "general data protection regulation"] },
+    { "id": "ccpa-cpra", "label": "CCPA or CPRA", "patterns": ["\\bCCPA\\b", "\\bCPRA\\b", "california consumer privacy act"] },
+    { "id": "pci-dss", "label": "PCI DSS", "patterns": ["PCI[- ]DSS", "payment card industry data security standard"] },
+    { "id": "sox", "label": "SOX", "patterns": ["\\bSOX\\b", "Sarbanes[- ]Oxley"] },
+    { "id": "aml-kyc", "label": "AML or KYC", "patterns": ["\\bAML\\b", "\\bKYC\\b", "anti-money laundering", "know your customer"] },
+    { "id": "glba", "label": "GLBA", "patterns": ["\\bGLBA\\b", "Gramm[- ]Leach[- ]Bliley"] },
+    { "id": "ferpa", "label": "FERPA", "patterns": ["\\bFERPA\\b", "family educational rights and privacy act"] },
+    { "id": "coppa", "label": "COPPA", "patterns": ["\\bCOPPA\\b", "children's online privacy protection act"] },
+    { "id": "ada-section-508", "label": "ADA or Section 508", "patterns": ["ADA Title III", "Section 508"] },
+    { "id": "soc-2", "label": "SOC 2", "patterns": ["SOC ?2", "service organization control 2"] },
+    { "id": "iso-27001", "label": "ISO 27001", "patterns": ["ISO[/ -]?IEC 27001", "ISO 27001"] },
+    { "id": "nist-csf", "label": "NIST CSF", "patterns": ["NIST CSF", "NIST Cybersecurity Framework"] },
+    { "id": "fedramp", "label": "FedRAMP", "patterns": ["\\bFedRAMP\\b"] },
+    { "id": "eu-ai-act", "label": "EU AI Act", "patterns": ["EU AI Act", "European Union AI Act"] },
+    { "id": "iec-62443", "label": "IEC 62443", "patterns": ["IEC 62443"] },
+    { "id": "fisma", "label": "FISMA", "patterns": ["\\bFISMA\\b", "federal information security modernization act"] }
+  ],
+  "artifacts": {
+    "canonical": [
+      { "id": "arc-progress", "tier": "0", "path": ".arc-ready/PROGRESS.md" },
+      { "id": "prd", "tier": "1.1", "path": ".prd-ready/PRD.md" },
+      { "id": "architecture", "tier": "1.2", "path": ".architecture-ready/ARCH.md" },
+      { "id": "roadmap", "tier": "1.3", "path": ".roadmap-ready/ROADMAP.md" },
+      { "id": "stack", "tier": "1.4", "path": ".stack-ready/STACK.md" },
+      { "id": "repository", "tier": "2.1", "path": ".repo-ready/SCAFFOLD.md" },
+      { "id": "production", "tier": "2.2", "path": ".production-ready/STATE.md" },
+      { "id": "deploy", "tier": "3.1", "path": ".deploy-ready/DEPLOY.md" },
+      { "id": "observe", "tier": "3.2", "path": ".observe-ready/OBSERVE.md" },
+      { "id": "launch", "tier": "3.3", "path": ".launch-ready/STATE.md" },
+      { "id": "launch-prepublication", "tier": "3.3", "path": ".launch-ready/PREPUBLICATION.md" },
+      { "id": "harden", "tier": "3.4", "path": ".harden-ready/FINDINGS.md" }
+    ],
+    "legacy": [
+      { "id": "kickoff-progress", "tier": "0", "path": ".kickoff-ready/PROGRESS.md", "replaced_by": ".arc-ready/PROGRESS.md" },
+      { "id": "stack-decision", "tier": "1.4", "path": ".stack-ready/DECISION.md", "replaced_by": ".stack-ready/STACK.md" },
+      { "id": "repository-audit", "tier": "2.1", "path": ".repo-ready/AUDIT-REPORT.md", "replaced_by": ".repo-ready/SCAFFOLD.md" }
+    ]
+  }
+}

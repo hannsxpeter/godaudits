@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 12 * * *'
   workflow_dispatch:
 
 jobs:
@@ -15,12 +17,22 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13'
+
+      - name: Install pinned release validators
+        run: python -m pip install -r requirements/skills-ref.txt -r requirements/schema-validator.txt
 
       - name: Run engine tests
         run: npm test
@@ -28,8 +40,20 @@ jobs:
       - name: Run benchmark corpus
         run: npm run benchmark
 
+      - name: Run deterministic evaluations
+        run: npm run eval
+
       - name: Run repository contracts
-        run: npm run lint
+        run: SKILLS_REF_BIN="$(command -v skills-ref)" npm run lint
+
+      - name: Run official Agent Skills validation
+        run: skills-ref validate "$GITHUB_WORKSPACE/skills/godaudits"
+
+      - name: Validate emitted evidence schema
+        run: |
+          node bin/godaudits.js evidence benchmarks/fixtures/node-api --output /tmp/evidence-node.json
+          node bin/godaudits.js evidence test/fixtures/pillars-routing --output /tmp/evidence-pillars.json
+          python scripts/validate-evidence-schema.py skills/godaudits/schemas/evidence.schema.json /tmp/evidence-node.json /tmp/evidence-pillars.json --assert-contract
 
       - name: Installer smoke test
         run: |
@@ -53,3 +77,9 @@ jobs:
         run: |
           npm pack --dry-run
           node bin/godaudits.js doctor
+
+      - name: Check tag and release parity
+        if: github.event_name == 'schedule'
+        run: bash scripts/lint.sh tag-release-parity --verbose
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

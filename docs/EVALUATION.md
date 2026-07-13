@@ -33,9 +33,34 @@ remediation closure, and 95 percent clean-control rate.
 - Python worker outbound-call and deferred-work signals.
 - Go CLI archetype detection.
 - Clean Rust library controls.
+- Web application form detection.
+- Mobile or desktop form detection.
+- Data or ML form detection.
+- Infrastructure or IaC form detection.
 
 Run it with `npm run benchmark`. This corpus tests the runtime, not model
 judgment. It must stay fast, offline, deterministic, and safe for CI.
+
+## Deterministic product evaluations
+
+`npm run eval` runs focused suites for Pillars 1.1 routing, all six project
+forms and 37 arc-ready profiles, overlay conservatism, arc-ready table-ledger
+drift, evidence freshness, all ten OWASP 2025 categories, and secret-safe
+fingerprinting. These suites guard product contracts separately from the full
+unit test command so release evidence shows which integration surface failed.
+
+## Behavioral harness cases
+
+The cases under `evals/cases/` test model behavior that deterministic code
+cannot establish: form composition, regulatory restraint, Pillars routing,
+artifact-truth judgment, stale-evidence response, standards completeness,
+adversarial refutation, and remediation traceability.
+
+Every run records the model, harness, skill commit, fixture commit, capabilities,
+artifact locations, invariant scores, and automatic-fail review using
+`evals/RESULTS-TEMPLATE.md`. No checked-in result means no claimed live-harness
+score. A pass requires every critical invariant and at least 90 percent of
+weighted points.
 
 ## Model audit benchmarks
 

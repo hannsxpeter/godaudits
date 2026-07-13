@@ -1,0 +1,71 @@
+{
+  "web-application": {
+    "paths": ["package.json", "src/components/App.tsx", "src/pages/index.tsx"],
+    "contents": {
+      "package.json": "{\"dependencies\":{\"react\":\"latest\",\"react-dom\":\"latest\"}}",
+      "src/components/App.tsx": "import { createRoot } from 'react-dom/client'; export function App() { return <main>Portal</main>; }",
+      "src/pages/index.tsx": "export default function Home() { return <h1>Dashboard</h1>; }"
+    }
+  },
+  "api-service": {
+    "paths": ["openapi.yaml", "src/routes/users.js", "src/server/index.js"],
+    "contents": {
+      "openapi.yaml": "openapi: 3.1.0\npaths:\n  /users:\n    get: {}\n",
+      "src/routes/users.js": "router.get('/users', listUsers); router.post('/users', createUser);",
+      "src/server/index.js": "const app = express(); app.get('/health', health);"
+    }
+  },
+  "cli-sdk": {
+    "paths": ["package.json", "bin/audit.js", "src/sdk/client.js"],
+    "contents": {
+      "package.json": "{\"bin\":{\"audit\":\"bin/audit.js\"},\"exports\":\"./src/sdk/client.js\"}",
+      "bin/audit.js": "#!/usr/bin/env node\nconst { Command } = require('commander'); new Command().parse();",
+      "src/sdk/client.js": "export class AuditClient { run() {} }"
+    }
+  },
+  "mobile-desktop": {
+    "paths": ["android/app/src/main/AndroidManifest.xml", "lib/main.dart", "pubspec.yaml"],
+    "contents": {
+      "android/app/src/main/AndroidManifest.xml": "<manifest><application /></manifest>",
+      "lib/main.dart": "void main() { runApp(const Portal()); } // AppLifecycleState",
+      "pubspec.yaml": "name: portal\nflutter:\n  uses-material-design: true\n"
+    }
+  },
+  "data-ml": {
+    "paths": ["dbt_project.yml", "models/orders.sql", "notebooks/train.ipynb"],
+    "contents": {
+      "dbt_project.yml": "name: analytics\nmodel-paths: [models]\n",
+      "models/orders.sql": "select * from source_orders",
+      "notebooks/train.ipynb": "{\"cells\":[{\"source\":[\"import mlflow\\n\",\"from sklearn import metrics\\n\",\"# evaluation threshold\"]}]}"
+    }
+  },
+  "infrastructure-iac": {
+    "paths": ["main.tf", "modules/network/variables.tf", "charts/api/Chart.yaml"],
+    "contents": {
+      "main.tf": "terraform { required_version = \">= 1.7\" }\nresource \"aws_s3_bucket\" \"state\" {}\n",
+      "modules/network/variables.tf": "variable \"region\" { type = string }",
+      "charts/api/Chart.yaml": "apiVersion: v2\nname: api\n"
+    }
+  },
+  "hybrid-healthcare-platform": {
+    "paths": ["README.md", "openapi.yaml", "src/server/routes.js", "src/components/Portal.tsx", "src/pages/index.tsx", "sdk/client.ts"],
+    "contents": {
+      "README.md": "Healthcare SaaS developer platform for patient records. FHIR is the clinical exchange contract. HIPAA and GDPR are explicitly in scope. The service is multi-tenant and every row carries tenant_id. Consumers use the software development kit, developer portal, API key, webhook, and rate limit contracts.",
+      "openapi.yaml": "openapi: 3.1.0\npaths:\n  /patients:\n    get: {}\n",
+      "src/server/routes.js": "const app = express(); app.get('/patients', listPatients); app.post('/patients', addPatient);",
+      "src/components/Portal.tsx": "import { createRoot } from 'react-dom/client'; export function Portal() { return <main>Patients</main>; }",
+      "src/pages/index.tsx": "export default function Page() { return <Portal />; }",
+      "sdk/client.ts": "export class PatientClient { list() {} }"
+    }
+  },
+  "arc-artifacts": {
+    "paths": [".arc-ready/PROGRESS.md", ".prd-ready/PRD.md", ".architecture-ready/ARCH.md", ".kickoff-ready/PROGRESS.md", ".stack-ready/STACK.md"],
+    "contents": {
+      ".arc-ready/PROGRESS.md": "# arc-ready PROGRESS\n\n## Tier ledger\n- 0: done | artifact: .arc-ready/PROGRESS.md | verified: 2026-07-13\n- 1.1 (PRD): done | artifact: .prd-ready/PRD.md | verified: 2026-07-13\n- 1.2 (ARCH): imported | artifact: .architecture-ready/ARCH.md | verified: 2026-07-13\n- 1.3 (ROADMAP): done | artifact: .roadmap-ready/ROADMAP.md | verified: 2026-07-13\n- 1.4 (STACK): in-flight | artifact: .stack-ready/STACK.md | verified: 2026-07-13\n",
+      ".prd-ready/PRD.md": "# Product requirements\n",
+      ".architecture-ready/ARCH.md": "",
+      ".kickoff-ready/PROGRESS.md": "# legacy progress\n",
+      ".stack-ready/STACK.md": "# Stack state\n"
+    }
+  }
+}

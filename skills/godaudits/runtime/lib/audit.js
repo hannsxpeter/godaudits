@@ -89,6 +89,57 @@ function validateAudit(audit, options = {}) {
     if (!['static', 'sandbox', 'connected'].includes(capability)) errors.push(`invalid audit capability: ${capability}`);
   }
   if (!metadata.risk_profile) errors.push('audit.risk_profile is required');
+  if (metadata.project_form !== undefined && !['web-application', 'api-service', 'cli-sdk', 'mobile-desktop', 'data-ml', 'infrastructure-iac', 'unknown'].includes(metadata.project_form)) {
+    errors.push(`invalid audit.project_form: ${metadata.project_form}`);
+  }
+  if (metadata.secondary_forms !== undefined) {
+    if (!Array.isArray(metadata.secondary_forms)) errors.push('audit.secondary_forms must be an array');
+    else {
+      if (duplicates(metadata.secondary_forms).length) errors.push('audit.secondary_forms must be unique');
+      for (const form of metadata.secondary_forms) {
+        if (!['web-application', 'api-service', 'cli-sdk', 'mobile-desktop', 'data-ml', 'infrastructure-iac'].includes(form)) errors.push(`invalid audit.secondary_forms entry: ${form}`);
+        if (form === metadata.project_form) errors.push(`audit.secondary_forms repeats primary form ${form}`);
+      }
+    }
+  }
+  if (metadata.domain_overlays !== undefined) {
+    if (!Array.isArray(metadata.domain_overlays)) errors.push('audit.domain_overlays must be an array');
+    else {
+      const overlayKeys = new Set();
+      for (const overlay of metadata.domain_overlays) {
+        if (!overlay || typeof overlay !== 'object') {
+          errors.push('audit.domain_overlays entries must be objects');
+          continue;
+        }
+        const key = `${overlay.axis || ''}/${overlay.id || ''}`;
+        if (overlayKeys.has(key)) errors.push(`duplicate audit domain overlay ${key}`);
+        overlayKeys.add(key);
+        if (!['product', 'industry', 'regulatory'].includes(overlay.axis)) errors.push(`${key} has invalid axis`);
+        if (!overlay.id || overlay.status !== 'candidate') errors.push(`${key} requires an id and candidate status`);
+        if (!ALLOWED.confidence.has(overlay.confidence)) errors.push(`${key} has invalid confidence`);
+        if (typeof overlay.requires_verification !== 'boolean') errors.push(`${key}.requires_verification must be a boolean`);
+        if (overlay.axis === 'regulatory' && overlay.requires_verification !== true) errors.push(`${key} must require verification`);
+      }
+    }
+  }
+  if (metadata.evidence_fingerprint_sha256 !== undefined && !/^[a-f0-9]{64}$/.test(metadata.evidence_fingerprint_sha256)) {
+    errors.push('audit.evidence_fingerprint_sha256 must be a SHA-256 digest');
+  }
+  if (metadata.evidence_commit !== undefined && (typeof metadata.evidence_commit !== 'string' || !metadata.evidence_commit)) {
+    errors.push('audit.evidence_commit must be a non-empty string');
+  }
+  if (options.requireFreshEvidence) {
+    if (!options.currentEvidence || !options.currentEvidence.fingerprint_sha256) errors.push('fresh evidence validation requires a current repository fingerprint');
+    if (!metadata.evidence_fingerprint_sha256) errors.push('audit.evidence_fingerprint_sha256 is required by the freshness gate');
+    if (!metadata.evidence_commit) errors.push('audit.evidence_commit is required by the freshness gate');
+    if (options.currentEvidence && metadata.evidence_fingerprint_sha256
+      && options.currentEvidence.fingerprint_sha256 !== metadata.evidence_fingerprint_sha256) {
+      errors.push('evidence fingerprint is stale for the current repository');
+    }
+    if (options.currentEvidence && metadata.evidence_commit && options.currentEvidence.commit !== metadata.evidence_commit) {
+      errors.push(`evidence commit is stale: recorded ${metadata.evidence_commit}, current ${options.currentEvidence.commit}`);
+    }
+  }
   const profileWeights = options.catalog && options.catalog.profiles[metadata.risk_profile]
     ? options.catalog.profiles[metadata.risk_profile].weights
     : DOMAIN_WEIGHTS;
@@ -220,6 +271,51 @@ function validateAudit(audit, options = {}) {
         const finding = audit.findings.find((item) => item.id === id);
         if (!(finding.checks || []).includes(check.id)) errors.push(`${check.id} and ${id} finding links are not reciprocal`);
         if (check.outcome === 'fail' && !['open', 'accepted-risk'].includes(finding.status)) errors.push(`${check.id} fails but ${id} is ${finding.status}`);
+      }
+    }
+  }
+
+  if (audit.standards !== undefined) {
+    if (!Array.isArray(audit.standards)) errors.push('standards must be an array');
+    else {
+      const standardKeys = new Set();
+      const catalogChecks = new Set(options.catalog ? options.catalog.checks.map((check) => check.id) : checkIds);
+      for (const result of audit.standards) {
+        if (!result || typeof result !== 'object') {
+          errors.push('standards entries must be objects');
+          continue;
+        }
+        const key = `${result.framework || ''}/${result.category || ''}`;
+        if (!result.framework || !result.category || !result.title) errors.push(`${key} requires framework, category, and title`);
+        if (standardKeys.has(key)) errors.push(`duplicate standards result ${key}`);
+        standardKeys.add(key);
+        if (!ALLOWED.outcome.has(result.status)) errors.push(`${key} has invalid status`);
+        for (const field of ['checks', 'evidence', 'finding_ids']) {
+          if (!Array.isArray(result[field])) errors.push(`${key}.${field} must be an array`);
+          else if (duplicates(result[field]).length) errors.push(`${key}.${field} must be unique`);
+        }
+        if (['pass', 'fail', 'not-applicable'].includes(result.status) && (!result.evidence || result.evidence.length === 0)) {
+          errors.push(`${key} ${result.status} disposition requires evidence`);
+        }
+        if (result.status === 'fail' && (!result.finding_ids || result.finding_ids.length === 0)) errors.push(`${key} fails without a finding`);
+        if (result.status === 'pass' && result.finding_ids && result.finding_ids.length) errors.push(`${key} passes but references findings`);
+        for (const id of result.checks || []) if (!catalogChecks.has(id)) errors.push(`${key} references unknown check ${id}`);
+        for (const id of result.evidence || []) if (!evidenceIds.has(id)) errors.push(`${key} references missing evidence ${id}`);
+        for (const id of result.finding_ids || []) if (!findingIds.has(id)) errors.push(`${key} references missing finding ${id}`);
+      }
+      if (options.catalog) {
+        const expected = new Map();
+        for (const [framework, definition] of Object.entries(options.catalog.standards.frameworks)) {
+          for (const category of definition.categories) expected.set(`${framework}/${category.id}`, category);
+        }
+        for (const [key, category] of expected) {
+          if (!standardKeys.has(key)) errors.push(`standards ledger is missing ${key}`);
+          const result = audit.standards.find((item) => `${item.framework}/${item.category}` === key);
+          if (result && (result.title !== category.title || JSON.stringify(result.checks) !== JSON.stringify(category.checks))) {
+            errors.push(`${key} must match the standards catalog`);
+          }
+        }
+        for (const key of standardKeys) if (!expected.has(key)) errors.push(`standards ledger contains unknown category ${key}`);
       }
     }
   }

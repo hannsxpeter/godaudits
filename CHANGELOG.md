@@ -3,6 +3,33 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.1.0] - 2026-07-13
+
+godaudits 2.1 closes the context, agent-memory, artifact-truth, standards, and release-evidence gaps while preserving the version 2.0 audit schema.
+
+### Added
+
+- Six-form project detection with primary and secondary forms, separate product and industry overlays, conservative regulatory candidates, and a validated registry of all 37 arc-ready profiles.
+- A zero-dependency Pillars 1.1 parser, structural validator, nested-scope router, absent and excluded state handling, context budgets, and a `godaudits pillars` command.
+- Arc-ready 1.1 table-ledger validation, canonical and legacy artifact inventory, dependency-order drift, Git-history freshness with an mtime fallback, and launch prepublication checks bound to content or Git revision.
+- Evidence fingerprint and commit binding with fail-closed `validate --require-fresh-evidence` behavior.
+- A complete OWASP Web Top 10:2025 crosswalk and structured standards ledger, including explicit A10 exceptional-condition coverage.
+- Eight form-aware benchmark repositories, five deterministic evaluation suites, and eight live-harness behavioral cases.
+- Pinned official Agent Skills validation and validator dependencies, immutable GitHub Actions, scheduled release parity, package smoke tests, and a local release-check command.
+- Fully constrained Evidence JSON Schema 2020-12 validation against real Pillars-present and Pillars-absent outputs.
+
+### Changed
+
+- Expanded the catalog from 414 to 419 checks with A-SEC-28 and A-MEM-21 through A-MEM-24. New audit-only routing checks do not add duplicate score weight.
+- EVIDENCE.json now uses schema 1.1 and includes project context, arc artifacts, and Pillars state. AUDIT.json remains schema 2.0 with backward-compatible optional metadata and standards fields.
+- Intake now routes form first across four independent axes instead of collapsing delivery form, product behavior, industry, and regulation into one archetype.
+- Release validation now checks catalog and prompt freshness, schemas, evaluations, shell syntax, action pins, skill size, version parity, the official validator, and GitHub tag-release parity.
+- Pillars evidence is clone-location independent, generated trees are excluded from scope discovery, and traversal stops safely at a fixed directory budget.
+
+### Security
+
+- Regulatory clues remain candidates until verified, repository drift invalidates release-grade evidence, and public activation evidence is rejected when its hardening content revision is stale.
+
 ## [2.0.0] - 2026-07-13
 
 godaudits 2.0 turns the prompt-only skill into a portable evidence and audit

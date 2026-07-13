@@ -1,6 +1,6 @@
 {
   "name": "godaudits",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Evidence-first codebase auditing with a deterministic check catalog, validated audit state, computed scores, benchmarks, MDX reports, and SARIF output.",
   "keywords": [
     "agent-skills",
@@ -28,6 +28,9 @@
   "files": [
     "bin",
     "benchmarks",
+    "evals",
+    "requirements",
+    "test",
     "skills",
     "install.sh",
     "scripts",
@@ -46,12 +49,14 @@
   "scripts": {
     "test": "node --test test/*.test.js",
     "benchmark": "node bin/godaudits.js benchmark",
+    "eval": "node scripts/eval.js",
     "catalog": "node scripts/build-catalog.js",
     "catalog:check": "node scripts/build-catalog.js --check",
     "build:prompt": "bash scripts/build-prompt.sh",
     "prompt:check": "bash scripts/build-prompt.sh --check",
     "lint": "bash scripts/lint.sh --all --verbose",
-    "check": "npm run test && npm run benchmark && npm run lint",
+    "check": "npm run test && npm run benchmark && npm run eval && npm run lint",
+    "release:check": "bash scripts/release-check.sh",
     "install:skill": "sh install.sh",
     "prepack": "npm run check",
     "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'"

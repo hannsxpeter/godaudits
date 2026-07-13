@@ -1,16 +1,17 @@
 # Roadmap audit module
 
-Audits whether the project's plan and roadmap artifacts tell the truth: capacity behind every date, dependencies sorted before work, gates that are binary, checkboxes that match the disk, and a launch that is scheduled rather than wished for. It runs the roadmap-ready and kickoff-ready disciplines forward against a live repo and its delivery history. Findings ship as F-ROAD-n blocks and a 0-100 roadmap score into `.godaudits/AUDIT.json` and its generated AUDIT.mdx view. The orchestrator loads this module whenever a plan, roadmap, or tracker artifact exists in or beside the repo; any archetype excludes it when no such artifact exists, in which case delivery reality reduces to a single check inside the repo domain and the applicability matrix records that specific reason. In plan-aware mode this module owns plan drift for the whole audit.
+Audits whether the project's plan and roadmap artifacts tell the truth: capacity behind every date, dependencies sorted before work, gates that are binary, checkboxes that match the disk, and a launch that is scheduled rather than wished for. It runs roadmap-ready and arc-ready 1.1 disciplines forward against a live repo and its delivery history. Findings ship as F-ROAD-n blocks and a 0-100 roadmap score into `.godaudits/AUDIT.json` and its generated AUDIT.mdx view. The orchestrator loads this module whenever a plan, roadmap, tracker, or arc-ready ledger exists in or beside the repo; any archetype excludes it when no such artifact exists, in which case delivery reality reduces to a single check inside the repo domain and the applicability matrix records that specific reason. In plan-aware mode this module owns plan drift for the whole audit.
 
 ## Lineage
 
-Descends from aihxp roadmap-ready (the ready-suite sequencer) with kickoff-ready (the suite's only meta-tier orchestrator) folded in, by way of the godplans roadmap module that inverted them into R-ROAD-1 through R-ROAD-20. From roadmap-ready the audit inherits the three-label row test (commitment, direction, or owned open question), the capacity corollary (no dates without engineer-week math), the precision gradient across horizons, the 8-field milestone anatomy with binary gates, topological sequencing over the dependency DAG, the gated launch sub-tree with its D-calendar, and the have-nots list, which becomes this module's severity convention: a have-not that disqualifies a roadmap at plan time is at least Medium when found live in a shipped repo. From kickoff-ready it inherits filesystem-as-truth completion, the seven-status ledger vocabulary, the rubber-stamp, ghost-handoff, and phantom-resume guards, and the critical-finding launch gate. Neither ancestor is one of the seven hannsxpeter auditors, but roadmap-ready's Mode B protocol (quote the failing item, name the dominant failure mode, prescribe the remediation) is this module's method DNA: run Mode B against every roadmap artifact the repo carries.
+Descends from aihxp roadmap-ready with the orchestrator consolidated into arc-ready 1.1, by way of the godplans roadmap module that inverted them into R-ROAD-1 through R-ROAD-20. From roadmap-ready the audit inherits the three-label row test (commitment, direction, or owned open question), the capacity corollary (no dates without engineer-week math), the precision gradient across horizons, the 8-field milestone anatomy with binary gates, topological sequencing over the dependency DAG, the gated launch sub-tree with its D-calendar, and the have-nots list. Arc-ready 1.1 contributes filesystem-as-truth completion, the canonical `.arc-ready/PROGRESS.md` ledger, artifact dependency order, freshness comparisons, the rubber-stamp, ghost-handoff, and phantom-resume guards, plus the critical-finding launch gate. `.kickoff-ready/PROGRESS.md` remains a legacy import alias, never a competing source of truth. Roadmap-ready's Mode B protocol (quote the failing item, name the dominant failure mode, prescribe the remediation) remains this module's method DNA.
 
 ## Surface map
 
 Inventory before any check runs; declare each conditional sub-surface present or absent with the reason recorded in the audit.
 
-- Roadmap artifacts: `.godplans/PLAN.mdx` (plan-aware mode), `ROADMAP.md`, `docs/roadmap*.md`, `docs/milestones*.md`, `.roadmap-ready/ROADMAP.md`, `.roadmap-ready/HANDOFF.md`, `.kickoff-ready/PROGRESS.md`, and any tracker export checked into the repo.
+- Roadmap artifacts: `.godplans/PLAN.mdx` (plan-aware mode), `ROADMAP.md`, `docs/roadmap*.md`, `docs/milestones*.md`, `.roadmap-ready/ROADMAP.md`, `.roadmap-ready/HANDOFF.md`, `.arc-ready/PROGRESS.md`, legacy `.kickoff-ready/PROGRESS.md`, and any tracker export checked into the repo.
+- Arc artifact chain: `.prd-ready/PRD.md`, `.architecture-ready/ARCH.md`, `.roadmap-ready/ROADMAP.md`, `.stack-ready/STACK.md`, `.repo-ready/SCAFFOLD.md` or `.repo-ready/AUDIT-REPORT.md`, `.production-ready/STATE.md`, `.deploy-ready/DEPLOY.md`, `.observe-ready/OBSERVE.md`, `.launch-ready/STATE.md`, `.launch-ready/PREPUBLICATION.md`, and `.harden-ready/FINDINGS.md`.
 - Delivery-reality surface: `git log` on the roadmap files themselves, tags and releases, `CHANGELOG.md`, `docs/retrospectives/`, `spikes/` with `Verdict:` lines.
 - Launch surface: launch sections and D-calendars in the artifacts above, `docs/launch*`, `docs/runbooks/rollback.md`.
 - Public surface: `docs/ROADMAP-PUBLIC.md` or an equivalent named derivative.
@@ -71,7 +72,7 @@ Severities are funded-product calibration; scale them per `intake.md`. A-ROAD-1 
     Look: `git log` dates on upstream artifacts versus the commits that flipped downstream boxes.
     Fail: upstream artifact modified after dependent tasks were checked, no reconciliation note: Medium.
 17. A-ROAD-17 Verify the ledger is complete: every domain or sibling appears as done, skipped (with reason), imported (with source), or failed (with note); failed Verify keeps the box unchecked with a dated note.
-    Look: the seven-status vocabulary in `.kickoff-ready/PROGRESS.md` or the plan's ledger; notes under unchecked tasks.
+   Look: the seven-status vocabulary in canonical `.arc-ready/PROGRESS.md`, legacy `.kickoff-ready/PROGRESS.md`, or the plan's ledger; notes under unchecked tasks.
     Fail: work absent from the ledger entirely (silence as status), or a checked box above a failure note: Medium.
 18. A-ROAD-18 Verify governance is written down: review cadence, authority map per horizon, re-plan triggers, freeze conditions, archive rule, and per-session `updated:` bumps.
     Look: governance section; frontmatter `updated:` stamps against session log entries.
@@ -85,12 +86,12 @@ Severities are funded-product calibration; scale them per `intake.md`. A-ROAD-1 
 21. A-ROAD-21 Verify the plan matches the code (audit-only; this is the plan-drift check the ownership map assigns here): decisions the code contradicts, checked feature tasks with no code trace, requirements with no trace in source, bulk check-off commits.
     Look: plan decisions versus the intake fingerprint; `git log -p` on the plan file for many boxes flipped in one commit with no matching work commits.
     Fail: a plan decision the code contradicts or a checked feature with no code path: High. Bulk check-offs in a single commit: Medium.
-22. A-ROAD-22 Verify freshness against delivery (audit-only): the roadmap moved while the repo moved.
-    Look: `git log -1 --format=%ci` on each roadmap artifact versus commit volume since.
-    Fail: a cadence cycle of commits (or 50 or more commits) since the roadmap was last touched: Medium (shelf roadmap, observed).
-23. A-ROAD-23 Verify one source of truth (audit-only): multiple roadmap artifacts agree on what is done and what is next, or a canonical pointer names the live one.
-    Look: cross-compare status and sequence across `ROADMAP.md`, PLAN.mdx, PROGRESS.md, and tracker exports.
-    Fail: two artifacts disagreeing on status or sequence with no canonical pointer: Medium.
+22. A-ROAD-22 Verify freshness against delivery and the arc artifact dependency chain (audit-only): the roadmap moved while the repo moved, and downstream artifacts were reconciled after upstream changes.
+    Look: `git log -1 --format=%ci` on each roadmap and arc artifact; compare upstream and downstream modification times; compare `.launch-ready/PREPUBLICATION.md` against `.harden-ready/FINDINGS.md`.
+    Fail: a cadence cycle of commits (or 50 or more commits) since the roadmap was last touched: Medium; an upstream artifact newer than a checked downstream tier with no reconciliation note: Medium; prepublication evidence older than hardening changes: High.
+23. A-ROAD-23 Verify one source of truth and a complete arc ledger (audit-only): multiple roadmap artifacts agree on what is done and what is next, or a canonical pointer names the live one. Every claimed arc tier has a non-empty artifact and every present artifact appears in the ledger.
+    Look: cross-compare status and sequence across `ROADMAP.md`, PLAN.mdx, `.arc-ready/PROGRESS.md`, legacy PROGRESS.md, and tracker exports; inventory the arc artifact chain.
+    Fail: two artifacts disagreeing on status or sequence with no canonical pointer: Medium; a claimed artifact missing or empty, an artifact absent from the ledger, invalid status vocabulary, or dependency-order violation: Medium.
 
 ## Scoring
 

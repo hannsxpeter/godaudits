@@ -28,10 +28,14 @@ deterministic runtime. Contributions must protect both halves of that contract.
 1. Branch from `main`.
 2. Change canonical source files.
 3. Add or update Node test fixtures for behavior changes.
-4. Regenerate the catalog and prompts when their sources change.
-5. Add a CHANGELOG entry and update every version surface for a release.
-6. Run `npm run check` until it passes.
-7. Open a pull request explaining the missed defect, false positive, unsafe
+4. Add or update a deterministic evaluation and behavioral case when routing,
+   artifact truth, standards, freshness, or remediation behavior changes.
+5. Regenerate the catalog and prompts when their sources change.
+6. Add a CHANGELOG entry and update every version surface for a release.
+7. Run `npm run check` until it passes.
+8. Install both pinned validator requirement files, then run
+   `npm run release:check` before a release.
+9. Open a pull request explaining the missed defect, false positive, unsafe
    behavior, or workflow gap the change prevents.
 
 Useful focused commands:
@@ -39,9 +43,11 @@ Useful focused commands:
 ```sh
 npm test
 npm run benchmark
+npm run eval
 npm run catalog:check
 npm run prompt:check
 npm run lint
+npm run release:check
 ```
 
 ## Reporting audit quality issues
