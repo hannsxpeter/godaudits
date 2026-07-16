@@ -1,0 +1,180 @@
+{
+  "schema_version": "2.0",
+  "audit": {
+    "name": "blind-post-filter-leak",
+    "audit_version": 1,
+    "status": "reported",
+    "created": "2026-07-16",
+    "updated": "2026-07-16",
+    "mode": "fresh",
+    "plan_aware": false,
+    "commit": "seeded0",
+    "archetype": "api-service",
+    "scale": "side-project",
+    "risk_profile": "balanced",
+    "engine_version": "2.0.0",
+    "pack_version": "2.0.0",
+    "capabilities": [
+      "static"
+    ],
+    "assumptions": [
+      "Blind run: the auditor received only the repository path and the A-SEC-3 definition."
+    ]
+  },
+  "compliance": {
+    "result": "pass",
+    "screened": "2026-07-16",
+    "policy_pack": "provider-neutral@1"
+  },
+  "domains": [
+    {
+      "id": "security",
+      "status": "applicable",
+      "weight": 15,
+      "checks": [
+        {
+          "id": "A-SEC-3",
+          "outcome": "fail",
+          "confidence": "Firm",
+          "weight": 100,
+          "evidence": [
+            "E-1"
+          ],
+          "finding_ids": [
+            "F-SEC-1"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-1",
+      "type": "source",
+      "path": "src/tickets.js",
+      "line": 5,
+      "quote": "  const ticket = await db.tickets.findOne({ id: req.params.id });",
+      "sha256": "16f94a7c331f18f5a98fe8dd5067e4fba56e2d90c8dba8a672a312775332f9f8",
+      "redacted": false
+    }
+  ],
+  "strengths": [],
+  "findings": [
+    {
+      "id": "F-SEC-1",
+      "domain": "security",
+      "title": "getTicket resolves a ticket by request-supplied id with no tenant predicate in the query (post-query filtering only)",
+      "severity": "Critical",
+      "confidence": "Firm",
+      "effort": "S",
+      "evidence": [
+        "E-1"
+      ],
+      "impact": "The database query binds only the request-supplied id, with no orgId/tenant key. Cross-tenant ticket rows are loaded into application memory before any authorization decision is made, so the authorization boundary is application logic rather than the query. Consequences: (1) the 404-vs-403 split is an existence oracle -- an attacker enumerating ids learns exactly which ticket ids belong to other organizations, and the 403 body 'Ticket belongs to another organization' confirms cross-tenant existence; (2) the check is fail-open by construction -- if req.user is undefined, req.user.orgId throws after the record is already loaded, and any future code path, refactor, logging line, serializer, or sibling handler added between the load and the comparison exposes the full cross-tenant record; (3) it violates deny-by-default: the query returns everything and the handler must remember to subtract. A single missing post-filter (as in a copy-pasted sibling handler) silently leaks another organization's ticket data.",
+      "fix": "Bind the tenant to the query itself so the database can never return another org's row: `const ticket = await db.tickets.findOne({ id: req.params.id, orgId: req.user.orgId });` then `if (!ticket) return res.status(404).json({ error: 'No such ticket' });` and delete the post-query orgId comparison entirely. Return 404 (not 403) for both missing and out-of-tenant ids so the endpoint reveals no existence information. Enforce this centrally -- a scoped repository helper that requires a tenant key, or row-level-security policies keyed on the session tenant -- rather than relying on each handler remembering to filter after the fact.",
+      "verify": "node --test test/security.test.js",
+      "checks": [
+        "A-SEC-3"
+      ],
+      "status": "open",
+      "remediation": [
+        "GA-101"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "GA-101",
+      "phase": 1,
+      "wave": "1.1",
+      "title": "Bind the query to the caller: getTicket resolves a ticket by request-supplied id with no tenant predicate in the query (",
+      "parallel": false,
+      "files": [
+        "src/tickets.js",
+        "test/security.test.js"
+      ],
+      "depends_on": [],
+      "reuses": "the scoping already applied by the sibling handlers",
+      "fixes": [
+        "F-SEC-1"
+      ],
+      "acceptance": [
+        "The load binds the owner or tenant predicate inside the query.",
+        "A cross-tenant id returns 404 rather than the record."
+      ],
+      "verify": "node --test test/security.test.js",
+      "checks": [
+        "A-SEC-3"
+      ],
+      "status": "open"
+    },
+    {
+      "id": "GA-601",
+      "phase": 6,
+      "wave": "6.1",
+      "title": "Re-run godaudits",
+      "parallel": false,
+      "files": [],
+      "depends_on": [
+        "GA-101"
+      ],
+      "reuses": "the current audit state",
+      "fixes": [],
+      "acceptance": [
+        "No open Critical findings remain."
+      ],
+      "verify": "godaudits validate .godaudits/AUDIT.json",
+      "checks": [],
+      "status": "open",
+      "final_gate": true
+    }
+  ],
+  "accepted_risks": [],
+  "open_questions": [],
+  "session_log": [
+    {
+      "date": "2026-07-16",
+      "summary": "Blind A-SEC-3 audit of post-filter-leak."
+    }
+  ],
+  "computed": {
+    "coverage": {
+      "applicable": 1,
+      "evaluated": 1,
+      "passed": 0,
+      "failed": 1,
+      "unknown": 0,
+      "not_applicable": 0,
+      "percent": 100
+    },
+    "domains": {
+      "security": {
+        "raw_score": 0,
+        "score": 0,
+        "cap": "active Critical caps domain at 69",
+        "evidence_basis": "mostly Firm"
+      }
+    },
+    "overall": {
+      "raw_score": 0,
+      "score": 0,
+      "verdict": "critical condition",
+      "grade_method": "static-read",
+      "grade_scope": "an arithmetic roll-up of model-assigned pass/fail from a source read, not a test result, scan, or certification",
+      "evidence_basis": "mostly Firm",
+      "coverage_cap": 100,
+      "critical_cap": 79,
+      "weak_domain_cap": 84
+    },
+    "counts": {
+      "findings_total": 1,
+      "critical": 1,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "accepted_risk": 0,
+      "tasks_total": 2,
+      "tasks_done": 0
+    }
+  }
+}

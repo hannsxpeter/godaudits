@@ -1,0 +1,180 @@
+{
+  "schema_version": "2.0",
+  "audit": {
+    "name": "blind-list-scoped-get-not",
+    "audit_version": 1,
+    "status": "reported",
+    "created": "2026-07-16",
+    "updated": "2026-07-16",
+    "mode": "fresh",
+    "plan_aware": false,
+    "commit": "seeded0",
+    "archetype": "api-service",
+    "scale": "side-project",
+    "risk_profile": "balanced",
+    "engine_version": "2.0.0",
+    "pack_version": "2.0.0",
+    "capabilities": [
+      "static"
+    ],
+    "assumptions": [
+      "Blind run: the auditor received only the repository path and the A-SEC-3 definition."
+    ]
+  },
+  "compliance": {
+    "result": "pass",
+    "screened": "2026-07-16",
+    "policy_pack": "provider-neutral@1"
+  },
+  "domains": [
+    {
+      "id": "security",
+      "status": "applicable",
+      "weight": 15,
+      "checks": [
+        {
+          "id": "A-SEC-3",
+          "outcome": "fail",
+          "confidence": "Firm",
+          "weight": 100,
+          "evidence": [
+            "E-1"
+          ],
+          "finding_ids": [
+            "F-SEC-1"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-1",
+      "type": "source",
+      "path": "src/routes.js",
+      "line": 10,
+      "quote": "  const invoice = await db.invoices.findById(req.params.invoiceId);",
+      "sha256": "498a73d8a8d772df27fd9063f69fa5053b539eb7fb5b5b97466ea32de74754e9",
+      "redacted": false
+    }
+  ],
+  "strengths": [],
+  "findings": [
+    {
+      "id": "F-SEC-1",
+      "domain": "security",
+      "title": "getInvoice resolves an invoice by request-supplied id with no tenant predicate (cross-tenant IDOR)",
+      "severity": "Critical",
+      "confidence": "Firm",
+      "effort": "S",
+      "evidence": [
+        "E-1"
+      ],
+      "impact": "The handler loads an invoice using only the client-controlled `req.params.invoiceId` and returns the full record via `res.json(invoice)`, with no binding to `req.user.tenantId`. Any authenticated user who guesses or enumerates an invoice id reads another tenant's invoice in full. This is financial and cross-tenant data (billing amounts, counterparty identity, and any PII carried on the record), so the exposure is a direct confidentiality breach across the tenant boundary. The gap is made unambiguous by its siblings in the same file: `listInvoices` (line 5) filters on `{ tenantId: req.user.tenantId }` and `updateInvoice` (line 16) binds both `{ id, tenantId }`, so the tenant is available on the request and the omission on the read path is the sole deviation from the file's own pattern. There is no compensating control: no router-level ownership middleware, no post-load ownership assertion before `res.json`, and no row-level-security policy or migration anywhere in the repository (`src/db.js` is an in-memory stub with no tenant filtering of its own). The read is also the most enumerable path, since GET requires no body and no CSRF-relevant state.",
+      "fix": "Bind the id to the caller's tenant inside the query, matching the predicate already used by `updateInvoice`. Replace the lookup with a scoped `findOne`, e.g. `const invoice = await db.invoices.findOne({ id: req.params.invoiceId, tenantId: req.user.tenantId });`, keeping the existing `if (!invoice) return res.status(404).end();` so a cross-tenant id is indistinguishable from a missing one and enumeration leaks nothing. Add a `findOne` to the `db.invoices` stub in `src/db.js` to match. Rather than fixing this one call site, prefer making the scoping structural: expose a single `scopedInvoices(req)` accessor (or an equivalent repository bound to `req.user.tenantId`) that every handler must route through, and forbid direct `db.invoices.*` access from route code, so an unscoped `findById` cannot be reintroduced. A row-level-security policy on the invoices table keyed to the session tenant would enforce the same invariant at the database layer and is the strongest deny-by-default option once a real datastore replaces the stub. Add a regression test asserting that a GET for an invoice belonging to another tenant returns 404.",
+      "verify": "node --test test/security.test.js",
+      "checks": [
+        "A-SEC-3"
+      ],
+      "status": "open",
+      "remediation": [
+        "GA-101"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "GA-101",
+      "phase": 1,
+      "wave": "1.1",
+      "title": "Bind the query to the caller: getInvoice resolves an invoice by request-supplied id with no tenant predicate (cross-tena",
+      "parallel": false,
+      "files": [
+        "src/routes.js",
+        "test/security.test.js"
+      ],
+      "depends_on": [],
+      "reuses": "the scoping already applied by the sibling handlers",
+      "fixes": [
+        "F-SEC-1"
+      ],
+      "acceptance": [
+        "The load binds the owner or tenant predicate inside the query.",
+        "A cross-tenant id returns 404 rather than the record."
+      ],
+      "verify": "node --test test/security.test.js",
+      "checks": [
+        "A-SEC-3"
+      ],
+      "status": "open"
+    },
+    {
+      "id": "GA-601",
+      "phase": 6,
+      "wave": "6.1",
+      "title": "Re-run godaudits",
+      "parallel": false,
+      "files": [],
+      "depends_on": [
+        "GA-101"
+      ],
+      "reuses": "the current audit state",
+      "fixes": [],
+      "acceptance": [
+        "No open Critical findings remain."
+      ],
+      "verify": "godaudits validate .godaudits/AUDIT.json",
+      "checks": [],
+      "status": "open",
+      "final_gate": true
+    }
+  ],
+  "accepted_risks": [],
+  "open_questions": [],
+  "session_log": [
+    {
+      "date": "2026-07-16",
+      "summary": "Blind A-SEC-3 audit of list-scoped-get-not."
+    }
+  ],
+  "computed": {
+    "coverage": {
+      "applicable": 1,
+      "evaluated": 1,
+      "passed": 0,
+      "failed": 1,
+      "unknown": 0,
+      "not_applicable": 0,
+      "percent": 100
+    },
+    "domains": {
+      "security": {
+        "raw_score": 0,
+        "score": 0,
+        "cap": "active Critical caps domain at 69",
+        "evidence_basis": "mostly Firm"
+      }
+    },
+    "overall": {
+      "raw_score": 0,
+      "score": 0,
+      "verdict": "critical condition",
+      "grade_method": "static-read",
+      "grade_scope": "an arithmetic roll-up of model-assigned pass/fail from a source read, not a test result, scan, or certification",
+      "evidence_basis": "mostly Firm",
+      "coverage_cap": 100,
+      "critical_cap": 79,
+      "weak_domain_cap": 84
+    },
+    "counts": {
+      "findings_total": 1,
+      "critical": 1,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "accepted_risk": 0,
+      "tasks_total": 2,
+      "tasks_done": 0
+    }
+  }
+}

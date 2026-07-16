@@ -1,23 +1,187 @@
 #!/usr/bin/env node
 'use strict';
 
-// Generates the authored half of the seeded-defect corpus. Each case is an
-// independent audit that seeds exactly one defect against one catalog check, so
-// a catalog change that renames or drops that check orphans a seed and turns the
-// gate red.
+// Generates the seeded-defect corpus, which has two halves.
 //
-// These are AUTHORED fixtures: a maintainer wrote both the defect and the audit
-// that finds it, so they detect their own seeds by construction. They are worth
-// exactly one thing, regression coverage, and calibrate.js refuses to let them
-// contribute to a detection rate. Replacing any of them with a recorded real
-// audit run is a strict upgrade.
+// AUTHORED cases are built here from SEEDS: a maintainer wrote both the defect
+// and the audit that finds it, so they detect their own seeds by construction.
+// They are worth exactly one thing, regression coverage, and calibrate.js
+// refuses to let them contribute to a detection rate.
+//
+// RECORDED cases are assembled from blind-runs.json: real audit runs where an
+// agent saw only a repository and the A-SEC-3 definition, with no ground truth,
+// no defect count, and no hint that one repository was a clean control. Their
+// verdicts, findings, severities, and citations are the auditor's; only the
+// AUDIT.json assembly is mechanical. Ground truth in seeded-ground-truth.json
+// was authored before any of them ran. These are what a detection rate may be
+// computed from. Regenerating never re-runs the audits, so the measurement
+// stays what the tool actually produced at capture time.
 
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { compileAudit } = require('../skills/godaudits/runtime/lib/audit');
+const { redactSecrets } = require('../skills/godaudits/runtime/lib/evidence');
 
 const root = path.resolve(__dirname, '..');
 const outputDir = path.join(root, 'benchmarks/detectors');
+const seededRoot = path.join(root, 'benchmarks/fixtures/seeded');
+
+function sha256OfFile(repo, file) {
+  return crypto.createHash('sha256').update(fs.readFileSync(path.join(seededRoot, repo, file))).digest('hex');
+}
+
+// Builds a recorded case from a blind audit run captured verbatim in
+// blind-runs.json. The verdict, the finding, the severity, and the citation are
+// the auditor's; only the AUDIT.json assembly around them is mechanical.
+//
+// The runs carry a single citation per finding because the capture schema asked
+// for one. The tool's own rule is that a single evidence path cannot support a
+// Certain label, so recorded findings are written as Firm regardless of the
+// label the run reported. That is the corroboration invariant applied to the
+// recording, not a judgement that the run over-claimed.
+// A report never carries a credential-shaped value outside a redacted evidence
+// record, so recorded prose passes through the same redactor a real audit uses.
+// It fires conservatively: one run's remediation advice suggested resolving by
+// `shareToken: req.query.token`, and the scanner masked the expression. Masking
+// a code expression is the right direction to be wrong in, so the redactor is
+// applied rather than loosened. blind-runs.json keeps the verbatim capture.
+function scrub(value) {
+  return typeof value === 'string' ? redactSecrets(value).text : value;
+}
+
+function recordedAuditFor(run, truth) {
+  const failed = run.outcome === 'fail';
+  const finding = run.findings[0] || null;
+  // A pass records the file the auditor read; the capture schema collected
+  // citations for findings only.
+  const citedPath = finding ? finding.path : truth.pass_evidence.path;
+  const citedLine = finding ? finding.line : truth.pass_evidence.line;
+  const citedQuote = finding ? finding.quote : truth.pass_evidence.quote;
+  const findingId = 'F-SEC-1';
+
+  return {
+    schema_version: '2.0',
+    audit: {
+      name: `blind-${run.repo}`,
+      audit_version: 1,
+      status: 'reported',
+      created: '2026-07-16',
+      updated: '2026-07-16',
+      mode: 'fresh',
+      plan_aware: false,
+      commit: 'seeded0',
+      archetype: 'api-service',
+      scale: 'side-project',
+      risk_profile: 'balanced',
+      engine_version: '2.0.0',
+      pack_version: '2.0.0',
+      capabilities: ['static'],
+      assumptions: ['Blind run: the auditor received only the repository path and the A-SEC-3 definition.']
+    },
+    compliance: { result: 'pass', screened: '2026-07-16', policy_pack: 'provider-neutral@1' },
+    domains: [
+      {
+        id: 'security',
+        status: 'applicable',
+        weight: 15,
+        checks: [
+          {
+            id: 'A-SEC-3',
+            outcome: run.outcome,
+            confidence: 'Firm',
+            weight: 100,
+            evidence: ['E-1'],
+            finding_ids: failed ? [findingId] : []
+          }
+        ]
+      }
+    ],
+    evidence: [
+      {
+        id: 'E-1',
+        type: 'source',
+        path: citedPath,
+        line: citedLine,
+        quote: scrub(citedQuote),
+        sha256: sha256OfFile(run.repo, citedPath),
+        redacted: scrub(citedQuote) !== citedQuote
+      }
+    ],
+    strengths: [],
+    findings: failed ? [{
+      id: findingId,
+      domain: 'security',
+      title: scrub(finding.title),
+      severity: finding.severity,
+      confidence: 'Firm',
+      effort: 'S',
+      evidence: ['E-1'],
+      impact: scrub(finding.impact),
+      fix: scrub(finding.fix),
+      verify: 'node --test test/security.test.js',
+      checks: ['A-SEC-3'],
+      status: 'open',
+      remediation: ['GA-101']
+    }] : [],
+    tasks: failed ? [
+      {
+        id: 'GA-101',
+        phase: 1,
+        wave: '1.1',
+        title: scrub(`Bind the query to the caller: ${finding.title}`.slice(0, 120)),
+        parallel: false,
+        files: [citedPath, 'test/security.test.js'],
+        depends_on: [],
+        reuses: 'the scoping already applied by the sibling handlers',
+        fixes: [findingId],
+        acceptance: [
+          'The load binds the owner or tenant predicate inside the query.',
+          'A cross-tenant id returns 404 rather than the record.'
+        ],
+        verify: 'node --test test/security.test.js',
+        checks: ['A-SEC-3'],
+        status: 'open'
+      },
+      {
+        id: 'GA-601',
+        phase: 6,
+        wave: '6.1',
+        title: 'Re-run godaudits',
+        parallel: false,
+        files: [],
+        depends_on: ['GA-101'],
+        reuses: 'the current audit state',
+        fixes: [],
+        acceptance: ['No open Critical findings remain.'],
+        verify: 'godaudits validate .godaudits/AUDIT.json',
+        checks: [],
+        status: 'open',
+        final_gate: true
+      }
+    ] : [
+      {
+        id: 'GA-601',
+        phase: 6,
+        wave: '6.1',
+        title: 'Re-run godaudits',
+        parallel: false,
+        files: [],
+        depends_on: [],
+        reuses: 'the current audit state',
+        fixes: [],
+        acceptance: ['A-SEC-3 still passes on a re-read.'],
+        verify: 'godaudits validate .godaudits/AUDIT.json',
+        checks: [],
+        status: 'open',
+        final_gate: true
+      }
+    ],
+    accepted_risks: [],
+    open_questions: [],
+    session_log: [{ date: '2026-07-16', summary: `Blind A-SEC-3 audit of ${run.repo}.` }]
+  };
+}
 
 // Each seed: one domain, one failing check (the seeded defect), one clean check
 // in the same domain, and the source path the defect lives at.
@@ -238,6 +402,40 @@ for (const seed of SEEDS) {
   });
 }
 
+// Recorded cases: real blind audit runs, captured verbatim, scored against
+// ground truth that was authored before any of them ran.
+const blind = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/blind-runs.json'), 'utf8'));
+const truthById = new Map(
+  JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/seeded-ground-truth.json'), 'utf8')).repos.map((item) => [item.repo, item])
+);
+
+for (const run of blind.runs) {
+  const truth = truthById.get(run.repo);
+  if (!truth) {
+    process.stderr.write(`blind run ${run.repo} has no ground-truth entry\n`);
+    process.exitCode = 1;
+    continue;
+  }
+  const { audit, errors } = compileAudit(recordedAuditFor(run, truth));
+  if (errors.length) {
+    process.stderr.write(`recorded ${run.repo} is not a valid audit: ${errors.join('; ')}\n`);
+    process.exitCode = 1;
+    continue;
+  }
+  const file = `detectors/blind-${run.repo}.audit.json`;
+  emit(file, `${JSON.stringify(audit, null, 2)}\n`);
+  cases.push({
+    name: `blind-${run.repo}`,
+    provenance: 'recorded',
+    audit: file,
+    seeded: truth.defect,
+    expected: {
+      required_findings: truth.seeded ? [{ check: 'A-SEC-3', severity: truth.severity, path: truth.path }] : [],
+      clean_checks: truth.seeded ? [] : ['A-SEC-3']
+    }
+  });
+}
+
 if (process.exitCode === 1) process.exit(1);
 
 const corpus = {
@@ -253,5 +451,8 @@ if (check) {
     process.exitCode = 1;
   } else process.stdout.write('Detector corpus is fresh.\n');
 } else {
-  process.stdout.write(`Wrote ${cases.length} authored corpus case(s) covering ${[...new Set(SEEDS.map((seed) => seed.failCheck))].join(', ')}\n`);
+  const authored = cases.filter((item) => item.provenance === 'authored').length;
+  const recorded = cases.filter((item) => item.provenance === 'recorded').length;
+  const covered = [...new Set(cases.flatMap((item) => item.expected.required_findings.map((entry) => entry.check)))].sort();
+  process.stdout.write(`Wrote ${cases.length} corpus case(s): ${authored} authored, ${recorded} recorded; covering ${covered.join(', ')}\n`);
 }

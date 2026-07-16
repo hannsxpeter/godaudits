@@ -1,0 +1,180 @@
+{
+  "schema_version": "2.0",
+  "audit": {
+    "name": "blind-obvious-lookup",
+    "audit_version": 1,
+    "status": "reported",
+    "created": "2026-07-16",
+    "updated": "2026-07-16",
+    "mode": "fresh",
+    "plan_aware": false,
+    "commit": "seeded0",
+    "archetype": "api-service",
+    "scale": "side-project",
+    "risk_profile": "balanced",
+    "engine_version": "2.0.0",
+    "pack_version": "2.0.0",
+    "capabilities": [
+      "static"
+    ],
+    "assumptions": [
+      "Blind run: the auditor received only the repository path and the A-SEC-3 definition."
+    ]
+  },
+  "compliance": {
+    "result": "pass",
+    "screened": "2026-07-16",
+    "policy_pack": "provider-neutral@1"
+  },
+  "domains": [
+    {
+      "id": "security",
+      "status": "applicable",
+      "weight": 15,
+      "checks": [
+        {
+          "id": "A-SEC-3",
+          "outcome": "fail",
+          "confidence": "Firm",
+          "weight": 100,
+          "evidence": [
+            "E-1"
+          ],
+          "finding_ids": [
+            "F-SEC-1"
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-1",
+      "type": "source",
+      "path": "src/server.js",
+      "line": 11,
+      "quote": "  const patient = await db.patients.findOne({ id: req.params.id });",
+      "sha256": "5308ebee7c7263ea0ac56764e0a0cbc85bb93638bf2131ef949f12866e811475",
+      "redacted": false
+    }
+  ],
+  "strengths": [],
+  "findings": [
+    {
+      "id": "F-SEC-1",
+      "domain": "security",
+      "title": "Patient record lookup by request-supplied id with no owner or tenant predicate (IDOR exposing PHI)",
+      "severity": "Critical",
+      "confidence": "Firm",
+      "effort": "S",
+      "evidence": [
+        "E-1"
+      ],
+      "impact": "GET /patients/:id resolves a patient record using only the client-controlled path parameter. The global `requireSession` middleware (src/server.js:7, src/auth.js:2-5) only asserts that a session with a userId exists; it performs no object-level ownership check. Any authenticated user of any clinic can enumerate or guess patient ids and read arbitrary records. The response returns the full record, which per the handler's own comment on line 9 contains name, date of birth, and diagnosis notes: PHI/PII, and the exposure crosses clinic tenant boundaries. The sibling list handler at line 17 already scopes to `req.session.clinicId`, proving the tenant key is present on the session and simply not applied here. No RLS policy or migration exists in the repository to compensate.",
+      "fix": "Bind the lookup to the caller's tenant (and owner, if applicable) inside the query itself rather than filtering after the fact, mirroring the list handler: `const patient = await db.patients.findOne({ id: req.params.id, clinicId: req.session.clinicId });`. Continue returning 404 (not 403) on miss so the endpoint does not confirm the existence of out-of-tenant ids. Better still, centralize this as a deny-by-default scoped-repository helper that requires an explicit tenant predicate for every load and mutation, so no future handler can construct an unscoped query, and back it with a row-level-security policy on the patients table keyed to the session clinic.",
+      "verify": "node --test test/security.test.js",
+      "checks": [
+        "A-SEC-3"
+      ],
+      "status": "open",
+      "remediation": [
+        "GA-101"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "GA-101",
+      "phase": 1,
+      "wave": "1.1",
+      "title": "Bind the query to the caller: Patient record lookup by request-supplied id with no owner or tenant predicate (IDOR expos",
+      "parallel": false,
+      "files": [
+        "src/server.js",
+        "test/security.test.js"
+      ],
+      "depends_on": [],
+      "reuses": "the scoping already applied by the sibling handlers",
+      "fixes": [
+        "F-SEC-1"
+      ],
+      "acceptance": [
+        "The load binds the owner or tenant predicate inside the query.",
+        "A cross-tenant id returns 404 rather than the record."
+      ],
+      "verify": "node --test test/security.test.js",
+      "checks": [
+        "A-SEC-3"
+      ],
+      "status": "open"
+    },
+    {
+      "id": "GA-601",
+      "phase": 6,
+      "wave": "6.1",
+      "title": "Re-run godaudits",
+      "parallel": false,
+      "files": [],
+      "depends_on": [
+        "GA-101"
+      ],
+      "reuses": "the current audit state",
+      "fixes": [],
+      "acceptance": [
+        "No open Critical findings remain."
+      ],
+      "verify": "godaudits validate .godaudits/AUDIT.json",
+      "checks": [],
+      "status": "open",
+      "final_gate": true
+    }
+  ],
+  "accepted_risks": [],
+  "open_questions": [],
+  "session_log": [
+    {
+      "date": "2026-07-16",
+      "summary": "Blind A-SEC-3 audit of obvious-lookup."
+    }
+  ],
+  "computed": {
+    "coverage": {
+      "applicable": 1,
+      "evaluated": 1,
+      "passed": 0,
+      "failed": 1,
+      "unknown": 0,
+      "not_applicable": 0,
+      "percent": 100
+    },
+    "domains": {
+      "security": {
+        "raw_score": 0,
+        "score": 0,
+        "cap": "active Critical caps domain at 69",
+        "evidence_basis": "mostly Firm"
+      }
+    },
+    "overall": {
+      "raw_score": 0,
+      "score": 0,
+      "verdict": "critical condition",
+      "grade_method": "static-read",
+      "grade_scope": "an arithmetic roll-up of model-assigned pass/fail from a source read, not a test result, scan, or certification",
+      "evidence_basis": "mostly Firm",
+      "coverage_cap": 100,
+      "critical_cap": 79,
+      "weak_domain_cap": 84
+    },
+    "counts": {
+      "findings_total": 1,
+      "critical": 1,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "accepted_risk": 0,
+      "tasks_total": 2,
+      "tasks_done": 0
+    }
+  }
+}

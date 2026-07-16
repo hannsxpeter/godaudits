@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "note": "Verbatim output of blind A-SEC-3 audit runs against benchmarks/fixtures/seeded/. Each run was given only one repository path and the catalog's own A-SEC-3 definition: no ground truth, no count of defects, and no indication that any repository was a clean control. Recorded exactly as returned, hits and misses alike. These recordings are the input the detector corpus derives its `recorded` cases from; regenerating the corpus never re-runs the audits, so the measurement is what the tool actually produced at capture time.",
+  "captured": "2026-07-16",
+  "method": "Six independent agents, one per repository, static read only, structured verdict per run.",
+  "runs": [
+    {
+      "repo": "export-unscoped",
+      "outcome": "fail",
+      "confidence": "Certain",
+      "findings": [
+        {
+          "title": "CSV export resolves contacts by request-supplied segment with no owner or tenant predicate",
+          "severity": "Critical",
+          "path": "src/contacts.js",
+          "line": 15,
+          "quote": "  const rows = await db.contacts.find({ segment: req.query.segment });",
+          "impact": "exportContacts is the only handler in the file that omits the accountId predicate its siblings apply (getContact uses { id: req.params.id, accountId: req.user.accountId } on line 5; listContacts uses { accountId: req.user.accountId } on line 10). The query filters solely on the attacker-controlled req.query.segment, so any authenticated user can stream every tenant's contacts out as CSV. The response body on line 17 emits name, email, and phone for each row, making this a cross-tenant bulk disclosure of PII, not just a single-record leak. Severity is Critical per the check's rule on both counts: PII payload and cross-tenant scope.",
+          "fix": "Bind the export query to the caller's tenant the same way the siblings do: await db.contacts.find({ segment: req.query.segment, accountId: req.user.accountId }). Better, route every contacts read through one shared scoping helper that takes req.user.accountId as a required argument so a handler cannot be written without it, or enforce the predicate below the handler layer with a row-level-security policy keyed on the session's account. Also treat req.query.segment as an untrusted filter value and validate it against the allowed segment set."
+        }
+      ],
+      "reasoning": "The repository contains three files: package.json, src/db.js (a stub datastore with no-op findOne/find, so no scoping is enforced at the data layer), and src/contacts.js (all three handlers). package.json references src/server.js, but that file does not exist in the repo, so there is no router or middleware layer that could impose scoping above the handlers, and no migrations directory that could define RLS policies. Authorization therefore rests entirely on the per-query predicates in src/contacts.js. I checked each of the three handlers there. getContact (line 5) binds the request-supplied id to the caller via accountId, and listContacts (line 10) filters the list by accountId; both satisfy A-SEC-3. exportContacts (line 15) resolves rows using only req.query.segment, an attacker-controlled value, with no owner or tenant key, and returns PII (name, email, phone) as CSV. That is one distinct violation: a scoping convention exists in the file, but the export path bypasses it, which is exactly the sibling-bypass pattern the check targets."
+    },
+    {
+      "repo": "helper-bypassed",
+      "outcome": "fail",
+      "confidence": "Certain",
+      "findings": [
+        {
+          "title": "previewDocument resolves a document by request-supplied id with no workspace predicate, bypassing the scoped() helper",
+          "severity": "Critical",
+          "path": "src/documents.js",
+          "line": 17,
+          "quote": "  const doc = await db.documents.findOne({ id: req.query.docId });",
+          "impact": "Unlike its siblings readDocument (line 6) and listDocuments (line 11), which both route through scoped(query, req.user) to inject workspaceId, previewDocument builds its query literally from req.query.docId with no owner or tenant key. Any caller who can reach this handler can supply an arbitrary document id and receive the full title and body of a document belonging to any other workspace. This is cross-tenant data disclosure of arbitrary document contents, so Critical per the check's own severity rule. The comment at line 15 (\"Added for the share-link feature\") indicates the bypass was introduced later, defeating the invariant scope.js documents at lines 2-3 (\"Every document read must go through this helper so the workspace predicate is never forgotten\").",
+          "fix": "Route the lookup through the same helper as the other handlers: `const doc = await db.documents.findOne(scoped({ id: req.query.docId }, req.user));`. If the share-link feature must serve unauthenticated viewers, do not query by document id at all: mint an unguessable share token, store it on the document, and resolve by that token (`findOne({ shareToken: req.query.token })`) with expiry and revocation, rather than accepting a raw record id. Additionally, enforce deny-by-default centrally (middleware or a repository layer that refuses any documents query lacking a workspaceId predicate) so a future handler cannot reintroduce the same bypass."
+        }
+      ],
+      "reasoning": "The repository is a small four-file Express-style docs API. src/scope.js defines scoped(query, user) which merges user.workspaceId into any query, and its header comment states every document read must go through it. In src/documents.js, readDocument (line 6) and listDocuments (line 11) both correctly call scoped(...) with req.user, so the id/list paths are tenant-bound. previewDocument (line 17) calls db.documents.findOne({ id: req.query.docId }) directly, taking the record id straight from the query string with no workspaceId or owner predicate, and returns the document title and body. That is exactly the fail condition for A-SEC-3: a handler resolving a record by request-supplied id with no owner or tenant predicate, with a scoping helper present but bypassed on one path. Because the exposed data is arbitrary cross-tenant document content, severity is Critical. src/db.js is an inert stub and package.json references src/server.js, which is absent from the fixture, so no mount-order or middleware layer could be inspected; that absence does not change the verdict, since the bypass is visible and unambiguous in the handler itself."
+    },
+    {
+      "repo": "list-scoped-get-not",
+      "outcome": "fail",
+      "confidence": "Certain",
+      "findings": [
+        {
+          "title": "getInvoice resolves an invoice by request-supplied id with no tenant predicate (cross-tenant IDOR)",
+          "severity": "Critical",
+          "path": "src/routes.js",
+          "line": 10,
+          "quote": "  const invoice = await db.invoices.findById(req.params.invoiceId);",
+          "impact": "The handler loads an invoice using only the client-controlled `req.params.invoiceId` and returns the full record via `res.json(invoice)`, with no binding to `req.user.tenantId`. Any authenticated user who guesses or enumerates an invoice id reads another tenant's invoice in full. This is financial and cross-tenant data (billing amounts, counterparty identity, and any PII carried on the record), so the exposure is a direct confidentiality breach across the tenant boundary. The gap is made unambiguous by its siblings in the same file: `listInvoices` (line 5) filters on `{ tenantId: req.user.tenantId }` and `updateInvoice` (line 16) binds both `{ id, tenantId }`, so the tenant is available on the request and the omission on the read path is the sole deviation from the file's own pattern. There is no compensating control: no router-level ownership middleware, no post-load ownership assertion before `res.json`, and no row-level-security policy or migration anywhere in the repository (`src/db.js` is an in-memory stub with no tenant filtering of its own). The read is also the most enumerable path, since GET requires no body and no CSRF-relevant state.",
+          "fix": "Bind the id to the caller's tenant inside the query, matching the predicate already used by `updateInvoice`. Replace the lookup with a scoped `findOne`, e.g. `const invoice = await db.invoices.findOne({ id: req.params.invoiceId, tenantId: req.user.tenantId });`, keeping the existing `if (!invoice) return res.status(404).end();` so a cross-tenant id is indistinguishable from a missing one and enumeration leaks nothing. Add a `findOne` to the `db.invoices` stub in `src/db.js` to match. Rather than fixing this one call site, prefer making the scoping structural: expose a single `scopedInvoices(req)` accessor (or an equivalent repository bound to `req.user.tenantId`) that every handler must route through, and forbid direct `db.invoices.*` access from route code, so an unscoped `findById` cannot be reintroduced. A row-level-security policy on the invoices table keyed to the session tenant would enforce the same invariant at the database layer and is the strongest deny-by-default option once a real datastore replaces the stub. Add a regression test asserting that a GET for an invoice belonging to another tenant returns 404."
+        }
+      ],
+      "reasoning": "The repository is a three-file invoice service (package.json, src/db.js, src/routes.js); I read all of them in full. src/db.js is an in-memory stub (`find`, `findById`, `update`) that applies no tenant filtering itself, so all authorization must live in the handlers. There are no router/app.use files, no middleware, and no migrations, so there is no central deny-by-default layer and no RLS policy to compensate. Of the three handlers in src/routes.js: listInvoices (line 5) is scoped via `find({ tenantId: req.user.tenantId })`; updateInvoice (line 16) is scoped via `update({ id: req.params.invoiceId, tenantId: req.user.tenantId }, ...)`. getInvoice (line 10) calls `db.invoices.findById(req.params.invoiceId)` with no owner or tenant predicate and no post-load ownership check before returning the record, which is exactly the check's fail condition. Severity is Critical rather than High because the data returned is invoice/billing data and the exposure crosses the tenant boundary, both of which the check names explicitly. The correctly-scoped siblings confirm tenant context is available on the request, so this is a genuine gap rather than a design without tenancy."
+    },
+    {
+      "repo": "obvious-lookup",
+      "confidence": "Certain",
+      "outcome": "fail",
+      "reasoning": "Read all four source files in the repository (package.json, src/server.js, src/db.js, src/auth.js). Two route handlers exist in src/server.js. The list handler GET /patients (line 17) correctly binds the query to the caller's tenant via `find({ clinicId: req.session.clinicId })` and satisfies the check. The single-record handler GET /patients/:id (line 11) resolves the record purely by the request-supplied id with no owner or tenant predicate. The only authorization control is `requireSession` (src/auth.js), mounted globally at src/server.js line 7, which verifies that *a* session exists but performs no object-level ownership check. No RLS policies or migrations exist in the repository to compensate. Per the check's rule this is a violation, and severity is Critical because the handler returns PII/PHI (the comment on line 9 states the record contains name, date of birth, and diagnosis notes) and the leak crosses clinic tenant boundaries. The correctly-scoped sibling on line 17 confirms `req.session.clinicId` is the available tenant key, so this is an omission rather than a missing capability.",
+      "findings": [
+        {
+          "title": "Patient record lookup by request-supplied id with no owner or tenant predicate (IDOR exposing PHI)",
+          "severity": "Critical",
+          "path": "src/server.js",
+          "line": 11,
+          "quote": "  const patient = await db.patients.findOne({ id: req.params.id });",
+          "impact": "GET /patients/:id resolves a patient record using only the client-controlled path parameter. The global `requireSession` middleware (src/server.js:7, src/auth.js:2-5) only asserts that a session with a userId exists; it performs no object-level ownership check. Any authenticated user of any clinic can enumerate or guess patient ids and read arbitrary records. The response returns the full record, which per the handler's own comment on line 9 contains name, date of birth, and diagnosis notes: PHI/PII, and the exposure crosses clinic tenant boundaries. The sibling list handler at line 17 already scopes to `req.session.clinicId`, proving the tenant key is present on the session and simply not applied here. No RLS policy or migration exists in the repository to compensate.",
+          "fix": "Bind the lookup to the caller's tenant (and owner, if applicable) inside the query itself rather than filtering after the fact, mirroring the list handler: `const patient = await db.patients.findOne({ id: req.params.id, clinicId: req.session.clinicId });`. Continue returning 404 (not 403) on miss so the endpoint does not confirm the existence of out-of-tenant ids. Better still, centralize this as a deny-by-default scoped-repository helper that requires an explicit tenant predicate for every load and mutation, so no future handler can construct an unscoped query, and back it with a row-level-security policy on the patients table keyed to the session clinic."
+        }
+      ]
+    },
+    {
+      "repo": "post-filter-leak",
+      "outcome": "fail",
+      "confidence": "Firm",
+      "findings": [
+        {
+          "title": "getTicket resolves a ticket by request-supplied id with no tenant predicate in the query (post-query filtering only)",
+          "severity": "Critical",
+          "path": "src/tickets.js",
+          "line": 5,
+          "quote": "  const ticket = await db.tickets.findOne({ id: req.params.id });",
+          "impact": "The database query binds only the request-supplied id, with no orgId/tenant key. Cross-tenant ticket rows are loaded into application memory before any authorization decision is made, so the authorization boundary is application logic rather than the query. Consequences: (1) the 404-vs-403 split is an existence oracle -- an attacker enumerating ids learns exactly which ticket ids belong to other organizations, and the 403 body 'Ticket belongs to another organization' confirms cross-tenant existence; (2) the check is fail-open by construction -- if req.user is undefined, req.user.orgId throws after the record is already loaded, and any future code path, refactor, logging line, serializer, or sibling handler added between the load and the comparison exposes the full cross-tenant record; (3) it violates deny-by-default: the query returns everything and the handler must remember to subtract. A single missing post-filter (as in a copy-pasted sibling handler) silently leaks another organization's ticket data.",
+          "fix": "Bind the tenant to the query itself so the database can never return another org's row: `const ticket = await db.tickets.findOne({ id: req.params.id, orgId: req.user.orgId });` then `if (!ticket) return res.status(404).json({ error: 'No such ticket' });` and delete the post-query orgId comparison entirely. Return 404 (not 403) for both missing and out-of-tenant ids so the endpoint reveals no existence information. Enforce this centrally -- a scoped repository helper that requires a tenant key, or row-level-security policies keyed on the session tenant -- rather than relying on each handler remembering to filter after the fact."
+        }
+      ],
+      "reasoning": "The repository is a three-file fixture: package.json, src/db.js (a stub db with tickets.findOne), and src/tickets.js (the only handler). I read all three in full; there are no router/mount files, no migrations, and no RLS policies, so src/tickets.js is the entire authorization surface. Line 5 resolves the record with `findOne({ id: req.params.id })` -- the id comes straight from the request and the query carries no orgId or ownerId key, which is exactly the pattern the check names as failing ('findOne({ id: with no owner key'). The handler does compare ticket.orgId to req.user.orgId on line 7 and returns 403, so the response body is not leaked in the current code path, but that is post-query filtering in application code, not object-level ownership inside the query as A-SEC-3 requires. The check's fail rule is written against where the predicate lives, not whether a later branch happens to catch it, and the residual harms are real: an existence oracle across tenants via the 404/403 split, a fail-open path if req.user is absent, and no structural guarantee for any future or sibling handler. The data is cross-tenant support-ticket data belonging to other organizations, so the check's own severity rule puts this at Critical rather than High. Reporting one finding; there are no other handlers, list, search, or export paths in this repository to assess."
+    },
+    {
+      "repo": "properly-scoped",
+      "outcome": "pass",
+      "confidence": "Firm",
+      "findings": [],
+      "reasoning": "The repository contains only three files (package.json, src/db.js, src/orders.js); no node_modules, no migrations, no router/server file (package.json's start script points at src/server.js, which does not exist in the repo, so there is no mount-order or middleware surface to assess).\n\nAll four data-access handlers in src/orders.js bind the record to the caller's tenant via req.user.customerId, with no path that resolves a record by request-supplied id alone:\n- getOrder (line 5): findOne({ id: req.params.id, customerId: req.user.customerId }) \u2014 object-level read is owner-scoped, and a miss returns 404 rather than leaking existence.\n- listOrders (line 11): find({ customerId: req.user.customerId }) \u2014 list is tenant-filtered.\n- cancelOrder (lines 16-19): update({ id: req.params.id, customerId: req.user.customerId }, ...) \u2014 the mutation predicate itself carries the owner key, so a cross-tenant id matches nothing and result.matched is falsy \u2192 404. There is no read-then-write gap and no unscoped fallback.\n- exportOrders (line 25): find({ customerId: req.user.customerId }) \u2014 export is tenant-filtered; the projected fields (id, total) come only from owner-scoped rows.\n\nsrc/db.js is an inert stub whose methods ignore their filters, but the check is about whether handlers supply an owner/tenant predicate in the query, and every one of them does. I found no sibling handler bypassing the scoping pattern and no search/PUT/PATCH/DELETE path outside these four. The repository satisfies A-SEC-3."
+    }
+  ]
+}
