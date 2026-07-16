@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "pack_version": "2.3.0",
-  "source_hash": "1639f81617ada9fc54d82e7e296e9edd00010ae9971233a5be0305244b935fbc",
+  "pack_version": "2.4.0",
+  "source_hash": "8904ea286ccb59ae325cab492ef06172a8b20c19bd2aea6bed72d9610030d976",
   "domain_count": 18,
-  "check_count": 427,
+  "check_count": 429,
   "profiles": {
     "balanced": {
       "description": "General product risk weighted by user blast radius.",
@@ -668,8 +668,8 @@
     {
       "id": "product",
       "module": "product.md",
-      "check_count": 20,
-      "scoring_contract": "Weights derive from the godplans product self-audit rubric, collapsed into auditable dimensions. Sum is 100; re-normalize when a conditional dimension's sub-surface is declared absent in the Surface map.\n\n- Problem, user, and framing (A-PRD-1 to A-PRD-4): 25.\n- Success metrics and live instrumentation (A-PRD-5, A-PRD-19): 20.\n- Requirements and promise integrity (A-PRD-6, A-PRD-18, A-PRD-20): 20. Conditional: with no outward promise surface, A-PRD-18 and A-PRD-20 drop and the dimension rests on A-PRD-6.\n- NFR coverage (A-PRD-7): 10.\n- Scope negative space (A-PRD-8): 10.\n- Registers and question hygiene (A-PRD-9 to A-PRD-11): 10.\n- Lifecycle, prior art, and closure (A-PRD-12 to A-PRD-17): 5. Conditional: never-shipped repos drop A-PRD-17 and score this dimension on change control and prior art alone.\n\nAny active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 21,
+      "scoring_contract": "Weights derive from the godplans product self-audit rubric, collapsed into auditable dimensions. Sum is 100; re-normalize when a conditional dimension's sub-surface is declared absent in the Surface map.\n\n- Problem, user, and framing (A-PRD-1 to A-PRD-4): 25.\n- Success metrics and live instrumentation (A-PRD-5, A-PRD-19): 20.\n- Requirements and promise integrity (A-PRD-6, A-PRD-18, A-PRD-20): 20. Conditional: with no outward promise surface, A-PRD-18 and A-PRD-20 drop and the dimension rests on A-PRD-6.\n- NFR coverage (A-PRD-7): 10.\n- Scope negative space (A-PRD-8): 10.\n- Registers and question hygiene (A-PRD-9 to A-PRD-11): 10.\n- Lifecycle, prior art, and closure (A-PRD-12 to A-PRD-17): 5. Conditional: never-shipped repos drop A-PRD-17 and score this dimension on change control and prior art alone.\n\nA-PRD-21 carries no weight of its own: its findings score inside the requirements dimension of the control they implicate.\n\nAny active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Problem, user, and framing",
@@ -1709,8 +1709,8 @@
     {
       "id": "repo",
       "module": "repo.md",
-      "check_count": 23,
-      "scoring_contract": "Weighted dimensions summing to 100. Derived from repo-ready's 42-point Mode C table normalized, with the DX slice redistributed into CI tooling and tier discipline (onboarding DX is already exercised by the A-REPO-7 Quick Start and A-REPO-10 hooks).\n\n| Dimension | Weight | Checks |\n|---|---|---|\n| Essentials and hygiene | 18 | A-REPO-4, A-REPO-6, A-REPO-7, A-REPO-21 |\n| CI and quality tooling | 20 | A-REPO-5, A-REPO-9, A-REPO-10, A-REPO-11, A-REPO-22 |\n| Community and documentation | 14 | A-REPO-8, A-REPO-16, A-REPO-17, A-REPO-18 |\n| Security automation | 14 | A-REPO-3, A-REPO-12 |\n| Tier discipline and traceability | 14 | A-REPO-1, A-REPO-2, A-REPO-19, A-REPO-20 |\n| Release machinery (conditional) | 12 | A-REPO-13, A-REPO-14, A-REPO-23 |\n| Agent safety | 8 | A-REPO-15 |\n\nRelease machinery applies only when the release sub-surface exists; a tier-1 repo that publishes nothing and declares the stop drops it, re-normalizing the rest to 100. A-REPO-5 is skipped in single-language repos without re-weighting its dimension. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 24,
+      "scoring_contract": "Weighted dimensions summing to 100. Derived from repo-ready's 42-point Mode C table normalized, with the DX slice redistributed into CI tooling and tier discipline (onboarding DX is already exercised by the A-REPO-7 Quick Start and A-REPO-10 hooks).\n\n| Dimension | Weight | Checks |\n|---|---|---|\n| Essentials and hygiene | 18 | A-REPO-4, A-REPO-6, A-REPO-7, A-REPO-21 |\n| CI and quality tooling | 20 | A-REPO-5, A-REPO-9, A-REPO-10, A-REPO-11, A-REPO-22 |\n| Community and documentation | 14 | A-REPO-8, A-REPO-16, A-REPO-17, A-REPO-18 |\n| Security automation | 14 | A-REPO-3, A-REPO-12 |\n| Tier discipline and traceability | 14 | A-REPO-1, A-REPO-2, A-REPO-19, A-REPO-20 |\n| Release machinery (conditional) | 12 | A-REPO-13, A-REPO-14, A-REPO-23 |\n| Agent safety | 8 | A-REPO-15 |\n\nA-REPO-24 carries no weight of its own: its findings score inside the documentation dimension of the control they implicate.\n\nRelease machinery applies only when the release sub-surface exists; a tier-1 repo that publishes nothing and declares the stop drops it, re-normalizing the rest to 100. A-REPO-5 is skipped in single-language repos without re-weighting its dimension. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Essentials and hygiene",
@@ -2417,6 +2417,20 @@
       "dimension_weight": 20,
       "scoring_role": "weighted",
       "default_weight": 6.66666667
+    },
+    {
+      "id": "A-PRD-21",
+      "domain": "product",
+      "module": "product.md",
+      "title": "Requirements traceability: a traceability record links each requirement to its design component, its build task or slice, and its verifying test, so nothing is planned but unbuilt or built but unverified. In plan-aware mode the R-id-to-check-to-task tracing is the in-repo mechanism",
+      "look": "a traceability matrix or equivalent (requirement ids referenced from tasks, tests, and code); in plan-aware mode the PLAN.mdx requirement ids traced to tasks and to this audit's checks.",
+      "fail": "requirements with no build or test trace, or a required traceability record absent at funded-product or enterprise scale: Medium (High when critical-path requirements such as authn, authz, or payments are untraced to a verifying test).",
+      "source_line": 86,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
     },
     {
       "id": "A-ARCH-1",
@@ -6738,6 +6752,20 @@
       "dimension_weight": 12,
       "scoring_role": "weighted",
       "default_weight": 4
+    },
+    {
+      "id": "A-REPO-24",
+      "domain": "repo",
+      "module": "repo.md",
+      "title": "Documentation profile completeness (audit-only). The documentation set matches the project's detected profile (product form, scale, and risk or regulatory overlays): the documents a comparable project of this shape needs are present, scaled to it. A prototype is not faulted for a missing business-continuity plan; a funded-product or enterprise system is expected to carry a PRD, architecture and ADRs, a test strategy, a deploy and rollback plan, an operations runbook, and release notes, and at enterprise or regulated scale an initiation brief (charter, business case, stakeholders and RACI), a requirements-traceability matrix, and a closeout with lessons. Documents the form makes irrelevant are recorded not-applicable with a reason",
+      "look": "the root-doc and `docs/` inventory against the form, scale, and risk profile in `intake.md`; presence of the governance documents at funded-product or enterprise scale; not-applicable markers with their reason.",
+      "fail": "a required document for the detected profile is absent with no not-applicable reason: Medium (High when a security-critical or regulated project lacks a threat model, privacy or DSAR records, or incident-response documentation).",
+      "source_line": 86,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
     },
     {
       "id": "A-BUILD-1",

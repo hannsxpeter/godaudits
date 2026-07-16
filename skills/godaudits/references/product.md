@@ -83,6 +83,9 @@ Severities are funded-product calibration; scale them per `intake.md`. A-PRD-1 t
 20. A-PRD-20 Verify monetization promises are enforced: every documented tier cap, quota, or plan boundary has an enforcement branch in code.
     Look: pricing copy and tier constants; grep `tier`, `quota`, `limit`, `plan` in `src/` for the enforcing conditionals.
     Fail: a documented cap with no enforcement code (silent revenue leak or overpromise): High.
+21. A-PRD-21 (audit-only) Requirements traceability: a traceability record links each requirement to its design component, its build task or slice, and its verifying test, so nothing is planned but unbuilt or built but unverified. In plan-aware mode the R-id-to-check-to-task tracing is the in-repo mechanism.
+    Look: a traceability matrix or equivalent (requirement ids referenced from tasks, tests, and code); in plan-aware mode the PLAN.mdx requirement ids traced to tasks and to this audit's checks.
+    Fail: requirements with no build or test trace, or a required traceability record absent at funded-product or enterprise scale: Medium (High when critical-path requirements such as authn, authz, or payments are untraced to a verifying test).
 
 ## Scoring
 
@@ -95,6 +98,8 @@ Weights derive from the godplans product self-audit rubric, collapsed into audit
 - Scope negative space (A-PRD-8): 10.
 - Registers and question hygiene (A-PRD-9 to A-PRD-11): 10.
 - Lifecycle, prior art, and closure (A-PRD-12 to A-PRD-17): 5. Conditional: never-shipped repos drop A-PRD-17 and score this dimension on change control and prior art alone.
+
+A-PRD-21 carries no weight of its own: its findings score inside the requirements dimension of the control they implicate.
 
 Any active Critical finding, including an accepted risk, caps this domain at 69.
 

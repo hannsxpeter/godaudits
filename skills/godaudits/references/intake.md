@@ -69,6 +69,21 @@ Every domain gets a row. Applicable means the domain pass runs and its checks bi
 
 Hard rules: security, code-quality, style-genome, repo are never excluded (they scale down instead). seo requires a public crawlable surface. llm requires model calls in the code; a langchain import with no call site is a stack finding, not an llm pass. ui requires rendered pixels the project owns. roadmap applies whenever a plan, roadmap, or issue tracker artifact exists in or beside the repo; otherwise it reduces to one delivery-reality check inside repo.
 
+## Documentation profile
+
+The same signals that build the applicability matrix, product form, scale, risk
+profile, and regulatory overlays, also set which documents this project is expected
+to carry. Derive the expected documentation set the way a comparable project of this
+shape would need it, not from a fixed checklist: a prototype carries a README and a
+brief; a funded-product system adds a PRD, architecture and ADRs, a test strategy, a
+deploy and rollback plan, an operations runbook, and release notes; an enterprise or
+regulated system adds an initiation brief (charter, business case, stakeholders and
+RACI), a requirements-traceability matrix, a closeout with lessons, and the
+regulatory-overlay records named in the compliance standards. Documents the form
+makes irrelevant are recorded not-applicable with a reason. A-REPO-24 audits
+completeness against this profile and A-PRD-21 audits the traceability record; a
+missing document is a finding only when the profile expects it.
+
 ## Risk profiles and domain weights
 
 Overall score = sum(domain score x profile weight) / sum(active profile weights), over applicable domains only. Excluded domains drop out. Profiles live in `catalog/profiles.json`, are versioned with the check pack, and are validated mechanically. Choose one during intake:

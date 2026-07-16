@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.3 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.4 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -191,7 +191,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.3.0
+## Skill version: 2.4.0
 
 
 ---
@@ -582,6 +582,21 @@ Calibration moves severity, never evidence: a weekend project with fast-hashed p
 Every domain gets a row. Applicable means the domain pass runs and its checks bind. Excluded requires a reason specific to this repo; "not needed" is banned by the substitution test. Merge routing from the primary form, every supported secondary form, and verified overlays. A primary form cannot silently suppress a domain activated by a real secondary surface. Candidate regulatory overlays may add questions and evidence requirements, but do not alter scoring until verified.
 
 Hard rules: security, code-quality, style-genome, repo are never excluded (they scale down instead). seo requires a public crawlable surface. llm requires model calls in the code; a langchain import with no call site is a stack finding, not an llm pass. ui requires rendered pixels the project owns. roadmap applies whenever a plan, roadmap, or issue tracker artifact exists in or beside the repo; otherwise it reduces to one delivery-reality check inside repo.
+
+## Documentation profile
+
+The same signals that build the applicability matrix, product form, scale, risk
+profile, and regulatory overlays, also set which documents this project is expected
+to carry. Derive the expected documentation set the way a comparable project of this
+shape would need it, not from a fixed checklist: a prototype carries a README and a
+brief; a funded-product system adds a PRD, architecture and ADRs, a test strategy, a
+deploy and rollback plan, an operations runbook, and release notes; an enterprise or
+regulated system adds an initiation brief (charter, business case, stakeholders and
+RACI), a requirements-traceability matrix, a closeout with lessons, and the
+regulatory-overlay records named in the compliance standards. Documents the form
+makes irrelevant are recorded not-applicable with a reason. A-REPO-24 audits
+completeness against this profile and A-PRD-21 audits the traceability record; a
+missing document is a finding only when the profile expects it.
 
 ## Risk profiles and domain weights
 
@@ -977,6 +992,9 @@ Severities are funded-product calibration; scale them per `intake.md`. A-PRD-1 t
 20. A-PRD-20 Verify monetization promises are enforced: every documented tier cap, quota, or plan boundary has an enforcement branch in code.
     Look: pricing copy and tier constants; grep `tier`, `quota`, `limit`, `plan` in `src/` for the enforcing conditionals.
     Fail: a documented cap with no enforcement code (silent revenue leak or overpromise): High.
+21. A-PRD-21 (audit-only) Requirements traceability: a traceability record links each requirement to its design component, its build task or slice, and its verifying test, so nothing is planned but unbuilt or built but unverified. In plan-aware mode the R-id-to-check-to-task tracing is the in-repo mechanism.
+    Look: a traceability matrix or equivalent (requirement ids referenced from tasks, tests, and code); in plan-aware mode the PLAN.mdx requirement ids traced to tasks and to this audit's checks.
+    Fail: requirements with no build or test trace, or a required traceability record absent at funded-product or enterprise scale: Medium (High when critical-path requirements such as authn, authz, or payments are untraced to a verifying test).
 
 ## Scoring
 
@@ -989,6 +1007,8 @@ Weights derive from the godplans product self-audit rubric, collapsed into audit
 - Scope negative space (A-PRD-8): 10.
 - Registers and question hygiene (A-PRD-9 to A-PRD-11): 10.
 - Lifecycle, prior art, and closure (A-PRD-12 to A-PRD-17): 5. Conditional: never-shipped repos drop A-PRD-17 and score this dimension on change control and prior art alone.
+
+A-PRD-21 carries no weight of its own: its findings score inside the requirements dimension of the control they implicate.
 
 Any active Critical finding, including an accepted risk, caps this domain at 69.
 
@@ -3014,6 +3034,9 @@ Mirrors `R-REPO-1` through `R-REPO-20` one to one; `A-REPO-21` onward are audit-
 23. **A-REPO-23 Delivery reality (audit-only, conditional).** Runs only when the roadmap domain is excluded per `intake.md`: the repo's release story matches shipped reality.
     Look: latest `v*` tag vs the CHANGELOG top entry; commit recency vs activity claims in README; release automation that has never cut a release.
     Fail: CHANGELOG and tags disagree, Low; release machinery configured but unused across 6 months of active commits, Low.
+24. **A-REPO-24 Documentation profile completeness (audit-only).** The documentation set matches the project's detected profile (product form, scale, and risk or regulatory overlays): the documents a comparable project of this shape needs are present, scaled to it. A prototype is not faulted for a missing business-continuity plan; a funded-product or enterprise system is expected to carry a PRD, architecture and ADRs, a test strategy, a deploy and rollback plan, an operations runbook, and release notes, and at enterprise or regulated scale an initiation brief (charter, business case, stakeholders and RACI), a requirements-traceability matrix, and a closeout with lessons. Documents the form makes irrelevant are recorded not-applicable with a reason.
+    Look: the root-doc and `docs/` inventory against the form, scale, and risk profile in `intake.md`; presence of the governance documents at funded-product or enterprise scale; not-applicable markers with their reason.
+    Fail: a required document for the detected profile is absent with no not-applicable reason: Medium (High when a security-critical or regulated project lacks a threat model, privacy or DSAR records, or incident-response documentation).
 
 ## Scoring
 
@@ -3028,6 +3051,8 @@ Weighted dimensions summing to 100. Derived from repo-ready's 42-point Mode C ta
 | Tier discipline and traceability | 14 | A-REPO-1, A-REPO-2, A-REPO-19, A-REPO-20 |
 | Release machinery (conditional) | 12 | A-REPO-13, A-REPO-14, A-REPO-23 |
 | Agent safety | 8 | A-REPO-15 |
+
+A-REPO-24 carries no weight of its own: its findings score inside the documentation dimension of the control they implicate.
 
 Release machinery applies only when the release sub-surface exists; a tier-1 repo that publishes nothing and declares the stop drops it, re-normalizing the rest to 100. A-REPO-5 is skipped in single-language repos without re-weighting its dimension. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
