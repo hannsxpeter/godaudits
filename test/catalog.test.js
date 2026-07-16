@@ -10,8 +10,8 @@ const root = path.resolve(__dirname, '..');
 test('catalog extracts every domain and unique check id', () => {
   const catalog = buildCatalog(root);
   assert.equal(catalog.domains.length, 18);
-  assert.equal(catalog.check_count, 424);
-  assert.equal(new Set(catalog.checks.map((check) => check.id)).size, 424);
+  assert.equal(catalog.check_count, 427);
+  assert.equal(new Set(catalog.checks.map((check) => check.id)).size, 427);
   assert.ok(catalog.checks.every((check) => check.title && check.module && check.look && check.fail));
   for (const profile of Object.values(catalog.profiles)) {
     assert.equal(Object.values(profile.weights).reduce((sum, weight) => sum + weight, 0), 100);

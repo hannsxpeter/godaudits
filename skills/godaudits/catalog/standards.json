@@ -8,52 +8,544 @@
         {
           "id": "A01:2025",
           "title": "Broken Access Control",
-          "checks": ["A-SEC-3", "A-SEC-4", "A-SEC-5", "A-SEC-10"]
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-4",
+            "A-SEC-5",
+            "A-SEC-10"
+          ]
         },
         {
           "id": "A02:2025",
           "title": "Security Misconfiguration",
-          "checks": ["A-SEC-15", "A-SEC-16", "A-SEC-22"]
+          "checks": [
+            "A-SEC-15",
+            "A-SEC-16",
+            "A-SEC-22"
+          ]
         },
         {
           "id": "A03:2025",
           "title": "Software Supply Chain Failures",
-          "checks": ["A-SEC-17", "A-SEC-18", "A-SEC-26"]
+          "checks": [
+            "A-SEC-17",
+            "A-SEC-18",
+            "A-SEC-26"
+          ]
         },
         {
           "id": "A04:2025",
           "title": "Cryptographic Failures",
-          "checks": ["A-SEC-11", "A-SEC-12", "A-SEC-13"]
+          "checks": [
+            "A-SEC-11",
+            "A-SEC-12",
+            "A-SEC-13"
+          ]
         },
         {
           "id": "A05:2025",
           "title": "Injection",
-          "checks": ["A-SEC-8", "A-SEC-9", "A-SEC-10"]
+          "checks": [
+            "A-SEC-8",
+            "A-SEC-9",
+            "A-SEC-10"
+          ]
         },
         {
           "id": "A06:2025",
           "title": "Insecure Design",
-          "checks": ["A-SEC-1", "A-SEC-2", "A-SEC-16", "A-SEC-24", "A-SEC-25"]
+          "checks": [
+            "A-SEC-1",
+            "A-SEC-2",
+            "A-SEC-16",
+            "A-SEC-24",
+            "A-SEC-25"
+          ]
         },
         {
           "id": "A07:2025",
           "title": "Authentication Failures",
-          "checks": ["A-SEC-6", "A-SEC-7"]
+          "checks": [
+            "A-SEC-6",
+            "A-SEC-7"
+          ]
         },
         {
           "id": "A08:2025",
           "title": "Software or Data Integrity Failures",
-          "checks": ["A-SEC-10", "A-SEC-17", "A-SEC-19", "A-SEC-22"]
+          "checks": [
+            "A-SEC-10",
+            "A-SEC-17",
+            "A-SEC-19",
+            "A-SEC-22"
+          ]
         },
         {
           "id": "A09:2025",
           "title": "Security Logging and Alerting Failures",
-          "checks": ["A-SEC-20", "A-OBS-7", "A-OBS-8", "A-OBS-9", "A-OBS-22"]
+          "checks": [
+            "A-SEC-20",
+            "A-OBS-7",
+            "A-OBS-8",
+            "A-OBS-9",
+            "A-OBS-22"
+          ]
         },
         {
           "id": "A10:2025",
           "title": "Mishandling Exceptional Conditions",
-          "checks": ["A-SEC-28", "A-CODE-12", "A-CODE-13", "A-CODE-14", "A-ARCH-8", "A-ARCH-9", "A-DB-14", "A-DB-15", "A-DEPLOY-4", "A-DEPLOY-16", "A-OBS-22"]
+          "checks": [
+            "A-SEC-28",
+            "A-CODE-12",
+            "A-CODE-13",
+            "A-CODE-14",
+            "A-ARCH-8",
+            "A-ARCH-9",
+            "A-DB-14",
+            "A-DB-15",
+            "A-DEPLOY-4",
+            "A-DEPLOY-16",
+            "A-OBS-22"
+          ]
+        }
+      ]
+    },
+    "gdpr-eu": {
+      "name": "GDPR (EU 2016/679)",
+      "source": "Regulation (EU) 2016/679",
+      "categories": [
+        {
+          "id": "lawful-basis-and-consent",
+          "title": "Lawful basis and consent (Art 6-7)",
+          "checks": [
+            "A-SEC-31",
+            "A-UX-17"
+          ]
+        },
+        {
+          "id": "data-subject-rights",
+          "title": "Data subject rights (Art 12-22)",
+          "checks": [
+            "A-SEC-21"
+          ]
+        },
+        {
+          "id": "security-of-processing",
+          "title": "Security of processing (Art 32)",
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-11",
+            "A-SEC-12",
+            "A-SEC-20",
+            "A-DB-19"
+          ]
+        },
+        {
+          "id": "data-minimization-and-retention",
+          "title": "Data minimization and retention (Art 5)",
+          "checks": [
+            "A-SEC-21",
+            "A-DB-7",
+            "A-DB-21"
+          ]
+        },
+        {
+          "id": "records-and-transfers",
+          "title": "Records of processing and transfers (Art 30, 44-49)",
+          "checks": [
+            "A-SEC-32"
+          ]
+        },
+        {
+          "id": "privacy-by-design",
+          "title": "Data protection by design and default (Art 25)",
+          "checks": [
+            "A-SEC-2",
+            "A-SEC-12"
+          ]
+        }
+      ]
+    },
+    "ccpa-cpra": {
+      "name": "CCPA / CPRA (California)",
+      "source": "Cal. Civ. Code 1798.100 et seq.",
+      "categories": [
+        {
+          "id": "consumer-rights",
+          "title": "Consumer rights to know, delete, correct",
+          "checks": [
+            "A-SEC-21"
+          ]
+        },
+        {
+          "id": "opt-out-of-sale-and-sharing",
+          "title": "Opt-out of sale and sharing",
+          "checks": [
+            "A-SEC-31",
+            "A-UX-17"
+          ]
+        },
+        {
+          "id": "reasonable-security",
+          "title": "Reasonable security safeguards",
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-11",
+            "A-SEC-12"
+          ]
+        },
+        {
+          "id": "data-inventory",
+          "title": "Data inventory and records",
+          "checks": [
+            "A-SEC-32"
+          ]
+        }
+      ]
+    },
+    "pipeda-ca": {
+      "name": "PIPEDA (Canada)",
+      "source": "S.C. 2000, c. 5",
+      "categories": [
+        {
+          "id": "consent",
+          "title": "Consent (Principle 3)",
+          "checks": [
+            "A-SEC-31"
+          ]
+        },
+        {
+          "id": "safeguards",
+          "title": "Safeguards (Principle 7)",
+          "checks": [
+            "A-SEC-11",
+            "A-SEC-12",
+            "A-SEC-3"
+          ]
+        },
+        {
+          "id": "access-and-accuracy",
+          "title": "Individual access and accuracy (Principles 9-10)",
+          "checks": [
+            "A-SEC-21"
+          ]
+        },
+        {
+          "id": "accountability",
+          "title": "Accountability (Principle 1)",
+          "checks": [
+            "A-SEC-32",
+            "A-SEC-20"
+          ]
+        }
+      ]
+    },
+    "wcag-2.2-aa": {
+      "name": "WCAG 2.2 Level AA",
+      "source": "W3C WCAG 2.2",
+      "categories": [
+        {
+          "id": "perceivable",
+          "title": "Perceivable",
+          "checks": [
+            "A-UI-3",
+            "A-UI-21",
+            "A-UI-17"
+          ]
+        },
+        {
+          "id": "operable",
+          "title": "Operable",
+          "checks": [
+            "A-UI-4",
+            "A-UI-6",
+            "A-UI-7",
+            "A-UI-24",
+            "A-UI-20",
+            "A-UX-8"
+          ]
+        },
+        {
+          "id": "understandable",
+          "title": "Understandable",
+          "checks": [
+            "A-UX-7",
+            "A-UX-9",
+            "A-UI-8"
+          ]
+        },
+        {
+          "id": "robust",
+          "title": "Robust",
+          "checks": [
+            "A-UI-2",
+            "A-UI-9"
+          ]
+        }
+      ]
+    },
+    "aoda-on": {
+      "name": "AODA (Ontario, IASR WCAG 2.0 AA)",
+      "source": "O. Reg. 191/11",
+      "categories": [
+        {
+          "id": "web-content-accessibility",
+          "title": "Information and communications - web content",
+          "checks": [
+            "A-UI-3",
+            "A-UI-4",
+            "A-UI-6",
+            "A-UI-21",
+            "A-UI-24",
+            "A-UX-8"
+          ]
+        }
+      ]
+    },
+    "ada-508": {
+      "name": "ADA / Section 508 (US, WCAG 2.0 AA)",
+      "source": "29 U.S.C. 794d; 36 CFR 1194",
+      "categories": [
+        {
+          "id": "web-content-accessibility",
+          "title": "Accessible web content and software",
+          "checks": [
+            "A-UI-2",
+            "A-UI-3",
+            "A-UI-4",
+            "A-UI-21",
+            "A-UX-8"
+          ]
+        }
+      ]
+    },
+    "soc2-tsc": {
+      "name": "SOC 2 (Trust Services Criteria)",
+      "source": "AICPA TSP section 100",
+      "categories": [
+        {
+          "id": "security-common-criteria",
+          "title": "Security (common criteria)",
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-4",
+            "A-SEC-5",
+            "A-SEC-6",
+            "A-SEC-7",
+            "A-SEC-20",
+            "A-SEC-17"
+          ]
+        },
+        {
+          "id": "change-management",
+          "title": "Change management",
+          "checks": [
+            "A-DEPLOY-1",
+            "A-DEPLOY-8",
+            "A-DEPLOY-9",
+            "A-REPO-13"
+          ]
+        },
+        {
+          "id": "availability",
+          "title": "Availability",
+          "checks": [
+            "A-OBS-3",
+            "A-DEPLOY-11",
+            "A-DB-21"
+          ]
+        },
+        {
+          "id": "confidentiality",
+          "title": "Confidentiality",
+          "checks": [
+            "A-SEC-11",
+            "A-SEC-12",
+            "A-DB-19"
+          ]
+        },
+        {
+          "id": "processing-integrity",
+          "title": "Processing integrity",
+          "checks": [
+            "A-DB-9",
+            "A-DB-14",
+            "A-DB-24"
+          ]
+        },
+        {
+          "id": "privacy",
+          "title": "Privacy",
+          "checks": [
+            "A-SEC-21",
+            "A-SEC-31"
+          ]
+        }
+      ]
+    },
+    "iso-27001": {
+      "name": "ISO/IEC 27001:2022 (Annex A)",
+      "source": "ISO/IEC 27001:2022",
+      "categories": [
+        {
+          "id": "access-control",
+          "title": "Access control",
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-4",
+            "A-SEC-5"
+          ]
+        },
+        {
+          "id": "cryptography",
+          "title": "Cryptography",
+          "checks": [
+            "A-SEC-11",
+            "A-SEC-12"
+          ]
+        },
+        {
+          "id": "logging-and-monitoring",
+          "title": "Logging and monitoring",
+          "checks": [
+            "A-SEC-20",
+            "A-OBS-12"
+          ]
+        },
+        {
+          "id": "secure-development",
+          "title": "Secure development",
+          "checks": [
+            "A-SEC-8",
+            "A-SEC-9",
+            "A-SEC-10",
+            "A-CODE-8",
+            "A-BUILD-15"
+          ]
+        },
+        {
+          "id": "supplier-and-supply-chain",
+          "title": "Supplier and supply-chain security",
+          "checks": [
+            "A-SEC-17",
+            "A-CODE-17"
+          ]
+        },
+        {
+          "id": "vulnerability-management",
+          "title": "Technical vulnerability management",
+          "checks": [
+            "A-SEC-26",
+            "A-REPO-12"
+          ]
+        },
+        {
+          "id": "backup-and-continuity",
+          "title": "Backup and continuity",
+          "checks": [
+            "A-DB-21",
+            "A-DEPLOY-4"
+          ]
+        }
+      ]
+    },
+    "pci-dss-4": {
+      "name": "PCI DSS v4.0",
+      "source": "PCI SSC PCI DSS v4.0",
+      "categories": [
+        {
+          "id": "protect-stored-account-data",
+          "title": "Protect stored account data (Req 3)",
+          "checks": [
+            "A-SEC-12",
+            "A-DB-4",
+            "A-DB-19",
+            "A-SEC-32"
+          ]
+        },
+        {
+          "id": "encrypt-transmission",
+          "title": "Encrypt transmission of cardholder data (Req 4)",
+          "checks": [
+            "A-SEC-11",
+            "A-DB-19"
+          ]
+        },
+        {
+          "id": "secure-systems-and-software",
+          "title": "Secure systems and software (Req 6)",
+          "checks": [
+            "A-SEC-8",
+            "A-SEC-9",
+            "A-SEC-10",
+            "A-SEC-26",
+            "A-BUILD-15"
+          ]
+        },
+        {
+          "id": "access-control",
+          "title": "Restrict and authenticate access (Req 7-8)",
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-4",
+            "A-SEC-6",
+            "A-SEC-7"
+          ]
+        },
+        {
+          "id": "logging-and-monitoring",
+          "title": "Log and monitor access (Req 10)",
+          "checks": [
+            "A-SEC-20",
+            "A-OBS-12"
+          ]
+        }
+      ]
+    },
+    "hipaa-security-rule": {
+      "name": "HIPAA Security Rule",
+      "source": "45 CFR Part 164 Subpart C",
+      "categories": [
+        {
+          "id": "access-control",
+          "title": "Access control (164.312(a))",
+          "checks": [
+            "A-SEC-3",
+            "A-SEC-4",
+            "A-SEC-7"
+          ]
+        },
+        {
+          "id": "audit-controls",
+          "title": "Audit controls (164.312(b))",
+          "checks": [
+            "A-SEC-20",
+            "A-OBS-12"
+          ]
+        },
+        {
+          "id": "integrity",
+          "title": "Integrity (164.312(c))",
+          "checks": [
+            "A-DB-14",
+            "A-SEC-9"
+          ]
+        },
+        {
+          "id": "transmission-security",
+          "title": "Transmission security (164.312(e))",
+          "checks": [
+            "A-SEC-11",
+            "A-DB-19"
+          ]
+        },
+        {
+          "id": "encryption-and-agreements",
+          "title": "Encryption and business-associate agreements",
+          "checks": [
+            "A-SEC-12",
+            "A-SEC-32"
+          ]
         }
       ]
     }

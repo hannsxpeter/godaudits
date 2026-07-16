@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 424-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.1 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.3 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -41,6 +41,10 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+
+## Dynamic verification (opt-in)
+
+Static is the default and never runs the product. When the user explicitly authorizes a disposable runtime environment (ground rule 2), godaudits may add a dynamic verification pass that CONFIRMS or REFUTES its behavioral findings against the running app rather than trusting static inference alone. Behavioral findings are the class static reading can suspect but not prove: race conditions and TOCTOU, dead controls that are stored but never read, lifecycle transitions that free a resource early, authorization gaps on a non-primary caller path, and accessibility or consent behavior that only appears at runtime. Each such finding carries a runtime-verification handoff (a route or request sequence with the expected-versus-actual outcome) that an authorized harness runs: the Godpowers `god-browser-tester` (headless browser against a runtime URL) or a project Playwright suite. Runtime confirmation upgrades a Tentative finding to Firm or Certain; refutation drops it. Dynamic verification never runs automatically, never touches production, and its results are recorded as runtime evidence with provenance.
 
 ## Runtime commands
 
@@ -189,7 +193,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.2.0
+## Skill version: 2.3.0
 
 
 ---
@@ -726,6 +730,35 @@ interoperability, competitive analysis, public-interest research, individual
 use of supported products, and API-key automation are not violations merely
 because similar primitives can be abused. Record the facts that distinguish the
 legitimate case.
+
+## E. Framework conformance (standards ledger)
+
+The gate above screens usage, platform, and provider policy: is the product
+allowed. That is distinct from framework CONFORMANCE: does the code evidence a
+regulatory framework's controls. Conformance is tracked in the standards ledger,
+not this gate, and never as a separate scored domain.
+
+The catalog defines conformance frameworks as `standards` alongside OWASP Web Top
+10:2025: privacy and sovereignty (GDPR, CCPA/CPRA, PIPEDA), accessibility (WCAG
+2.2 AA, AODA, ADA/Section 508), security frameworks (SOC 2 Trust Services
+Criteria, ISO/IEC 27001:2022 Annex A), and industry standards (PCI DSS v4.0,
+HIPAA Security Rule). Each framework maps its categories to the existing checks
+that provide code evidence, so a framework is dispositioned from the checks it
+references, never double-scored.
+
+Disposition each framework per APPLICABILITY, governed by where the product's
+users are and what data it handles, not only where the business sits. A framework
+whose regulated surface is absent is `not-applicable` with absence evidence
+(HIPAA with no PHI, PCI DSS with no card data, GDPR with no EU-resident data
+path). A framework whose owning checks pass is `pass` with their evidence; a
+failing owning check makes its category `fail`.
+
+Technical-readiness, not certification. These frameworks evidence the technical
+controls a code audit can see (encryption, access control, consent code, DSAR
+paths, audit logging, accessible markup). They do not evidence the organizational
+and process controls (policies, training, vendor management, incident response,
+physical security) that SOC 2, ISO/IEC 27001, or PCI certification require. Report
+conformance as control-evidence readiness and never claim certification.
 
 ## What lands in AUDIT.json
 

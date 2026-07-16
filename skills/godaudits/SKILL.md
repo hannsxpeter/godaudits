@@ -1,9 +1,9 @@
 ---
 name: godaudits
-description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 424 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
+description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 427 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.2.0"
+  version: "2.3.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.1 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.3 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -33,6 +33,10 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+
+## Dynamic verification (opt-in)
+
+Static is the default and never runs the product. When the user explicitly authorizes a disposable runtime environment (ground rule 2), godaudits may add a dynamic verification pass that CONFIRMS or REFUTES its behavioral findings against the running app rather than trusting static inference alone. Behavioral findings are the class static reading can suspect but not prove: race conditions and TOCTOU, dead controls that are stored but never read, lifecycle transitions that free a resource early, authorization gaps on a non-primary caller path, and accessibility or consent behavior that only appears at runtime. Each such finding carries a runtime-verification handoff (a route or request sequence with the expected-versus-actual outcome) that an authorized harness runs: the Godpowers `god-browser-tester` (headless browser against a runtime URL) or a project Playwright suite. Runtime confirmation upgrades a Tentative finding to Firm or Certain; refutation drops it. Dynamic verification never runs automatically, never touches production, and its results are recorded as runtime evidence with provenance.
 
 ## Runtime commands
 
@@ -199,4 +203,4 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.2.0
+## Skill version: 2.3.0

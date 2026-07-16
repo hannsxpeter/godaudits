@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.1 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.3 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -39,6 +39,10 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+
+## Dynamic verification (opt-in)
+
+Static is the default and never runs the product. When the user explicitly authorizes a disposable runtime environment (ground rule 2), godaudits may add a dynamic verification pass that CONFIRMS or REFUTES its behavioral findings against the running app rather than trusting static inference alone. Behavioral findings are the class static reading can suspect but not prove: race conditions and TOCTOU, dead controls that are stored but never read, lifecycle transitions that free a resource early, authorization gaps on a non-primary caller path, and accessibility or consent behavior that only appears at runtime. Each such finding carries a runtime-verification handoff (a route or request sequence with the expected-versus-actual outcome) that an authorized harness runs: the Godpowers `god-browser-tester` (headless browser against a runtime URL) or a project Playwright suite. Runtime confirmation upgrades a Tentative finding to Firm or Certain; refutation drops it. Dynamic verification never runs automatically, never touches production, and its results are recorded as runtime evidence with provenance.
 
 ## Runtime commands
 
@@ -187,7 +191,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.2.0
+## Skill version: 2.3.0
 
 
 ---
@@ -724,6 +728,35 @@ interoperability, competitive analysis, public-interest research, individual
 use of supported products, and API-key automation are not violations merely
 because similar primitives can be abused. Record the facts that distinguish the
 legitimate case.
+
+## E. Framework conformance (standards ledger)
+
+The gate above screens usage, platform, and provider policy: is the product
+allowed. That is distinct from framework CONFORMANCE: does the code evidence a
+regulatory framework's controls. Conformance is tracked in the standards ledger,
+not this gate, and never as a separate scored domain.
+
+The catalog defines conformance frameworks as `standards` alongside OWASP Web Top
+10:2025: privacy and sovereignty (GDPR, CCPA/CPRA, PIPEDA), accessibility (WCAG
+2.2 AA, AODA, ADA/Section 508), security frameworks (SOC 2 Trust Services
+Criteria, ISO/IEC 27001:2022 Annex A), and industry standards (PCI DSS v4.0,
+HIPAA Security Rule). Each framework maps its categories to the existing checks
+that provide code evidence, so a framework is dispositioned from the checks it
+references, never double-scored.
+
+Disposition each framework per APPLICABILITY, governed by where the product's
+users are and what data it handles, not only where the business sits. A framework
+whose regulated surface is absent is `not-applicable` with absence evidence
+(HIPAA with no PHI, PCI DSS with no card data, GDPR with no EU-resident data
+path). A framework whose owning checks pass is `pass` with their evidence; a
+failing owning check makes its category `fail`.
+
+Technical-readiness, not certification. These frameworks evidence the technical
+controls a code audit can see (encryption, access control, consent code, DSAR
+paths, audit logging, accessible markup). They do not evidence the organizational
+and process controls (policies, training, vendor management, incident response,
+physical security) that SOC 2, ISO/IEC 27001, or PCI certification require. Report
+conformance as control-evidence readiness and never claim certification.
 
 ## What lands in AUDIT.json
 
@@ -1626,6 +1659,12 @@ A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severi
 30. A-SEC-30 (audit-only): Caller-supplied selectors are ownership-bound before use: any identifier, email, slug, or hostname taken from the request body, query, or model output that selects a record is verified to belong to the authenticated principal, and for an email or hostname is proven controlled by the caller, before that record is read, charged, mutated, or state-transitioned.
     Look: mutations, actions, and tools that resolve a member, booking, tenant, space, listing, or domain from a caller-supplied id, email, or hostname; whether the resolved document's tenant or owner is checked against the caller; public checkout that attaches an existing member by email; unauthenticated verification that transitions state by hostname; agent tools acting on a model-chosen id.
     Fail: a caller-supplied selector reaches a read, charge, mutation, or state transition without being bound to the authenticated principal (public checkout spending an existing member's credit by email, unauthenticated domain-verify taking a tenant offline, an agent tool writing into a model-named booking's tenant): High (Critical when it spends money or credit, exposes another tenant, or overwrites another party's data).
+31. A-SEC-31 (audit-only): Consent and tracking lifecycle, when the product sets non-essential cookies, loads third-party trackers, or processes personal data of consumers in a consent regime (GDPR, CCPA/CPRA, PIPEDA): consent or a lawful basis is captured BEFORE non-essential cookies or trackers fire; a genuine reject or opt-out path exists and is as prominent as accept; the consent choice is honored server-side and in analytics or tag initialization (for example a Consent Mode gate), not just hidden in the UI; and Do-Not-Sell/Share and opt-out signals reach the code that would otherwise share data.
+    Look: cookie or consent banner components and whether tracker/analytics init is gated on the stored choice; `gtag`, `fbq`, pixel, or tag-manager calls that run before consent; a "reject all" control against the "accept" control; server handling of an opt-out or global privacy control signal.
+    Fail: non-essential cookies or trackers fire before consent, or reject/opt-out is missing, buried, or ignored by the code that shares data: High for a consent regime with regulated personal data, Medium otherwise. Cross-reference F-CMP for the applicable regime.
+32. A-SEC-32 (audit-only): Regulated-data governance records exist in the repository when a regulatory surface is present: a data classification or record-of-processing inventory (GDPR Art 30 ROPA), data-processing agreements or business-associate agreements referenced for third-party processors that receive regulated data (GDPR DPA, HIPAA BAA), a cross-border transfer basis where regulated data leaves its jurisdiction, and a stated scope boundary that minimizes regulated data (PCI cardholder-data scope; PHI minimization) so unneeded regulated data is not stored or transmitted.
+    Look: a schema-backed classification map or ROPA doc; processor/subprocessor lists with DPA/BAA references; transfer-mechanism notes (SCCs, adequacy); where card or health data enters and whether it is tokenized or scoped out; `.godplans`/docs for a stated regulated-data scope.
+    Fail: regulated data is processed with no classification/record, no processor agreement reference, no transfer basis where required, or an unbounded regulated-data scope: High (Critical when card or health data is stored in cleartext or out of a declared scope). Cross-reference F-CMP.
 
 ## Scoring
 
@@ -1643,7 +1682,7 @@ Weights are secauditor's dimension table carried forward. Conditional dimensions
 - Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.
 - AI and LLM security (2, conditional on model calls): A-SEC-23.
 
-A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, and A-SEC-30 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
+A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, A-SEC-30, A-SEC-31, and A-SEC-32 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 
@@ -2117,6 +2156,9 @@ A-UI-1 through A-UI-20 mirror R-UI-1 through R-UI-20 one to one; A-UI-21 through
 23. A-UI-23 (audit-only) Hydration and island wiring is deliberate: interactive islands carry client directives, no `use client` at route roots, no SSR/client markup divergence, lazy routes not statically imported anyway.
     Look: `grep -rn 'use client' src/app/` at route roots; Astro components with handlers but no `client:` directive; `Date.now()` or `Math.random()` in SSR render paths.
     Fail: an interactive island shipped with no client directive (dead controls): High; a route-root `use client` or a lazy route still statically imported: Medium.
+24. A-UI-24 (audit-only) WCAG 2.2 pointer target size and focus appearance: interactive targets meet the 24 by 24 CSS px minimum with adequate spacing (WCAG 2.5.8 Target Size Minimum), and the stated mobile target contract where one exists; the focus indicator meets the focus-appearance minimum (WCAG 2.4.11): never removed without an equivalent, with sufficient area and contrast against adjacent colors.
+    Look: CSS for interactive controls' min-width/min-height/padding and spacing; `outline: none` or `outline: 0` with no replacement `:focus-visible` style; icon-only, close, or nav controls sized below 24px; dense list or toolbar tap targets.
+    Fail: interactive targets below the 24px minimum without a valid exception (inline text links, user-agent controls), or a removed or too-faint focus indicator: Medium (High when it blocks a primary action on touch or defeats keyboard focus visibility). Cross-reference F-CMP for WCAG 2.2 AA.
 
 ## Scoring
 
@@ -2134,6 +2176,8 @@ Dimensions and weights carry over from uiauditor. The eight always-on dimensions
 | Assets and media | 6 | A-UI-16 |
 | I18n readiness (conditional) | 8 nominal | A-UI-17 |
 | Native UI (conditional) | 9 nominal | A-UI-18 |
+
+A-UI-24 carries no weight of its own: its findings score inside the accessibility dimension of the control they implicate.
 
 The accessibility floor carries over: a Critical owned by the accessibility dimension holds that dimension in the 0-59 band, and the eight A-UI-20 conditions stay Critical at every scale calibration; calibration moves other severities, never these. Any active Critical finding, including an accepted risk, caps this domain at 69.
 

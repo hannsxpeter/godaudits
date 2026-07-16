@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "pack_version": "2.2.0",
-  "source_hash": "00427b2853fbea990a83b609468b0113f5b1442a258de87ccb500faaa48099fa",
+  "pack_version": "2.3.0",
+  "source_hash": "1639f81617ada9fc54d82e7e296e9edd00010ae9971233a5be0305244b935fbc",
   "domain_count": 18,
-  "check_count": 424,
+  "check_count": 427,
   "profiles": {
     "balanced": {
       "description": "General product risk weighted by user blast radius.",
@@ -206,6 +206,445 @@
               "A-DEPLOY-4",
               "A-DEPLOY-16",
               "A-OBS-22"
+            ]
+          }
+        ]
+      },
+      "gdpr-eu": {
+        "name": "GDPR (EU 2016/679)",
+        "source": "Regulation (EU) 2016/679",
+        "categories": [
+          {
+            "id": "lawful-basis-and-consent",
+            "title": "Lawful basis and consent (Art 6-7)",
+            "checks": [
+              "A-SEC-31",
+              "A-UX-17"
+            ]
+          },
+          {
+            "id": "data-subject-rights",
+            "title": "Data subject rights (Art 12-22)",
+            "checks": [
+              "A-SEC-21"
+            ]
+          },
+          {
+            "id": "security-of-processing",
+            "title": "Security of processing (Art 32)",
+            "checks": [
+              "A-SEC-3",
+              "A-SEC-11",
+              "A-SEC-12",
+              "A-SEC-20",
+              "A-DB-19"
+            ]
+          },
+          {
+            "id": "data-minimization-and-retention",
+            "title": "Data minimization and retention (Art 5)",
+            "checks": [
+              "A-SEC-21",
+              "A-DB-7",
+              "A-DB-21"
+            ]
+          },
+          {
+            "id": "records-and-transfers",
+            "title": "Records of processing and transfers (Art 30, 44-49)",
+            "checks": [
+              "A-SEC-32"
+            ]
+          },
+          {
+            "id": "privacy-by-design",
+            "title": "Data protection by design and default (Art 25)",
+            "checks": [
+              "A-SEC-2",
+              "A-SEC-12"
+            ]
+          }
+        ]
+      },
+      "ccpa-cpra": {
+        "name": "CCPA / CPRA (California)",
+        "source": "Cal. Civ. Code 1798.100 et seq.",
+        "categories": [
+          {
+            "id": "consumer-rights",
+            "title": "Consumer rights to know, delete, correct",
+            "checks": [
+              "A-SEC-21"
+            ]
+          },
+          {
+            "id": "opt-out-of-sale-and-sharing",
+            "title": "Opt-out of sale and sharing",
+            "checks": [
+              "A-SEC-31",
+              "A-UX-17"
+            ]
+          },
+          {
+            "id": "reasonable-security",
+            "title": "Reasonable security safeguards",
+            "checks": [
+              "A-SEC-3",
+              "A-SEC-11",
+              "A-SEC-12"
+            ]
+          },
+          {
+            "id": "data-inventory",
+            "title": "Data inventory and records",
+            "checks": [
+              "A-SEC-32"
+            ]
+          }
+        ]
+      },
+      "pipeda-ca": {
+        "name": "PIPEDA (Canada)",
+        "source": "S.C. 2000, c. 5",
+        "categories": [
+          {
+            "id": "consent",
+            "title": "Consent (Principle 3)",
+            "checks": [
+              "A-SEC-31"
+            ]
+          },
+          {
+            "id": "safeguards",
+            "title": "Safeguards (Principle 7)",
+            "checks": [
+              "A-SEC-11",
+              "A-SEC-12",
+              "A-SEC-3"
+            ]
+          },
+          {
+            "id": "access-and-accuracy",
+            "title": "Individual access and accuracy (Principles 9-10)",
+            "checks": [
+              "A-SEC-21"
+            ]
+          },
+          {
+            "id": "accountability",
+            "title": "Accountability (Principle 1)",
+            "checks": [
+              "A-SEC-32",
+              "A-SEC-20"
+            ]
+          }
+        ]
+      },
+      "wcag-2.2-aa": {
+        "name": "WCAG 2.2 Level AA",
+        "source": "W3C WCAG 2.2",
+        "categories": [
+          {
+            "id": "perceivable",
+            "title": "Perceivable",
+            "checks": [
+              "A-UI-3",
+              "A-UI-21",
+              "A-UI-17"
+            ]
+          },
+          {
+            "id": "operable",
+            "title": "Operable",
+            "checks": [
+              "A-UI-4",
+              "A-UI-6",
+              "A-UI-7",
+              "A-UI-24",
+              "A-UI-20",
+              "A-UX-8"
+            ]
+          },
+          {
+            "id": "understandable",
+            "title": "Understandable",
+            "checks": [
+              "A-UX-7",
+              "A-UX-9",
+              "A-UI-8"
+            ]
+          },
+          {
+            "id": "robust",
+            "title": "Robust",
+            "checks": [
+              "A-UI-2",
+              "A-UI-9"
+            ]
+          }
+        ]
+      },
+      "aoda-on": {
+        "name": "AODA (Ontario, IASR WCAG 2.0 AA)",
+        "source": "O. Reg. 191/11",
+        "categories": [
+          {
+            "id": "web-content-accessibility",
+            "title": "Information and communications - web content",
+            "checks": [
+              "A-UI-3",
+              "A-UI-4",
+              "A-UI-6",
+              "A-UI-21",
+              "A-UI-24",
+              "A-UX-8"
+            ]
+          }
+        ]
+      },
+      "ada-508": {
+        "name": "ADA / Section 508 (US, WCAG 2.0 AA)",
+        "source": "29 U.S.C. 794d; 36 CFR 1194",
+        "categories": [
+          {
+            "id": "web-content-accessibility",
+            "title": "Accessible web content and software",
+            "checks": [
+              "A-UI-2",
+              "A-UI-3",
+              "A-UI-4",
+              "A-UI-21",
+              "A-UX-8"
+            ]
+          }
+        ]
+      },
+      "soc2-tsc": {
+        "name": "SOC 2 (Trust Services Criteria)",
+        "source": "AICPA TSP section 100",
+        "categories": [
+          {
+            "id": "security-common-criteria",
+            "title": "Security (common criteria)",
+            "checks": [
+              "A-SEC-3",
+              "A-SEC-4",
+              "A-SEC-5",
+              "A-SEC-6",
+              "A-SEC-7",
+              "A-SEC-20",
+              "A-SEC-17"
+            ]
+          },
+          {
+            "id": "change-management",
+            "title": "Change management",
+            "checks": [
+              "A-DEPLOY-1",
+              "A-DEPLOY-8",
+              "A-DEPLOY-9",
+              "A-REPO-13"
+            ]
+          },
+          {
+            "id": "availability",
+            "title": "Availability",
+            "checks": [
+              "A-OBS-3",
+              "A-DEPLOY-11",
+              "A-DB-21"
+            ]
+          },
+          {
+            "id": "confidentiality",
+            "title": "Confidentiality",
+            "checks": [
+              "A-SEC-11",
+              "A-SEC-12",
+              "A-DB-19"
+            ]
+          },
+          {
+            "id": "processing-integrity",
+            "title": "Processing integrity",
+            "checks": [
+              "A-DB-9",
+              "A-DB-14",
+              "A-DB-24"
+            ]
+          },
+          {
+            "id": "privacy",
+            "title": "Privacy",
+            "checks": [
+              "A-SEC-21",
+              "A-SEC-31"
+            ]
+          }
+        ]
+      },
+      "iso-27001": {
+        "name": "ISO/IEC 27001:2022 (Annex A)",
+        "source": "ISO/IEC 27001:2022",
+        "categories": [
+          {
+            "id": "access-control",
+            "title": "Access control",
+            "checks": [
+              "A-SEC-3",
+              "A-SEC-4",
+              "A-SEC-5"
+            ]
+          },
+          {
+            "id": "cryptography",
+            "title": "Cryptography",
+            "checks": [
+              "A-SEC-11",
+              "A-SEC-12"
+            ]
+          },
+          {
+            "id": "logging-and-monitoring",
+            "title": "Logging and monitoring",
+            "checks": [
+              "A-SEC-20",
+              "A-OBS-12"
+            ]
+          },
+          {
+            "id": "secure-development",
+            "title": "Secure development",
+            "checks": [
+              "A-SEC-8",
+              "A-SEC-9",
+              "A-SEC-10",
+              "A-CODE-8",
+              "A-BUILD-15"
+            ]
+          },
+          {
+            "id": "supplier-and-supply-chain",
+            "title": "Supplier and supply-chain security",
+            "checks": [
+              "A-SEC-17",
+              "A-CODE-17"
+            ]
+          },
+          {
+            "id": "vulnerability-management",
+            "title": "Technical vulnerability management",
+            "checks": [
+              "A-SEC-26",
+              "A-REPO-12"
+            ]
+          },
+          {
+            "id": "backup-and-continuity",
+            "title": "Backup and continuity",
+            "checks": [
+              "A-DB-21",
+              "A-DEPLOY-4"
+            ]
+          }
+        ]
+      },
+      "pci-dss-4": {
+        "name": "PCI DSS v4.0",
+        "source": "PCI SSC PCI DSS v4.0",
+        "categories": [
+          {
+            "id": "protect-stored-account-data",
+            "title": "Protect stored account data (Req 3)",
+            "checks": [
+              "A-SEC-12",
+              "A-DB-4",
+              "A-DB-19",
+              "A-SEC-32"
+            ]
+          },
+          {
+            "id": "encrypt-transmission",
+            "title": "Encrypt transmission of cardholder data (Req 4)",
+            "checks": [
+              "A-SEC-11",
+              "A-DB-19"
+            ]
+          },
+          {
+            "id": "secure-systems-and-software",
+            "title": "Secure systems and software (Req 6)",
+            "checks": [
+              "A-SEC-8",
+              "A-SEC-9",
+              "A-SEC-10",
+              "A-SEC-26",
+              "A-BUILD-15"
+            ]
+          },
+          {
+            "id": "access-control",
+            "title": "Restrict and authenticate access (Req 7-8)",
+            "checks": [
+              "A-SEC-3",
+              "A-SEC-4",
+              "A-SEC-6",
+              "A-SEC-7"
+            ]
+          },
+          {
+            "id": "logging-and-monitoring",
+            "title": "Log and monitor access (Req 10)",
+            "checks": [
+              "A-SEC-20",
+              "A-OBS-12"
+            ]
+          }
+        ]
+      },
+      "hipaa-security-rule": {
+        "name": "HIPAA Security Rule",
+        "source": "45 CFR Part 164 Subpart C",
+        "categories": [
+          {
+            "id": "access-control",
+            "title": "Access control (164.312(a))",
+            "checks": [
+              "A-SEC-3",
+              "A-SEC-4",
+              "A-SEC-7"
+            ]
+          },
+          {
+            "id": "audit-controls",
+            "title": "Audit controls (164.312(b))",
+            "checks": [
+              "A-SEC-20",
+              "A-OBS-12"
+            ]
+          },
+          {
+            "id": "integrity",
+            "title": "Integrity (164.312(c))",
+            "checks": [
+              "A-DB-14",
+              "A-SEC-9"
+            ]
+          },
+          {
+            "id": "transmission-security",
+            "title": "Transmission security (164.312(e))",
+            "checks": [
+              "A-SEC-11",
+              "A-DB-19"
+            ]
+          },
+          {
+            "id": "encryption-and-agreements",
+            "title": "Encryption and business-associate agreements",
+            "checks": [
+              "A-SEC-12",
+              "A-SEC-32"
             ]
           }
         ]
@@ -535,8 +974,8 @@
     {
       "id": "security",
       "module": "security.md",
-      "check_count": 30,
-      "scoring_contract": "Weights are secauditor's dimension table carried forward. Conditional dimensions drop out and the rest re-normalize proportionally when the sub-surface is absent; the audit reports which were active.\n\n- Authorization and access control (18): A-SEC-3, A-SEC-4, A-SEC-5.\n- Injection and input handling (16): A-SEC-8, A-SEC-9, A-SEC-10.\n- Authentication and sessions (15, conditional on an auth surface): A-SEC-6, A-SEC-7.\n- Crypto and data protection (11): A-SEC-11, A-SEC-12.\n- Misconfiguration and hardening (9): A-SEC-15, A-SEC-16.\n- Supply chain and CI/CD (9): A-SEC-17, A-SEC-18, A-SEC-26.\n- Secrets management (8): A-SEC-13, A-SEC-14, A-SEC-27.\n- API and web service (6, conditional on an API surface): A-SEC-19.\n- Logging and privacy (4, privacy half conditional on regulated data): A-SEC-20, A-SEC-21.\n- Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.\n- AI and LLM security (2, conditional on model calls): A-SEC-23.\n\nA-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, and A-SEC-30 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 32,
+      "scoring_contract": "Weights are secauditor's dimension table carried forward. Conditional dimensions drop out and the rest re-normalize proportionally when the sub-surface is absent; the audit reports which were active.\n\n- Authorization and access control (18): A-SEC-3, A-SEC-4, A-SEC-5.\n- Injection and input handling (16): A-SEC-8, A-SEC-9, A-SEC-10.\n- Authentication and sessions (15, conditional on an auth surface): A-SEC-6, A-SEC-7.\n- Crypto and data protection (11): A-SEC-11, A-SEC-12.\n- Misconfiguration and hardening (9): A-SEC-15, A-SEC-16.\n- Supply chain and CI/CD (9): A-SEC-17, A-SEC-18, A-SEC-26.\n- Secrets management (8): A-SEC-13, A-SEC-14, A-SEC-27.\n- API and web service (6, conditional on an API surface): A-SEC-19.\n- Logging and privacy (4, privacy half conditional on regulated data): A-SEC-20, A-SEC-21.\n- Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.\n- AI and LLM security (2, conditional on model calls): A-SEC-23.\n\nA-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, A-SEC-30, A-SEC-31, and A-SEC-32 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Authorization and access control",
@@ -831,8 +1270,8 @@
     {
       "id": "ui",
       "module": "ui.md",
-      "check_count": 23,
-      "scoring_contract": "Dimensions and weights carry over from uiauditor. The eight always-on dimensions sum to 100; the two conditional dimensions carry nominal weights outside that pool. When a conditional surface is absent, its dimension drops entirely (never zero-and-keep) with the absence reason recorded; when present, add its nominal weight and rescale all active weights to sum to 100 (I18N alone: multiply by 100/108; both active: 100/117).\n\n| Dimension | Weight | Checks |\n|---|---|---|\n| Accessibility and inclusive markup | 22 | A-UI-3, A-UI-4, A-UI-5, A-UI-6, A-UI-7, A-UI-8, A-UI-19, A-UI-20, A-UI-21 |\n| Semantic structure | 14 | A-UI-2, A-UI-9 |\n| Styling architecture | 13 | A-UI-10, A-UI-22 |\n| Component state correctness | 13 | A-UI-11, A-UI-23 |\n| Responsive layout | 12 | A-UI-12 |\n| Render-path performance | 11 | A-UI-13 |\n| Design system and theming | 9 | A-UI-1, A-UI-14, A-UI-15 |\n| Assets and media | 6 | A-UI-16 |\n| I18n readiness (conditional) | 8 nominal | A-UI-17 |\n| Native UI (conditional) | 9 nominal | A-UI-18 |\n\nThe accessibility floor carries over: a Critical owned by the accessibility dimension holds that dimension in the 0-59 band, and the eight A-UI-20 conditions stay Critical at every scale calibration; calibration moves other severities, never these. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 24,
+      "scoring_contract": "Dimensions and weights carry over from uiauditor. The eight always-on dimensions sum to 100; the two conditional dimensions carry nominal weights outside that pool. When a conditional surface is absent, its dimension drops entirely (never zero-and-keep) with the absence reason recorded; when present, add its nominal weight and rescale all active weights to sum to 100 (I18N alone: multiply by 100/108; both active: 100/117).\n\n| Dimension | Weight | Checks |\n|---|---|---|\n| Accessibility and inclusive markup | 22 | A-UI-3, A-UI-4, A-UI-5, A-UI-6, A-UI-7, A-UI-8, A-UI-19, A-UI-20, A-UI-21 |\n| Semantic structure | 14 | A-UI-2, A-UI-9 |\n| Styling architecture | 13 | A-UI-10, A-UI-22 |\n| Component state correctness | 13 | A-UI-11, A-UI-23 |\n| Responsive layout | 12 | A-UI-12 |\n| Render-path performance | 11 | A-UI-13 |\n| Design system and theming | 9 | A-UI-1, A-UI-14, A-UI-15 |\n| Assets and media | 6 | A-UI-16 |\n| I18n readiness (conditional) | 8 nominal | A-UI-17 |\n| Native UI (conditional) | 9 nominal | A-UI-18 |\n\nA-UI-24 carries no weight of its own: its findings score inside the accessibility dimension of the control they implicate.\n\nThe accessibility floor carries over: a Critical owned by the accessibility dimension holds that dimension in the 0-59 band, and the eight A-UI-20 conditions stay Critical at every scale calibration; calibration moves other severities, never these. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Accessibility and inclusive markup",
@@ -2677,7 +3116,9 @@
       "look": "`FLOAT|DOUBLE|REAL|:float` against `price|amount|balance|total|fee` columns; verify the migration DDL, not the model type.",
       "fail": "floating-point money -> Critical (hard cap); `DECIMAL` with defaulted precision and scale on MySQL -> High.",
       "source_line": 33,
-      "standards": [],
+      "standards": [
+        "pci-dss-4/protect-stored-account-data"
+      ],
       "dimension": "Types",
       "dimension_weight": 7,
       "scoring_role": "weighted",
@@ -2719,7 +3160,9 @@
       "look": "`deleted_at` columns and their FK children; bare foreign ids from other services or databases; erasure code paths against the copy inventory.",
       "fail": "soft-deleted parents with live hard-FK children and no stated rule -> Medium; PII erasure missing denormalized copies -> High.",
       "source_line": 42,
-      "standards": [],
+      "standards": [
+        "gdpr-eu/data-minimization-and-retention"
+      ],
       "dimension": "Referential integrity",
       "dimension_weight": 14,
       "scoring_role": "weighted",
@@ -2747,7 +3190,9 @@
       "look": "webhook handlers, payment captures, queue consumers; the INSERT and its backing constraint; reservation write paths.",
       "fail": "retried or externally triggered write with no UNIQUE-backed key -> Critical; overlap enforced by SELECT-then-INSERT -> High.",
       "source_line": 48,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/processing-integrity"
+      ],
       "dimension": "Constraints",
       "dimension_weight": 10,
       "scoring_role": "weighted",
@@ -2818,7 +3263,9 @@
       "fail": "read-modify-write on money or inventory with no lock, version, or constraint -> Critical; dependent writes as separate autocommit statements -> High.",
       "source_line": 63,
       "standards": [
-        "owasp-web-2025/A10:2025"
+        "owasp-web-2025/A10:2025",
+        "soc2-tsc/processing-integrity",
+        "hipaa-security-rule/integrity"
       ],
       "dimension": "Transactions",
       "dimension_weight": 9,
@@ -2891,7 +3338,13 @@
       "look": "`FORCE ROW LEVEL SECURITY` per tenant-owned table; policy expressions against the pooling mode; sensitive column names (`ssn`, `pan`, `dob`, `diagnosis`) and their storage.",
       "fail": "tenancy by app WHERE alone -> Critical; RLS ENABLEd but not FORCEd while the app role owns the table -> High; CVV stored at all -> Critical.",
       "source_line": 78,
-      "standards": [],
+      "standards": [
+        "gdpr-eu/security-of-processing",
+        "soc2-tsc/confidentiality",
+        "pci-dss-4/protect-stored-account-data",
+        "pci-dss-4/encrypt-transmission",
+        "hipaa-security-rule/transmission-security"
+      ],
       "dimension": "DB security",
       "dimension_weight": 12,
       "scoring_role": "weighted",
@@ -2919,7 +3372,11 @@
       "look": "partition DDL and its automation; scheduled jobs deleting by time; replica routing code; `pg_stat_statements` or slow-log config.",
       "fail": "unbounded growth table with no retention mechanism -> Medium (High on the hot path); post-write replica read on money or auth -> High.",
       "source_line": 84,
-      "standards": [],
+      "standards": [
+        "gdpr-eu/data-minimization-and-retention",
+        "soc2-tsc/availability",
+        "iso-27001/backup-and-continuity"
+      ],
       "dimension": "Scale and operations",
       "dimension_weight": 2,
       "scoring_role": "weighted",
@@ -2961,7 +3418,9 @@
       "look": "the chain from payment-intent or charge creation through invoice insert, settlement, refund, and payout or transfer; the fields compared at the settlement or reconciliation guard; whether refunds reverse an already-released transfer; whether a refund, payout, or transfer is marked applied without reading provider status; reschedule or edit paths that change price after payment.",
       "fail": "any two sides of a money flow can diverge (payment metadata carries add-ons the booking price omits so settlement rejects and the charge strands, a reschedule changes price without touching the paid invoice, a refund does not reverse a released transfer, a refund or payout recorded final without confirming provider status) -> High (Critical when funds are taken with no fulfillment, double-refunded, or double-paid).",
       "source_line": 93,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/processing-integrity"
+      ],
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
@@ -2992,7 +3451,8 @@
       "fail": "a live surface with zero corresponding controls, such as an upload route with no validation anywhere: High.",
       "source_line": 27,
       "standards": [
-        "owasp-web-2025/A06:2025"
+        "owasp-web-2025/A06:2025",
+        "gdpr-eu/privacy-by-design"
       ],
       "dimension": null,
       "dimension_weight": 0,
@@ -3008,7 +3468,14 @@
       "fail": "a handler resolving a record by request-supplied id with no owner or tenant predicate: Critical on PII, financial, or cross-tenant data; High otherwise.",
       "source_line": 30,
       "standards": [
-        "owasp-web-2025/A01:2025"
+        "owasp-web-2025/A01:2025",
+        "gdpr-eu/security-of-processing",
+        "ccpa-cpra/reasonable-security",
+        "pipeda-ca/safeguards",
+        "soc2-tsc/security-common-criteria",
+        "iso-27001/access-control",
+        "pci-dss-4/access-control",
+        "hipaa-security-rule/access-control"
       ],
       "dimension": "Authorization and access control",
       "dimension_weight": 18,
@@ -3024,7 +3491,11 @@
       "fail": "a request-settable `role`/`isAdmin`/`scope`/`tenant` field: Critical. Whole-body binding or raw ORM objects returned: High.",
       "source_line": 33,
       "standards": [
-        "owasp-web-2025/A01:2025"
+        "owasp-web-2025/A01:2025",
+        "soc2-tsc/security-common-criteria",
+        "iso-27001/access-control",
+        "pci-dss-4/access-control",
+        "hipaa-security-rule/access-control"
       ],
       "dimension": "Authorization and access control",
       "dimension_weight": 18,
@@ -3040,7 +3511,9 @@
       "fail": "decode-without-verify feeding authorization: Critical. A trusted client identity header: High.",
       "source_line": 36,
       "standards": [
-        "owasp-web-2025/A01:2025"
+        "owasp-web-2025/A01:2025",
+        "soc2-tsc/security-common-criteria",
+        "iso-27001/access-control"
       ],
       "dimension": "Authorization and access control",
       "dimension_weight": 18,
@@ -3056,7 +3529,9 @@
       "fail": "fast-hashed or reversible passwords: Critical. Limiter mounted after auth routes, or `==` token comparison: High.",
       "source_line": 39,
       "standards": [
-        "owasp-web-2025/A07:2025"
+        "owasp-web-2025/A07:2025",
+        "soc2-tsc/security-common-criteria",
+        "pci-dss-4/access-control"
       ],
       "dimension": "Authentication and sessions",
       "dimension_weight": 15,
@@ -3072,7 +3547,10 @@
       "fail": "no algorithm allowlist or `alg:none` accepted: Critical. Missing session regeneration or cookie flags: Medium.",
       "source_line": 42,
       "standards": [
-        "owasp-web-2025/A07:2025"
+        "owasp-web-2025/A07:2025",
+        "soc2-tsc/security-common-criteria",
+        "pci-dss-4/access-control",
+        "hipaa-security-rule/access-control"
       ],
       "dimension": "Authentication and sessions",
       "dimension_weight": 15,
@@ -3088,7 +3566,9 @@
       "fail": "user or stored input in a string-built query or shell command: Critical.",
       "source_line": 45,
       "standards": [
-        "owasp-web-2025/A05:2025"
+        "owasp-web-2025/A05:2025",
+        "iso-27001/secure-development",
+        "pci-dss-4/secure-systems-and-software"
       ],
       "dimension": "Injection and input handling",
       "dimension_weight": 16,
@@ -3104,7 +3584,10 @@
       "fail": "request or DB data in a raw-HTML sink: High (Critical when reachable unauthenticated). Code execution on input: Critical.",
       "source_line": 48,
       "standards": [
-        "owasp-web-2025/A05:2025"
+        "owasp-web-2025/A05:2025",
+        "iso-27001/secure-development",
+        "pci-dss-4/secure-systems-and-software",
+        "hipaa-security-rule/integrity"
       ],
       "dimension": "Injection and input handling",
       "dimension_weight": 16,
@@ -3122,7 +3605,9 @@
       "standards": [
         "owasp-web-2025/A01:2025",
         "owasp-web-2025/A05:2025",
-        "owasp-web-2025/A08:2025"
+        "owasp-web-2025/A08:2025",
+        "iso-27001/secure-development",
+        "pci-dss-4/secure-systems-and-software"
       ],
       "dimension": "Injection and input handling",
       "dimension_weight": 16,
@@ -3138,7 +3623,14 @@
       "fail": "cert validation disabled on a reachable path: Critical. A broken primitive or non-CSPRNG token: High.",
       "source_line": 54,
       "standards": [
-        "owasp-web-2025/A04:2025"
+        "owasp-web-2025/A04:2025",
+        "gdpr-eu/security-of-processing",
+        "ccpa-cpra/reasonable-security",
+        "pipeda-ca/safeguards",
+        "soc2-tsc/confidentiality",
+        "iso-27001/cryptography",
+        "pci-dss-4/encrypt-transmission",
+        "hipaa-security-rule/transmission-security"
       ],
       "dimension": "Crypto and data protection",
       "dimension_weight": 11,
@@ -3154,7 +3646,15 @@
       "fail": "a regulated field plaintext at rest where the regime demands otherwise: High. A token or PII in a URL: Medium.",
       "source_line": 57,
       "standards": [
-        "owasp-web-2025/A04:2025"
+        "owasp-web-2025/A04:2025",
+        "gdpr-eu/security-of-processing",
+        "gdpr-eu/privacy-by-design",
+        "ccpa-cpra/reasonable-security",
+        "pipeda-ca/safeguards",
+        "soc2-tsc/confidentiality",
+        "iso-27001/cryptography",
+        "pci-dss-4/protect-stored-account-data",
+        "hipaa-security-rule/encryption-and-agreements"
       ],
       "dimension": "Crypto and data protection",
       "dimension_weight": 11,
@@ -3234,7 +3734,9 @@
       "source_line": 72,
       "standards": [
         "owasp-web-2025/A03:2025",
-        "owasp-web-2025/A08:2025"
+        "owasp-web-2025/A08:2025",
+        "soc2-tsc/security-common-criteria",
+        "iso-27001/supplier-and-supply-chain"
       ],
       "dimension": "Supply chain and CI/CD",
       "dimension_weight": 9,
@@ -3282,7 +3784,13 @@
       "fail": "secrets or PII in logs: High. Silent 403 and auth-failure branches: Medium.",
       "source_line": 81,
       "standards": [
-        "owasp-web-2025/A09:2025"
+        "owasp-web-2025/A09:2025",
+        "gdpr-eu/security-of-processing",
+        "pipeda-ca/accountability",
+        "soc2-tsc/security-common-criteria",
+        "iso-27001/logging-and-monitoring",
+        "pci-dss-4/logging-and-monitoring",
+        "hipaa-security-rule/audit-controls"
       ],
       "dimension": "Logging and privacy",
       "dimension_weight": 4,
@@ -3297,7 +3805,13 @@
       "look": "schema annotations, delete endpoints (soft-delete flags versus purge jobs), consent middleware, audit tables.",
       "fail": "erasure that only soft-deletes while copies persist in logs or backups: High. No consent enforcement where the regime requires it: High.",
       "source_line": 84,
-      "standards": [],
+      "standards": [
+        "gdpr-eu/data-subject-rights",
+        "gdpr-eu/data-minimization-and-retention",
+        "ccpa-cpra/consumer-rights",
+        "pipeda-ca/access-and-accuracy",
+        "soc2-tsc/privacy"
+      ],
       "dimension": "Logging and privacy",
       "dimension_weight": 4,
       "scoring_role": "weighted",
@@ -3375,7 +3889,9 @@
       "fail": "a known-critical CVE in a used dependency: High (Critical when the vulnerable function is reachable from an entry point).",
       "source_line": 99,
       "standards": [
-        "owasp-web-2025/A03:2025"
+        "owasp-web-2025/A03:2025",
+        "iso-27001/vulnerability-management",
+        "pci-dss-4/secure-systems-and-software"
       ],
       "dimension": "Supply chain and CI/CD",
       "dimension_weight": 9,
@@ -3435,6 +3951,45 @@
       "fail": "a caller-supplied selector reaches a read, charge, mutation, or state transition without being bound to the authenticated principal (public checkout spending an existing member's credit by email, unauthenticated domain-verify taking a tenant offline, an agent tool writing into a model-named booking's tenant): High (Critical when it spends money or credit, exposes another tenant, or overwrites another party's data).",
       "source_line": 111,
       "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
+      "id": "A-SEC-31",
+      "domain": "security",
+      "module": "security.md",
+      "title": "Consent and tracking lifecycle, when the product sets non-essential cookies, loads third-party trackers, or processes personal data of consumers in a consent regime (GDPR, CCPA/CPRA, PIPEDA): consent or a lawful basis is captured BEFORE non-essential cookies or trackers fire; a genuine reject or opt-out path exists and is as prominent as accept; the consent choice is honored server-side and in analytics or tag initialization (for example a Consent Mode gate), not just hidden in the UI; and Do-Not-Sell/Share and opt-out signals reach the code that would otherwise share data",
+      "look": "cookie or consent banner components and whether tracker/analytics init is gated on the stored choice; `gtag`, `fbq`, pixel, or tag-manager calls that run before consent; a \"reject all\" control against the \"accept\" control; server handling of an opt-out or global privacy control signal.",
+      "fail": "non-essential cookies or trackers fire before consent, or reject/opt-out is missing, buried, or ignored by the code that shares data: High for a consent regime with regulated personal data, Medium otherwise. Cross-reference F-CMP for the applicable regime.",
+      "source_line": 114,
+      "standards": [
+        "gdpr-eu/lawful-basis-and-consent",
+        "ccpa-cpra/opt-out-of-sale-and-sharing",
+        "pipeda-ca/consent",
+        "soc2-tsc/privacy"
+      ],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
+      "id": "A-SEC-32",
+      "domain": "security",
+      "module": "security.md",
+      "title": "Regulated-data governance records exist in the repository when a regulatory surface is present: a data classification or record-of-processing inventory (GDPR Art 30 ROPA), data-processing agreements or business-associate agreements referenced for third-party processors that receive regulated data (GDPR DPA, HIPAA BAA), a cross-border transfer basis where regulated data leaves its jurisdiction, and a stated scope boundary that minimizes regulated data (PCI cardholder-data scope; PHI minimization) so unneeded regulated data is not stored or transmitted",
+      "look": "a schema-backed classification map or ROPA doc; processor/subprocessor lists with DPA/BAA references; transfer-mechanism notes (SCCs, adequacy); where card or health data enters and whether it is tokenized or scoped out; `.godplans`/docs for a stated regulated-data scope.",
+      "fail": "regulated data is processed with no classification/record, no processor agreement reference, no transfer basis where required, or an unbounded regulated-data scope: High (Critical when card or health data is stored in cleartext or out of a declared scope). Cross-reference F-CMP.",
+      "source_line": 117,
+      "standards": [
+        "gdpr-eu/records-and-transfers",
+        "ccpa-cpra/data-inventory",
+        "pipeda-ca/accountability",
+        "pci-dss-4/protect-stored-account-data",
+        "hipaa-security-rule/encryption-and-agreements"
+      ],
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
@@ -3882,7 +4437,9 @@
       "look": "catch blocks rendering `err.message` or `error.code`, error catalogs, form reset calls inside error paths.",
       "fail": "raw codes or stack traces reaching users, or a form cleared on error; High.",
       "source_line": 45,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/understandable"
+      ],
       "dimension": "Content and UX writing",
       "dimension_weight": 8,
       "scoring_role": "weighted",
@@ -3896,7 +4453,11 @@
       "look": "custom widgets without key handlers, paste handlers calling `preventDefault`, `autocomplete=\"off\"` on credential fields, `tabIndex` abuse.",
       "fail": "a keyboard-unreachable core task, Critical; blocked paste or autofill in auth, High.",
       "source_line": 48,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/operable",
+        "aoda-on/web-content-accessibility",
+        "ada-508/web-content-accessibility"
+      ],
       "dimension": "Flow accessibility",
       "dimension_weight": 13,
       "scoring_role": "weighted",
@@ -3910,7 +4471,9 @@
       "look": "`grep -rln \"placeholder=\" src | xargs grep -L \"<label\"`, validation triggers, submit handlers.",
       "fail": "placeholder-as-label or missing autocomplete on identity fields, one systemic finding; High.",
       "source_line": 51,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/understandable"
+      ],
       "dimension": "Forms and input (conditional: forms present)",
       "dimension_weight": 7,
       "scoring_role": "weighted",
@@ -4022,7 +4585,10 @@
       "look": "billing and subscription routes, consent banners, `defaultChecked`, countdown timers, hardcoded viewer or stock counts.",
       "fail": "any confirmed deceptive pattern, Critical; legal exposure under GDPR, the FTC click-to-cancel rule, and EU DSA Art. 25.",
       "source_line": 75,
-      "standards": [],
+      "standards": [
+        "gdpr-eu/lawful-basis-and-consent",
+        "ccpa-cpra/opt-out-of-sale-and-sharing"
+      ],
       "dimension": "Trust and anti-deception (conditional: billing or consent)",
       "dimension_weight": 6,
       "scoring_role": "weighted",
@@ -4120,7 +4686,10 @@
       "look": "`grep -rEn '<(div|span)[^>]*(onClick|@click|on:click)' src/` across `*.jsx`, `*.tsx`, `*.vue`, `*.svelte`, `*.html`.",
       "fail": "a `div`/`span` doing a control's work without role, `tabindex=\"0\"`, and a key handler: High; when it locks keyboard users out of a load-bearing control: Critical.",
       "source_line": 29,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/robust",
+        "ada-508/web-content-accessibility"
+      ],
       "dimension": "Semantic structure",
       "dimension_weight": 14,
       "scoring_role": "weighted",
@@ -4134,7 +4703,11 @@
       "look": "icon-only buttons whose only child is an `svg`; `input`/`select`/`textarea` without `for`/`id`, wrapping `label`, or `aria-label`; missing `alt`; placeholder-only fields; `video`/`audio` sites.",
       "fail": "unnamed core control or captionless load-bearing media: Critical; placeholder-only labels or informative `alt=\"\"`: High.",
       "source_line": 32,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/perceivable",
+        "aoda-on/web-content-accessibility",
+        "ada-508/web-content-accessibility"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4148,7 +4721,11 @@
       "look": "`grep -rEn 'role=\"(tab|checkbox|combobox|menu|listbox)\"' src/` then read for `aria-selected`/`aria-checked` and arrow-key handlers; `grep -rEn 'tabindex=\"[1-9]' src/`.",
       "fail": "a custom widget with no keyboard path on a load-bearing surface: Critical; positive `tabindex`, unresolved refs, or `aria-hidden` wrapping focusables: High.",
       "source_line": 35,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/operable",
+        "aoda-on/web-content-accessibility",
+        "ada-508/web-content-accessibility"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4176,7 +4753,10 @@
       "look": "`grep -rn 'outline' src/styles/` and the reset; rule order against every `:focus-visible` declaration.",
       "fail": "a global reset strips outlines with no replacement, or the `:focus-visible` rule is defeated by a later selector: High.",
       "source_line": 41,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/operable",
+        "aoda-on/web-content-accessibility"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4190,7 +4770,9 @@
       "look": "`grep -rn 'prefers-reduced-motion' src/`; `@keyframes` and `transition` sites; carousel, ticker, and auto-dismiss toast components.",
       "fail": "auto-advancing content with no pause/stop/extend control: High; ungated animation or layout-property animation (`width`, `top`, `margin`): Medium.",
       "source_line": 44,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/operable"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4204,7 +4786,9 @@
       "look": "`grep -rEn 'user-scalable=no|maximum-scale=1' src/`; `aria-live`/`role=\"status\"` regions and their writers; form error rendering; the document shell.",
       "fail": "zoom disabled: Critical; a live region nothing writes to, or errors not tied to their fields: High; missing `lang`: Medium.",
       "source_line": 47,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/understandable"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4218,7 +4802,9 @@
       "look": "route templates and layouts; `grep -rEn '<(main|h1)' src/`; interactive-in-interactive nesting (`button` inside `a`); duplicate id values.",
       "fail": "nested interactive elements or duplicate ids breaking ARIA references: High; missing or multiple `h1`/`main`, skipped levels, generic titles: Medium.",
       "source_line": 50,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/robust"
+      ],
       "dimension": "Semantic structure",
       "dimension_weight": 14,
       "scoring_role": "weighted",
@@ -4330,7 +4916,9 @@
       "look": "`locales/`, `*.po`, i18next/next-intl/vue-i18n config; hardcoded strings in templates; `grep -rn 'n === 1' src/`; `dir=` derivation.",
       "fail": "an i18n runtime installed while screens hardcode English: High; hand-rolled plurals or fixed-locale formatting: Medium. Absent surface: record the absence with reason.",
       "source_line": 74,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/perceivable"
+      ],
       "dimension": "I18n readiness (conditional)",
       "dimension_weight": 8,
       "scoring_role": "weighted",
@@ -4372,7 +4960,9 @@
       "look": "the zero-count sweep `grep -rEn '<(div|span)[^>]*onClick|tabindex=\"[1-9]|user-scalable=no|maximum-scale=1' src/` plus the A-UI-3, A-UI-5, A-UI-11, and A-UI-12 reads.",
       "fail": "any confirmed hit: Critical, never downgraded at any scale calibration. Plan-aware: a checked PLAN.mdx UI sweep task whose greps now fail also cross-references roadmap drift.",
       "source_line": 83,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/operable"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4386,7 +4976,11 @@
       "look": "error, success, and status styling that changes only color with no icon or text; the token file's foreground/background pairs computed numerically.",
       "fail": "color-only signaling on forms or status surfaces: High; a token pair computing below 4.5:1: Medium at Tentative confidence (real pixel contrast needs a browser tool).",
       "source_line": 86,
-      "standards": [],
+      "standards": [
+        "wcag-2.2-aa/perceivable",
+        "aoda-on/web-content-accessibility",
+        "ada-508/web-content-accessibility"
+      ],
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
@@ -4419,6 +5013,23 @@
       "dimension_weight": 13,
       "scoring_role": "weighted",
       "default_weight": 5.55555556
+    },
+    {
+      "id": "A-UI-24",
+      "domain": "ui",
+      "module": "ui.md",
+      "title": "WCAG 2.2 pointer target size and focus appearance: interactive targets meet the 24 by 24 CSS px minimum with adequate spacing (WCAG 2.5.8 Target Size Minimum), and the stated mobile target contract where one exists; the focus indicator meets the focus-appearance minimum (WCAG 2.4.11): never removed without an equivalent, with sufficient area and contrast against adjacent colors",
+      "look": "CSS for interactive controls' min-width/min-height/padding and spacing; `outline: none` or `outline: 0` with no replacement `:focus-visible` style; icon-only, close, or nav controls sized below 24px; dense list or toolbar tap targets.",
+      "fail": "interactive targets below the 24px minimum without a valid exception (inline text links, user-agent controls), or a removed or too-faint focus indicator: Medium (High when it blocks a primary action on touch or defeats keyboard focus visibility). Cross-reference F-CMP for WCAG 2.2 AA.",
+      "source_line": 95,
+      "standards": [
+        "wcag-2.2-aa/operable",
+        "aoda-on/web-content-accessibility"
+      ],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
     },
     {
       "id": "A-SEO-1",
@@ -4876,7 +5487,9 @@
       "look": "map `tests/` files to the auth, payment, and mutation modules the fingerprint names.",
       "fail": "a critical path with zero tests: High; failure cases untested: Medium.",
       "source_line": 47,
-      "standards": [],
+      "standards": [
+        "iso-27001/secure-development"
+      ],
       "dimension": "Testing discipline: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
@@ -5008,7 +5621,9 @@
       "look": "lockfile presence, manifest ranges (`*`, `latest`), the CI audit step, duplicate-purpose packages.",
       "fail": "no lockfile: High; floating `*` or `latest` ranges: Medium; no advisory step at funded-product scale: Medium.",
       "source_line": 74,
-      "standards": [],
+      "standards": [
+        "iso-27001/supplier-and-supply-chain"
+      ],
       "dimension": "Dependencies: 9",
       "dimension_weight": 9,
       "scoring_role": "weighted",
@@ -5960,7 +6575,9 @@
       "look": "`.github/dependabot.yml` or `renovate.json` grouping blocks; `codeql.yml` or a semgrep step; a gitleaks step or platform scanning; protection settings in CONTRIBUTING or settings-as-code.",
       "fail": "no dependency bot, Medium; no SAST on a funded product, Medium; bot without grouping, Low. Actual leaked secrets are F-SEC: cross-reference, never re-score.",
       "source_line": 50,
-      "standards": [],
+      "standards": [
+        "iso-27001/vulnerability-management"
+      ],
       "dimension": "Security automation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
@@ -5974,7 +6591,9 @@
       "look": "release-please, semantic-release, or changesets config; `git tag -l 'v*'`; convention strings across the three artifacts; `git log --oneline -30` conformance.",
       "fail": "the tool parses Conventional Commits while history does not conform, or the three artifacts cite different conventions. Medium.",
       "source_line": 53,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/change-management"
+      ],
       "dimension": "Release machinery (conditional)",
       "dimension_weight": 12,
       "scoring_role": "weighted",
@@ -6324,7 +6943,10 @@
       "look": "`next.config.js`, middleware, helmet or equivalent, rate-limit call sites, dynamic `import()` for chart and editor libs.",
       "fail": "no rate limit on login: High; the header set absent: Medium. Secrets in repo or bundle are security's: cross-reference F-SEC per the ownership map.",
       "source_line": 70,
-      "standards": [],
+      "standards": [
+        "iso-27001/secure-development",
+        "pci-dss-4/secure-systems-and-software"
+      ],
       "dimension": "Supply chain and hardening",
       "dimension_weight": 10,
       "scoring_role": "weighted",
@@ -6758,7 +7380,9 @@
       "look": "deploy workflows; count `docker build` and bundler build invocations; build steps inside promote jobs; image tags (digest or SHA vs branch names).",
       "fail": "the pipeline rebuilds per environment, or promotes with no pinned identity. High.",
       "source_line": 17,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/change-management"
+      ],
       "dimension": "Artifact and promotion integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
@@ -6801,7 +7425,8 @@
       "fail": "\"rollback: redeploy previous image\" adjacent to a schema migration, High; a deployed product with no rollback doc at all, High.",
       "source_line": 26,
       "standards": [
-        "owasp-web-2025/A10:2025"
+        "owasp-web-2025/A10:2025",
+        "iso-27001/backup-and-continuity"
       ],
       "dimension": "Rollback truth per change class",
       "dimension_weight": 20,
@@ -6858,7 +7483,9 @@
       "look": "deploy workflow job graph and `needs:` edges; scan steps (trivy, grype, secret scan) pointed at the artifact, not just the source.",
       "fail": "a single job that builds, tests, and deploys on push to main, High; no artifact scan gate, Medium. Test existence itself is repo territory: cross-reference F-REPO.",
       "source_line": 38,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/change-management"
+      ],
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
@@ -6872,7 +7499,9 @@
       "look": "`environment:` with a protection rule, tag-triggered or `workflow_dispatch` prod deploys, deploy-marker conventions for solo builders.",
       "fail": "prod deploy fires on every push to main with no protection rule and no distinct second action. High.",
       "source_line": 41,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/change-management"
+      ],
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
@@ -6900,7 +7529,9 @@
       "look": "rollout config (`strategy:` blocks, Argo Rollouts, Flagger, `bluegreen` in `fly.toml`); canary claims in docs and job names vs wired analysis steps.",
       "fail": "canary claimed with any of the four fields missing, High (paper canary); an untested change reaching 100 percent of user traffic in one uniform step, Medium. The metric pipeline itself belongs to observe: cross-reference F-OBS.",
       "source_line": 47,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/availability"
+      ],
       "dimension": "Rollout rigor",
       "dimension_weight": 15,
       "scoring_role": "weighted",
@@ -7084,7 +7715,9 @@
       "look": "the SLO register; OpenSLO or sloth yaml; terraform SLO resources.",
       "fail": "a deployed user-facing journey with no SLO anywhere, High; a row missing query, window, or budget, Medium.",
       "source_line": 23,
-      "standards": [],
+      "standards": [
+        "soc2-tsc/availability"
+      ],
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
@@ -7216,7 +7849,11 @@
       "look": "`Sentry.init` and equivalents; `release:` wired to a git SHA or deploy env var; grouping notes in `.observe-ready/`.",
       "fail": "no error tracker on a deployed service, High; a tracker with no release tag, Medium. Scrubber config: F-SEC.",
       "source_line": 50,
-      "standards": [],
+      "standards": [
+        "iso-27001/logging-and-monitoring",
+        "pci-dss-4/logging-and-monitoring",
+        "hipaa-security-rule/audit-controls"
+      ],
       "dimension": "Logging, tracing, and error tracking",
       "dimension_weight": 20,
       "scoring_role": "weighted",

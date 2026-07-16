@@ -3,6 +3,29 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.3.0] - 2026-07-16
+
+### Added
+
+- Compliance frameworks modeled as standards mapped to existing checks (never a
+  separate scored domain), alongside OWASP Web Top 10:2025: privacy and
+  sovereignty (GDPR, CCPA/CPRA, PIPEDA), accessibility (WCAG 2.2 AA, AODA,
+  ADA/Section 508), security frameworks (SOC 2 Trust Services Criteria, ISO/IEC
+  27001:2022 Annex A), and industry standards (PCI DSS v4.0, HIPAA Security
+  Rule). Each framework's categories map to the checks that provide code
+  evidence, so a framework is dispositioned per applicability without
+  double-scoring.
+- Three compliance routing checks (427 checks total): A-SEC-31 consent and
+  tracking lifecycle, A-SEC-32 regulated-data governance records (ROPA, DPA/BAA,
+  transfer basis, scope), and A-UI-24 WCAG 2.2 pointer target size and focus
+  appearance.
+- compliance.md section E: framework conformance via the standards ledger, the
+  gate-versus-conformance distinction, and a technical-readiness (not
+  certification) boundary.
+- An opt-in dynamic verification section: behavioral findings can be confirmed
+  or refuted at runtime by an authorized harness (Godpowers god-browser-tester
+  or a project Playwright suite); static remains the safe default.
+
 ## [2.2.0] - 2026-07-16
 
 ### Added
