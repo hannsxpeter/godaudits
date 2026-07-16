@@ -117,6 +117,9 @@ A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severi
 32. A-SEC-32 (audit-only): Regulated-data governance records exist in the repository when a regulatory surface is present: a data classification or record-of-processing inventory (GDPR Art 30 ROPA), data-processing agreements or business-associate agreements referenced for third-party processors that receive regulated data (GDPR DPA, HIPAA BAA), a cross-border transfer basis where regulated data leaves its jurisdiction, and a stated scope boundary that minimizes regulated data (PCI cardholder-data scope; PHI minimization) so unneeded regulated data is not stored or transmitted.
     Look: a schema-backed classification map or ROPA doc; processor/subprocessor lists with DPA/BAA references; transfer-mechanism notes (SCCs, adequacy); where card or health data enters and whether it is tokenized or scoped out; `.godplans`/docs for a stated regulated-data scope.
     Fail: regulated data is processed with no classification/record, no processor agreement reference, no transfer basis where required, or an unbounded regulated-data scope: High (Critical when card or health data is stored in cleartext or out of a declared scope). Cross-reference F-CMP.
+33. A-SEC-33 (audit-only): API interaction safety: unsafe operations a client may retry (a POST or PATCH that creates or charges) accept and honor an idempotency key so a retry does not double-apply; real-time surfaces (WebSocket, Server-Sent Events) authenticate the connection at handshake, authorize each subscription or channel, and bound per-connection resource use (message size, rate, backpressure or heartbeat) rather than serving an unauthenticated firehose.
+    Look: POST/PATCH handlers that create or charge and whether they read and dedupe on an `Idempotency-Key`; WebSocket or SSE upgrade handlers for auth on connect, per-subscription authorization, and per-message or per-connection limits.
+    Fail: a retryable create-or-charge endpoint with no honored idempotency key, or a real-time endpoint that accepts connections without authentication or without resource bounds: High (Critical when the retryable endpoint moves money or crosses a tenant). Cross-reference F-DB for the persisted idempotency key.
 
 ## Scoring
 
@@ -134,7 +137,7 @@ Weights are secauditor's dimension table carried forward. Conditional dimensions
 - Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.
 - AI and LLM security (2, conditional on model calls): A-SEC-23.
 
-A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, A-SEC-30, A-SEC-31, and A-SEC-32 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
+A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, A-SEC-30, A-SEC-31, A-SEC-32, and A-SEC-33 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

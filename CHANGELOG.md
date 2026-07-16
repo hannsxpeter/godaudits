@@ -3,6 +3,26 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.7.0] - 2026-07-16
+
+### Added
+
+- A-ARCH-23 (API contract design), a routing check for systems that expose an
+  API or service surface: the API style is declared and applied consistently
+  (REST, GraphQL, or RPC); a versioning strategy protects existing consumers; a
+  machine-readable contract (an OpenAPI document or a GraphQL schema) is checked
+  in and matches the routes; and errors use one consistent envelope (RFC 7807
+  Problem Details or a documented equivalent). Scores into architecture.
+- A-SEC-33 (API interaction safety), a routing check paired with A-ARCH-23:
+  retryable unsafe operations (a POST or PATCH that creates or charges) accept
+  and honor an idempotency key so a retry does not double-apply, and real-time
+  surfaces (WebSocket, Server-Sent Events) authenticate the connection at
+  handshake, authorize each subscription, and bound per-connection resource use.
+  Scores into security.
+- Both new checks carry no weight of their own; like the other ROUTING_CHECKS
+  they score into their implicated dimension, so the catalog grows to 431 checks
+  without shifting the scoring denominator.
+
 ## [2.6.0] - 2026-07-16
 
 ### Added
