@@ -24,6 +24,7 @@ const corpus = JSON.parse(fs.readFileSync(corpusPath, 'utf8'));
 const catalogChecks = new Set(buildCatalog(root).checks.map((check) => check.id));
 const cases = corpus.cases.map((item) => ({
   name: item.name,
+  provenance: item.provenance,
   expected: item.expected,
   audit: JSON.parse(fs.readFileSync(path.join(root, 'benchmarks', item.audit), 'utf8'))
 }));

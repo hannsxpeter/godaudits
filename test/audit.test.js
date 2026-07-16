@@ -83,12 +83,16 @@ test('two quotes from one file are one evidence method, not two', () => {
 });
 
 test('routing checks carry no weight and stay exempt from the pass corroboration bar', () => {
+  // The exemption is the weight, not the id: a zero-weight check earns no score,
+  // so corroborating it buys the grade nothing. Keep the audit otherwise valid
+  // (domain weights still sum to 100) so the exemption is what this proves.
   const audit = validAudit();
+  audit.domains[0].checks[0].weight = 100;
   audit.domains[0].checks[1].confidence = 'Certain';
   audit.domains[0].checks[1].weight = 0;
   audit.domains[0].checks[1].evidence = ['E-2'];
   const errors = validateAudit(audit);
-  assert.deepStrictEqual(errors.filter((error) => error.includes('Certain weighted pass')), []);
+  assert.deepStrictEqual(errors, []);
 });
 
 test('not-applicable outcomes require evidence and calendar dates are real', () => {

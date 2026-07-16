@@ -1,16 +1,95 @@
 {
   "schema_version": "1.0",
-  "scope": "Seeded-defect corpus for the internal detector-regression gate. Each case pairs a recorded AUDIT.json with the defects deliberately seeded in the audited source, mapped to the A-check that owns each one. The gate asks one question: after a catalog change, do the seeded defects still get detected? These cases are not a sample of real-world repositories, so nothing here estimates reliability on unseen code and no number derived from them feeds a per-repo score.",
+  "scope": "Seeded-defect corpus for the internal detector-regression gate. Each case pairs an AUDIT.json with the defect deliberately seeded in the audited source, mapped to the A-check that owns it. The gate asks one question: after a catalog change, do the seeded defects still get detected? Cases marked authored are maintainer-built fixtures that detect their own seeds by construction, so they earn regression coverage and nothing else; only a recorded real audit run may contribute to a detection rate. These cases are not a sample of real-world repositories, so nothing here estimates reliability on unseen code and no number derived from them feeds a per-repo score.",
   "cases": [
     {
       "name": "tenant-predicate-omitted",
-      "audit": "detectors/tenant-predicate.audit.json",
-      "seeded": "A board lookup queries by id with no tenant predicate, so an authenticated user can read another tenant's board.",
+      "provenance": "authored",
+      "audit": "detectors/tenant-predicate-omitted.audit.json",
+      "seeded": "A board lookup queries by id with no tenant predicate, so an authenticated user can read another tenant board.",
       "expected": {
         "required_findings": [
-          { "check": "A-SEC-3", "severity": "Critical", "path": "src/boards.js" }
+          {
+            "check": "A-SEC-3",
+            "severity": "Critical",
+            "path": "src/boards.js"
+          }
         ],
-        "clean_checks": ["A-SEC-4"]
+        "clean_checks": [
+          "A-SEC-4"
+        ]
+      }
+    },
+    {
+      "name": "caller-supplied-selector-unbound",
+      "provenance": "authored",
+      "audit": "detectors/caller-supplied-selector-unbound.audit.json",
+      "seeded": "A caller-supplied email selects the record without being bound to the authenticated principal.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-SEC-30",
+            "severity": "High",
+            "path": "src/profile.js"
+          }
+        ],
+        "clean_checks": [
+          "A-SEC-4"
+        ]
+      }
+    },
+    {
+      "name": "control-flag-never-read",
+      "provenance": "authored",
+      "audit": "detectors/control-flag-never-read.audit.json",
+      "seeded": "An exports-disabled flag is stored and read into scope but never consulted on the enforcement path.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-CODE-25",
+            "severity": "High",
+            "path": "src/export.js"
+          }
+        ],
+        "clean_checks": [
+          "A-CODE-1"
+        ]
+      }
+    },
+    {
+      "name": "scheduling-uses-utc",
+      "provenance": "authored",
+      "audit": "detectors/scheduling-uses-utc.audit.json",
+      "seeded": "Availability is computed in UTC rather than the entity timezone, so the day boundary is wrong for other zones.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-CODE-26",
+            "severity": "Medium",
+            "path": "src/schedule.js"
+          }
+        ],
+        "clean_checks": [
+          "A-CODE-1"
+        ]
+      }
+    },
+    {
+      "name": "money-flow-not-reconciled",
+      "provenance": "authored",
+      "audit": "detectors/money-flow-not-reconciled.audit.json",
+      "seeded": "An invoice is marked paid before the provider confirms the charge status, so a failed charge still settles.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-DB-24",
+            "severity": "Critical",
+            "path": "src/billing.js"
+          }
+        ],
+        "clean_checks": [
+          "A-DB-1"
+        ]
       }
     }
   ]

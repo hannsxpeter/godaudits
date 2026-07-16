@@ -264,6 +264,14 @@ does a Certain pass on a weighted check: certainty costs corroboration whether t
 claim raises an alarm or clears a check. Two quotes from the same file are one
 method, not two.
 
+The detector-regression corpus (`npm run test:detectors`) is internal and gates
+one thing: whether seeded defects are still detected after a catalog change. Each
+case declares its provenance. An `authored` case is a maintainer-built fixture
+that detects its own seed by construction, so it earns regression coverage and
+may never contribute to a detection rate; only a `recorded` real audit run may,
+and only above a floor of independent audits. The corpus estimates nothing about
+unseen repositories, and no number it produces reaches a per-repo score.
+
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and
 not-applicable support can be checked from the standalone report. SARIF 2.1.0

@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "audit": {
-    "name": "seeded-tenant-predicate",
+    "name": "seeded-tenant-predicate-omitted",
     "audit_version": 1,
     "status": "reported",
     "created": "2026-07-13",
@@ -54,13 +54,6 @@
           "finding_ids": []
         }
       ]
-    },
-    {
-      "id": "seo",
-      "status": "excluded",
-      "weight": 3,
-      "reason": "private API with no public crawlable surface",
-      "checks": []
     }
   ],
   "evidence": [
@@ -83,15 +76,7 @@
       "redacted": false
     }
   ],
-  "strengths": [
-    {
-      "title": "Authorization middleware is mounted centrally",
-      "evidence": [
-        "E-2"
-      ],
-      "preserve": "Keep the central mount while fixing query scoping."
-    }
-  ],
+  "strengths": [],
   "findings": [
     {
       "id": "F-SEC-1",
@@ -106,7 +91,7 @@
       ],
       "impact": "An authenticated user can read another tenant board by id.",
       "fix": "Add the tenant predicate inside the board query.",
-      "verify": "node --test test/security.test.js",
+      "verify": "node --test test/seeded.test.js",
       "checks": [
         "A-SEC-3"
       ],
@@ -121,22 +106,22 @@
       "id": "GA-101",
       "phase": 1,
       "wave": "1.1",
-      "title": "Scope board lookups to the tenant",
+      "title": "Fix: Board lookup omits the tenant predicate",
       "parallel": false,
       "files": [
         "src/boards.js",
-        "test/security.test.js"
+        "test/seeded.test.js"
       ],
       "depends_on": [],
-      "reuses": "central authorization middleware",
+      "reuses": "the existing module under audit",
       "fixes": [
         "F-SEC-1"
       ],
       "acceptance": [
-        "Every board query contains a tenant predicate.",
-        "A cross-tenant lookup returns 404."
+        "The seeded defect no longer reproduces.",
+        "A-SEC-3 passes with evidence on the remediated path."
       ],
-      "verify": "node --test test/security.test.js",
+      "verify": "node --test test/seeded.test.js",
       "checks": [
         "A-SEC-3"
       ],
@@ -155,7 +140,7 @@
       "reuses": "the current audit state",
       "fixes": [],
       "acceptance": [
-        "Security reaches 85 or better with no open Critical findings."
+        "No open Critical findings remain."
       ],
       "verify": "godaudits validate .godaudits/AUDIT.json",
       "checks": [],
@@ -168,7 +153,7 @@
   "session_log": [
     {
       "date": "2026-07-13",
-      "summary": "Audit created."
+      "summary": "Seeded corpus fixture."
     }
   ],
   "computed": {
