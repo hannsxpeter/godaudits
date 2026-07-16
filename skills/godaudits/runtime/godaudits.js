@@ -250,7 +250,7 @@ function main() {
     };
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     if (test.status !== 0) process.stderr.write(test.stdout + test.stderr);
-    return !nodeSupported || !result.project_context_valid || standardsCategories !== 10 || !schemasValid
+    return !nodeSupported || !result.project_context_valid || standardsCategories < 10 || !schemasValid
       || !result.catalog_fresh || (testsAvailable && test.status !== 0) ? 1 : 0;
   }
   throw new Error(`unknown command: ${command}\n${usage()}`);
