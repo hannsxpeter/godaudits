@@ -187,7 +187,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.1.0
+## Skill version: 2.2.0
 
 
 ---
@@ -1439,10 +1439,13 @@ Inventory before any check runs. The intake fingerprint already lists schema fil
 23. A-DB-23 (audit-only) Non-relational and analytics surfaces are graded by their own physics, where denormalization is correct: MongoDB unbounded embedded arrays and advisory-only validators; DynamoDB hot or monotonic partition keys, `Scan` plus filter on routine reads, GSIs not covering their query; Cassandra unbounded partitions and `ALLOW FILTERING`; Redis as sole system of record without AOF, or no TTL under `noeviction`; warehouse and dbt incremental models without `unique_key` or tests.
     Look: collection schemas, key designs, table definitions, `dbt_project.yml` and model configs.
     Fail: Redis as the only durable store for domain data -> High; unbounded partition or embedded array on a growth path -> High; no `dbt test` coverage on marts -> Medium.
+24. A-DB-24 (audit-only) Money flows reconcile end to end across every stage and store: the amount authorized or charged equals the amount persisted on the order or booking, the invoice, the settlement, any refund, and any marketplace payout or transfer, with add-ons, discounts, credits, and tax included on every side; provider status (payment, refund, transfer, payout) is confirmed before the local record is marked final; and a later mutation to price or status reconciles an already-settled invoice.
+    Look: the chain from payment-intent or charge creation through invoice insert, settlement, refund, and payout or transfer; the fields compared at the settlement or reconciliation guard; whether refunds reverse an already-released transfer; whether a refund, payout, or transfer is marked applied without reading provider status; reschedule or edit paths that change price after payment.
+    Fail: any two sides of a money flow can diverge (payment metadata carries add-ons the booking price omits so settlement rejects and the charge strands, a reschedule changes price without touching the paid invoice, a refund does not reverse a released transfer, a refund or payout recorded final without confirming provider status) -> High (Critical when funds are taken with no fulfillment, double-refunded, or double-paid).
 
 ## Scoring
 
-Weights carry over from dbauditor's dimension table. Conditional dimensions whose sub-surface is absent drop out, and the remaining weights re-normalize to 100 by proportional scaling (never zero-and-keep). A-DB-22 findings score into the dimension of the control they fake.
+Weights carry over from dbauditor's dimension table. Conditional dimensions whose sub-surface is absent drop out, and the remaining weights re-normalize to 100 by proportional scaling (never zero-and-keep). A-DB-22 and A-DB-24 findings score into the dimension of the control they implicate.
 
 - Referential integrity (14): A-DB-6, A-DB-7.
 - Indexing (13): A-DB-10, A-DB-11.
@@ -1617,6 +1620,12 @@ A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severi
 28. A-SEC-28 (audit-only): Every OWASP Web Top 10:2025 category receives a pass, fail, unknown, or justified not-applicable disposition backed by its owning checks, including A10 exceptional-condition paths.
     Look: map A01 through A10 to this module's checks and cross-referenced ARCH, CODE, DB, DEPLOY, and OBS findings; for A10 trace dependency failure, partial writes, resource exhaustion, invalid state transitions, restart recovery, and authorization or validation dependency failure.
     Fail: any category silently uninspected: Medium. A catch-all that returns success, drops work, bypasses a control, leaks sensitive errors, or permits an unauthorized transition on failure: High (Critical when exploitation crosses a tenant or regulated-data boundary).
+29. A-SEC-29 (audit-only): Authorization parity across caller paths: every privileged operation enforces the same authentication, tenant-suspension, step-up or MFA, and role gate on EVERY path that can reach it, not only on the primary interactive one. The paths are an interactive session, an API key or bearer token, a publicly exported function, an action whose authorization runs inside a non-writable query context, and any agent or tool call.
+    Look: the API-key or token auth path against the interactive guard for suspension, MFA, and role parity; `mutation` versus `internalMutation` exports of privileged handlers; action handlers whose only authorization runs inside an internal query; agent or tool definitions that pass caller-influenced arguments into privileged mutations; a route group reachable under a shared-path list on a non-owning host whose gate keys off the host context.
+    Fail: a privileged resource reachable through a caller path that skips a gate its sibling enforces (an API key still valid after tenant suspension, MFA enforced at the page but not at the token or API, a role checked in the wrapper while the raw action stays public, a step-up keyed to a host context the resource does not require): High (Critical when the gap moves money, crosses a tenant, or grants physical access).
+30. A-SEC-30 (audit-only): Caller-supplied selectors are ownership-bound before use: any identifier, email, slug, or hostname taken from the request body, query, or model output that selects a record is verified to belong to the authenticated principal, and for an email or hostname is proven controlled by the caller, before that record is read, charged, mutated, or state-transitioned.
+    Look: mutations, actions, and tools that resolve a member, booking, tenant, space, listing, or domain from a caller-supplied id, email, or hostname; whether the resolved document's tenant or owner is checked against the caller; public checkout that attaches an existing member by email; unauthenticated verification that transitions state by hostname; agent tools acting on a model-chosen id.
+    Fail: a caller-supplied selector reaches a read, charge, mutation, or state transition without being bound to the authenticated principal (public checkout spending an existing member's credit by email, unauthenticated domain-verify taking a tenant offline, an agent tool writing into a model-named booking's tenant): High (Critical when it spends money or credit, exposes another tenant, or overwrites another party's data).
 
 ## Scoring
 
@@ -1634,7 +1643,7 @@ Weights are secauditor's dimension table carried forward. Conditional dimensions
 - Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.
 - AI and LLM security (2, conditional on model calls): A-SEC-23.
 
-A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, and A-SEC-28 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
+A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, and A-SEC-30 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 
@@ -2455,6 +2464,12 @@ Severities are funded-product calibration; the intake scale moves them, never th
 24. A-CODE-24: Dependencies are alive: not majors behind, not abandoned, no deprecated APIs in active use.
     Look: manifest versions against known majors; deprecation warnings in code; staleness signals readable offline.
     Fail: an abandoned dependency on a critical path: Medium, Tentative when advisory knowledge cannot be confirmed offline.
+25. A-CODE-25 (audit-only): Live controls and lawful state machines: every stored or configured flag meant to gate behavior is actually read on the enforcement path (not only written and displayed), and every lifecycle state machine rejects transitions that release a still-committed resource before its end or that run out of lifecycle order.
+    Look: each control flag surfaced in the UI or schema (for example an approval-required, hold, or lock flag) traced to a branch that reads it; the state-transition table and the manual versus automatic transition handlers; whether a transition frees an inventory slot, access grant, or credit hold the entity still holds; whether the same guard the automatic path applies (end time, grace period) is applied on the manual path.
+    Fail: a control flag written and displayed but never read to change behavior, or a transition that frees a resource before the entity's end or performs an out-of-lifecycle change: High when it defeats an operator-configured safety or booking control, Medium otherwise.
+26. A-CODE-26 (audit-only): Wall-clock correctness: availability, booking windows, recurring schedules, and generated occurrences are computed in the entity's configured timezone rather than the server's UTC, daylight-saving transitions are handled, and the timezone used for computation matches the one used for display.
+    Look: date arithmetic on scheduling paths (getUTCDay, getUTCHours, Date.UTC, minute-of-day math) where a per-entity or per-property timezone field exists; whether that timezone is loaded and applied; the display formatter's timezone against the computation's.
+    Fail: wall-clock scheduling or availability computed with UTC date math while a configured timezone exists, so slots and generated tasks shift by the offset and drift across daylight saving: Medium (High when it yields accepted-but-invalid bookings or missed operational turnovers).
 
 ## Scoring
 
@@ -2468,6 +2483,8 @@ Dimensions derive from codeauditor's weight table with SEC removed (security own
 - Dependencies: 9 (A-CODE-17, A-CODE-24)
 - Docs and drift: 6 (A-CODE-18)
 - Operability hooks: 6, conditional (A-CODE-19, A-CODE-20); re-normalize for non-service archetypes
+
+A-CODE-25 and A-CODE-26 carry no weight of their own: their findings score inside the dimension of the control or path they implicate.
 
 Score each dimension against its findings, weight, and sum. Any active Critical finding, including an accepted risk, caps this domain at 69.
 

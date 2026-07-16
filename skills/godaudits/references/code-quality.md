@@ -95,6 +95,12 @@ Severities are funded-product calibration; the intake scale moves them, never th
 24. A-CODE-24: Dependencies are alive: not majors behind, not abandoned, no deprecated APIs in active use.
     Look: manifest versions against known majors; deprecation warnings in code; staleness signals readable offline.
     Fail: an abandoned dependency on a critical path: Medium, Tentative when advisory knowledge cannot be confirmed offline.
+25. A-CODE-25 (audit-only): Live controls and lawful state machines: every stored or configured flag meant to gate behavior is actually read on the enforcement path (not only written and displayed), and every lifecycle state machine rejects transitions that release a still-committed resource before its end or that run out of lifecycle order.
+    Look: each control flag surfaced in the UI or schema (for example an approval-required, hold, or lock flag) traced to a branch that reads it; the state-transition table and the manual versus automatic transition handlers; whether a transition frees an inventory slot, access grant, or credit hold the entity still holds; whether the same guard the automatic path applies (end time, grace period) is applied on the manual path.
+    Fail: a control flag written and displayed but never read to change behavior, or a transition that frees a resource before the entity's end or performs an out-of-lifecycle change: High when it defeats an operator-configured safety or booking control, Medium otherwise.
+26. A-CODE-26 (audit-only): Wall-clock correctness: availability, booking windows, recurring schedules, and generated occurrences are computed in the entity's configured timezone rather than the server's UTC, daylight-saving transitions are handled, and the timezone used for computation matches the one used for display.
+    Look: date arithmetic on scheduling paths (getUTCDay, getUTCHours, Date.UTC, minute-of-day math) where a per-entity or per-property timezone field exists; whether that timezone is loaded and applied; the display formatter's timezone against the computation's.
+    Fail: wall-clock scheduling or availability computed with UTC date math while a configured timezone exists, so slots and generated tasks shift by the offset and drift across daylight saving: Medium (High when it yields accepted-but-invalid bookings or missed operational turnovers).
 
 ## Scoring
 
@@ -108,6 +114,8 @@ Dimensions derive from codeauditor's weight table with SEC removed (security own
 - Dependencies: 9 (A-CODE-17, A-CODE-24)
 - Docs and drift: 6 (A-CODE-18)
 - Operability hooks: 6, conditional (A-CODE-19, A-CODE-20); re-normalize for non-service archetypes
+
+A-CODE-25 and A-CODE-26 carry no weight of their own: their findings score inside the dimension of the control or path they implicate.
 
 Score each dimension against its findings, weight, and sum. Any active Critical finding, including an accepted risk, caps this domain at 69.
 

@@ -57,7 +57,7 @@ Coverage notice: this compact prompt inlines the orchestrator and core
 contracts, but not the 18 domain modules. Use it only for focused audits where
 the requested module is separately available. If a module is unavailable,
 mark its checks unknown and report reduced coverage. Never approximate a full
-audit from memory. Use PROMPT.full.md for the complete 419-check pack.
+audit from memory. Use PROMPT.full.md for the complete 424-check pack.
 
 EOF
   strip_frontmatter "$SKILL" | strip_file_map

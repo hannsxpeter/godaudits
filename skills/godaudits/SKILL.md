@@ -1,9 +1,9 @@
 ---
 name: godaudits
-description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 419 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
+description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 424 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.1.0"
+  version: "2.2.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -191,7 +191,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
 | `references/<domain>.md` | 18 domain modules |
-| `catalog/checks.json` | Generated 419-check machine catalog with scoring and standards metadata |
+| `catalog/checks.json` | Generated 424-check machine catalog with scoring and standards metadata |
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
 | `schemas/*.json` | Audit, evidence, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |
@@ -199,4 +199,4 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.1.0
+## Skill version: 2.2.0
