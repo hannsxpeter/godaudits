@@ -3,6 +3,60 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.8.0] - 2026-07-16
+
+Narrow the gap between the confidence the report projects and the confidence a
+static read can justify. The theme is saying less with more warrant: no score
+math changed, and no check was added.
+
+### Fixed
+
+- Certainty now costs corroboration in both directions. A Certain Critical or
+  High finding already required two independent evidence paths, but a Certain
+  pass rode on a single evidence id of any strength, so a clean bill of health,
+  the more dangerous error, was structurally cheaper to assert than an alarm. A
+  Certain pass on a weighted check now carries the same two independent evidence
+  methods, or it cannot be Certain. Two quotes from one file are one method, not
+  two. Both gates derive from one shared corroboration helper.
+- The catalog's own fixture proved the point: it claimed a Certain pass from a
+  single line showing authorization middleware mounted centrally, which cannot
+  establish that every path is guarded. It is recorded as Firm.
+- The skill description claimed 429 checks; the catalog holds 431.
+
+### Added
+
+- Every consumer surface names its own method. The report headline reads
+  `Static-read grade X/100 (verdict): an arithmetic roll-up of model-assigned
+  pass/fail from a source read, not a test result, scan, or certification`, and
+  the same scope travels into the YAML frontmatter (`grade_method`,
+  `grade_scope`) and the SARIF run properties, so a machine or skim consumer
+  cannot lift an unqualified signal.
+- `evidence_basis`, a coarse ordinal on the overall grade and on every domain
+  (`mostly Certain`, `mixed`, `none`), stating what the grade rests on. It is
+  pooled on the same domain weighting the score uses, and it is deliberately a
+  word rather than a count: a tally would launder self-assigned labels into a
+  hard-looking statistic.
+- Standards coverage reports control-evidence readiness, never certification.
+  The column is relabelled from `Disposition`, and the not-certification caveat
+  now renders in the artifact instead of living only in a reference the model
+  reads. The compliance gate states that it is a policy-allowability screen, not
+  a legal-compliance determination.
+- An internal detector-regression gate (`npm run test:detectors`, wired into
+  `npm run check`): a seeded-defect corpus plus a rollup over `evaluateAudit`
+  that goes red when a catalog change orphans a seeded defect, when a recorded
+  audit stops detecting one, or when a detector falsely flags a declared clean
+  check. It withholds a detection rate below a five-observation floor and
+  reports a Wilson lower bound above it, because three-for-three is not a 100%
+  detector. It is internal by construction: it makes no claim about unseen
+  repositories and no number it produces feeds a per-repo score.
+
+### Changed
+
+- The behavioral check set is derived, not duplicated. The six runtime-eligible
+  ids moved out of `verify-runtime.js` into the catalog, which now emits a
+  `verifiability` axis (`static` or `behavioral`) per check and fails the build
+  when a behavioral id no longer exists, a guard the hardcoded set never had.
+
 ## [2.7.0] - 2026-07-16
 
 ### Added

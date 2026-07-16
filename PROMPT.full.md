@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.7 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.8 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -141,6 +141,12 @@ For every candidate finding:
 
 Critical and High findings should have two independent evidence paths when the repository permits it. If they do not, confidence cannot be Certain.
 
+Certainty costs corroboration in both directions. A Certain pass on a weighted
+check also requires two independent evidence paths, because a clean bill of
+health is not cheaper to assert than an alarm: it is the more dangerous error.
+Two quotes from the same file are one method, not two. When a pass rests on a
+single read, record it as Firm or Tentative rather than Certain.
+
 ### Phase 5: Compile scores and coverage
 
 Read `references/exemplar.md`. Run `godaudits validate .godaudits/AUDIT.json --write`.
@@ -195,7 +201,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.7.0
+## Skill version: 2.8.0
 
 
 ---
@@ -463,7 +469,10 @@ pack version, ids, evidence, weights, check outcomes, finding closure,
 reciprocal links, dependency cycles, final-gate closure, accepted-risk expiry
 shape, compliance ownership, parallel file isolation, session-log size, scores,
 counters, standards coverage, evidence freshness, and secret redaction. `not-applicable` requires absence evidence.
-Certain Critical and High findings require two independent evidence paths.
+Certain Critical and High findings require two independent evidence paths, and so
+does a Certain pass on a weighted check: certainty costs corroboration whether the
+claim raises an alarm or clears a check. Two quotes from the same file are one
+method, not two.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and

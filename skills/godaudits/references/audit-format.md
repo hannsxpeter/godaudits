@@ -259,7 +259,10 @@ pack version, ids, evidence, weights, check outcomes, finding closure,
 reciprocal links, dependency cycles, final-gate closure, accepted-risk expiry
 shape, compliance ownership, parallel file isolation, session-log size, scores,
 counters, standards coverage, evidence freshness, and secret redaction. `not-applicable` requires absence evidence.
-Certain Critical and High findings require two independent evidence paths.
+Certain Critical and High findings require two independent evidence paths, and so
+does a Certain pass on a weighted check: certainty costs corroboration whether the
+claim raises an alarm or clears a check. Two quotes from the same file are one
+method, not two.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and

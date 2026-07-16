@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "pack_version": "2.7.0",
+  "pack_version": "2.8.0",
   "source_hash": "89f9c4cd7a92e0403221d14380d73f40227ee209b06f7a68e0bba89b1822f53b",
   "domain_count": 18,
   "check_count": 431,
@@ -2150,6 +2150,7 @@
       "dimension": "Problem, user, and framing",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -2164,6 +2165,7 @@
       "dimension": "Problem, user, and framing",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -2178,6 +2180,7 @@
       "dimension": "Problem, user, and framing",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -2192,6 +2195,7 @@
       "dimension": "Problem, user, and framing",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -2206,6 +2210,7 @@
       "dimension": "Success metrics and live instrumentation",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -2220,6 +2225,7 @@
       "dimension": "Requirements and promise integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -2234,6 +2240,7 @@
       "dimension": "NFR coverage",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -2248,6 +2255,7 @@
       "dimension": "Scope negative space",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -2262,6 +2270,7 @@
       "dimension": "Registers and question hygiene",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -2276,6 +2285,7 @@
       "dimension": "Registers and question hygiene",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -2290,6 +2300,7 @@
       "dimension": "Registers and question hygiene",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -2304,6 +2315,7 @@
       "dimension": "Lifecycle, prior art, and closure",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -2318,6 +2330,7 @@
       "dimension": "Lifecycle, prior art, and closure",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -2332,6 +2345,7 @@
       "dimension": "Lifecycle, prior art, and closure",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -2346,6 +2360,7 @@
       "dimension": "Lifecycle, prior art, and closure",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -2360,6 +2375,7 @@
       "dimension": "Lifecycle, prior art, and closure",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -2374,6 +2390,7 @@
       "dimension": "Lifecycle, prior art, and closure",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -2388,6 +2405,7 @@
       "dimension": "Requirements and promise integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -2402,6 +2420,7 @@
       "dimension": "Success metrics and live instrumentation",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -2416,6 +2435,7 @@
       "dimension": "Requirements and promise integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -2430,6 +2450,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -2444,6 +2465,7 @@
       "dimension": "Shape and grounding",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -2458,6 +2480,7 @@
       "dimension": "Shape and grounding",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -2472,6 +2495,7 @@
       "dimension": "Shape and grounding",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -2486,6 +2510,7 @@
       "dimension": "Shape and grounding",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -2500,6 +2525,7 @@
       "dimension": "Component boundaries and dependency structure",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2514,6 +2540,7 @@
       "dimension": "Component boundaries and dependency structure",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2528,6 +2555,7 @@
       "dimension": "Data architecture and invariants",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2544,6 +2572,7 @@
       "dimension": "Data architecture and invariants",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2560,6 +2589,7 @@
       "dimension": "Integration discipline",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -2574,6 +2604,7 @@
       "dimension": "Integration discipline",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -2588,6 +2619,7 @@
       "dimension": "NFR reality",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2602,6 +2634,7 @@
       "dimension": "NFR reality",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2616,6 +2649,7 @@
       "dimension": "Trust boundary placement",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 15
     },
     {
@@ -2630,6 +2664,7 @@
       "dimension": "Decision records and drift",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2644,6 +2679,7 @@
       "dimension": "Decision records and drift",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2658,6 +2694,7 @@
       "dimension": "Decision records and drift",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2672,6 +2709,7 @@
       "dimension": "Decision records and drift",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2686,6 +2724,7 @@
       "dimension": "Decision records and drift",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2700,6 +2739,7 @@
       "dimension": "Decision records and drift",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2714,6 +2754,7 @@
       "dimension": "Data architecture and invariants",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2728,6 +2769,7 @@
       "dimension": "Component boundaries and dependency structure",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2742,6 +2784,7 @@
       "dimension": "Component boundaries and dependency structure",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2756,6 +2799,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -2770,6 +2814,7 @@
       "dimension": "Constraint and compliance fit",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2784,6 +2829,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2798,6 +2844,7 @@
       "dimension": "Constraint and compliance fit",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2812,6 +2859,7 @@
       "dimension": "Bundle coherence",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -2826,6 +2874,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2840,6 +2889,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2854,6 +2904,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2868,6 +2919,7 @@
       "dimension": "Bundle coherence",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -2882,6 +2934,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2896,6 +2949,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2910,6 +2964,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2924,6 +2979,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2938,6 +2994,7 @@
       "dimension": "Constraint and compliance fit",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -2952,6 +3009,7 @@
       "dimension": "Dependency and runtime hygiene",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8.33333333
     },
     {
@@ -2966,6 +3024,7 @@
       "dimension": "Cost realism",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8
     },
     {
@@ -2980,6 +3039,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -2994,6 +3054,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -3008,6 +3069,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -3022,6 +3084,7 @@
       "dimension": "Migration discipline (conditional)",
       "dimension_weight": 7,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7
     },
     {
@@ -3036,6 +3099,7 @@
       "dimension": "Decision record and honesty triple",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -3050,6 +3114,7 @@
       "dimension": "Bundle coherence",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -3064,6 +3129,7 @@
       "dimension": "Dependency and runtime hygiene",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8.33333333
     },
     {
@@ -3078,6 +3144,7 @@
       "dimension": "Bundle coherence",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.25
     },
     {
@@ -3092,6 +3159,7 @@
       "dimension": "Dependency and runtime hygiene",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8.33333333
     },
     {
@@ -3106,6 +3174,7 @@
       "dimension": "Schema design",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -3120,6 +3189,7 @@
       "dimension": "Schema design",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -3134,6 +3204,7 @@
       "dimension": "Schema design",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -3150,6 +3221,7 @@
       "dimension": "Types",
       "dimension_weight": 7,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -3164,6 +3236,7 @@
       "dimension": "Types",
       "dimension_weight": 7,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -3178,6 +3251,7 @@
       "dimension": "Referential integrity",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7
     },
     {
@@ -3194,6 +3268,7 @@
       "dimension": "Referential integrity",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7
     },
     {
@@ -3208,6 +3283,7 @@
       "dimension": "Constraints",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -3224,6 +3300,7 @@
       "dimension": "Constraints",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -3238,6 +3315,7 @@
       "dimension": "Indexing",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.5
     },
     {
@@ -3252,6 +3330,7 @@
       "dimension": "Indexing",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.5
     },
     {
@@ -3266,6 +3345,7 @@
       "dimension": "Query layer",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3280,6 +3360,7 @@
       "dimension": "Query layer",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3298,6 +3379,7 @@
       "dimension": "Transactions",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -3314,6 +3396,7 @@
       "dimension": "Transactions",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -3328,6 +3411,7 @@
       "dimension": "Migrations",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -3342,6 +3426,7 @@
       "dimension": "Migrations",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -3356,6 +3441,7 @@
       "dimension": "DB security",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3376,6 +3462,7 @@
       "dimension": "DB security",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3390,6 +3477,7 @@
       "dimension": "Search",
       "dimension_weight": 4,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -3408,6 +3496,7 @@
       "dimension": "Scale and operations",
       "dimension_weight": 2,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1
     },
     {
@@ -3422,6 +3511,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -3436,6 +3526,7 @@
       "dimension": "Scale and operations",
       "dimension_weight": 2,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1
     },
     {
@@ -3452,6 +3543,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "behavioral",
       "default_weight": 0
     },
     {
@@ -3468,6 +3560,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -3485,6 +3578,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -3508,6 +3602,7 @@
       "dimension": "Authorization and access control",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3528,6 +3623,7 @@
       "dimension": "Authorization and access control",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3546,6 +3642,7 @@
       "dimension": "Authorization and access control",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3564,6 +3661,7 @@
       "dimension": "Authentication and sessions",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -3583,6 +3681,7 @@
       "dimension": "Authentication and sessions",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -3601,6 +3700,7 @@
       "dimension": "Injection and input handling",
       "dimension_weight": 16,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.33333333
     },
     {
@@ -3620,6 +3720,7 @@
       "dimension": "Injection and input handling",
       "dimension_weight": 16,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.33333333
     },
     {
@@ -3640,6 +3741,7 @@
       "dimension": "Injection and input handling",
       "dimension_weight": 16,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.33333333
     },
     {
@@ -3663,6 +3765,7 @@
       "dimension": "Crypto and data protection",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.5
     },
     {
@@ -3687,6 +3790,7 @@
       "dimension": "Crypto and data protection",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.5
     },
     {
@@ -3703,6 +3807,7 @@
       "dimension": "Secrets management",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.66666667
     },
     {
@@ -3717,6 +3822,7 @@
       "dimension": "Secrets management",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.66666667
     },
     {
@@ -3733,6 +3839,7 @@
       "dimension": "Misconfiguration and hardening",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -3750,6 +3857,7 @@
       "dimension": "Misconfiguration and hardening",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -3769,6 +3877,7 @@
       "dimension": "Supply chain and CI/CD",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -3785,6 +3894,7 @@
       "dimension": "Supply chain and CI/CD",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -3801,6 +3911,7 @@
       "dimension": "API and web service",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -3823,6 +3934,7 @@
       "dimension": "Logging and privacy",
       "dimension_weight": 4,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2
     },
     {
@@ -3843,6 +3955,7 @@
       "dimension": "Logging and privacy",
       "dimension_weight": 4,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2
     },
     {
@@ -3860,6 +3973,7 @@
       "dimension": "Cloud, container, and IaC",
       "dimension_weight": 2,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2
     },
     {
@@ -3874,6 +3988,7 @@
       "dimension": "AI and LLM security",
       "dimension_weight": 2,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2
     },
     {
@@ -3890,6 +4005,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -3906,6 +4022,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -3924,6 +4041,7 @@
       "dimension": "Supply chain and CI/CD",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -3938,6 +4056,7 @@
       "dimension": "Secrets management",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.66666667
     },
     {
@@ -3954,6 +4073,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -3968,6 +4088,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "behavioral",
       "default_weight": 0
     },
     {
@@ -3982,6 +4103,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "behavioral",
       "default_weight": 0
     },
     {
@@ -4001,6 +4123,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "behavioral",
       "default_weight": 0
     },
     {
@@ -4021,6 +4144,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -4035,6 +4159,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -4049,6 +4174,7 @@
       "dimension": "Security, trust boundaries, and data governance: 17",
       "dimension_weight": 17,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.25
     },
     {
@@ -4063,6 +4189,7 @@
       "dimension": "Prompt construction and context: 12",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4077,6 +4204,7 @@
       "dimension": "Prompt construction and context: 12",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4091,6 +4219,7 @@
       "dimension": "Security, trust boundaries, and data governance: 17",
       "dimension_weight": 17,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.25
     },
     {
@@ -4105,6 +4234,7 @@
       "dimension": "Security, trust boundaries, and data governance: 17",
       "dimension_weight": 17,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.25
     },
     {
@@ -4119,6 +4249,7 @@
       "dimension": "Security, trust boundaries, and data governance: 17",
       "dimension_weight": 17,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.25
     },
     {
@@ -4133,6 +4264,7 @@
       "dimension": "Model selection and configuration: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -4147,6 +4279,7 @@
       "dimension": "Model selection and configuration: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -4161,6 +4294,7 @@
       "dimension": "Model selection and configuration: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -4175,6 +4309,7 @@
       "dimension": "Provider API and SDK usage: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -4189,6 +4324,7 @@
       "dimension": "Provider API and SDK usage: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -4203,6 +4339,7 @@
       "dimension": "Reliability: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -4217,6 +4354,7 @@
       "dimension": "Reliability: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -4231,6 +4369,7 @@
       "dimension": "Output handling: 8",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8
     },
     {
@@ -4245,6 +4384,7 @@
       "dimension": "Cost and token efficiency: 6",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -4259,6 +4399,7 @@
       "dimension": "Latency: 4",
       "dimension_weight": 4,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4273,6 +4414,7 @@
       "dimension": "Evaluation: 5",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -4287,6 +4429,7 @@
       "dimension": "Evaluation: 5",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -4301,6 +4444,7 @@
       "dimension": "Observability: 5",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -4315,6 +4459,7 @@
       "dimension": "RAG and retrieval: 7, conditional",
       "dimension_weight": 7,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -4329,6 +4474,7 @@
       "dimension": "RAG and retrieval: 7, conditional",
       "dimension_weight": 7,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -4343,6 +4489,7 @@
       "dimension": "Agents and tools: 6, conditional",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -4357,6 +4504,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -4371,6 +4519,7 @@
       "dimension": "Model selection and configuration: 10",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -4385,6 +4534,7 @@
       "dimension": "Prompt construction and context: 12",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4399,6 +4549,7 @@
       "dimension": "Journeys and flows",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -4413,6 +4564,7 @@
       "dimension": "Journeys and flows",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -4427,6 +4579,7 @@
       "dimension": "Usability and heuristics",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.25
     },
     {
@@ -4441,6 +4594,7 @@
       "dimension": "Usability and heuristics",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.25
     },
     {
@@ -4455,6 +4609,7 @@
       "dimension": "Usability and heuristics",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.25
     },
     {
@@ -4469,6 +4624,7 @@
       "dimension": "Content and UX writing",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4485,6 +4641,7 @@
       "dimension": "Content and UX writing",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4503,6 +4660,7 @@
       "dimension": "Flow accessibility",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 13
     },
     {
@@ -4519,6 +4677,7 @@
       "dimension": "Forms and input (conditional: forms present)",
       "dimension_weight": 7,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7
     },
     {
@@ -4533,6 +4692,7 @@
       "dimension": "Process and workflow (conditional: multi-actor workflows)",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -4547,6 +4707,7 @@
       "dimension": "Process and workflow (conditional: multi-actor workflows)",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -4561,6 +4722,7 @@
       "dimension": "Process and workflow (conditional: multi-actor workflows)",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -4575,6 +4737,7 @@
       "dimension": "IA and navigation",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8
     },
     {
@@ -4589,6 +4752,7 @@
       "dimension": "Onboarding and activation (conditional: signup flow)",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4603,6 +4767,7 @@
       "dimension": "Onboarding and activation (conditional: signup flow)",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -4617,6 +4782,7 @@
       "dimension": "Performance and responsiveness",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -4634,6 +4800,7 @@
       "dimension": "Trust and anti-deception (conditional: billing or consent)",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -4648,6 +4815,7 @@
       "dimension": "Interaction design",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -4662,6 +4830,7 @@
       "dimension": "Journeys and flows",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.66666667
     },
     {
@@ -4676,6 +4845,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -4690,6 +4860,7 @@
       "dimension": "Interaction design",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -4704,6 +4875,7 @@
       "dimension": "Usability and heuristics",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.25
     },
     {
@@ -4718,6 +4890,7 @@
       "dimension": "Design system and theming",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.56410256
     },
     {
@@ -4735,6 +4908,7 @@
       "dimension": "Semantic structure",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.98290598
     },
     {
@@ -4753,6 +4927,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -4771,6 +4946,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -4785,6 +4961,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -4802,6 +4979,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -4818,6 +4996,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -4834,6 +5013,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -4850,6 +5030,7 @@
       "dimension": "Semantic structure",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.98290598
     },
     {
@@ -4864,6 +5045,7 @@
       "dimension": "Styling architecture",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.55555556
     },
     {
@@ -4878,6 +5060,7 @@
       "dimension": "Component state correctness",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.55555556
     },
     {
@@ -4892,6 +5075,7 @@
       "dimension": "Responsive layout",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10.25641026
     },
     {
@@ -4906,6 +5090,7 @@
       "dimension": "Render-path performance",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 9.4017094
     },
     {
@@ -4920,6 +5105,7 @@
       "dimension": "Design system and theming",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.56410256
     },
     {
@@ -4934,6 +5120,7 @@
       "dimension": "Design system and theming",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.56410256
     },
     {
@@ -4948,6 +5135,7 @@
       "dimension": "Assets and media",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.12820513
     },
     {
@@ -4964,6 +5152,7 @@
       "dimension": "I18n readiness (conditional)",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.83760684
     },
     {
@@ -4978,6 +5167,7 @@
       "dimension": "Native UI (conditional)",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.69230769
     },
     {
@@ -4992,6 +5182,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -5008,6 +5199,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -5026,6 +5218,7 @@
       "dimension": "Accessibility and inclusive markup",
       "dimension_weight": 22,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.08926876
     },
     {
@@ -5040,6 +5233,7 @@
       "dimension": "Styling architecture",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.55555556
     },
     {
@@ -5054,6 +5248,7 @@
       "dimension": "Component state correctness",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.55555556
     },
     {
@@ -5071,6 +5266,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -5085,6 +5281,7 @@
       "dimension": "Crawlability and indexation control",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.8
     },
     {
@@ -5099,6 +5296,7 @@
       "dimension": "Rendering and content-in-HTML",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.5
     },
     {
@@ -5113,6 +5311,7 @@
       "dimension": "Rendering and content-in-HTML",
       "dimension_weight": 13,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.5
     },
     {
@@ -5127,6 +5326,7 @@
       "dimension": "Crawlability and indexation control",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.8
     },
     {
@@ -5141,6 +5341,7 @@
       "dimension": "Crawlability and indexation control",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.8
     },
     {
@@ -5155,6 +5356,7 @@
       "dimension": "Crawlability and indexation control",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.8
     },
     {
@@ -5169,6 +5371,7 @@
       "dimension": "Crawlability and indexation control",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.8
     },
     {
@@ -5183,6 +5386,7 @@
       "dimension": "Canonicalization",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.5
     },
     {
@@ -5197,6 +5401,7 @@
       "dimension": "URL architecture and edge config",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -5211,6 +5416,7 @@
       "dimension": "On-page content and semantics",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5225,6 +5431,7 @@
       "dimension": "On-page content and semantics",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5239,6 +5446,7 @@
       "dimension": "Structured data",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5253,6 +5461,7 @@
       "dimension": "Structured data",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5267,6 +5476,7 @@
       "dimension": "AI and generative-engine visibility",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -5281,6 +5491,7 @@
       "dimension": "AI and generative-engine visibility",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -5295,6 +5506,7 @@
       "dimension": "Core Web Vitals code signals",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5309,6 +5521,7 @@
       "dimension": "Social metadata and head hygiene",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -5323,6 +5536,7 @@
       "dimension": "Internationalization",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5337,6 +5551,7 @@
       "dimension": "Feeds and installability",
       "dimension_weight": 4,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -5351,6 +5566,7 @@
       "dimension": "SEO observability",
       "dimension_weight": 3,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.5
     },
     {
@@ -5365,6 +5581,7 @@
       "dimension": "URL architecture and edge config",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -5379,6 +5596,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -5393,6 +5611,7 @@
       "dimension": "Canonicalization",
       "dimension_weight": 11,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5.5
     },
     {
@@ -5407,6 +5626,7 @@
       "dimension": "SEO observability",
       "dimension_weight": 3,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.5
     },
     {
@@ -5421,6 +5641,7 @@
       "dimension": "Social metadata and head hygiene",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -5435,6 +5656,7 @@
       "dimension": "Maintainability and budgets: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5449,6 +5671,7 @@
       "dimension": "Architecture conventions: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.75
     },
     {
@@ -5463,6 +5686,7 @@
       "dimension": "Architecture conventions: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.75
     },
     {
@@ -5477,6 +5701,7 @@
       "dimension": "Architecture conventions: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.75
     },
     {
@@ -5491,6 +5716,7 @@
       "dimension": "Maintainability and budgets: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5505,6 +5731,7 @@
       "dimension": "Maintainability and budgets: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5519,6 +5746,7 @@
       "dimension": "Maintainability and budgets: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5535,6 +5763,7 @@
       "dimension": "Testing discipline: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5549,6 +5778,7 @@
       "dimension": "Testing discipline: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5563,6 +5793,7 @@
       "dimension": "Testing discipline: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5577,6 +5808,7 @@
       "dimension": "Testing discipline: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5593,6 +5825,7 @@
       "dimension": "Error handling and resilience: 12",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -5609,6 +5842,7 @@
       "dimension": "Error handling and resilience: 12",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -5625,6 +5859,7 @@
       "dimension": "Error handling and resilience: 12",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -5639,6 +5874,7 @@
       "dimension": "Performance shapes: 10, conditional",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5653,6 +5889,7 @@
       "dimension": "Performance shapes: 10, conditional",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5669,6 +5906,7 @@
       "dimension": "Dependencies: 9",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -5683,6 +5921,7 @@
       "dimension": "Docs and drift: 6",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5697,6 +5936,7 @@
       "dimension": "Operability hooks: 6, conditional",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -5711,6 +5951,7 @@
       "dimension": "Operability hooks: 6, conditional",
       "dimension_weight": 6,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -5725,6 +5966,7 @@
       "dimension": "Testing discipline: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5739,6 +5981,7 @@
       "dimension": "Maintainability and budgets: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.8
     },
     {
@@ -5753,6 +5996,7 @@
       "dimension": "Architecture conventions: 19",
       "dimension_weight": 19,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.75
     },
     {
@@ -5767,6 +6011,7 @@
       "dimension": "Dependencies: 9",
       "dimension_weight": 9,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -5781,6 +6026,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "behavioral",
       "default_weight": 0
     },
     {
@@ -5795,6 +6041,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "behavioral",
       "default_weight": 0
     },
     {
@@ -5809,6 +6056,7 @@
       "dimension": "Enforced layer real",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5823,6 +6071,7 @@
       "dimension": "Naming genome",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -5837,6 +6086,7 @@
       "dimension": "Naming genome",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -5851,6 +6101,7 @@
       "dimension": "Comment voice",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8
     },
     {
@@ -5865,6 +6116,7 @@
       "dimension": "Structural genome",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5879,6 +6131,7 @@
       "dimension": "Control flow and error posture",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5893,6 +6146,7 @@
       "dimension": "Control flow and error posture",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -5907,6 +6161,7 @@
       "dimension": "Types, imports, tests",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -5921,6 +6176,7 @@
       "dimension": "Types, imports, tests",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -5935,6 +6191,7 @@
       "dimension": "Types, imports, tests",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -5949,6 +6206,7 @@
       "dimension": "Idioms and glossary",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5963,6 +6221,7 @@
       "dimension": "Idioms and glossary",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5977,6 +6236,7 @@
       "dimension": "Structural genome",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -5991,6 +6251,7 @@
       "dimension": "Profile artifact",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -6005,6 +6266,7 @@
       "dimension": "Profile artifact",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -6019,6 +6281,7 @@
       "dimension": "Enforcement, wiring, freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -6033,6 +6296,7 @@
       "dimension": "Anti-tells and voice drift",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.66666667
     },
     {
@@ -6047,6 +6311,7 @@
       "dimension": "Enforcement, wiring, freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -6061,6 +6326,7 @@
       "dimension": "Enforcement, wiring, freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 1.66666667
     },
     {
@@ -6075,6 +6341,7 @@
       "dimension": "Profile artifact",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -6089,6 +6356,7 @@
       "dimension": "Anti-tells and voice drift",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.66666667
     },
     {
@@ -6103,6 +6371,7 @@
       "dimension": "Anti-tells and voice drift",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.66666667
     },
     {
@@ -6117,6 +6386,7 @@
       "dimension": "Enforced layer real",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6
     },
     {
@@ -6131,6 +6401,7 @@
       "dimension": "Archetype and applicability",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6145,6 +6416,7 @@
       "dimension": "Loader and topology",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6159,6 +6431,7 @@
       "dimension": "Archetype and applicability",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6173,6 +6446,7 @@
       "dimension": "Archetype and applicability",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6187,6 +6461,7 @@
       "dimension": "Floor pillars",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -6201,6 +6476,7 @@
       "dimension": "Archetype and applicability",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6215,6 +6491,7 @@
       "dimension": "Format conformance",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -6229,6 +6506,7 @@
       "dimension": "Format conformance",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -6243,6 +6521,7 @@
       "dimension": "Truthfulness",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6257,6 +6536,7 @@
       "dimension": "Truthfulness",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6271,6 +6551,7 @@
       "dimension": "Drift",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -6285,6 +6566,7 @@
       "dimension": "Drift",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -6299,6 +6581,7 @@
       "dimension": "Format conformance",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -6313,6 +6596,7 @@
       "dimension": "Lifecycle and CI",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6327,6 +6611,7 @@
       "dimension": "Loader and topology",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6341,6 +6626,7 @@
       "dimension": "Lifecycle and CI",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6355,6 +6641,7 @@
       "dimension": "Lifecycle and CI",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6369,6 +6656,7 @@
       "dimension": "Loader and topology",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6383,6 +6671,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -6397,6 +6686,7 @@
       "dimension": "Truthfulness",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6411,6 +6701,7 @@
       "dimension": "Format conformance",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -6425,6 +6716,7 @@
       "dimension": "Loader and topology",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6439,6 +6731,7 @@
       "dimension": "Lifecycle and CI",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.75
     },
     {
@@ -6453,6 +6746,7 @@
       "dimension": "Format conformance",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3
     },
     {
@@ -6467,6 +6761,7 @@
       "dimension": "Tier discipline and traceability",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6481,6 +6776,7 @@
       "dimension": "Tier discipline and traceability",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6495,6 +6791,7 @@
       "dimension": "Security automation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7
     },
     {
@@ -6509,6 +6806,7 @@
       "dimension": "Essentials and hygiene",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -6523,6 +6821,7 @@
       "dimension": "CI and quality tooling",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6537,6 +6836,7 @@
       "dimension": "Essentials and hygiene",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -6551,6 +6851,7 @@
       "dimension": "Essentials and hygiene",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -6565,6 +6866,7 @@
       "dimension": "Community and documentation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6579,6 +6881,7 @@
       "dimension": "CI and quality tooling",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6593,6 +6896,7 @@
       "dimension": "CI and quality tooling",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6607,6 +6911,7 @@
       "dimension": "CI and quality tooling",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6623,6 +6928,7 @@
       "dimension": "Security automation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7
     },
     {
@@ -6639,6 +6945,7 @@
       "dimension": "Release machinery (conditional)",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6653,6 +6960,7 @@
       "dimension": "Release machinery (conditional)",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6667,6 +6975,7 @@
       "dimension": "Agent safety",
       "dimension_weight": 8,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 8
     },
     {
@@ -6681,6 +6990,7 @@
       "dimension": "Community and documentation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6695,6 +7005,7 @@
       "dimension": "Community and documentation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6709,6 +7020,7 @@
       "dimension": "Community and documentation",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6723,6 +7035,7 @@
       "dimension": "Tier discipline and traceability",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6737,6 +7050,7 @@
       "dimension": "Tier discipline and traceability",
       "dimension_weight": 14,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.5
     },
     {
@@ -6751,6 +7065,7 @@
       "dimension": "Essentials and hygiene",
       "dimension_weight": 18,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4.5
     },
     {
@@ -6765,6 +7080,7 @@
       "dimension": "CI and quality tooling",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6779,6 +7095,7 @@
       "dimension": "Release machinery (conditional)",
       "dimension_weight": 12,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6793,6 +7110,7 @@
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
+      "verifiability": "static",
       "default_weight": 0
     },
     {
@@ -6807,6 +7125,7 @@
       "dimension": "Session state and closure",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -6821,6 +7140,7 @@
       "dimension": "Vertical completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6835,6 +7155,7 @@
       "dimension": "Real wiring and CTA completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6849,6 +7170,7 @@
       "dimension": "Vertical completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6863,6 +7185,7 @@
       "dimension": "Vertical completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6877,6 +7200,7 @@
       "dimension": "Real wiring and CTA completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6891,6 +7215,7 @@
       "dimension": "Real wiring and CTA completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -6905,6 +7230,7 @@
       "dimension": "Auth, RBAC, and threat model",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6919,6 +7245,7 @@
       "dimension": "Auth, RBAC, and threat model",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6933,6 +7260,7 @@
       "dimension": "Auth, RBAC, and threat model",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -6947,6 +7275,7 @@
       "dimension": "Visual identity",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -6961,6 +7290,7 @@
       "dimension": "States, feedback, and tests",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -6975,6 +7305,7 @@
       "dimension": "States, feedback, and tests",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -6989,6 +7320,7 @@
       "dimension": "Supply chain and hardening",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7006,6 +7338,7 @@
       "dimension": "Supply chain and hardening",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7020,6 +7353,7 @@
       "dimension": "Real wiring and CTA completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7034,6 +7368,7 @@
       "dimension": "Session state and closure",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7048,6 +7383,7 @@
       "dimension": "Session state and closure",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7062,6 +7398,7 @@
       "dimension": "Vertical completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7076,6 +7413,7 @@
       "dimension": "Session state and closure",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7090,6 +7428,7 @@
       "dimension": "Supply chain and hardening",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7104,6 +7443,7 @@
       "dimension": "Real wiring and CTA completeness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7118,6 +7458,7 @@
       "dimension": "Capacity and cadence honesty",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7132,6 +7473,7 @@
       "dimension": "Capacity and cadence honesty",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7146,6 +7488,7 @@
       "dimension": "Grounding and classification",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -7160,6 +7503,7 @@
       "dimension": "Grounding and classification",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -7174,6 +7518,7 @@
       "dimension": "Precision gradient and ceiling",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7188,6 +7533,7 @@
       "dimension": "Sequencing correctness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -7202,6 +7548,7 @@
       "dimension": "Sequencing correctness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -7216,6 +7563,7 @@
       "dimension": "Sequencing correctness",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -7230,6 +7578,7 @@
       "dimension": "Capacity and cadence honesty",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7244,6 +7593,7 @@
       "dimension": "Phase anatomy and gates",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -7258,6 +7608,7 @@
       "dimension": "Precision gradient and ceiling",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7272,6 +7623,7 @@
       "dimension": "Launch and hardening gates",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7286,6 +7638,7 @@
       "dimension": "Launch and hardening gates",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7300,6 +7653,7 @@
       "dimension": "Executor handoff and delivery truth",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7314,6 +7668,7 @@
       "dimension": "Executor handoff and delivery truth",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7328,6 +7683,7 @@
       "dimension": "Phase anatomy and gates",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 7.5
     },
     {
@@ -7342,6 +7698,7 @@
       "dimension": "Governance, ledger, and freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -7356,6 +7713,7 @@
       "dimension": "Governance, ledger, and freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -7370,6 +7728,7 @@
       "dimension": "Governance, ledger, and freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -7384,6 +7743,7 @@
       "dimension": "Governance, ledger, and freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -7398,6 +7758,7 @@
       "dimension": "Executor handoff and delivery truth",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7412,6 +7773,7 @@
       "dimension": "Governance, ledger, and freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -7426,6 +7788,7 @@
       "dimension": "Governance, ledger, and freshness",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 0.83333333
     },
     {
@@ -7442,6 +7805,7 @@
       "dimension": "Artifact and promotion integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -7456,6 +7820,7 @@
       "dimension": "Artifact and promotion integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -7470,6 +7835,7 @@
       "dimension": "Rollback truth per change class",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7487,6 +7853,7 @@
       "dimension": "Rollback truth per change class",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7501,6 +7868,7 @@
       "dimension": "Migration calendar and guardrails (conditional)",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -7515,6 +7883,7 @@
       "dimension": "Migration calendar and guardrails (conditional)",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 10
     },
     {
@@ -7529,6 +7898,7 @@
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7545,6 +7915,7 @@
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7561,6 +7932,7 @@
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7575,6 +7947,7 @@
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7591,6 +7964,7 @@
       "dimension": "Rollout rigor",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7605,6 +7979,7 @@
       "dimension": "First-deploy and post-deploy discipline",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7619,6 +7994,7 @@
       "dimension": "Rollout rigor",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7633,6 +8009,7 @@
       "dimension": "Rollout rigor",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7647,6 +8024,7 @@
       "dimension": "First-deploy and post-deploy discipline",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7663,6 +8041,7 @@
       "dimension": "Rollback truth per change class",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7677,6 +8056,7 @@
       "dimension": "First-deploy and post-deploy discipline",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -7691,6 +8071,7 @@
       "dimension": "Rollback truth per change class",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7705,6 +8086,7 @@
       "dimension": "Artifact and promotion integrity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -7719,6 +8101,7 @@
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7733,6 +8116,7 @@
       "dimension": "Pipeline gates and secrets",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -7747,6 +8131,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -7761,6 +8146,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -7777,6 +8163,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -7791,6 +8178,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -7805,6 +8193,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -7819,6 +8208,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -7835,6 +8225,7 @@
       "dimension": "Alert derivation and severity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7851,6 +8242,7 @@
       "dimension": "Alert derivation and severity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7867,6 +8259,7 @@
       "dimension": "Alert derivation and severity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7881,6 +8274,7 @@
       "dimension": "Logging, tracing, and error tracking",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7895,6 +8289,7 @@
       "dimension": "Logging, tracing, and error tracking",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7913,6 +8308,7 @@
       "dimension": "Logging, tracing, and error tracking",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -7927,6 +8323,7 @@
       "dimension": "Cost and cardinality (conditional)",
       "dimension_weight": 5,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7941,6 +8338,7 @@
       "dimension": "Dashboard discipline and independence",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7955,6 +8353,7 @@
       "dimension": "Dashboard discipline and independence",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7969,6 +8368,7 @@
       "dimension": "Dashboard discipline and independence",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7983,6 +8383,7 @@
       "dimension": "Runbook and incident loop",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -7997,6 +8398,7 @@
       "dimension": "Runbook and incident loop",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8011,6 +8413,7 @@
       "dimension": "Runbook and incident loop",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8025,6 +8428,7 @@
       "dimension": "Promise binding and SLO design",
       "dimension_weight": 25,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.57142857
     },
     {
@@ -8039,6 +8443,7 @@
       "dimension": "Logging, tracing, and error tracking",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -8056,6 +8461,7 @@
       "dimension": "Alert derivation and severity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -8070,6 +8476,7 @@
       "dimension": "Logging, tracing, and error tracking",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -8084,6 +8491,7 @@
       "dimension": "Alert derivation and severity",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 4
     },
     {
@@ -8098,6 +8506,7 @@
       "dimension": "Positioning discipline",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -8112,6 +8521,7 @@
       "dimension": "Positioning discipline",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -8126,6 +8536,7 @@
       "dimension": "Positioning discipline",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 6.66666667
     },
     {
@@ -8140,6 +8551,7 @@
       "dimension": "Landing page and copy",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -8154,6 +8566,7 @@
       "dimension": "Landing page and copy",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -8168,6 +8581,7 @@
       "dimension": "Landing page and copy",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -8182,6 +8596,7 @@
       "dimension": "Landing page and copy",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -8196,6 +8611,7 @@
       "dimension": "Landing page and copy",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -8210,6 +8626,7 @@
       "dimension": "SEO and OG cards",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8224,6 +8641,7 @@
       "dimension": "SEO and OG cards",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8238,6 +8656,7 @@
       "dimension": "SEO and OG cards",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8252,6 +8671,7 @@
       "dimension": "Waitlist and email funnel",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8266,6 +8686,7 @@
       "dimension": "Waitlist and email funnel",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8280,6 +8701,7 @@
       "dimension": "Waitlist and email funnel",
       "dimension_weight": 15,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8294,6 +8716,7 @@
       "dimension": "Channels and etiquette",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8308,6 +8731,7 @@
       "dimension": "Telemetry and attribution",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8322,6 +8746,7 @@
       "dimension": "Telemetry and attribution",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8336,6 +8761,7 @@
       "dimension": "Channels and etiquette",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 5
     },
     {
@@ -8350,6 +8776,7 @@
       "dimension": "Runbook and sibling coupling",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -8364,6 +8791,7 @@
       "dimension": "Runbook and sibling coupling",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -8378,6 +8806,7 @@
       "dimension": "Runbook and sibling coupling",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     },
     {
@@ -8392,6 +8821,7 @@
       "dimension": "Landing page and copy",
       "dimension_weight": 20,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 3.33333333
     },
     {
@@ -8406,6 +8836,7 @@
       "dimension": "Runbook and sibling coupling",
       "dimension_weight": 10,
       "scoring_role": "weighted",
+      "verifiability": "static",
       "default_weight": 2.5
     }
   ]

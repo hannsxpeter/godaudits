@@ -51,6 +51,22 @@ const ROUTING_CHECKS = new Set([
   'A-MEM-19'
 ]);
 
+// Behavioral check ids: a static read can suspect these defects (a race, a dead
+// control, an early state transition, an authorization gap on a non-primary
+// path) but cannot prove them without running the app. This is the single
+// source for the catalog's verifiability axis; verify-runtime imports it rather
+// than keeping a second list. Every id is validated against the parsed catalog
+// below, so a renamed or deleted check fails the build instead of silently
+// dropping out of runtime eligibility.
+const BEHAVIORAL_CHECKS = new Set([
+  'A-SEC-29',
+  'A-SEC-30',
+  'A-SEC-31',
+  'A-DB-24',
+  'A-CODE-25',
+  'A-CODE-26'
+]);
+
 function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
@@ -253,6 +269,7 @@ function buildCatalog(root) {
     check.dimension = dimension ? dimension.name : null;
     check.dimension_weight = dimension ? dimension.weight : 0;
     check.scoring_role = dimension ? 'weighted' : 'routing';
+    check.verifiability = BEHAVIORAL_CHECKS.has(check.id) ? 'behavioral' : 'static';
   }
   for (const domain of domains) {
     if (!domain.dimensions.length) throw new Error(`${domain.id} contains no parsed scoring dimensions`);
@@ -281,6 +298,10 @@ function buildCatalog(root) {
   if (missingRouting.length || unexpectedRouting.length) {
     throw new Error(`routing check mismatch; missing ${missingRouting.join(', ') || 'none'}; unexpected ${unexpectedRouting.join(', ') || 'none'}`);
   }
+  const unknownBehavioral = [...BEHAVIORAL_CHECKS].filter((id) => !checkMap.has(id));
+  if (unknownBehavioral.length) {
+    throw new Error(`behavioral check axis references unknown check ${unknownBehavioral.join(', ')}`);
+  }
 
   return {
     schema_version: '1.0',
@@ -300,4 +321,4 @@ function buildCatalog(root) {
   };
 }
 
-module.exports = { MODULES, ROUTING_CHECKS, buildCatalog, expandChecks, parseChecks, parseDimensions };
+module.exports = { BEHAVIORAL_CHECKS, MODULES, ROUTING_CHECKS, buildCatalog, expandChecks, parseChecks, parseDimensions };
