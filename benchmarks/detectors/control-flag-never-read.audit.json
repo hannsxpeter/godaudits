@@ -1,0 +1,199 @@
+{
+  "schema_version": "2.0",
+  "audit": {
+    "name": "seeded-control-flag-never-read",
+    "audit_version": 1,
+    "status": "reported",
+    "created": "2026-07-13",
+    "updated": "2026-07-13",
+    "mode": "fresh",
+    "plan_aware": false,
+    "commit": "abc1234",
+    "archetype": "api-service",
+    "scale": "side-project",
+    "risk_profile": "balanced",
+    "engine_version": "2.0.0",
+    "pack_version": "2.0.0",
+    "capabilities": [
+      "static"
+    ],
+    "assumptions": []
+  },
+  "compliance": {
+    "result": "pass",
+    "screened": "2026-07-13",
+    "policy_pack": "provider-neutral@1"
+  },
+  "domains": [
+    {
+      "id": "code-quality",
+      "status": "applicable",
+      "weight": 10,
+      "checks": [
+        {
+          "id": "A-CODE-25",
+          "outcome": "fail",
+          "confidence": "Certain",
+          "weight": 60,
+          "evidence": [
+            "E-1",
+            "E-2"
+          ],
+          "finding_ids": [
+            "F-CODE-1"
+          ]
+        },
+        {
+          "id": "A-CODE-1",
+          "outcome": "pass",
+          "confidence": "Firm",
+          "weight": 40,
+          "evidence": [
+            "E-2"
+          ],
+          "finding_ids": []
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-1",
+      "type": "source",
+      "path": "src/export.js",
+      "line": 8,
+      "quote": "const { exportsDisabled } = settings;",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "redacted": false
+    },
+    {
+      "id": "E-2",
+      "type": "source",
+      "path": "src/index.js",
+      "line": 4,
+      "quote": "module.exports = { runExport };",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "redacted": false
+    }
+  ],
+  "strengths": [],
+  "findings": [
+    {
+      "id": "F-CODE-1",
+      "domain": "code-quality",
+      "title": "Control flag is stored but never enforced",
+      "severity": "High",
+      "confidence": "Certain",
+      "effort": "S",
+      "evidence": [
+        "E-1",
+        "E-2"
+      ],
+      "impact": "Disabling exports in settings has no effect; the export still runs.",
+      "fix": "Consult the flag on the enforcement path before running the export.",
+      "verify": "node --test test/seeded.test.js",
+      "checks": [
+        "A-CODE-25"
+      ],
+      "status": "open",
+      "remediation": [
+        "GA-101"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "GA-101",
+      "phase": 1,
+      "wave": "1.1",
+      "title": "Fix: Control flag is stored but never enforced",
+      "parallel": false,
+      "files": [
+        "src/export.js",
+        "test/seeded.test.js"
+      ],
+      "depends_on": [],
+      "reuses": "the existing module under audit",
+      "fixes": [
+        "F-CODE-1"
+      ],
+      "acceptance": [
+        "The seeded defect no longer reproduces.",
+        "A-CODE-25 passes with evidence on the remediated path."
+      ],
+      "verify": "node --test test/seeded.test.js",
+      "checks": [
+        "A-CODE-25"
+      ],
+      "status": "open"
+    },
+    {
+      "id": "GA-601",
+      "phase": 6,
+      "wave": "6.1",
+      "title": "Re-run godaudits",
+      "parallel": false,
+      "files": [],
+      "depends_on": [
+        "GA-101"
+      ],
+      "reuses": "the current audit state",
+      "fixes": [],
+      "acceptance": [
+        "No open Critical findings remain."
+      ],
+      "verify": "godaudits validate .godaudits/AUDIT.json",
+      "checks": [],
+      "status": "open",
+      "final_gate": true
+    }
+  ],
+  "accepted_risks": [],
+  "open_questions": [],
+  "session_log": [
+    {
+      "date": "2026-07-13",
+      "summary": "Seeded corpus fixture."
+    }
+  ],
+  "computed": {
+    "coverage": {
+      "applicable": 2,
+      "evaluated": 2,
+      "passed": 1,
+      "failed": 1,
+      "unknown": 0,
+      "not_applicable": 0,
+      "percent": 100
+    },
+    "domains": {
+      "code-quality": {
+        "raw_score": 55,
+        "score": 55,
+        "cap": null,
+        "evidence_basis": "mostly Certain"
+      }
+    },
+    "overall": {
+      "raw_score": 55,
+      "score": 55,
+      "verdict": "at risk",
+      "grade_method": "static-read",
+      "grade_scope": "an arithmetic roll-up of model-assigned pass/fail from a source read, not a test result, scan, or certification",
+      "evidence_basis": "mostly Certain",
+      "coverage_cap": 100,
+      "critical_cap": 100,
+      "weak_domain_cap": 100
+    },
+    "counts": {
+      "findings_total": 1,
+      "critical": 0,
+      "high": 1,
+      "medium": 0,
+      "low": 0,
+      "accepted_risk": 0,
+      "tasks_total": 2,
+      "tasks_done": 0
+    }
+  }
+}

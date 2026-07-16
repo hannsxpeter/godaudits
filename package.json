@@ -1,6 +1,6 @@
 {
   "name": "godaudits",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "Evidence-first codebase auditing with a deterministic check catalog, validated audit state, computed scores, benchmarks, MDX reports, and SARIF output.",
   "keywords": [
     "agent-skills",
@@ -60,11 +60,13 @@
     "version:check": "node scripts/version-sync.js --check",
     "release:prepare": "node scripts/release-prepare.js",
     "lint": "bash scripts/lint.sh --all --verbose",
-    "check": "npm run version:check && npm run check-map:check && npm run test && npm run benchmark && npm run test:detectors && npm run eval && npm run lint",
+    "check": "npm run version:check && npm run check-map:check && npm run corpus:check && npm run test && npm run benchmark && npm run test:detectors && npm run eval && npm run lint",
     "release:check": "bash scripts/release-check.sh",
     "install:skill": "sh install.sh",
     "prepack": "npm run check",
     "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'",
-    "test:detectors": "node scripts/detector-gate.js"
+    "test:detectors": "node scripts/detector-gate.js",
+    "corpus": "node benchmarks/build-detector-corpus.js",
+    "corpus:check": "node benchmarks/build-detector-corpus.js --check"
   }
 }

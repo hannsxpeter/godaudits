@@ -3,6 +3,40 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.9.0] - 2026-07-16
+
+Finishes the detector-regression gate that 2.8.0 left parked at one case, and
+closes the laundering trap that growing it would otherwise have opened.
+
+### Added
+
+- Corpus provenance. Every case declares itself `authored` (a maintainer-built
+  fixture) or `recorded` (a real audit run captured verbatim). An authored case
+  detects its own seeded defect by construction, so counting it toward a
+  detection rate would manufacture a reliability-shaped number out of data
+  written to pass. Authored cases now earn regression coverage and nothing else:
+  only recorded runs can support a rate, and a case with no declared provenance
+  is rejected rather than assumed.
+- The reporting floor counts independent audits, not seeded instances. Five
+  defects seeded inside one audit are one observation of a detector, not five:
+  they share a repository, a model run, and every correlated mistake in it.
+  Authored cases cannot top up a recorded sample toward the floor.
+- The corpus grew from one case to five, each an independent audit seeding one
+  defect against a different check (A-SEC-3, A-SEC-30, A-CODE-25, A-CODE-26,
+  A-DB-24) across three domains, so a catalog change that renames or drops any
+  of them orphans a seed and turns the gate red. Because all five are authored,
+  the gate reports `authored-only` and no rate: broader coverage bought no
+  false precision.
+- `npm run corpus` generates the corpus and `corpus:check` gates its freshness,
+  matching the treatment of every other generated artifact, so a hand-edited
+  fixture cannot silently drift from its generator.
+
+### Fixed
+
+- The routing-exemption test proved its point on an audit that was invalid for
+  an unrelated reason (domain weights no longer summed to 100). It now holds the
+  audit valid, so the zero-weight exemption is what the test demonstrates.
+
 ## [2.8.0] - 2026-07-16
 
 Narrow the gap between the confidence the report projects and the confidence a

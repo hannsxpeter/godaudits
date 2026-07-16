@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.8 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.9 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -201,7 +201,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.8.0
+## Skill version: 2.9.0
 
 
 ---
@@ -473,6 +473,14 @@ Certain Critical and High findings require two independent evidence paths, and s
 does a Certain pass on a weighted check: certainty costs corroboration whether the
 claim raises an alarm or clears a check. Two quotes from the same file are one
 method, not two.
+
+The detector-regression corpus (`npm run test:detectors`) is internal and gates
+one thing: whether seeded defects are still detected after a catalog change. Each
+case declares its provenance. An `authored` case is a maintainer-built fixture
+that detects its own seed by construction, so it earns regression coverage and
+may never contribute to a detection rate; only a `recorded` real audit run may,
+and only above a floor of independent audits. The corpus estimates nothing about
+unseen repositories, and no number it produces reaches a per-repo score.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and
