@@ -105,6 +105,12 @@ A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severi
 28. A-SEC-28 (audit-only): Every OWASP Web Top 10:2025 category receives a pass, fail, unknown, or justified not-applicable disposition backed by its owning checks, including A10 exceptional-condition paths.
     Look: map A01 through A10 to this module's checks and cross-referenced ARCH, CODE, DB, DEPLOY, and OBS findings; for A10 trace dependency failure, partial writes, resource exhaustion, invalid state transitions, restart recovery, and authorization or validation dependency failure.
     Fail: any category silently uninspected: Medium. A catch-all that returns success, drops work, bypasses a control, leaks sensitive errors, or permits an unauthorized transition on failure: High (Critical when exploitation crosses a tenant or regulated-data boundary).
+29. A-SEC-29 (audit-only): Authorization parity across caller paths: every privileged operation enforces the same authentication, tenant-suspension, step-up or MFA, and role gate on EVERY path that can reach it, not only on the primary interactive one. The paths are an interactive session, an API key or bearer token, a publicly exported function, an action whose authorization runs inside a non-writable query context, and any agent or tool call.
+    Look: the API-key or token auth path against the interactive guard for suspension, MFA, and role parity; `mutation` versus `internalMutation` exports of privileged handlers; action handlers whose only authorization runs inside an internal query; agent or tool definitions that pass caller-influenced arguments into privileged mutations; a route group reachable under a shared-path list on a non-owning host whose gate keys off the host context.
+    Fail: a privileged resource reachable through a caller path that skips a gate its sibling enforces (an API key still valid after tenant suspension, MFA enforced at the page but not at the token or API, a role checked in the wrapper while the raw action stays public, a step-up keyed to a host context the resource does not require): High (Critical when the gap moves money, crosses a tenant, or grants physical access).
+30. A-SEC-30 (audit-only): Caller-supplied selectors are ownership-bound before use: any identifier, email, slug, or hostname taken from the request body, query, or model output that selects a record is verified to belong to the authenticated principal, and for an email or hostname is proven controlled by the caller, before that record is read, charged, mutated, or state-transitioned.
+    Look: mutations, actions, and tools that resolve a member, booking, tenant, space, listing, or domain from a caller-supplied id, email, or hostname; whether the resolved document's tenant or owner is checked against the caller; public checkout that attaches an existing member by email; unauthenticated verification that transitions state by hostname; agent tools acting on a model-chosen id.
+    Fail: a caller-supplied selector reaches a read, charge, mutation, or state transition without being bound to the authenticated principal (public checkout spending an existing member's credit by email, unauthenticated domain-verify taking a tenant offline, an agent tool writing into a model-named booking's tenant): High (Critical when it spends money or credit, exposes another tenant, or overwrites another party's data).
 
 ## Scoring
 
@@ -122,7 +128,7 @@ Weights are secauditor's dimension table carried forward. Conditional dimensions
 - Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.
 - AI and LLM security (2, conditional on model calls): A-SEC-23.
 
-A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, and A-SEC-28 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
+A-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, and A-SEC-30 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
 ## Remediation seeds
 

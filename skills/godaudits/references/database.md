@@ -90,10 +90,13 @@ Inventory before any check runs. The intake fingerprint already lists schema fil
 23. A-DB-23 (audit-only) Non-relational and analytics surfaces are graded by their own physics, where denormalization is correct: MongoDB unbounded embedded arrays and advisory-only validators; DynamoDB hot or monotonic partition keys, `Scan` plus filter on routine reads, GSIs not covering their query; Cassandra unbounded partitions and `ALLOW FILTERING`; Redis as sole system of record without AOF, or no TTL under `noeviction`; warehouse and dbt incremental models without `unique_key` or tests.
     Look: collection schemas, key designs, table definitions, `dbt_project.yml` and model configs.
     Fail: Redis as the only durable store for domain data -> High; unbounded partition or embedded array on a growth path -> High; no `dbt test` coverage on marts -> Medium.
+24. A-DB-24 (audit-only) Money flows reconcile end to end across every stage and store: the amount authorized or charged equals the amount persisted on the order or booking, the invoice, the settlement, any refund, and any marketplace payout or transfer, with add-ons, discounts, credits, and tax included on every side; provider status (payment, refund, transfer, payout) is confirmed before the local record is marked final; and a later mutation to price or status reconciles an already-settled invoice.
+    Look: the chain from payment-intent or charge creation through invoice insert, settlement, refund, and payout or transfer; the fields compared at the settlement or reconciliation guard; whether refunds reverse an already-released transfer; whether a refund, payout, or transfer is marked applied without reading provider status; reschedule or edit paths that change price after payment.
+    Fail: any two sides of a money flow can diverge (payment metadata carries add-ons the booking price omits so settlement rejects and the charge strands, a reschedule changes price without touching the paid invoice, a refund does not reverse a released transfer, a refund or payout recorded final without confirming provider status) -> High (Critical when funds are taken with no fulfillment, double-refunded, or double-paid).
 
 ## Scoring
 
-Weights carry over from dbauditor's dimension table. Conditional dimensions whose sub-surface is absent drop out, and the remaining weights re-normalize to 100 by proportional scaling (never zero-and-keep). A-DB-22 findings score into the dimension of the control they fake.
+Weights carry over from dbauditor's dimension table. Conditional dimensions whose sub-surface is absent drop out, and the remaining weights re-normalize to 100 by proportional scaling (never zero-and-keep). A-DB-22 and A-DB-24 findings score into the dimension of the control they implicate.
 
 - Referential integrity (14): A-DB-6, A-DB-7.
 - Indexing (13): A-DB-10, A-DB-11.

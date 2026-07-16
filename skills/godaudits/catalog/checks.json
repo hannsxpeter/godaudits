@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "pack_version": "2.1.0",
-  "source_hash": "ba1b8af9839a543edf7783d2e049b341056ea69db12ff20331246864d8102488",
+  "pack_version": "2.2.0",
+  "source_hash": "00427b2853fbea990a83b609468b0113f5b1442a258de87ccb500faaa48099fa",
   "domain_count": 18,
-  "check_count": 419,
+  "check_count": 424,
   "profiles": {
     "balanced": {
       "description": "General product risk weighted by user blast radius.",
@@ -439,8 +439,8 @@
     {
       "id": "database",
       "module": "database.md",
-      "check_count": 23,
-      "scoring_contract": "Weights carry over from dbauditor's dimension table. Conditional dimensions whose sub-surface is absent drop out, and the remaining weights re-normalize to 100 by proportional scaling (never zero-and-keep). A-DB-22 findings score into the dimension of the control they fake.\n\n- Referential integrity (14): A-DB-6, A-DB-7.\n- Indexing (13): A-DB-10, A-DB-11.\n- Query layer (12): A-DB-12, A-DB-13.\n- DB security (12): A-DB-18, A-DB-19.\n- Schema design (11): A-DB-1, A-DB-2, A-DB-3.\n- Constraints (10): A-DB-8, A-DB-9.\n- Transactions (9, conditional: a write path exists): A-DB-14, A-DB-15.\n- Types (7): A-DB-4, A-DB-5.\n- Migrations (6, conditional: migration tooling or DDL history exists): A-DB-16, A-DB-17.\n- Search (4, conditional: a search surface exists): A-DB-20.\n- Scale and operations (2, re-weight up on strong growth signals): A-DB-21, A-DB-23.\n\nHard Criticals regardless of the weighted mean: float money, app-only tenancy, plaintext PII or stored CVV, a payment path with no idempotency UNIQUE, a public database binding, CASCADE destroying financial or audit data, an unprotected read-modify-write on money. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 24,
+      "scoring_contract": "Weights carry over from dbauditor's dimension table. Conditional dimensions whose sub-surface is absent drop out, and the remaining weights re-normalize to 100 by proportional scaling (never zero-and-keep). A-DB-22 and A-DB-24 findings score into the dimension of the control they implicate.\n\n- Referential integrity (14): A-DB-6, A-DB-7.\n- Indexing (13): A-DB-10, A-DB-11.\n- Query layer (12): A-DB-12, A-DB-13.\n- DB security (12): A-DB-18, A-DB-19.\n- Schema design (11): A-DB-1, A-DB-2, A-DB-3.\n- Constraints (10): A-DB-8, A-DB-9.\n- Transactions (9, conditional: a write path exists): A-DB-14, A-DB-15.\n- Types (7): A-DB-4, A-DB-5.\n- Migrations (6, conditional: migration tooling or DDL history exists): A-DB-16, A-DB-17.\n- Search (4, conditional: a search surface exists): A-DB-20.\n- Scale and operations (2, re-weight up on strong growth signals): A-DB-21, A-DB-23.\n\nHard Criticals regardless of the weighted mean: float money, app-only tenancy, plaintext PII or stored CVV, a payment path with no idempotency UNIQUE, a public database binding, CASCADE destroying financial or audit data, an unprotected read-modify-write on money. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Referential integrity",
@@ -535,8 +535,8 @@
     {
       "id": "security",
       "module": "security.md",
-      "check_count": 28,
-      "scoring_contract": "Weights are secauditor's dimension table carried forward. Conditional dimensions drop out and the rest re-normalize proportionally when the sub-surface is absent; the audit reports which were active.\n\n- Authorization and access control (18): A-SEC-3, A-SEC-4, A-SEC-5.\n- Injection and input handling (16): A-SEC-8, A-SEC-9, A-SEC-10.\n- Authentication and sessions (15, conditional on an auth surface): A-SEC-6, A-SEC-7.\n- Crypto and data protection (11): A-SEC-11, A-SEC-12.\n- Misconfiguration and hardening (9): A-SEC-15, A-SEC-16.\n- Supply chain and CI/CD (9): A-SEC-17, A-SEC-18, A-SEC-26.\n- Secrets management (8): A-SEC-13, A-SEC-14, A-SEC-27.\n- API and web service (6, conditional on an API surface): A-SEC-19.\n- Logging and privacy (4, privacy half conditional on regulated data): A-SEC-20, A-SEC-21.\n- Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.\n- AI and LLM security (2, conditional on model calls): A-SEC-23.\n\nA-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, and A-SEC-28 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 30,
+      "scoring_contract": "Weights are secauditor's dimension table carried forward. Conditional dimensions drop out and the rest re-normalize proportionally when the sub-surface is absent; the audit reports which were active.\n\n- Authorization and access control (18): A-SEC-3, A-SEC-4, A-SEC-5.\n- Injection and input handling (16): A-SEC-8, A-SEC-9, A-SEC-10.\n- Authentication and sessions (15, conditional on an auth surface): A-SEC-6, A-SEC-7.\n- Crypto and data protection (11): A-SEC-11, A-SEC-12.\n- Misconfiguration and hardening (9): A-SEC-15, A-SEC-16.\n- Supply chain and CI/CD (9): A-SEC-17, A-SEC-18, A-SEC-26.\n- Secrets management (8): A-SEC-13, A-SEC-14, A-SEC-27.\n- API and web service (6, conditional on an API surface): A-SEC-19.\n- Logging and privacy (4, privacy half conditional on regulated data): A-SEC-20, A-SEC-21.\n- Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.\n- AI and LLM security (2, conditional on model calls): A-SEC-23.\n\nA-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, and A-SEC-30 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Authorization and access control",
@@ -1026,8 +1026,8 @@
     {
       "id": "code-quality",
       "module": "code-quality.md",
-      "check_count": 24,
-      "scoring_contract": "Dimensions derive from codeauditor's weight table with SEC removed (security owns it) and the remainder re-normalized to 100:\n\n- Architecture conventions: 19 (A-CODE-2, A-CODE-3, A-CODE-4, A-CODE-23)\n- Maintainability and budgets: 19 (A-CODE-1, A-CODE-5, A-CODE-6, A-CODE-7, A-CODE-22)\n- Testing discipline: 19 (A-CODE-8, A-CODE-9, A-CODE-10, A-CODE-11, A-CODE-21)\n- Error handling and resilience: 12 (A-CODE-12, A-CODE-13, A-CODE-14)\n- Performance shapes: 10, conditional (A-CODE-15, A-CODE-16); re-normalize for pure libraries with no I/O or service surface\n- Dependencies: 9 (A-CODE-17, A-CODE-24)\n- Docs and drift: 6 (A-CODE-18)\n- Operability hooks: 6, conditional (A-CODE-19, A-CODE-20); re-normalize for non-service archetypes\n\nScore each dimension against its findings, weight, and sum. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 26,
+      "scoring_contract": "Dimensions derive from codeauditor's weight table with SEC removed (security owns it) and the remainder re-normalized to 100:\n\n- Architecture conventions: 19 (A-CODE-2, A-CODE-3, A-CODE-4, A-CODE-23)\n- Maintainability and budgets: 19 (A-CODE-1, A-CODE-5, A-CODE-6, A-CODE-7, A-CODE-22)\n- Testing discipline: 19 (A-CODE-8, A-CODE-9, A-CODE-10, A-CODE-11, A-CODE-21)\n- Error handling and resilience: 12 (A-CODE-12, A-CODE-13, A-CODE-14)\n- Performance shapes: 10, conditional (A-CODE-15, A-CODE-16); re-normalize for pure libraries with no I/O or service surface\n- Dependencies: 9 (A-CODE-17, A-CODE-24)\n- Docs and drift: 6 (A-CODE-18)\n- Operability hooks: 6, conditional (A-CODE-19, A-CODE-20); re-normalize for non-service archetypes\n\nA-CODE-25 and A-CODE-26 carry no weight of their own: their findings score inside the dimension of the control or path they implicate.\n\nScore each dimension against its findings, weight, and sum. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Architecture conventions: 19",
@@ -2954,6 +2954,20 @@
       "default_weight": 1
     },
     {
+      "id": "A-DB-24",
+      "domain": "database",
+      "module": "database.md",
+      "title": "Money flows reconcile end to end across every stage and store: the amount authorized or charged equals the amount persisted on the order or booking, the invoice, the settlement, any refund, and any marketplace payout or transfer, with add-ons, discounts, credits, and tax included on every side; provider status (payment, refund, transfer, payout) is confirmed before the local record is marked final; and a later mutation to price or status reconciles an already-settled invoice",
+      "look": "the chain from payment-intent or charge creation through invoice insert, settlement, refund, and payout or transfer; the fields compared at the settlement or reconciliation guard; whether refunds reverse an already-released transfer; whether a refund, payout, or transfer is marked applied without reading provider status; reschedule or edit paths that change price after payment.",
+      "fail": "any two sides of a money flow can diverge (payment metadata carries add-ons the booking price omits so settlement rejects and the charge strands, a reschedule changes price without touching the paid invoice, a refund does not reverse a released transfer, a refund or payout recorded final without confirming provider status) -> High (Critical when funds are taken with no fulfillment, double-refunded, or double-paid).",
+      "source_line": 93,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
       "id": "A-SEC-1",
       "domain": "security",
       "module": "security.md",
@@ -3393,6 +3407,34 @@
       "standards": [
         "owasp-web-2025/A10:2025"
       ],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
+      "id": "A-SEC-29",
+      "domain": "security",
+      "module": "security.md",
+      "title": "Authorization parity across caller paths: every privileged operation enforces the same authentication, tenant-suspension, step-up or MFA, and role gate on EVERY path that can reach it, not only on the primary interactive one. The paths are an interactive session, an API key or bearer token, a publicly exported function, an action whose authorization runs inside a non-writable query context, and any agent or tool call",
+      "look": "the API-key or token auth path against the interactive guard for suspension, MFA, and role parity; `mutation` versus `internalMutation` exports of privileged handlers; action handlers whose only authorization runs inside an internal query; agent or tool definitions that pass caller-influenced arguments into privileged mutations; a route group reachable under a shared-path list on a non-owning host whose gate keys off the host context.",
+      "fail": "a privileged resource reachable through a caller path that skips a gate its sibling enforces (an API key still valid after tenant suspension, MFA enforced at the page but not at the token or API, a role checked in the wrapper while the raw action stays public, a step-up keyed to a host context the resource does not require): High (Critical when the gap moves money, crosses a tenant, or grants physical access).",
+      "source_line": 108,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
+      "id": "A-SEC-30",
+      "domain": "security",
+      "module": "security.md",
+      "title": "Caller-supplied selectors are ownership-bound before use: any identifier, email, slug, or hostname taken from the request body, query, or model output that selects a record is verified to belong to the authenticated principal, and for an email or hostname is proven controlled by the caller, before that record is read, charged, mutated, or state-transitioned",
+      "look": "mutations, actions, and tools that resolve a member, booking, tenant, space, listing, or domain from a caller-supplied id, email, or hostname; whether the resolved document's tenant or owner is checked against the caller; public checkout that attaches an existing member by email; unauthenticated verification that transitions state by hostname; agent tools acting on a model-chosen id.",
+      "fail": "a caller-supplied selector reaches a read, charge, mutation, or state transition without being bound to the authenticated principal (public checkout spending an existing member's credit by email, unauthenticated domain-verify taking a tenant offline, an agent tool writing into a model-named booking's tenant): High (Critical when it spends money or credit, exposes another tenant, or overwrites another party's data).",
+      "source_line": 111,
+      "standards": [],
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
@@ -5069,6 +5111,34 @@
       "dimension_weight": 9,
       "scoring_role": "weighted",
       "default_weight": 4.5
+    },
+    {
+      "id": "A-CODE-25",
+      "domain": "code-quality",
+      "module": "code-quality.md",
+      "title": "Live controls and lawful state machines: every stored or configured flag meant to gate behavior is actually read on the enforcement path (not only written and displayed), and every lifecycle state machine rejects transitions that release a still-committed resource before its end or that run out of lifecycle order",
+      "look": "each control flag surfaced in the UI or schema (for example an approval-required, hold, or lock flag) traced to a branch that reads it; the state-transition table and the manual versus automatic transition handlers; whether a transition frees an inventory slot, access grant, or credit hold the entity still holds; whether the same guard the automatic path applies (end time, grace period) is applied on the manual path.",
+      "fail": "a control flag written and displayed but never read to change behavior, or a transition that frees a resource before the entity's end or performs an out-of-lifecycle change: High when it defeats an operator-configured safety or booking control, Medium otherwise.",
+      "source_line": 98,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
+      "id": "A-CODE-26",
+      "domain": "code-quality",
+      "module": "code-quality.md",
+      "title": "Wall-clock correctness: availability, booking windows, recurring schedules, and generated occurrences are computed in the entity's configured timezone rather than the server's UTC, daylight-saving transitions are handled, and the timezone used for computation matches the one used for display",
+      "look": "date arithmetic on scheduling paths (getUTCDay, getUTCHours, Date.UTC, minute-of-day math) where a per-entity or per-property timezone field exists; whether that timezone is loaded and applied; the display formatter's timezone against the computation's.",
+      "fail": "wall-clock scheduling or availability computed with UTC date math while a configured timezone exists, so slots and generated tasks shift by the offset and drift across daylight saving: Medium (High when it yields accepted-but-invalid bookings or missed operational turnovers).",
+      "source_line": 101,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
     },
     {
       "id": "A-DNA-1",

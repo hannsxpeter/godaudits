@@ -3,6 +3,28 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.2.0] - 2026-07-16
+
+### Added
+
+- Five behavioral checks that verify a control is correctly wired on the live
+  path, not merely present, closing a structural blind spot of a
+  control-presence catalog (419 -> 424 checks):
+  - A-SEC-29 authorization parity across every caller path (interactive
+    session, API key or token, publicly exported function, action-in-query
+    context, agent or tool call); suspension and step-up enforced at the data
+    or function tier, not only a page or edge gate.
+  - A-SEC-30 caller-supplied selectors (id, email, slug, hostname, model
+    output) are ownership-bound to the authenticated principal before use.
+  - A-DB-24 money flows reconcile end to end across charge, invoice,
+    settlement, refund, and payout or transfer, with provider status confirmed
+    before a record is final and transfers reversed on refund.
+  - A-CODE-25 control flags are read on the enforcement path and lifecycle
+    transitions never release a still-committed resource early or out of order.
+  - A-CODE-26 scheduling and availability use the entity timezone, not UTC.
+- The five new checks score as routing checks (findings land in the dimension
+  of the control they implicate), so domain scoring weights are unchanged.
+
 ## [2.1.0] - 2026-07-13
 
 godaudits 2.1 closes the context, agent-memory, artifact-truth, standards, and release-evidence gaps while preserving the version 2.0 audit schema.

@@ -28,11 +28,16 @@ const MODULES = [
 
 const ROUTING_CHECKS = new Set([
   'A-DB-22',
+  'A-DB-24',
   'A-SEC-1',
   'A-SEC-2',
   'A-SEC-24',
   'A-SEC-25',
   'A-SEC-28',
+  'A-SEC-29',
+  'A-SEC-30',
+  'A-CODE-25',
+  'A-CODE-26',
   'A-LLM-23',
   'A-UX-20',
   'A-SEO-22',
