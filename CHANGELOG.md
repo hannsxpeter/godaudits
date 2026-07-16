@@ -3,6 +3,57 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.10.0] - 2026-07-16
+
+The detector corpus now measures something real. 2.9.0 built the machinery and
+honestly reported nothing, because authored fixtures cannot support a rate. This
+release supplies the missing input: recorded blind audit runs.
+
+### Added
+
+- Six seeded fixture repositories under `benchmarks/fixtures/seeded/`, graded
+  from blatant to genuinely subtle: an unscoped lookup of medical PII; a service
+  whose list and update bind the tenant while the by-id read does not; a scoping
+  helper that one later handler bypasses; a handler that loads unscoped and
+  filters afterward; an export path that ignores the account predicate its
+  siblings apply; and one control with no seeded defect at all.
+- `benchmarks/seeded-ground-truth.json`, authored before any audit ran and kept
+  outside the repositories so an auditor reading a fixture cannot see it.
+- `benchmarks/blind-runs.json`: six real audit runs captured verbatim. Each
+  auditor received one repository path and the catalog's own A-SEC-3 definition,
+  with no ground truth, no defect count, and no hint that a control existed.
+  Recorded exactly as returned, hits and misses alike.
+- The corpus derives `recorded` cases from those runs, so A-SEC-3 now clears the
+  five-independent-audit floor and reports a measured detection rate with its
+  Wilson lower bound. Five for five reports as a rate of 1.0 with a lower bound
+  of 0.57, because five for five is not a perfect detector and the artifact must
+  not read as though it were. Every check still carried only by authored
+  fixtures continues to report `authored-only` and no rate.
+
+### Fixed
+
+- Ground truth for the post-filter case said High. The blind run said Critical
+  and was right: A-SEC-3's rule keys severity on the data class ("Critical on
+  PII, financial, or cross-tenant data"), and support tickets across
+  organizations are cross-tenant data. The original entry had imported a
+  compensating-control discount the rule does not contain, and had not weighed
+  that the handler is fail-open when `req.user` is absent, since it throws only
+  after the row is already in memory, nor that the 404-versus-403 split is a
+  cross-tenant existence oracle. Corrected, with the correction recorded in the
+  file rather than quietly rewritten.
+
+### Changed
+
+- Recorded findings carry Firm rather than the label the run reported, because
+  the capture schema collected a single citation per finding and one evidence
+  path cannot support Certain. That is the corroboration invariant from 2.8.0
+  applied to real output.
+- Recorded prose passes through the same secret redactor a real audit uses. It
+  fires conservatively: one run's remediation advice suggested resolving by
+  `shareToken: req.query.token`, and the scanner masked the expression. Masking a
+  code expression is the right direction to be wrong in, so the redactor was
+  applied rather than loosened, and `blind-runs.json` keeps the verbatim capture.
+
 ## [2.9.0] - 2026-07-16
 
 Finishes the detector-regression gate that 2.8.0 left parked at one case, and

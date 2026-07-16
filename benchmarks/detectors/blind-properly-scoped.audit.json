@@ -1,0 +1,129 @@
+{
+  "schema_version": "2.0",
+  "audit": {
+    "name": "blind-properly-scoped",
+    "audit_version": 1,
+    "status": "reported",
+    "created": "2026-07-16",
+    "updated": "2026-07-16",
+    "mode": "fresh",
+    "plan_aware": false,
+    "commit": "seeded0",
+    "archetype": "api-service",
+    "scale": "side-project",
+    "risk_profile": "balanced",
+    "engine_version": "2.0.0",
+    "pack_version": "2.0.0",
+    "capabilities": [
+      "static"
+    ],
+    "assumptions": [
+      "Blind run: the auditor received only the repository path and the A-SEC-3 definition."
+    ]
+  },
+  "compliance": {
+    "result": "pass",
+    "screened": "2026-07-16",
+    "policy_pack": "provider-neutral@1"
+  },
+  "domains": [
+    {
+      "id": "security",
+      "status": "applicable",
+      "weight": 15,
+      "checks": [
+        {
+          "id": "A-SEC-3",
+          "outcome": "pass",
+          "confidence": "Firm",
+          "weight": 100,
+          "evidence": [
+            "E-1"
+          ],
+          "finding_ids": []
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E-1",
+      "type": "source",
+      "path": "src/orders.js",
+      "line": 5,
+      "quote": "  const order = await db.orders.findOne({ id: req.params.id, customerId: req.user.customerId });",
+      "sha256": "3789139d976288e7374edb8b834d081dbe6383d65992e6707ab7eb85dbc3ccea",
+      "redacted": false
+    }
+  ],
+  "strengths": [],
+  "findings": [],
+  "tasks": [
+    {
+      "id": "GA-601",
+      "phase": 6,
+      "wave": "6.1",
+      "title": "Re-run godaudits",
+      "parallel": false,
+      "files": [],
+      "depends_on": [],
+      "reuses": "the current audit state",
+      "fixes": [],
+      "acceptance": [
+        "A-SEC-3 still passes on a re-read."
+      ],
+      "verify": "godaudits validate .godaudits/AUDIT.json",
+      "checks": [],
+      "status": "open",
+      "final_gate": true
+    }
+  ],
+  "accepted_risks": [],
+  "open_questions": [],
+  "session_log": [
+    {
+      "date": "2026-07-16",
+      "summary": "Blind A-SEC-3 audit of properly-scoped."
+    }
+  ],
+  "computed": {
+    "coverage": {
+      "applicable": 1,
+      "evaluated": 1,
+      "passed": 1,
+      "failed": 0,
+      "unknown": 0,
+      "not_applicable": 0,
+      "percent": 100
+    },
+    "domains": {
+      "security": {
+        "raw_score": 100,
+        "score": 100,
+        "cap": null,
+        "evidence_basis": "mostly Firm"
+      }
+    },
+    "overall": {
+      "raw_score": 100,
+      "score": 100,
+      "verdict": "audit-proof",
+      "grade_method": "static-read",
+      "grade_scope": "an arithmetic roll-up of model-assigned pass/fail from a source read, not a test result, scan, or certification",
+      "evidence_basis": "mostly Firm",
+      "coverage_cap": 100,
+      "critical_cap": 100,
+      "weak_domain_cap": 100
+    },
+    "counts": {
+      "findings_total": 0,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "accepted_risk": 0,
+      "tasks_total": 1,
+      "tasks_done": 0
+    }
+  }
+}

@@ -124,6 +124,34 @@ test('a detector that falsely flags a declared clean check fails the corpus', ()
   assert.deepStrictEqual(report.missed, []);
 });
 
+test('the shipped corpus reports a rate only where recorded runs support one', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const root = path.resolve(__dirname, '..');
+  const corpus = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/detectors.json'), 'utf8'));
+  const cases = corpus.cases.map((item) => ({
+    name: item.name,
+    provenance: item.provenance,
+    expected: item.expected,
+    audit: JSON.parse(fs.readFileSync(path.join(root, 'benchmarks', item.audit), 'utf8'))
+  }));
+  const report = aggregateCorpus(cases);
+  assert.strictEqual(report.passed, true);
+
+  // A-SEC-3 is carried by real blind runs, so it earns a rate.
+  const sec3 = statFor(report, 'A-SEC-3');
+  assert.strictEqual(sec3.sample, 'reported');
+  assert.ok(sec3.recorded_cases >= MIN_SAMPLE);
+  // Five for five is not a perfect detector, and the bound must say so.
+  assert.ok(sec3.detection_rate_lower_bound < sec3.detection_rate);
+
+  // Every check carried only by authored fixtures must still report nothing.
+  for (const stat of report.checks.filter((item) => item.check !== 'A-SEC-3')) {
+    assert.strictEqual(stat.sample, 'authored-only');
+    assert.strictEqual(stat.detection_rate, null);
+  }
+});
+
 test('the corpus states its scope and claims nothing about unseen repositories', () => {
   const report = aggregateCorpus([seededCase('one')]);
   assert.match(report.scope, /not a reliability estimate for unseen repositories/);

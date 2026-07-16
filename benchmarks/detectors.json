@@ -91,6 +91,98 @@
           "A-DB-1"
         ]
       }
+    },
+    {
+      "name": "blind-export-unscoped",
+      "provenance": "recorded",
+      "audit": "detectors/blind-export-unscoped.audit.json",
+      "seeded": "getContact and listContacts both bind accountId, but exportContacts queries by segment alone and streams name, email, and phone for every account. A-SEC-3 names list, search, and export explicitly.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-SEC-3",
+            "severity": "Critical",
+            "path": "src/contacts.js"
+          }
+        ],
+        "clean_checks": []
+      }
+    },
+    {
+      "name": "blind-helper-bypassed",
+      "provenance": "recorded",
+      "audit": "detectors/blind-helper-bypassed.audit.json",
+      "seeded": "A scoped() helper injects workspaceId and is used by readDocument and listDocuments, but previewDocument queries findOne({ id: req.query.docId }) directly and bypasses it, returning document body across workspaces.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-SEC-3",
+            "severity": "Critical",
+            "path": "src/documents.js"
+          }
+        ],
+        "clean_checks": []
+      }
+    },
+    {
+      "name": "blind-list-scoped-get-not",
+      "provenance": "recorded",
+      "audit": "detectors/blind-list-scoped-get-not.audit.json",
+      "seeded": "listInvoices and updateInvoice both bind tenantId, but getInvoice calls findById(req.params.invoiceId) with no tenant predicate. The surrounding correct scoping is what makes it easy to skim past.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-SEC-3",
+            "severity": "Critical",
+            "path": "src/routes.js"
+          }
+        ],
+        "clean_checks": []
+      }
+    },
+    {
+      "name": "blind-obvious-lookup",
+      "provenance": "recorded",
+      "audit": "detectors/blind-obvious-lookup.audit.json",
+      "seeded": "GET /patients/:id resolves a patient by request-supplied id with no clinic or owner predicate in the query, returning name, date of birth, and diagnosis notes. The sibling list handler is correctly scoped by clinicId, so the omission is local to the by-id load.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-SEC-3",
+            "severity": "Critical",
+            "path": "src/server.js"
+          }
+        ],
+        "clean_checks": []
+      }
+    },
+    {
+      "name": "blind-post-filter-leak",
+      "provenance": "recorded",
+      "audit": "detectors/blind-post-filter-leak.audit.json",
+      "seeded": "getTicket resolves by request-supplied id with no orgId predicate in the query and only compares ownership after loading. A-SEC-3 requires the ownership binding inside the query; post-filtering also discloses existence by returning a distinguishable 403 rather than 404.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-SEC-3",
+            "severity": "Critical",
+            "path": "src/tickets.js"
+          }
+        ],
+        "clean_checks": []
+      }
+    },
+    {
+      "name": "blind-properly-scoped",
+      "provenance": "recorded",
+      "audit": "detectors/blind-properly-scoped.audit.json",
+      "seeded": "No seeded defect. Read, list, mutate, and export all bind customerId inside the query, and cancelOrder checks the matched count rather than trusting the update. An A-SEC-3 failure reported here is a false positive.",
+      "expected": {
+        "required_findings": [],
+        "clean_checks": [
+          "A-SEC-3"
+        ]
+      }
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "godaudits",
   "description": "Audit a codebase end to end across 18 domains with a 419-check ledger, form-aware context, Pillars 1.1 routing, arc-ready drift detection, OWASP 2025 coverage, typed evidence, deterministic scoring, and an executable remediation plan.",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "author": { "name": "aihxp", "url": "https://github.com/hannsxpeter" },
   "homepage": "https://github.com/hannsxpeter/godaudits",
   "repository": "https://github.com/hannsxpeter/godaudits",

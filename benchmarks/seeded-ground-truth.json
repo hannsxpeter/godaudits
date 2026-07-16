@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "check": "A-SEC-3",
+  "note": "Ground truth for the seeded fixture repositories under benchmarks/fixtures/seeded/. Authored before any audit ran and deliberately kept outside the repositories themselves, so an auditing agent reading a fixture cannot see the answer. Each entry records the defect seeded, where it lives, and the severity a correct audit should assign. `properly-scoped` is a control with no seeded defect: an audit that fails A-SEC-3 there is a false positive, not a hit.",
+  "repos": [
+    {
+      "repo": "obvious-lookup",
+      "difficulty": "obvious",
+      "seeded": true,
+      "path": "src/server.js",
+      "severity": "Critical",
+      "defect": "GET /patients/:id resolves a patient by request-supplied id with no clinic or owner predicate in the query, returning name, date of birth, and diagnosis notes. The sibling list handler is correctly scoped by clinicId, so the omission is local to the by-id load.",
+      "why_severity": "Critical: unscoped cross-tenant read of medical PII."
+    },
+    {
+      "repo": "list-scoped-get-not",
+      "difficulty": "subtle",
+      "seeded": true,
+      "path": "src/routes.js",
+      "severity": "Critical",
+      "defect": "listInvoices and updateInvoice both bind tenantId, but getInvoice calls findById(req.params.invoiceId) with no tenant predicate. The surrounding correct scoping is what makes it easy to skim past.",
+      "why_severity": "Critical: cross-tenant read of financial records."
+    },
+    {
+      "repo": "helper-bypassed",
+      "difficulty": "subtle",
+      "seeded": true,
+      "path": "src/documents.js",
+      "severity": "Critical",
+      "defect": "A scoped() helper injects workspaceId and is used by readDocument and listDocuments, but previewDocument queries findOne({ id: req.query.docId }) directly and bypasses it, returning document body across workspaces.",
+      "why_severity": "Critical: cross-tenant document disclosure."
+    },
+    {
+      "repo": "post-filter-leak",
+      "difficulty": "subtle",
+      "seeded": true,
+      "path": "src/tickets.js",
+      "severity": "Critical",
+      "defect": "getTicket resolves by request-supplied id with no orgId predicate in the query and only compares ownership after loading. A-SEC-3 requires the ownership binding inside the query; post-filtering also discloses existence by returning a distinguishable 403 rather than 404.",
+      "why_severity": "Critical: the check keys severity on the data class, and support tickets across organizations are cross-tenant data.",
+      "correction": "This entry originally said High, on the reasoning that the post-filter withholds the record body so the leak does not fully materialize. The blind audit run recorded here said Critical and was right: A-SEC-3's fail rule reads 'Critical on PII, financial, or cross-tenant data; High otherwise', which keys severity on what the data is, not on whether a later branch happens to catch the load. The original entry imported a compensating-control discount the rule does not contain. The run also raised two consequences the original entry had not weighed: the handler is fail-open if req.user is undefined, since req.user.orgId throws only after the row is already in memory, and the 404-versus-403 split is a cross-tenant existence oracle. Ground truth corrected to Critical."
+    },
+    {
+      "repo": "export-unscoped",
+      "difficulty": "subtle",
+      "seeded": true,
+      "path": "src/contacts.js",
+      "severity": "Critical",
+      "defect": "getContact and listContacts both bind accountId, but exportContacts queries by segment alone and streams name, email, and phone for every account. A-SEC-3 names list, search, and export explicitly.",
+      "why_severity": "Critical: bulk cross-account export of contact PII."
+    },
+    {
+      "repo": "properly-scoped",
+      "difficulty": "control",
+      "seeded": false,
+      "path": null,
+      "severity": null,
+      "defect": "No seeded defect. Read, list, mutate, and export all bind customerId inside the query, and cancelOrder checks the matched count rather than trusting the update. An A-SEC-3 failure reported here is a false positive.",
+      "why_severity": null,
+      "pass_evidence": {
+        "path": "src/orders.js",
+        "line": 5,
+        "quote": "  const order = await db.orders.findOne({ id: req.params.id, customerId: req.user.customerId });",
+        "note": "The blind run's verdict for this repository was pass, but the capture schema collected citations only for findings, so it returned no citation to support the pass. This line is drawn mechanically from the file the run read, to give the recorded pass the evidence the format requires. The decision is the auditor's; the citation is not."
+      }
+    }
+  ]
+}

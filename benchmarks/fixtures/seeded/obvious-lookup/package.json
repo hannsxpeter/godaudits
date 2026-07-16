@@ -1,0 +1,1 @@
+{ "name": "patient-portal", "private": true, "scripts": { "start": "node src/server.js" } }
