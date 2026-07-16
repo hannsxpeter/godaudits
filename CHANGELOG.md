@@ -3,6 +3,21 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.4.0] - 2026-07-16
+
+### Added
+
+- Documentation profile: intake derives the expected documentation set from the
+  detected product form, scale, risk profile, and regulatory overlays, so a
+  missing document is a finding only when the profile expects it (a prototype is
+  not faulted for a missing continuity plan; a regulated platform is expected to
+  carry a threat model and traceability record).
+- Two routing checks (429 total): A-REPO-24 documentation-profile completeness
+  (the required doc set for the detected profile exists, scaled, including the
+  governance documents, initiation brief, traceability matrix, and closeout, at
+  enterprise or regulated scale) and A-PRD-21 requirements traceability (each
+  requirement links to its design, build task, and verifying test).
+
 ## [2.3.0] - 2026-07-16
 
 ### Added

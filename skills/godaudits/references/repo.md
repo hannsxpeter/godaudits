@@ -83,6 +83,9 @@ Mirrors `R-REPO-1` through `R-REPO-20` one to one; `A-REPO-21` onward are audit-
 23. **A-REPO-23 Delivery reality (audit-only, conditional).** Runs only when the roadmap domain is excluded per `intake.md`: the repo's release story matches shipped reality.
     Look: latest `v*` tag vs the CHANGELOG top entry; commit recency vs activity claims in README; release automation that has never cut a release.
     Fail: CHANGELOG and tags disagree, Low; release machinery configured but unused across 6 months of active commits, Low.
+24. **A-REPO-24 Documentation profile completeness (audit-only).** The documentation set matches the project's detected profile (product form, scale, and risk or regulatory overlays): the documents a comparable project of this shape needs are present, scaled to it. A prototype is not faulted for a missing business-continuity plan; a funded-product or enterprise system is expected to carry a PRD, architecture and ADRs, a test strategy, a deploy and rollback plan, an operations runbook, and release notes, and at enterprise or regulated scale an initiation brief (charter, business case, stakeholders and RACI), a requirements-traceability matrix, and a closeout with lessons. Documents the form makes irrelevant are recorded not-applicable with a reason.
+    Look: the root-doc and `docs/` inventory against the form, scale, and risk profile in `intake.md`; presence of the governance documents at funded-product or enterprise scale; not-applicable markers with their reason.
+    Fail: a required document for the detected profile is absent with no not-applicable reason: Medium (High when a security-critical or regulated project lacks a threat model, privacy or DSAR records, or incident-response documentation).
 
 ## Scoring
 
@@ -97,6 +100,8 @@ Weighted dimensions summing to 100. Derived from repo-ready's 42-point Mode C ta
 | Tier discipline and traceability | 14 | A-REPO-1, A-REPO-2, A-REPO-19, A-REPO-20 |
 | Release machinery (conditional) | 12 | A-REPO-13, A-REPO-14, A-REPO-23 |
 | Agent safety | 8 | A-REPO-15 |
+
+A-REPO-24 carries no weight of its own: its findings score inside the documentation dimension of the control they implicate.
 
 Release machinery applies only when the release sub-surface exists; a tier-1 repo that publishes nothing and declares the stop drops it, re-normalizing the rest to 100. A-REPO-5 is skipped in single-language repos without re-weighting its dimension. Any active Critical finding, including an accepted risk, caps this domain at 69.
 

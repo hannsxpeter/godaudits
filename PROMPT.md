@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 424-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.3 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.4 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -193,7 +193,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.3.0
+## Skill version: 2.4.0
 
 
 ---
@@ -584,6 +584,21 @@ Calibration moves severity, never evidence: a weekend project with fast-hashed p
 Every domain gets a row. Applicable means the domain pass runs and its checks bind. Excluded requires a reason specific to this repo; "not needed" is banned by the substitution test. Merge routing from the primary form, every supported secondary form, and verified overlays. A primary form cannot silently suppress a domain activated by a real secondary surface. Candidate regulatory overlays may add questions and evidence requirements, but do not alter scoring until verified.
 
 Hard rules: security, code-quality, style-genome, repo are never excluded (they scale down instead). seo requires a public crawlable surface. llm requires model calls in the code; a langchain import with no call site is a stack finding, not an llm pass. ui requires rendered pixels the project owns. roadmap applies whenever a plan, roadmap, or issue tracker artifact exists in or beside the repo; otherwise it reduces to one delivery-reality check inside repo.
+
+## Documentation profile
+
+The same signals that build the applicability matrix, product form, scale, risk
+profile, and regulatory overlays, also set which documents this project is expected
+to carry. Derive the expected documentation set the way a comparable project of this
+shape would need it, not from a fixed checklist: a prototype carries a README and a
+brief; a funded-product system adds a PRD, architecture and ADRs, a test strategy, a
+deploy and rollback plan, an operations runbook, and release notes; an enterprise or
+regulated system adds an initiation brief (charter, business case, stakeholders and
+RACI), a requirements-traceability matrix, a closeout with lessons, and the
+regulatory-overlay records named in the compliance standards. Documents the form
+makes irrelevant are recorded not-applicable with a reason. A-REPO-24 audits
+completeness against this profile and A-PRD-21 audits the traceability record; a
+missing document is a finding only when the profile expects it.
 
 ## Risk profiles and domain weights
 

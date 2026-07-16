@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "godaudits: an evidence-first audit system with 419 checks, form-aware context, Pillars and arc-ready validation, OWASP 2025 coverage, deterministic scoring, SARIF, and executable remediation plans.",
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "plugins": [
     {

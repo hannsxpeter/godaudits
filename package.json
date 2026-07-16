@@ -1,6 +1,6 @@
 {
   "name": "godaudits",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Evidence-first codebase auditing with a deterministic check catalog, validated audit state, computed scores, benchmarks, MDX reports, and SARIF output.",
   "keywords": [
     "agent-skills",
