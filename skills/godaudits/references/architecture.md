@@ -91,6 +91,9 @@ Severities are funded-product calibration; intake's scale calibration moves them
 22. A-ARCH-22 A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions are not coded inline in transport handlers.
     Look: bodies of `routes/`, `pages/api/`, controllers, and UI event handlers for business rules.
     Fail: load-bearing invariants enforced only inside transport handlers: Medium; the same invariant duplicated across handlers with drift between copies: High.
+23. A-ARCH-23 (audit-only) API contract design, when an API or service surface exists: the API style is declared and applied consistently (REST, GraphQL, or RPC, not a different shape per endpoint); a versioning strategy exists that does not break existing consumers; a machine-readable contract (an OpenAPI document or a GraphQL schema) is present and matches the routes on disk; resources and URIs are modeled consistently for REST; and errors use one consistent envelope (RFC 7807 Problem Details or a documented equivalent), not an ad-hoc shape per endpoint.
+    Look: route registration and handler signatures; an `openapi.*`, `swagger.*`, or GraphQL schema file diffed against the routes; version prefixes or content negotiation; the error-response shape across handlers.
+    Fail: mixed API styles with no stated reason, no versioning strategy on a consumer-facing API, a contract file drifted from the routes, or inconsistent ad-hoc error shapes: Medium (High when consumers are external and a breaking change ships with no version). Cross-reference F-SEC for API auth and residue.
 
 ## Scoring
 
@@ -103,6 +106,8 @@ Weighted dimensions summing to 100. Conditional dimensions drop out and the rest
 - NFR reality (A-ARCH-11, A-ARCH-12): 10
 - Trust boundary placement (A-ARCH-13): 15, conditional on a network surface the project owns
 - Decision records and drift (A-ARCH-14 to A-ARCH-19): 10
+
+A-ARCH-23 carries no weight of its own: its findings score inside the integration-discipline or trust-boundary dimension of the API surface they implicate.
 
 Any active Critical finding, including an accepted risk, caps this domain at 69.
 

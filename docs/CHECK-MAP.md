@@ -2,7 +2,7 @@
 
 Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand.
 
-18 domains, 429 checks, and 11 standards frameworks. Each check's ownership, weight, and standards mapping are derived from its domain module and the standards catalog.
+18 domains, 431 checks, and 11 standards frameworks. Each check's ownership, weight, and standards mapping are derived from its domain module and the standards catalog.
 
 ## Standards frameworks
 
@@ -50,7 +50,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 
 ### architecture (architecture.md)
 
-22 checks: 22 weighted, 0 routing.
+23 checks: 22 weighted, 1 routing.
 
 | Check | Role | Standards | Title |
 |---|---|---|---|
@@ -76,6 +76,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-ARCH-20 | weighted (Data architecture and invariants) | - | No distributed monolith: no table written by more than one deployable, no request path chaining thre |
 | A-ARCH-21 | weighted (Component boundaries and dependency structure) | - | Context boundaries hold at import level: no deep imports into another context's internals, no shared |
 | A-ARCH-22 | weighted (Component boundaries and dependency structure) | - | A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions |
+| A-ARCH-23 | routing | - | API contract design, when an API or service surface exists: the API style is declared and applied co |
 
 ### stack (stack.md)
 
@@ -141,7 +142,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 
 ### security (security.md)
 
-32 checks: 23 weighted, 9 routing.
+33 checks: 23 weighted, 10 routing.
 
 | Check | Role | Standards | Title |
 |---|---|---|---|
@@ -177,6 +178,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-SEC-30 | routing | - | Caller-supplied selectors are ownership-bound before use: any identifier, email, slug, or hostname t |
 | A-SEC-31 | routing | gdpr-eu/lawful-basis-and-consent, ccpa-cpra/opt-out-of-sale-and-sharing, pipeda-ca/consent, soc2-tsc/privacy | Consent and tracking lifecycle, when the product sets non-essential cookies, loads third-party track |
 | A-SEC-32 | routing | gdpr-eu/records-and-transfers, ccpa-cpra/data-inventory, pipeda-ca/accountability, pci-dss-4/protect-stored-account-data, hipaa-security-rule/encryption-and-agreements | Regulated-data governance records exist in the repository when a regulatory surface is present: a da |
+| A-SEC-33 | routing | - | API interaction safety: unsafe operations a client may retry (a POST or PATCH that creates or charge |
 
 ### llm (llm.md)
 

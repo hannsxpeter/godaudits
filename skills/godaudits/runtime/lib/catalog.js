@@ -40,6 +40,8 @@ const ROUTING_CHECKS = new Set([
   'A-SEC-30',
   'A-SEC-31',
   'A-SEC-32',
+  'A-SEC-33',
+  'A-ARCH-23',
   'A-UI-24',
   'A-CODE-25',
   'A-CODE-26',

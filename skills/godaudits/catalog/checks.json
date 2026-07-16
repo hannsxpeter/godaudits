@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "pack_version": "2.6.0",
-  "source_hash": "8904ea286ccb59ae325cab492ef06172a8b20c19bd2aea6bed72d9610030d976",
+  "pack_version": "2.7.0",
+  "source_hash": "89f9c4cd7a92e0403221d14380d73f40227ee209b06f7a68e0bba89b1822f53b",
   "domain_count": 18,
-  "check_count": 429,
+  "check_count": 431,
   "profiles": {
     "balanced": {
       "description": "General product risk weighted by user blast radius.",
@@ -738,8 +738,8 @@
     {
       "id": "architecture",
       "module": "architecture.md",
-      "check_count": 22,
-      "scoring_contract": "Weighted dimensions summing to 100. Conditional dimensions drop out and the rest re-normalize when their sub-surface is declared absent in the surface map.\n\n- Shape and grounding (A-ARCH-1 to A-ARCH-4): 15\n- Component boundaries and dependency structure (A-ARCH-5, A-ARCH-6, A-ARCH-21, A-ARCH-22): 20\n- Data architecture and invariants (A-ARCH-7, A-ARCH-8, A-ARCH-20): 15\n- Integration discipline (A-ARCH-9, A-ARCH-10): 15, conditional on external integrations or async infrastructure present\n- NFR reality (A-ARCH-11, A-ARCH-12): 10\n- Trust boundary placement (A-ARCH-13): 15, conditional on a network surface the project owns\n- Decision records and drift (A-ARCH-14 to A-ARCH-19): 10\n\nAny active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 23,
+      "scoring_contract": "Weighted dimensions summing to 100. Conditional dimensions drop out and the rest re-normalize when their sub-surface is declared absent in the surface map.\n\n- Shape and grounding (A-ARCH-1 to A-ARCH-4): 15\n- Component boundaries and dependency structure (A-ARCH-5, A-ARCH-6, A-ARCH-21, A-ARCH-22): 20\n- Data architecture and invariants (A-ARCH-7, A-ARCH-8, A-ARCH-20): 15\n- Integration discipline (A-ARCH-9, A-ARCH-10): 15, conditional on external integrations or async infrastructure present\n- NFR reality (A-ARCH-11, A-ARCH-12): 10\n- Trust boundary placement (A-ARCH-13): 15, conditional on a network surface the project owns\n- Decision records and drift (A-ARCH-14 to A-ARCH-19): 10\n\nA-ARCH-23 carries no weight of its own: its findings score inside the integration-discipline or trust-boundary dimension of the API surface they implicate.\n\nAny active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Shape and grounding",
@@ -974,8 +974,8 @@
     {
       "id": "security",
       "module": "security.md",
-      "check_count": 32,
-      "scoring_contract": "Weights are secauditor's dimension table carried forward. Conditional dimensions drop out and the rest re-normalize proportionally when the sub-surface is absent; the audit reports which were active.\n\n- Authorization and access control (18): A-SEC-3, A-SEC-4, A-SEC-5.\n- Injection and input handling (16): A-SEC-8, A-SEC-9, A-SEC-10.\n- Authentication and sessions (15, conditional on an auth surface): A-SEC-6, A-SEC-7.\n- Crypto and data protection (11): A-SEC-11, A-SEC-12.\n- Misconfiguration and hardening (9): A-SEC-15, A-SEC-16.\n- Supply chain and CI/CD (9): A-SEC-17, A-SEC-18, A-SEC-26.\n- Secrets management (8): A-SEC-13, A-SEC-14, A-SEC-27.\n- API and web service (6, conditional on an API surface): A-SEC-19.\n- Logging and privacy (4, privacy half conditional on regulated data): A-SEC-20, A-SEC-21.\n- Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.\n- AI and LLM security (2, conditional on model calls): A-SEC-23.\n\nA-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, A-SEC-30, A-SEC-31, and A-SEC-32 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.",
+      "check_count": 33,
+      "scoring_contract": "Weights are secauditor's dimension table carried forward. Conditional dimensions drop out and the rest re-normalize proportionally when the sub-surface is absent; the audit reports which were active.\n\n- Authorization and access control (18): A-SEC-3, A-SEC-4, A-SEC-5.\n- Injection and input handling (16): A-SEC-8, A-SEC-9, A-SEC-10.\n- Authentication and sessions (15, conditional on an auth surface): A-SEC-6, A-SEC-7.\n- Crypto and data protection (11): A-SEC-11, A-SEC-12.\n- Misconfiguration and hardening (9): A-SEC-15, A-SEC-16.\n- Supply chain and CI/CD (9): A-SEC-17, A-SEC-18, A-SEC-26.\n- Secrets management (8): A-SEC-13, A-SEC-14, A-SEC-27.\n- API and web service (6, conditional on an API surface): A-SEC-19.\n- Logging and privacy (4, privacy half conditional on regulated data): A-SEC-20, A-SEC-21.\n- Cloud, container, and IaC (2, conditional on container or IaC files): A-SEC-22.\n- AI and LLM security (2, conditional on model calls): A-SEC-23.\n\nA-SEC-1, A-SEC-2, A-SEC-24, A-SEC-25, A-SEC-28, A-SEC-29, A-SEC-30, A-SEC-31, A-SEC-32, and A-SEC-33 carry no weight of their own: their findings score inside the dimension of the control they implicate. Any active Critical finding, including an accepted risk, caps this domain at 69.",
       "dimensions": [
         {
           "name": "Authorization and access control",
@@ -2745,6 +2745,20 @@
       "default_weight": 5
     },
     {
+      "id": "A-ARCH-23",
+      "domain": "architecture",
+      "module": "architecture.md",
+      "title": "API contract design, when an API or service surface exists: the API style is declared and applied consistently (REST, GraphQL, or RPC, not a different shape per endpoint); a versioning strategy exists that does not break existing consumers; a machine-readable contract (an OpenAPI document or a GraphQL schema) is present and matches the routes on disk; resources and URIs are modeled consistently for REST; and errors use one consistent envelope (RFC 7807 Problem Details or a documented equivalent), not an ad-hoc shape per endpoint",
+      "look": "route registration and handler signatures; an `openapi.*`, `swagger.*`, or GraphQL schema file diffed against the routes; version prefixes or content negotiation; the error-response shape across handlers.",
+      "fail": "mixed API styles with no stated reason, no versioning strategy on a consumer-facing API, a contract file drifted from the routes, or inconsistent ad-hoc error shapes: Medium (High when consumers are external and a breaking change ships with no version). Cross-reference F-SEC for API auth and residue.",
+      "source_line": 94,
+      "standards": [],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
       "id": "A-STACK-1",
       "domain": "stack",
       "module": "stack.md",
@@ -4004,6 +4018,20 @@
         "pci-dss-4/protect-stored-account-data",
         "hipaa-security-rule/encryption-and-agreements"
       ],
+      "dimension": null,
+      "dimension_weight": 0,
+      "scoring_role": "routing",
+      "default_weight": 0
+    },
+    {
+      "id": "A-SEC-33",
+      "domain": "security",
+      "module": "security.md",
+      "title": "API interaction safety: unsafe operations a client may retry (a POST or PATCH that creates or charges) accept and honor an idempotency key so a retry does not double-apply; real-time surfaces (WebSocket, Server-Sent Events) authenticate the connection at handshake, authorize each subscription or channel, and bound per-connection resource use (message size, rate, backpressure or heartbeat) rather than serving an unauthenticated firehose",
+      "look": "POST/PATCH handlers that create or charge and whether they read and dedupe on an `Idempotency-Key`; WebSocket or SSE upgrade handlers for auth on connect, per-subscription authorization, and per-message or per-connection limits.",
+      "fail": "a retryable create-or-charge endpoint with no honored idempotency key, or a real-time endpoint that accepts connections without authentication or without resource bounds: High (Critical when the retryable endpoint moves money or crosses a tenant). Cross-reference F-DB for the persisted idempotency key.",
+      "source_line": 120,
+      "standards": [],
       "dimension": null,
       "dimension_weight": 0,
       "scoring_role": "routing",
