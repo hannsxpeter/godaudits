@@ -60,6 +60,35 @@ use of supported products, and API-key automation are not violations merely
 because similar primitives can be abused. Record the facts that distinguish the
 legitimate case.
 
+## E. Framework conformance (standards ledger)
+
+The gate above screens usage, platform, and provider policy: is the product
+allowed. That is distinct from framework CONFORMANCE: does the code evidence a
+regulatory framework's controls. Conformance is tracked in the standards ledger,
+not this gate, and never as a separate scored domain.
+
+The catalog defines conformance frameworks as `standards` alongside OWASP Web Top
+10:2025: privacy and sovereignty (GDPR, CCPA/CPRA, PIPEDA), accessibility (WCAG
+2.2 AA, AODA, ADA/Section 508), security frameworks (SOC 2 Trust Services
+Criteria, ISO/IEC 27001:2022 Annex A), and industry standards (PCI DSS v4.0,
+HIPAA Security Rule). Each framework maps its categories to the existing checks
+that provide code evidence, so a framework is dispositioned from the checks it
+references, never double-scored.
+
+Disposition each framework per APPLICABILITY, governed by where the product's
+users are and what data it handles, not only where the business sits. A framework
+whose regulated surface is absent is `not-applicable` with absence evidence
+(HIPAA with no PHI, PCI DSS with no card data, GDPR with no EU-resident data
+path). A framework whose owning checks pass is `pass` with their evidence; a
+failing owning check makes its category `fail`.
+
+Technical-readiness, not certification. These frameworks evidence the technical
+controls a code audit can see (encryption, access control, consent code, DSAR
+paths, audit logging, accessible markup). They do not evidence the organizational
+and process controls (policies, training, vendor management, incident response,
+physical security) that SOC 2, ISO/IEC 27001, or PCI certification require. Report
+conformance as control-evidence readiness and never claim certification.
+
 ## What lands in AUDIT.json
 
 The `compliance` object records `result` (`pass`, `findings-injected`, or

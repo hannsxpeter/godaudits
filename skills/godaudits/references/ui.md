@@ -92,6 +92,9 @@ A-UI-1 through A-UI-20 mirror R-UI-1 through R-UI-20 one to one; A-UI-21 through
 23. A-UI-23 (audit-only) Hydration and island wiring is deliberate: interactive islands carry client directives, no `use client` at route roots, no SSR/client markup divergence, lazy routes not statically imported anyway.
     Look: `grep -rn 'use client' src/app/` at route roots; Astro components with handlers but no `client:` directive; `Date.now()` or `Math.random()` in SSR render paths.
     Fail: an interactive island shipped with no client directive (dead controls): High; a route-root `use client` or a lazy route still statically imported: Medium.
+24. A-UI-24 (audit-only) WCAG 2.2 pointer target size and focus appearance: interactive targets meet the 24 by 24 CSS px minimum with adequate spacing (WCAG 2.5.8 Target Size Minimum), and the stated mobile target contract where one exists; the focus indicator meets the focus-appearance minimum (WCAG 2.4.11): never removed without an equivalent, with sufficient area and contrast against adjacent colors.
+    Look: CSS for interactive controls' min-width/min-height/padding and spacing; `outline: none` or `outline: 0` with no replacement `:focus-visible` style; icon-only, close, or nav controls sized below 24px; dense list or toolbar tap targets.
+    Fail: interactive targets below the 24px minimum without a valid exception (inline text links, user-agent controls), or a removed or too-faint focus indicator: Medium (High when it blocks a primary action on touch or defeats keyboard focus visibility). Cross-reference F-CMP for WCAG 2.2 AA.
 
 ## Scoring
 
@@ -109,6 +112,8 @@ Dimensions and weights carry over from uiauditor. The eight always-on dimensions
 | Assets and media | 6 | A-UI-16 |
 | I18n readiness (conditional) | 8 nominal | A-UI-17 |
 | Native UI (conditional) | 9 nominal | A-UI-18 |
+
+A-UI-24 carries no weight of its own: its findings score inside the accessibility dimension of the control they implicate.
 
 The accessibility floor carries over: a Critical owned by the accessibility dimension holds that dimension in the 0-59 band, and the eight A-UI-20 conditions stay Critical at every scale calibration; calibration moves other severities, never these. Any active Critical finding, including an accepted risk, caps this domain at 69.
 
