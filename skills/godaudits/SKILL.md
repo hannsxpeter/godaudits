@@ -3,7 +3,7 @@ name: godaudits
 description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 429 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.4.0"
+  version: "2.5.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.4 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.5 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -203,4 +203,4 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.4.0
+## Skill version: 2.5.0

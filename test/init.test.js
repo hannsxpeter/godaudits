@@ -21,9 +21,12 @@ test('initializer creates a complete unknown ledger that passes strict catalog v
     root,
     date: '2026-07-13'
   });
-  assert.equal(audit.domains.length, 18);
-  assert.equal(audit.domains.flatMap((domain) => domain.checks).length, 429);
-  assert.equal(audit.standards.length, 53);
+  // Derive from the catalog, never hard-code counts: the seeded audit mirrors it.
+  const standardsCategories = Object.values(catalog.standards.frameworks)
+    .reduce((sum, framework) => sum + framework.categories.length, 0);
+  assert.equal(audit.domains.length, catalog.domains.length);
+  assert.equal(audit.domains.flatMap((domain) => domain.checks).length, catalog.check_count);
+  assert.equal(audit.standards.length, standardsCategories);
   const result = compileAudit(audit, { catalog });
   assert.deepEqual(result.errors, []);
   assert.equal(result.audit.computed.coverage.percent, 0);
