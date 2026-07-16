@@ -9,9 +9,20 @@ const root = path.resolve(__dirname, '..');
 
 test('catalog extracts every domain and unique check id', () => {
   const catalog = buildCatalog(root);
-  assert.equal(catalog.domains.length, 18);
-  assert.equal(catalog.check_count, 429);
-  assert.equal(new Set(catalog.checks.map((check) => check.id)).size, 429);
+  // Invariants, not magic numbers: the catalog is self-consistent and every
+  // domain's check ids are contiguous. Growing a domain must never edit this test.
+  assert.equal(catalog.domains.length, catalog.domain_count);
+  assert.equal(catalog.domains.length, new Set(catalog.checks.map((check) => check.domain)).size);
+  assert.equal(catalog.check_count, catalog.checks.length);
+  assert.equal(new Set(catalog.checks.map((check) => check.id)).size, catalog.checks.length);
+  for (const domain of catalog.domains) {
+    const numbers = catalog.checks
+      .filter((check) => check.domain === domain.id)
+      .map((check) => Number(check.id.slice(check.id.lastIndexOf('-') + 1)))
+      .sort((a, b) => a - b);
+    assert.equal(numbers.length, domain.check_count, `${domain.id} check_count matches its checks`);
+    assert.deepEqual(numbers, numbers.map((_, index) => index + 1), `${domain.id} check ids are contiguous 1..N`);
+  }
   assert.ok(catalog.checks.every((check) => check.title && check.module && check.look && check.fail));
   for (const profile of Object.values(catalog.profiles)) {
     assert.equal(Object.values(profile.weights).reduce((sum, weight) => sum + weight, 0), 100);

@@ -3,6 +3,27 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.5.0] - 2026-07-16
+
+### Changed
+
+- Derive-not-duplicate refactor to remove the brittleness of hand-maintained
+  counts. Tests now assert invariants, not magic numbers: `check_count` equals
+  the actual check list length, ids are unique, and every domain's check ids are
+  contiguous 1..N, so growing a domain never edits a test. The `doctor`
+  standards-categories health check is a floor (OWASP baseline), not an exact
+  count.
+
+### Added
+
+- `npm run version:sync` writes the single source of version truth (package.json)
+  into every version surface and regenerates the catalog and prompts; `version:check`
+  verifies without writing and prints the fix command. `version:check` is gated in
+  `npm run check`.
+- `npm run release:prepare -- <patch|minor|major|X.Y.Z>` bumps the version, syncs
+  all surfaces, and stubs a CHANGELOG entry, one command instead of editing files
+  in lockstep.
+
 ## [2.4.0] - 2026-07-16
 
 ### Added
