@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 424-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.5 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.6 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -45,6 +45,10 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 ## Dynamic verification (opt-in)
 
 Static is the default and never runs the product. When the user explicitly authorizes a disposable runtime environment (ground rule 2), godaudits may add a dynamic verification pass that CONFIRMS or REFUTES its behavioral findings against the running app rather than trusting static inference alone. Behavioral findings are the class static reading can suspect but not prove: race conditions and TOCTOU, dead controls that are stored but never read, lifecycle transitions that free a resource early, authorization gaps on a non-primary caller path, and accessibility or consent behavior that only appears at runtime. Each such finding carries a runtime-verification handoff (a route or request sequence with the expected-versus-actual outcome) that an authorized harness runs: the Godpowers `god-browser-tester` (headless browser against a runtime URL) or a project Playwright suite. Runtime confirmation upgrades a Tentative finding to Firm or Certain; refutation drops it. Dynamic verification never runs automatically, never touches production, and its results are recorded as runtime evidence with provenance.
+
+The runtime supports this handoff directly: `godaudits verify-runtime plan AUDIT.json` emits a probe manifest for the behavioral findings, the authorized harness executes the probes and produces a results file, and `godaudits verify-runtime apply AUDIT.json RESULTS.json` folds confirmed and refuted dispositions into a verification report that a re-audit applies. Because AUDIT.json scores are compiled, dispositions are applied on re-audit, never hand-edited.
+
+Second opinion: the check catalog has a structural ceiling, it verifies control presence. To find what it would miss, an authorized run may add an unconstrained pass that reads the code fresh, without the catalog's framing, hunting behavioral defects (races, dead controls, early transitions, authorization gaps on non-primary paths) and feeding novel findings back as candidates. Verify each with the same evidence and refutation discipline before recording it.
 
 ## Runtime commands
 
@@ -193,7 +197,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.5.0
+## Skill version: 2.6.0
 
 
 ---

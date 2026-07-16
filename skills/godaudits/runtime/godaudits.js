@@ -15,6 +15,7 @@ const { auditToSarif } = require('./lib/sarif');
 const { importSarif } = require('./lib/sarif-import');
 const { analyzePillars } = require('./lib/pillars');
 const { validateProjectContextCatalog } = require('./lib/project-context');
+const { planProbes, applyResults } = require('./lib/verify-runtime');
 
 const skillRoot = path.resolve(__dirname, '..');
 const packageRoot = path.resolve(skillRoot, '..', '..');
@@ -30,6 +31,8 @@ godaudits sarif <AUDIT.json> [--output AUDIT.sarif]
 godaudits import-sarif <tool.sarif> [--start 1] [--output TOOL-EVIDENCE.json]
 godaudits diff <previous.json> <current.json>
 godaudits evaluate <AUDIT.json> <expected.json>
+godaudits verify-runtime plan <AUDIT.json> [--output PROBES.json]
+godaudits verify-runtime apply <AUDIT.json> <RESULTS.json> [--output VERIFICATION.json]
 godaudits benchmark [directory]
 godaudits doctor`;
 }
@@ -207,6 +210,22 @@ function main() {
     const metrics = evaluateAudit(result.audit, readJson(args[1]));
     process.stdout.write(`${JSON.stringify(metrics, null, 2)}\n`);
     return metrics.passed ? 0 : 1;
+  }
+  if (command === 'verify-runtime') {
+    const mode = args[0];
+    if (mode === 'plan') {
+      if (!args[1]) throw new Error('verify-runtime plan requires AUDIT.json');
+      const probes = planProbes(readJson(args[1]));
+      writeOrPrint(`${JSON.stringify(probes, null, 2)}\n`, option(args, '--output', path.join(path.dirname(args[1]), 'runtime', 'PROBES.json')));
+      return probes.probes.length ? 0 : 0;
+    }
+    if (mode === 'apply') {
+      if (!args[1] || !args[2]) throw new Error('verify-runtime apply requires AUDIT.json and RESULTS.json');
+      const report = applyResults(readJson(args[1]), readJson(args[2]));
+      writeOrPrint(`${JSON.stringify(report, null, 2)}\n`, option(args, '--output', path.join(path.dirname(args[1]), 'runtime', 'VERIFICATION.json')));
+      return 0;
+    }
+    throw new Error('verify-runtime requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESULTS.json>');
   }
   if (command === 'benchmark') return benchmark(args[0]);
   if (command === 'doctor') {

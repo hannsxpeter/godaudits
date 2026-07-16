@@ -64,6 +64,7 @@ if (check) {
     return;
   }
   execFileSync('node', ['scripts/build-catalog.js'], { cwd: root, stdio: 'inherit' });
+  execFileSync('node', ['scripts/build-check-map.js'], { cwd: root, stdio: 'inherit' });
   execFileSync('bash', ['scripts/build-prompt.sh'], { cwd: root, stdio: 'inherit' });
-  process.stdout.write(`Version surfaces synced to ${version}; catalog and prompts regenerated.\n`);
+  process.stdout.write(`Version surfaces synced to ${version}; catalog, check map, and prompts regenerated.\n`);
 }

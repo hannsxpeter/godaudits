@@ -3,6 +3,25 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.6.0] - 2026-07-16
+
+### Added
+
+- Dynamic verification runtime that begins to close the static ceiling.
+  `godaudits verify-runtime plan AUDIT.json` emits a runtime-probe handoff for the
+  behavioral findings (races, dead controls, early transitions, authorization gaps
+  on non-primary paths); an authorized harness (Godpowers god-browser-tester or a
+  project Playwright suite) executes them; `godaudits verify-runtime apply
+  AUDIT.json RESULTS.json` folds confirmed and refuted dispositions into a
+  verification report (confirmed raises confidence, refuted marks for removal on
+  re-audit). Static stays the default; nothing runs the app or the network.
+- `docs/CHECK-MAP.md`, a generated, browsable map of all 429 checks by domain,
+  scoring role, dimension, and standards, so the surface is legible without
+  reading 18 modules. Regenerated on release; `npm run check-map:check` gates it.
+- SKILL documents the verify-runtime commands and a second-opinion pass (an
+  unconstrained read that hunts what the control-presence catalog structurally
+  misses, then verifies each candidate with the normal discipline).
+
 ## [2.5.0] - 2026-07-16
 
 ### Changed
