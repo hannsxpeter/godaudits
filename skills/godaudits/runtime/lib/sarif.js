@@ -1,5 +1,7 @@
 'use strict';
 
+const { GRADE_METHOD, GRADE_SCOPE } = require('./audit');
+
 const LEVEL = { Critical: 'error', High: 'error', Medium: 'warning', Low: 'note' };
 
 function auditToSarif(audit) {
@@ -64,6 +66,11 @@ function auditToSarif(audit) {
         }
       },
       automationDetails: { id: `${audit.audit.name}/${audit.audit.commit}` },
+      properties: {
+        grade_method: GRADE_METHOD,
+        grade_scope: GRADE_SCOPE,
+        confidence_basis: 'Result confidence is the auditor\'s own label from a source read, not a measured detection rate.'
+      },
       results
     }]
   };

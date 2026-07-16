@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "scope": "Seeded-defect corpus for the internal detector-regression gate. Each case pairs a recorded AUDIT.json with the defects deliberately seeded in the audited source, mapped to the A-check that owns each one. The gate asks one question: after a catalog change, do the seeded defects still get detected? These cases are not a sample of real-world repositories, so nothing here estimates reliability on unseen code and no number derived from them feeds a per-repo score.",
+  "cases": [
+    {
+      "name": "tenant-predicate-omitted",
+      "audit": "detectors/tenant-predicate.audit.json",
+      "seeded": "A board lookup queries by id with no tenant predicate, so an authenticated user can read another tenant's board.",
+      "expected": {
+        "required_findings": [
+          { "check": "A-SEC-3", "severity": "Critical", "path": "src/boards.js" }
+        ],
+        "clean_checks": ["A-SEC-4"]
+      }
+    }
+  ]
+}

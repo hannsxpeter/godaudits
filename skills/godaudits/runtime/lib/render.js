@@ -82,7 +82,10 @@ function renderAudit(audit) {
   lines.push(`engine_version: ${yamlString(metadata.engine_version)}`);
   lines.push(`pack_version: ${yamlString(metadata.pack_version)}`);
   lines.push(`overall: ${computed.overall.score}`);
+  lines.push(`grade_method: ${yamlString(computed.overall.grade_method)}`);
+  lines.push(`grade_scope: ${yamlString(computed.overall.grade_scope)}`);
   lines.push(`verdict: ${yamlString(computed.overall.verdict)}`);
+  lines.push(`evidence_basis: ${yamlString(computed.overall.evidence_basis)}`);
   lines.push(`coverage: ${computed.coverage.percent}`);
   lines.push(`findings_total: ${computed.counts.findings_total}`);
   lines.push(`tasks_total: ${computed.counts.tasks_total}`);
@@ -90,7 +93,7 @@ function renderAudit(audit) {
   lines.push(`# ${mdxText(metadata.name)} audit`, '');
   const biggest = [...audit.findings].filter((finding) => ['open', 'accepted-risk'].includes(finding.status)).sort(compareFinding)[0];
   const strength = audit.strengths[0];
-  lines.push(`Score ${computed.overall.score}/100 (${computed.overall.verdict}). ${biggest ? `Biggest risk: ${mdxText(biggest.title)}.` : 'No open findings.'} ${strength ? `Biggest strength: ${mdxText(strength.title)}.` : ''}`.trim(), '');
+  lines.push(`Static-read grade ${computed.overall.score}/100 (${computed.overall.verdict}): ${computed.overall.grade_scope}. Evidence basis: ${computed.overall.evidence_basis}. ${biggest ? `Biggest risk: ${mdxText(biggest.title)}.` : 'No open findings.'} ${strength ? `Biggest strength: ${mdxText(strength.title)}.` : ''}`.trim(), '');
   lines.push('## Scope and method', '');
   lines.push(`Commit ${mdxText(metadata.commit)}; ${metadata.mode} audit; ${mdxText(metadata.project_form || metadata.archetype)} form at ${metadata.scale} scale; ${metadata.risk_profile} risk profile. Capabilities: ${metadata.capabilities.map(mdxText).join(', ')}.`);
   if (metadata.secondary_forms && metadata.secondary_forms.length) lines.push(`Secondary forms: ${metadata.secondary_forms.map(mdxText).join(', ')}.`);
@@ -99,21 +102,23 @@ function renderAudit(audit) {
   lines.push('The audit made no source edits, ran no application code, connected to no live systems, and called no models unless an explicitly listed capability states otherwise.', '');
   lines.push(`Coverage: ${computed.coverage.evaluated} of ${computed.coverage.applicable} applicable checks evaluated (${computed.coverage.percent}%). Unknown checks never earn points and cap the verdict.`, '');
   lines.push('## Compliance gate', '');
-  lines.push(`Result: ${audit.compliance.result}. Screened ${audit.compliance.screened} with ${mdxText(audit.compliance.policy_pack)}.`, '');
+  lines.push(`Result: ${audit.compliance.result}. Screened ${audit.compliance.screened} with ${mdxText(audit.compliance.policy_pack)}. This is a policy-allowability screen, not a legal-compliance determination.`, '');
   lines.push('## Applicability matrix', '');
   lines.push('| Domain | Status | Reason |', '|---|---|---|');
   for (const domain of audit.domains) lines.push(`| ${domain.id} | ${domain.status} | ${tableText(domain.reason || 'Checks evaluated below')} |`);
   lines.push('', '## Scorecard', '');
-  lines.push('| Domain | Score | Cap | Evaluated |', '|---|---:|---|---:|');
+  lines.push('| Domain | Score | Cap | Evaluated | Evidence basis |', '|---|---:|---|---:|---|');
   for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {
     const score = computed.domains[domain.id];
     const evaluated = domain.checks.filter((check) => ['pass', 'fail'].includes(check.outcome)).length;
-    lines.push(`| ${domain.id} | ${score.score} | ${score.cap || 'none'} | ${evaluated}/${domain.checks.filter((check) => check.outcome !== 'not-applicable').length} |`);
+    lines.push(`| ${domain.id} | ${score.score} | ${score.cap || 'none'} | ${evaluated}/${domain.checks.filter((check) => check.outcome !== 'not-applicable').length} | ${score.evidence_basis} |`);
   }
-  lines.push(`| Overall | ${computed.overall.score} | coverage ${computed.overall.coverage_cap}; critical ${computed.overall.critical_cap}; weak-domain ${computed.overall.weak_domain_cap} | ${computed.coverage.evaluated}/${computed.coverage.applicable} |`, '');
+  lines.push(`| Overall | ${computed.overall.score} | coverage ${computed.overall.coverage_cap}; critical ${computed.overall.critical_cap}; weak-domain ${computed.overall.weak_domain_cap} | ${computed.coverage.evaluated}/${computed.coverage.applicable} | ${computed.overall.evidence_basis} |`, '');
+  lines.push(`Every score above is ${computed.overall.grade_scope}. Confidence is the auditor's own, so the evidence basis states what the grade rests on, not how often such a grade proves right.`, '');
   if (audit.standards) {
     lines.push('## Standards coverage', '');
-    lines.push('| Framework | Category | Disposition | Checks | Evidence | Findings |', '|---|---|---|---|---|---|');
+    lines.push('Control-evidence readiness, not certification. These frameworks evidence the technical controls a code audit can see (encryption, access control, consent code, DSAR paths, audit logging, accessible markup). They do not evidence the organizational and process controls (policies, training, vendor management, incident response, physical security) that SOC 2, ISO/IEC 27001, or PCI certification require. A category below reports control-evidence readiness and never claims certification.', '');
+    lines.push('| Framework | Category | Control-evidence readiness | Checks | Evidence | Findings |', '|---|---|---|---|---|---|');
     for (const result of audit.standards) {
       lines.push(`| ${tableText(result.framework)} | ${tableText(`${result.category} ${result.title}`)} | ${result.status} | ${result.checks.join(', ')} | ${result.evidence.join(', ') || 'none'} | ${result.finding_ids.join(', ') || 'none'} |`);
     }

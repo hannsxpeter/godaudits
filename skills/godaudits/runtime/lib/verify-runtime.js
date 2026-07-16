@@ -9,9 +9,9 @@
 // suite); this stays static and never runs the app or the network.
 
 // Behavioral check ids: findings citing these are candidates for runtime proof.
-const BEHAVIORAL_CHECKS = new Set([
-  'A-SEC-29', 'A-SEC-30', 'A-SEC-31', 'A-DB-24', 'A-CODE-25', 'A-CODE-26'
-]);
+// The catalog owns the verifiability axis; importing it keeps one source of
+// truth and fails the catalog build if an id here stops existing.
+const { BEHAVIORAL_CHECKS } = require('./catalog');
 
 const CONFIDENCE_UP = { Tentative: 'Firm', Firm: 'Certain', Certain: 'Certain' };
 

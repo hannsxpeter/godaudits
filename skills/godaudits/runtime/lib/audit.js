@@ -23,6 +23,12 @@ const DOMAIN_WEIGHTS = {
   'agent-memory': 2
 };
 
+// The grade names its own method wherever it is displayed. One source, so the
+// prose report, the YAML frontmatter, and the SARIF run cannot drift into
+// presenting the number with different (or no) scope.
+const GRADE_METHOD = 'static-read';
+const GRADE_SCOPE = 'an arithmetic roll-up of model-assigned pass/fail from a source read, not a test result, scan, or certification';
+
 const ALLOWED = {
   status: new Set(['reported', 'remediating', 'resolved']),
   mode: new Set(['fresh', 're-audit']),
@@ -56,6 +62,25 @@ function waveValue(wave) {
 
 function isActiveRisk(finding) {
   return ['open', 'accepted-risk'].includes(finding.status);
+}
+
+// Two evidence records are independent when they come from different methods:
+// different source files, different tools, different recorders. Two quotes from
+// the same file are one method, not two.
+function evidenceMethods(ids, evidenceById) {
+  return new Set((ids || []).map((id) => {
+    const evidence = evidenceById.get(id) || {};
+    if (evidence.type === 'source') return `source:${evidence.path || ''}`;
+    if (evidence.type === 'human') return `human:${evidence.recorded_by || ''}`;
+    return `${evidence.type || 'missing'}:${evidence.tool || ''}:${evidence.scope || ''}:${evidence.command || ''}`;
+  }));
+}
+
+// Certainty costs corroboration. A Certain claim, whether it raises an alarm or
+// clears a check, carries two independent evidence paths; a clean bill of health
+// is not cheaper to assert than a high-severity finding.
+function corroborated(ids, evidenceById) {
+  return (ids || []).length >= 2 && evidenceMethods(ids, evidenceById).size >= 2;
 }
 
 function validateAudit(audit, options = {}) {
@@ -211,6 +236,9 @@ function validateAudit(audit, options = {}) {
       if (duplicates(check.finding_ids).length) errors.push(`${check.id}.finding_ids must be unique`);
       if (check.outcome === 'fail' && (!check.finding_ids || check.finding_ids.length === 0)) errors.push(`${check.id} fails without a finding`);
       if (check.outcome === 'pass' && check.finding_ids && check.finding_ids.length) errors.push(`${check.id} passes but references findings`);
+      if (check.outcome === 'pass' && check.confidence === 'Certain' && check.weight > 0 && !corroborated(check.evidence, evidenceById)) {
+        errors.push(`${check.id} is a Certain weighted pass and requires two independent evidence paths`);
+      }
     }
     if (!options.catalog && domain.status === 'applicable' && domain.checks.length && Math.abs(weight - 100) > 0.01) {
       errors.push(`${domain.id} check weights must sum to 100, got ${weight}`);
@@ -252,13 +280,7 @@ function validateAudit(audit, options = {}) {
       if (!evidenceIds.has(id)) errors.push(`${finding.id} references missing evidence ${id}`);
     }
     if (['open', 'accepted-risk'].includes(finding.status) && ['Critical', 'High'].includes(finding.severity) && finding.confidence === 'Certain') {
-      const methods = new Set((finding.evidence || []).map((id) => {
-        const evidence = evidenceById.get(id) || {};
-        if (evidence.type === 'source') return `source:${evidence.path || ''}`;
-        if (evidence.type === 'human') return `human:${evidence.recorded_by || ''}`;
-        return `${evidence.type || 'missing'}:${evidence.tool || ''}:${evidence.scope || ''}:${evidence.command || ''}`;
-      }));
-      if ((finding.evidence || []).length < 2 || methods.size < 2) {
+      if (!corroborated(finding.evidence, evidenceById)) {
         errors.push(`${finding.id} is Certain ${finding.severity} and requires two independent evidence paths`);
       }
     }
@@ -510,6 +532,19 @@ function severityFactor(severity) {
   return { Critical: 0, High: 0.25, Medium: 0.5, Low: 0.75 }[severity] ?? 0;
 }
 
+// A coarse, ordinal summary of what the score rests on. Deliberately a word and
+// not a count: a tally like "47 of 52 Certain" would launder self-assigned
+// labels into a hard-looking statistic and open the very gap this closes. The
+// only boundary is a plain majority by weight, so there is no tuned
+// coefficient deciding how a grade reads.
+function evidenceBasis(weightByConfidence) {
+  const levels = ['Certain', 'Firm', 'Tentative'];
+  const total = levels.reduce((sum, level) => sum + (weightByConfidence[level] || 0), 0);
+  if (!total) return 'none';
+  const dominant = levels.find((level) => (weightByConfidence[level] || 0) / total > 0.5);
+  return dominant ? `mostly ${dominant}` : 'mixed';
+}
+
 function verdict(score) {
   if (score >= 90) return 'audit-proof';
   if (score >= 80) return 'solid';
@@ -533,10 +568,12 @@ function compileAudit(input, options = {}) {
   let unknown = 0;
   let notApplicable = 0;
 
+  const overallConfidence = {};
   for (const domain of audit.domains) {
     if (domain.status === 'excluded') continue;
     let numerator = 0;
     let denominator = 0;
+    const domainConfidence = {};
     for (const check of domain.checks) {
       if (check.outcome === 'not-applicable') {
         notApplicable += 1;
@@ -549,6 +586,7 @@ function compileAudit(input, options = {}) {
       }
       evaluated += 1;
       denominator += check.weight;
+      domainConfidence[check.confidence] = (domainConfidence[check.confidence] || 0) + check.weight;
       if (check.outcome === 'pass') {
         passed += 1;
         numerator += check.weight;
@@ -568,8 +606,23 @@ function compileAudit(input, options = {}) {
     domainScores[domain.id] = {
       raw_score: raw,
       score,
-      cap: activeCritical ? 'active Critical caps domain at 69' : null
+      cap: activeCritical ? 'active Critical caps domain at 69' : null,
+      evidence_basis: evidenceBasis(domainConfidence)
     };
+
+    // The overall basis has to be pooled on the same weighting as the overall
+    // score, or the two contradict each other on the same line. The score gives
+    // each domain its domain.weight no matter how many of its checks were
+    // evaluated, so normalise this domain's confidence pool to shares and scale
+    // it by that same weight. Pooling raw check weights instead lets a
+    // 2-point domain outvote security and print "mostly Certain" over a grade
+    // resting on Tentative reads.
+    const domainTotal = Object.values(domainConfidence).reduce((sum, value) => sum + value, 0);
+    if (domainTotal) {
+      for (const [level, value] of Object.entries(domainConfidence)) {
+        overallConfidence[level] = (overallConfidence[level] || 0) + (value / domainTotal) * domain.weight;
+      }
+    }
   }
 
   const activeDomains = audit.domains.filter((domain) => domain.status === 'applicable');
@@ -600,6 +653,9 @@ function compileAudit(input, options = {}) {
       raw_score: rawOverall,
       score,
       verdict: verdict(score),
+      grade_method: GRADE_METHOD,
+      grade_scope: GRADE_SCOPE,
+      evidence_basis: evidenceBasis(overallConfidence),
       coverage_cap: coverageCap,
       critical_cap: criticalCap,
       weak_domain_cap: weakDomainCap
@@ -621,4 +677,4 @@ function compileAudit(input, options = {}) {
   return { audit, errors: [] };
 }
 
-module.exports = { ALLOWED, DOMAIN_WEIGHTS, compileAudit, isActiveRisk, validateAudit, verdict };
+module.exports = { ALLOWED, DOMAIN_WEIGHTS, GRADE_METHOD, GRADE_SCOPE, compileAudit, evidenceBasis, isActiveRisk, validateAudit, verdict };

@@ -42,7 +42,7 @@ function validAudit() {
           {
             id: 'A-SEC-4',
             outcome: 'pass',
-            confidence: 'Certain',
+            confidence: 'Firm',
             weight: 40,
             evidence: ['E-2'],
             finding_ids: []
