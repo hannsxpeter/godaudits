@@ -63,3 +63,42 @@ test('clean-control rate counts unique violated checks and stays bounded', () =>
   const metrics = evaluateAudit(audit, { required_findings: [], clean_checks: ['A-SEC-3'] });
   assert.equal(metrics.clean_control_rate, 0);
 });
+
+test('recall stratifies by severity and always reports Critical and High', () => {
+  const audit = compileAudit(validAudit()).audit;
+  const metrics = evaluateAudit(audit, {
+    required_findings: [{ check: 'A-SEC-3', severity: 'Critical', path: 'src/boards.js' }],
+    clean_checks: []
+  });
+  assert.equal(metrics.recall_by_severity.Critical, 1);
+  // No High seed, yet High stays a key reported as null (absent), never 1 (perfect),
+  // so a benchmark with no High seed cannot masquerade as full High recall.
+  assert.ok('High' in metrics.recall_by_severity);
+  assert.equal(metrics.recall_by_severity.High, null);
+  // Unseeded lower strata are omitted rather than reported perfect.
+  assert.ok(!('Medium' in metrics.recall_by_severity));
+  assert.ok(!('Low' in metrics.recall_by_severity));
+});
+
+test('a missed Critical is visible in recall_by_severity', () => {
+  const audit = compileAudit(validAudit()).audit;
+  const metrics = evaluateAudit(audit, {
+    required_findings: [{ check: 'A-SEC-3', severity: 'Critical', path: 'src/absent.js' }],
+    clean_checks: []
+  });
+  assert.equal(metrics.recall_by_severity.Critical, 0);
+  assert.equal(metrics.missed_by_severity.Critical.length, 1);
+});
+
+test('recall_by_severity groups by expected severity, not the finding severity', () => {
+  const audit = compileAudit(validAudit()).audit;
+  // The active finding is Critical; expecting it as High still counts as detected
+  // for the High stratum. severity_accuracy, not recall, records the mismatch.
+  const metrics = evaluateAudit(audit, {
+    required_findings: [{ check: 'A-SEC-3', severity: 'High', path: 'src/boards.js' }],
+    clean_checks: []
+  });
+  assert.equal(metrics.recall_by_severity.High, 1);
+  assert.equal(metrics.recall_by_severity.Critical, null);
+  assert.equal(metrics.severity_accuracy, 0);
+});

@@ -13,6 +13,9 @@ against known defects and known clean controls.
 - Citation validity: findings whose evidence type has the required provenance.
 - Remediation closure: findings with required reciprocal tasks.
 - Clean-control rate: clean checks that remain finding-free.
+- Recall by severity: recall within each expected severity, so a dangerous miss
+  cannot hide behind many Low findings. Critical and High are always reported,
+  as null when the benchmark seeds none, never as a perfect ratio.
 - Misses and false positives.
 
 A required finding matches only when both its check id and expected source path
