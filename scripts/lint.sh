@@ -20,6 +20,9 @@
 #   catalog-fresh        the generated machine catalog is current.
 #   catalog-claims       every prose claim of "N checks" or "N domains" agrees
 #                        with the generated catalog.
+#   zero-dependency      no runtime/optional/peer deps, no model-client
+#                        devDependency, and no third-party require in the
+#                        shipped runtime.
 #   schemas-valid        every committed JSON and schema document parses.
 #   runtime-tests        compiler, renderer, evidence, eval, and interop tests pass.
 #   benchmark            the deterministic multi-language corpus passes.
@@ -217,6 +220,55 @@ if (bad.length) console.log(bad.join("\n"));
   fi
 }
 
+check_zero_dependency() {
+  CHECK=zero-dependency
+  # The runtime is copyable and model-free by contract (docs/ENGINE.md, and
+  # ground rule 1: static mode makes no model calls). The doctor smoke test
+  # loads 12 of 13 runtime/lib files from a dependency-free tree, so an added
+  # third-party require there fails at execution, but calibrate.js is outside
+  # that graph. Gate the contract directly instead of relying on that gap:
+  # reject any runtime/optional/peer dependency and any model-client
+  # devDependency, then scan every shipped runtime/lib file for a require of a
+  # non-relative, non-node builtin module. Scoped to runtime/lib so it never
+  # false-positives on this script's own use of the word require.
+  out=$(node -e '
+const fs = require("fs");
+const repo = process.argv[1];
+const pkg = JSON.parse(fs.readFileSync(repo + "/package.json", "utf8"));
+const bad = [];
+for (const field of ["dependencies", "optionalDependencies", "peerDependencies"]) {
+  const names = Object.keys(pkg[field] || {});
+  if (names.length) bad.push(field + " must be empty: " + names.join(", "));
+}
+for (const name of Object.keys(pkg.devDependencies || {})) {
+  if (/^@anthropic-ai\//.test(name) || /(^|[\/-])(openai|codex)([\/-]|$)/.test(name)) {
+    bad.push("model-client devDependency is banned: " + name);
+  }
+}
+const libDir = repo + "/skills/godaudits/runtime/lib";
+const files = fs.existsSync(libDir) ? fs.readdirSync(libDir).filter((f) => f.endsWith(".js")) : [];
+const RE = /\brequire\(\s*["\x27]([^"\x27]+)["\x27]\s*\)/g;
+for (const file of files) {
+  const text = fs.readFileSync(libDir + "/" + file, "utf8");
+  let m;
+  while ((m = RE.exec(text))) {
+    const spec = m[1];
+    if (!spec.startsWith(".") && !spec.startsWith("node:")) {
+      bad.push("runtime/lib/" + file + " requires third-party module: " + spec);
+    }
+  }
+}
+if (bad.length) console.log(bad.join("\n"));
+' "$REPO_DIR") || { fail "dependency scan did not run"; return; }
+  if [ -n "$out" ]; then
+    fail "zero-dependency contract violated:"
+    printf '%s\n' "$out" >&2
+  else
+    note "no third-party runtime dependency or model client"
+    pass
+  fi
+}
+
 check_schemas_valid() {
   CHECK=schemas-valid
   if node -e 'const fs=require("fs"),path=require("path"); const roots=process.argv.slice(1); for(const root of roots){for(const file of fs.readdirSync(root)){if(file.endsWith(".json")) JSON.parse(fs.readFileSync(path.join(root,file),"utf8"));}}' "$SKILL_DIR/schemas" "$SKILL_DIR/catalog"; then pass; else fail "schema or catalog JSON did not parse"; fi
@@ -299,6 +351,7 @@ case "$TARGET" in
     check_symlinks_valid
     check_catalog_fresh
     check_catalog_claims
+    check_zero_dependency
     check_schemas_valid
     check_runtime_tests
     check_benchmark
@@ -318,6 +371,7 @@ case "$TARGET" in
   symlinks-valid) check_symlinks_valid ;;
   catalog-fresh) check_catalog_fresh ;;
   catalog-claims) check_catalog_claims ;;
+  zero-dependency) check_zero_dependency ;;
   schemas-valid) check_schemas_valid ;;
   runtime-tests) check_runtime_tests ;;
   benchmark) check_benchmark ;;

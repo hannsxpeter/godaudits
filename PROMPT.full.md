@@ -929,6 +929,8 @@ A strength is a finding with the sign flipped: same evidence standard, same file
 3. Make failure detectable: every claim carries the check, command, or cap rule that would catch its violation.
 4. End in a checkbox: every Critical and High finding traces to a GA task an agent can execute, verify, and flip.
 
+Severity follows blast radius, not visibility. A defect trivial to spot but that no check covered is not a smaller finding for being obvious; it carries the severity its reach earns.
+
 Score any audit fragment against these four. A fragment that names nothing, quotes nothing, and checks nothing scores zero, no matter how alarming its warnings or how reassuring its praise.
 
 

@@ -37,6 +37,9 @@
     "PROMPT.md",
     "PROMPT.full.md",
     "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
     "LICENSE",
     "CHANGELOG.md"
   ],
@@ -49,7 +52,7 @@
   "scripts": {
     "test": "node --test test/*.test.js",
     "benchmark": "node bin/godaudits.js benchmark",
-    "eval": "node scripts/eval.js",
+    "eval:suites": "node scripts/eval.js",
     "catalog": "node scripts/build-catalog.js",
     "catalog:check": "node scripts/build-catalog.js --check",
     "check-map": "node scripts/build-check-map.js",
@@ -60,7 +63,7 @@
     "version:check": "node scripts/version-sync.js --check",
     "release:prepare": "node scripts/release-prepare.js",
     "lint": "bash scripts/lint.sh --all --verbose",
-    "check": "npm run version:check && npm run check-map:check && npm run corpus:check && npm run test && npm run benchmark && npm run test:detectors && npm run eval && npm run lint",
+    "check": "npm run version:check && npm run check-map:check && npm run corpus:check && npm run test && npm run benchmark && npm run test:detectors && npm run eval:suites && npm run lint",
     "release:check": "bash scripts/release-check.sh",
     "install:skill": "sh install.sh",
     "prepack": "npm run check",

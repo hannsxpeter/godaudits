@@ -80,7 +80,7 @@ Then invoke it inside an existing project:
 
 The runtime is bundled inside the skill. Agents use the installed `godaudits`
 command when available, or run `runtime/godaudits.js` beside SKILL.md with Node
-18 or newer.
+22 or newer.
 
 ## Outputs
 
@@ -209,7 +209,7 @@ secret redaction:
 
 ```bash
 npm run benchmark
-npm run eval
+npm run eval:suites
 ```
 
 When an expected-finding manifest exists, evaluate an actual audit:
@@ -302,7 +302,7 @@ verify into one id system.
 ```bash
 npm test
 npm run benchmark
-npm run eval
+npm run eval:suites
 npm run catalog
 npm run build:prompt
 npm run check
