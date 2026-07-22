@@ -6,7 +6,7 @@
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Audit everything after anything. godaudits is an evidence-first codebase audit
-system that combines a 424-check Agent Skill with a zero-dependency runtime. It
+system that combines a 431-check Agent Skill with a zero-dependency runtime. It
 produces validated machine state, computed scores and coverage, a standalone
 remediation report, and optional SARIF annotations.
 
@@ -22,7 +22,7 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 
 ## What makes it different
 
-- 18 domains and 424 versioned checks, each with inspection and failure
+- 18 domains and 431 versioned checks, each with inspection and failure
   guidance.
 - Six project forms, secondary-form composition, all 37 arc-ready profiles, and
   conservative product, industry, and regulatory candidates.
@@ -103,7 +103,7 @@ All audit writes stay under `.godaudits/`:
 flowchart TD
   A[Repository] --> B[Static evidence fingerprint]
   B --> C[Applicability and risk profile]
-  C --> D[Complete 424-check ledger]
+  C --> D[Complete 431-check ledger]
   D --> E[18 domain evaluators]
   E --> F[Independent refutation and clustering]
   F --> G[Validated audit JSON]

@@ -205,7 +205,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
 | `references/<domain>.md` | 18 domain modules |
-| `catalog/checks.json` | Generated 424-check machine catalog with scoring and standards metadata |
+| `catalog/checks.json` | Generated 431-check machine catalog with scoring and standards metadata |
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
 | `schemas/*.json` | Audit, evidence, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |

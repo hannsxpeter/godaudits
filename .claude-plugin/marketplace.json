@@ -5,7 +5,7 @@
     "url": "https://github.com/hannsxpeter"
   },
   "metadata": {
-    "description": "godaudits: an evidence-first audit system with 419 checks, form-aware context, Pillars and arc-ready validation, OWASP 2025 coverage, deterministic scoring, SARIF, and executable remediation plans.",
+    "description": "godaudits: an evidence-first audit system with 431 checks, form-aware context, Pillars and arc-ready validation, OWASP 2025 coverage, deterministic scoring, SARIF, and executable remediation plans.",
     "version": "2.10.0"
   },
   "plugins": [

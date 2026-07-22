@@ -18,6 +18,8 @@
 #   modules-complete     every reference module has the six contract sections.
 #   symlinks-valid       .agents/skills and .claude/skills projections resolve.
 #   catalog-fresh        the generated machine catalog is current.
+#   catalog-claims       every prose claim of "N checks" or "N domains" agrees
+#                        with the generated catalog.
 #   schemas-valid        every committed JSON and schema document parses.
 #   runtime-tests        compiler, renderer, evidence, eval, and interop tests pass.
 #   benchmark            the deterministic multi-language corpus passes.
@@ -165,6 +167,56 @@ check_catalog_fresh() {
   if node "$SCRIPT_DIR/build-catalog.js" --check >/dev/null; then pass; else fail "check catalog is stale; run npm run catalog"; fi
 }
 
+check_catalog_claims() {
+  CHECK=catalog-claims
+  # Counts stated in prose drift silently. The freshness gates cannot catch it:
+  # prompt-fresh compares the generated prompts against their generator, so a
+  # literal typed into the generator stays self-consistent while contradicting
+  # the catalog. This scans the claim itself against catalog/checks.json.
+  #
+  # Scope is every tracked authored file except CHANGELOG.md (a released entry
+  # records the count that was true then), codeaudit.md (dated audit output),
+  # and benchmarks/fixtures (seeded repositories standing in for other
+  # projects, whose prose is not a godaudits claim).
+  #
+  # Check claims require three or more digits so the per-domain counts in
+  # docs/CHECK-MAP.md are not swept in. Domain claims exclude "domain score",
+  # which is a 0-100 scale rather than a count.
+  out=$(node -e '
+const fs = require("fs");
+const cp = require("child_process");
+const repo = process.argv[1];
+const cat = JSON.parse(fs.readFileSync(repo + "/skills/godaudits/catalog/checks.json", "utf8"));
+const skip = /^(CHANGELOG\.md|codeaudit\.md)$|^benchmarks\/fixtures\//;
+const files = cp.execSync("git ls-files", { cwd: repo }).toString().split("\n")
+  .filter((f) => /\.(md|mdx|json|js|sh|yml|yaml)$/.test(f))
+  .filter((f) => !skip.test(f));
+const CHECKS = /(\d{3,})[- ]+(?:versioned |unique )?checks?\b/g;
+const DOMAINS = /(\d+)[- ]+domains?\b(?! score)/g;
+const bad = [];
+for (const f of files) {
+  let text;
+  try { text = fs.readFileSync(repo + "/" + f, "utf8"); } catch (e) { continue; }
+  text.split("\n").forEach((line, i) => {
+    for (const m of line.matchAll(CHECKS)) {
+      if (Number(m[1]) !== cat.check_count) bad.push(f + ":" + (i + 1) + " claims " + m[1] + " checks; catalog has " + cat.check_count);
+    }
+    for (const m of line.matchAll(DOMAINS)) {
+      if (Number(m[1]) !== cat.domain_count) bad.push(f + ":" + (i + 1) + " claims " + m[1] + " domains; catalog has " + cat.domain_count);
+    }
+  });
+}
+if (bad.length) console.log(bad.join("\n"));
+' "$REPO_DIR") || { fail "claim scan did not run"; return; }
+  if [ -n "$out" ]; then
+    fail "count claims disagree with catalog/checks.json:"
+    printf '%s\n' "$out" >&2
+  else
+    note "claims agree with the catalog"
+    pass
+  fi
+}
+
 check_schemas_valid() {
   CHECK=schemas-valid
   if node -e 'const fs=require("fs"),path=require("path"); const roots=process.argv.slice(1); for(const root of roots){for(const file of fs.readdirSync(root)){if(file.endsWith(".json")) JSON.parse(fs.readFileSync(path.join(root,file),"utf8"));}}' "$SKILL_DIR/schemas" "$SKILL_DIR/catalog"; then pass; else fail "schema or catalog JSON did not parse"; fi
@@ -246,6 +298,7 @@ case "$TARGET" in
     check_modules_complete
     check_symlinks_valid
     check_catalog_fresh
+    check_catalog_claims
     check_schemas_valid
     check_runtime_tests
     check_benchmark
@@ -264,6 +317,7 @@ case "$TARGET" in
   modules-complete) check_modules_complete ;;
   symlinks-valid) check_symlinks_valid ;;
   catalog-fresh) check_catalog_fresh ;;
+  catalog-claims) check_catalog_claims ;;
   schemas-valid) check_schemas_valid ;;
   runtime-tests) check_runtime_tests ;;
   benchmark) check_benchmark ;;
