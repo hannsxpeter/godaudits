@@ -8,7 +8,7 @@ metadata:
   homepage: https://github.com/hannsxpeter/godaudits
 ---
 
-> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 18 or newer.
+> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 22 or newer.
 
 # godaudits
 

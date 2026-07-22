@@ -242,7 +242,7 @@ function main() {
     const test = testsAvailable
       ? spawnSync(process.execPath, ['--test', ...testFiles], { cwd: packageRoot, encoding: 'utf8' })
       : { status: 0, stdout: '', stderr: '' };
-    const nodeSupported = Number(process.versions.node.split('.')[0]) >= 18;
+    const nodeSupported = Number(process.versions.node.split('.')[0]) >= 22;
     const projectContextErrors = validateProjectContextCatalog(readJson(path.join(skillRoot, 'catalog/project-context.json')));
     const standardsCategories = Object.values(catalog.standards.frameworks).reduce((sum, framework) => sum + framework.categories.length, 0);
     const schemasValid = fs.readdirSync(path.join(skillRoot, 'schemas')).filter((name) => name.endsWith('.json')).every((name) => {

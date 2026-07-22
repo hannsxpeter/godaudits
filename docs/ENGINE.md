@@ -1,6 +1,6 @@
 # Runtime engine
 
-The godaudits runtime is zero-dependency CommonJS compatible with Node 18 and
+The godaudits runtime is zero-dependency CommonJS compatible with Node 22 and
 newer. It lives inside `skills/godaudits/runtime/` so Agent Skills installers do
 not lose it when they copy only the canonical skill directory.
 

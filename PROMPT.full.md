@@ -14,7 +14,7 @@ report contract. Evaluate every applicable check. A check not inspected is
 unknown, never pass. Run the deterministic CLI validation before presenting.
 
 
-> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 18 or newer.
+> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 22 or newer.
 
 # godaudits
 
@@ -527,6 +527,14 @@ large live view. Never delete ids from machine history.
 A removed historical finding or task id is a re-audit defect and makes the diff
 command exit nonzero. A moved source location updates through new hashed
 evidence without changing the finding id.
+
+The diff also rolls up `tasks.closures`: one entry per completed task carrying
+its `fixes` list and a `closure` of `all-resolved`, `partly-open`,
+`none-resolved`, or `no-linked-findings`, computed only from open-to-resolved
+finding transitions. This is auditor-asserted closure that ties a score move to
+the remediation that earned it, never an observed runtime outcome, and it is not
+joined to check outcomes because one check can carry findings that a single task
+does not fully resolve. No rate is derived from it.
 
 
 ---
