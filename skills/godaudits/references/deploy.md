@@ -12,7 +12,9 @@ Inventory before any check runs: CI/CD workflows (`.github/workflows/*.yml`, `.g
 
 ## Checks
 
-Mirrors `R-DEPLOY-1` through `R-DEPLOY-18` one to one; `A-DEPLOY-19` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`.
+Severities are funded-product calibration; scale per `intake.md`.
+
+Mirror boundary: A-DEPLOY-1..18 mirror R-DEPLOY-1..18 one to one; A-DEPLOY-19 and up are audit-only. Cross-verified against godplans: R-DEPLOY-1..18 defined.
 
 1. **A-DEPLOY-1 Same-artifact promotion.** One build step produces one content-addressed artifact promoted unchanged; per-region platform rebuilds record a source commit and build config pin as the artifact identity.
    Look: deploy workflows; count `docker build` and bundler build invocations; build steps inside promote jobs; image tags (digest or SHA vs branch names).

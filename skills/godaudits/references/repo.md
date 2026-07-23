@@ -12,7 +12,9 @@ Inventory before any check runs: root docs (`README.md`, `LICENSE`, `CONTRIBUTIN
 
 ## Checks
 
-Mirrors `R-REPO-1` through `R-REPO-20` one to one; `A-REPO-21` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`.
+Severities are funded-product calibration; scale per `intake.md`.
+
+Mirror boundary: A-REPO-1..20 mirror R-REPO-1..20 one to one; A-REPO-21 and up are audit-only. Cross-verified against godplans: R-REPO-1..21 defined.
 
 1. **A-REPO-1 Tier coherence.** Reconstruct the type x stage x audience triple from signals and check the file inventory sits in its band (MVP 5-8 files, Growth 12-18, Enterprise 20-30 plus).
    Look: root inventory count; contributor count, releases, and CI reality from the fingerprint; any pinned tier in docs or the plan.

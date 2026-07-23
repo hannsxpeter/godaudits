@@ -33,6 +33,27 @@ test('catalog extracts every domain and unique check id', () => {
   }
 });
 
+test('catalog derives audit_only from each module cross-verified mirror boundary', () => {
+  const catalog = buildCatalog(root);
+  for (const domain of catalog.domains) {
+    assert.ok(Number.isInteger(domain.mirror_boundary), `${domain.id} declares a mirror boundary`);
+    assert.ok(domain.mirror_boundary >= 1 && domain.mirror_boundary <= domain.check_count, `${domain.id} boundary is in range`);
+    // Cross-verification invariant: the boundary never claims more mirrored
+    // checks than godplans actually defines for the domain.
+    assert.ok(domain.godplans_requirements >= domain.mirror_boundary, `${domain.id} boundary stays within the godplans R-catalog`);
+    const domainChecks = catalog.checks.filter((check) => check.domain === domain.id);
+    for (const check of domainChecks) {
+      const number = Number(check.id.slice(check.id.lastIndexOf('-') + 1));
+      assert.equal(check.audit_only, number > domain.mirror_boundary, `${check.id} audit_only reflects the boundary`);
+    }
+    assert.equal(domainChecks.filter((check) => check.audit_only).length, domain.audit_only_count, `${domain.id} audit_only_count agrees with the checks`);
+  }
+  // A mirrored check substitutes to a real godplans R-id; an inserted audit-only
+  // one (money reconciliation lands at A-DB-24, shifting the boundary to 22) does not.
+  assert.equal(catalog.checks.find((check) => check.id === 'A-DB-22').audit_only, false);
+  assert.equal(catalog.checks.find((check) => check.id === 'A-DB-23').audit_only, true);
+});
+
 test('catalog maps every OWASP Web Top 10:2025 category to known checks', () => {
   const catalog = buildCatalog(root);
   const framework = catalog.standards.frameworks['owasp-web-2025'];

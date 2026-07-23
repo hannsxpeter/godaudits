@@ -21,6 +21,8 @@ Inventory before any check runs; cite the intake fingerprint for stack, manifest
 
 Default severities are funded-product calibration; scale per intake. Where a concern belongs to another domain, file nothing here and cross-reference per the ownership map.
 
+Mirror boundary: A-DNA-1..20 mirror R-DNA-1..20 one to one; A-DNA-21 and up are audit-only. Cross-verified against godplans: R-DNA-1..20 defined.
+
 1. A-DNA-1 Enforced layer real. Formatter and linter configs exist, their exact commands are wired into scripts or CI, and no prose doc restates what they settle.
    Look: the enforced-layer globs above; `package.json` scripts, `Makefile`, `.pre-commit-config.yaml`, `.github/workflows/*` for the commands.
    Fail: no formatter config in a multi-contributor repo: High. Configs present but nothing runs them in scripts or CI: Medium. A style doc restating indentation, quotes, or semicolons a named formatter rewrites: Low.

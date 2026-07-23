@@ -19,7 +19,9 @@ Inventory before any check runs. The intake fingerprint already lists schema fil
 
 ## Checks
 
-`A-DB-n` mirrors `R-DB-n` from the godplans database module one to one; A-DB-23 is audit-only. Default severities are funded-product calibration; intake scale calibration moves severity, never evidence. Anything that depends on row counts or plans static code cannot show is labeled Tentative.
+Default severities are funded-product calibration; intake scale calibration moves severity, never evidence. Anything that depends on row counts or plans static code cannot show is labeled Tentative.
+
+Mirror boundary: A-DB-1..22 mirror R-DB-1..22 one to one; A-DB-23 and up are audit-only. Cross-verified against godplans: R-DB-1..23 defined.
 
 1. A-DB-1 The data-layer profile is reconstructable from the repo: paradigm (OLTP, analytics, document, mixed), engine and version, sensitivity classes, tenancy model, growth expectations; every denormalized or derived column has a maintaining job, trigger, or generated column.
     Look: manifests, `docker-compose.yml`, ORM config, migration headers, `docs/`; derived columns (`*_count`, `*_total`, copied parent fields) diffed against jobs and triggers.

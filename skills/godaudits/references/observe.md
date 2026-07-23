@@ -12,7 +12,9 @@ Inventory before any check runs: SLO artifacts (`.observe-ready/SLOs.md`, `obser
 
 ## Checks
 
-Mirrors `R-OBS-1` through `R-OBS-20` one to one; `A-OBS-21` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`. PII anywhere in telemetry belongs to security (it owns log redaction): cross-reference F-SEC, never bill it here.
+Severities are funded-product calibration; scale per `intake.md`. PII anywhere in telemetry belongs to security (it owns log redaction): cross-reference F-SEC, never bill it here.
+
+Mirror boundary: A-OBS-1..20 mirror R-OBS-1..20 one to one; A-OBS-21 and up are audit-only. Cross-verified against godplans: R-OBS-1..21 defined.
 
 1. **A-OBS-1 Service and journey inventory truth.** A durable inventory names every service with its topology type and every user journey, and it matches the code.
    Look: `.observe-ready/STATE.md`, `observability/SLOS.md`, `docs/topology.md` vs the fingerprint's entry points, workers, and consumers; plan-aware: the plan's service table.

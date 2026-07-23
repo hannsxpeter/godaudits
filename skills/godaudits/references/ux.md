@@ -22,7 +22,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-A-UX-1 through A-UX-20 mirror R-UX-1 through R-UX-20 one to one; A-UX-21 and A-UX-22 are audit-only. Severities are funded-product calibration; scale them per intake. In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id.
+Severities are funded-product calibration; scale them per intake. In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id.
+
+Mirror boundary: A-UX-1..20 mirror R-UX-1..20 one to one; A-UX-21 and up are audit-only. Cross-verified against godplans: R-UX-1..20 defined.
 
 1. A-UX-1: One primary actor per journey is reconstructible from the product itself, with functional, emotional, and social jobs and a context of use.
    Look: README, landing and onboarding copy, role or persona enums, `docs/`; plan-aware: the actor decision in PLAN.mdx.

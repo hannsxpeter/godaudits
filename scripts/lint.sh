@@ -20,6 +20,9 @@
 #   catalog-fresh        the generated machine catalog is current.
 #   catalog-claims       every prose claim of "N checks" or "N domains" agrees
 #                        with the generated catalog.
+#   mirror-boundary      every domain module declares one well-formed A-to-R
+#                        Mirror boundary line and its inline "(audit-only)" tags
+#                        match that boundary exactly.
 #   zero-dependency      no runtime/optional/peer deps, no model-client
 #                        devDependency, and no third-party require in the
 #                        shipped runtime.
@@ -220,6 +223,61 @@ if (bad.length) console.log(bad.join("\n"));
   fi
 }
 
+check_mirror_boundary() {
+  CHECK=mirror-boundary
+  # Each domain module declares one machine-parseable Mirror boundary line that
+  # build-catalog.js reads to set audit_only on every check. The prose
+  # "(audit-only)" tags are a second, human-facing view of the same fact. This
+  # gate fails if the two ever disagree: a check above the boundary with no tag,
+  # a check at or below it wearing one, or a missing or malformed boundary line.
+  # The boundaries themselves were cross-verified against the godplans R-catalog
+  # at authoring time; the recorded godplans count guards against a boundary that
+  # would claim more mirrored checks than godplans defines.
+  out=$(node -e '
+const fs = require("node:fs");
+const path = require("node:path");
+const dir = process.argv[1];
+const skip = new Set(["audit-format.md", "intake.md", "compliance.md", "exemplar.md"]);
+const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md") && !skip.has(f)).sort();
+const bad = [];
+for (const f of files) {
+  const lines = fs.readFileSync(path.join(dir, f), "utf8").split(/\r?\n/);
+  const mirror = lines.filter((l) => /^Mirror boundary:/.test(l));
+  if (mirror.length !== 1) { bad.push(f + ": expected exactly one Mirror boundary line, found " + mirror.length); continue; }
+  const m = mirror[0].match(/^Mirror boundary:\s+A-([A-Z]+)-1\.\.(\d+)\s+mirror\s+R-\1-1\.\.\2\s+one to one;\s+A-\1-(\d+)\s+and up are audit-only\.\s+Cross-verified against godplans:\s+R-\1-1\.\.(\d+)\s+defined\.\s*$/);
+  if (!m) { bad.push(f + ": malformed Mirror boundary line: " + mirror[0].trim()); continue; }
+  const bare = m[1], boundary = Number(m[2]), start = Number(m[3]), gmax = Number(m[4]);
+  if (start !== boundary + 1) bad.push(f + ": audit-only start A-" + bare + "-" + start + " must be boundary+1 (" + (boundary + 1) + ")");
+  if (gmax < boundary) bad.push(f + ": boundary " + boundary + " exceeds its cross-verified godplans count " + gmax);
+  const DEF = new RegExp("^\\s*\\d+\\.\\s+\\*{0,2}(A-" + bare + "-(\\d+))");
+  const all = new Set(), tagged = new Set();
+  for (const line of lines) {
+    const d = line.match(DEF);
+    if (!d) continue;
+    const n = Number(d[2]);
+    all.add(n);
+    if (/\(audit-only\b/.test(line)) tagged.add(n);
+  }
+  if (!all.size) { bad.push(f + ": no numbered A-" + bare + " checks found"); continue; }
+  const total = Math.max(...all);
+  if (boundary > total) bad.push(f + ": boundary " + boundary + " exceeds its " + total + " checks");
+  for (let k = 1; k <= total; k += 1) {
+    const above = k > boundary;
+    if (above && !tagged.has(k)) bad.push(f + ": A-" + bare + "-" + k + " is above the mirror boundary but has no (audit-only) tag");
+    if (!above && tagged.has(k)) bad.push(f + ": A-" + bare + "-" + k + " is within the mirror but wears an (audit-only) tag");
+  }
+}
+if (bad.length) console.log(bad.join("\n"));
+' "$SKILL_DIR/references") || { fail "mirror-boundary scan did not run"; return; }
+  if [ -n "$out" ]; then
+    fail "mirror boundary and inline (audit-only) tags disagree:"
+    printf '%s\n' "$out" >&2
+  else
+    note "every module boundary agrees with its (audit-only) tags"
+    pass
+  fi
+}
+
 check_zero_dependency() {
   CHECK=zero-dependency
   # The runtime is copyable and model-free by contract (docs/ENGINE.md, and
@@ -354,6 +412,7 @@ case "$TARGET" in
     check_symlinks_valid
     check_catalog_fresh
     check_catalog_claims
+    check_mirror_boundary
     check_zero_dependency
     check_schemas_valid
     check_runtime_tests
@@ -374,6 +433,7 @@ case "$TARGET" in
   symlinks-valid) check_symlinks_valid ;;
   catalog-fresh) check_catalog_fresh ;;
   catalog-claims) check_catalog_claims ;;
+  mirror-boundary) check_mirror_boundary ;;
   zero-dependency) check_zero_dependency ;;
   schemas-valid) check_schemas_valid ;;
   runtime-tests) check_runtime_tests ;;

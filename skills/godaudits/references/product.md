@@ -21,7 +21,9 @@ The intake fingerprint already inventories routes, entities, roles, contributor 
 
 ## Checks
 
-Severities are funded-product calibration; scale them per `intake.md`. A-PRD-1 through A-PRD-17 mirror R-PRD-1 through R-PRD-17 one to one; A-PRD-18 through A-PRD-20 are audit-only. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+Severities are funded-product calibration; scale them per `intake.md`. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+
+Mirror boundary: A-PRD-1..17 mirror R-PRD-1..17 one to one; A-PRD-18 and up are audit-only. Cross-verified against godplans: R-PRD-1..17 defined.
 
 1. A-PRD-1 Verify the repo carries a product definition answering the seven pre-flight questions: problem, who has it, today's workaround, why now, concrete cost, 90-day success as an outcome, appetite; unknowns recorded as assumptions, never fabricated.
    Look: the product record surfaces above; plan-aware: the PLAN.mdx mode declaration and pre-flight block.
@@ -74,13 +76,13 @@ Severities are funded-product calibration; scale them per `intake.md`. A-PRD-1 t
 17. A-PRD-17 Verify closure artifacts: a 30-day retro record or schedule with metric baselines, a top-5 support runbook, and a one-paragraph rollback statement.
     Look: `docs/runbook.md` with `## Failure:` entries, `docs/retro*.md` with `Baseline:` lines.
     Fail: deployed product with no runbook or no rollback statement: Medium. Rollback pipeline mechanics cross-reference F-DEPLOY.
-18. A-PRD-18 Verify every outward promise has a shipped counterpart: README and landing feature claims map to live routes, commands, or screens.
+18. A-PRD-18 (audit-only) Verify every outward promise has a shipped counterpart: README and landing feature claims map to live routes, commands, or screens.
     Look: promise surface claims against the route and handler inventory in the intake fingerprint.
     Fail: an advertised capability with no code path: High. A stub-backed promise cites the F-BUILD stub finding per the ownership map instead of re-scoring it here.
-19. A-PRD-19 Verify the metric-event mapping holds in both directions: every documented metric is computable from emitted events, and "active" has an event-level definition.
+19. A-PRD-19 (audit-only) Verify the metric-event mapping holds in both directions: every documented metric is computable from emitted events, and "active" has an event-level definition.
     Look: emitted event names in code versus the mappings in `docs/metrics.md`.
     Fail: a success metric no event can compute, or an undefined "active": Medium. Orphan events no metric consumes: Low.
-20. A-PRD-20 Verify monetization promises are enforced: every documented tier cap, quota, or plan boundary has an enforcement branch in code.
+20. A-PRD-20 (audit-only) Verify monetization promises are enforced: every documented tier cap, quota, or plan boundary has an enforcement branch in code.
     Look: pricing copy and tier constants; grep `tier`, `quota`, `limit`, `plan` in `src/` for the enforcing conditionals.
     Fail: a documented cap with no enforcement code (silent revenue leak or overpromise): High.
 21. A-PRD-21 (audit-only) Requirements traceability: a traceability record links each requirement to its design component, its build task or slice, and its verifying test, so nothing is planned but unbuilt or built but unverified. In plan-aware mode the R-id-to-check-to-task tracing is the in-repo mechanism.

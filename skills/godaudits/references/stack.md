@@ -12,7 +12,9 @@ Inventory before any check runs: manifests (`package.json`, `pyproject.toml`, `g
 
 ## Checks
 
-Mirrors `R-STACK-1` through `R-STACK-20` one to one; `A-STACK-21` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`.
+Severities are funded-product calibration; scale per `intake.md`.
+
+Mirror boundary: A-STACK-1..20 mirror R-STACK-1..20 one to one; A-STACK-21 and up are audit-only. Cross-verified against godplans: R-STACK-1..21 defined.
 
 1. **A-STACK-1 Inventory truth.** Rebuild the stack inventory from manifests and import sites; compare against any recorded verdicts.
    Look: intake fingerprint; `.stack-ready/DECISION.md`, `docs/stack/inventory.md`; plan-aware: the plan's keep/adjust/replace labels.

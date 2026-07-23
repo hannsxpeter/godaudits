@@ -18,7 +18,9 @@ Inventory before any check runs. The intake fingerprint already locates the inst
 
 ## Checks
 
-Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. A-MEM-19 onward are audit-only checks. When the repo uses a non-Pillars memory convention, run A-MEM-19 first and re-scope the structural checks to their equivalents as it directs. In plan-aware mode, tag findings from A-MEM-1 through A-MEM-18 with the matching R-MEM id.
+When the repo uses a non-Pillars memory convention, run A-MEM-19 first and re-scope the structural checks to their equivalents as it directs. In plan-aware mode, tag findings from mirrored checks with the matching R-MEM id.
+
+Mirror boundary: A-MEM-1..18 mirror R-MEM-1..18 one to one; A-MEM-19 and up are audit-only. Cross-verified against godplans: R-MEM-1..22 defined.
 
 1. A-MEM-1: The declared archetype matches the code. The project type stated in `agents/context.md` (or PLAN.mdx when plan-aware) must agree with at least two file signals pillars-init would detect.
    Look: `agents/context.md`, `AGENTS.md` `excluded:` block, manifests and directory shape from the fingerprint.

@@ -142,6 +142,23 @@ function scoringText(source) {
   return match ? match[1].trim() : '';
 }
 
+// The A-to-R mirror boundary is machine-authoritative: exactly one line per
+// module states where the one-to-one numbering mirror ends and the audit-only
+// checks begin, plus the godplans requirement count it was cross-verified
+// against. Every check at or below the boundary substitutes to a real R-id in
+// godplans; every check above it is godaudits-only and carries no plan
+// requirement. The prose "(audit-only)" tags are a human view of the same fact;
+// scripts/lint.sh fails if they disagree with this line, so the two never drift.
+function parseMirrorBoundary(module, prefix, source) {
+  const bare = prefix.replace(/^A-/, '');
+  const lines = source.split(/\r?\n/).filter((line) => /^Mirror boundary:/.test(line));
+  if (lines.length !== 1) throw new Error(`${module} must declare exactly one Mirror boundary line, found ${lines.length}`);
+  const pattern = new RegExp(`^Mirror boundary:\\s+A-${bare}-1\\.\\.(\\d+)\\s+mirror\\s+R-${bare}-1\\.\\.\\1\\s+one to one;\\s+A-${bare}-(\\d+)\\s+and up are audit-only\\.\\s+Cross-verified against godplans:\\s+R-${bare}-1\\.\\.(\\d+)\\s+defined\\.\\s*$`);
+  const match = lines[0].match(pattern);
+  if (!match) throw new Error(`${module} Mirror boundary line is malformed: ${lines[0]}`);
+  return { boundary: Number(match[1]), auditStart: Number(match[2]), godplansMax: Number(match[3]) };
+}
+
 function expandChecks(expression) {
   const ids = [];
   let prefix = null;
@@ -216,10 +233,22 @@ function buildCatalog(root) {
     for (const check of domainChecks) {
       if (!check.look || !check.fail) throw new Error(`${check.id} requires Look and Fail guidance`);
     }
+    const prefix = domainChecks[0].id.replace(/-\d+$/, '');
+    const boundary = parseMirrorBoundary(module, prefix, source);
+    const maxNumber = Math.max(...domainChecks.map((check) => Number(check.id.match(/(\d+)$/)[1])));
+    if (boundary.boundary < 1 || boundary.boundary > maxNumber) throw new Error(`${module} mirror boundary ${boundary.boundary} is outside 1..${maxNumber}`);
+    if (boundary.auditStart !== boundary.boundary + 1) throw new Error(`${module} audit-only start ${boundary.auditStart} must equal mirror boundary + 1 (${boundary.boundary + 1})`);
+    if (boundary.godplansMax < boundary.boundary) throw new Error(`${module} mirror boundary ${boundary.boundary} exceeds its cross-verified godplans requirement count ${boundary.godplansMax}`);
+    for (const check of domainChecks) {
+      check.audit_only = Number(check.id.match(/(\d+)$/)[1]) > boundary.boundary;
+    }
     domains.push({
       id: domain,
       module,
       check_count: domainChecks.length,
+      mirror_boundary: boundary.boundary,
+      godplans_requirements: boundary.godplansMax,
+      audit_only_count: domainChecks.filter((check) => check.audit_only).length,
       scoring_contract: scoringText(source),
       dimensions: parseDimensions(scoringText(source))
     });
@@ -321,4 +350,4 @@ function buildCatalog(root) {
   };
 }
 
-module.exports = { BEHAVIORAL_CHECKS, MODULES, ROUTING_CHECKS, buildCatalog, expandChecks, parseChecks, parseDimensions };
+module.exports = { BEHAVIORAL_CHECKS, MODULES, ROUTING_CHECKS, buildCatalog, expandChecks, parseChecks, parseDimensions, parseMirrorBoundary };

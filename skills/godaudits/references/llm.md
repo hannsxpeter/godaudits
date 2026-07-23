@@ -21,7 +21,9 @@ Two conditional sub-surfaces must be declared present or absent, with the reason
 
 ## Checks
 
-A-LLM-1 through A-LLM-23 mirror R-LLM-1 through R-LLM-23; A-LLM-24 and A-LLM-25 are audit-only. In plan-aware mode, also check the matching PLAN.mdx section and tag the R-id.
+In plan-aware mode, also check the matching PLAN.mdx section and tag the R-id.
+
+Mirror boundary: A-LLM-1..23 mirror R-LLM-1..23 one to one; A-LLM-24 and up are audit-only. Cross-verified against godplans: R-LLM-1..23 defined.
 
 1. A-LLM-1: The trust-boundary architecture is real per LLM feature: every untrusted content source (RAG docs, tool results, web, files) is isolated from privileged channels, and every lethal-trifecta path has a structural mitigation, not a prompt line.
    Look: retrieval-to-prompt paths, agent orchestration, tool wiring; in plan-aware mode, the plan's trust-boundary map. Fail: a lethal-trifecta path guarded only by delimiters or instructions: Critical, filed as F-SEC per the ownership map and cited here.

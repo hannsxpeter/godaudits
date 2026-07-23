@@ -176,9 +176,10 @@ function main() {
   }
   if (command === 'render') {
     if (!args[0]) throw new Error('render requires AUDIT.json');
-    const result = compileAudit(readJson(args[0]), { catalog: buildCatalog(skillRoot) });
+    const catalog = buildCatalog(skillRoot);
+    const result = compileAudit(readJson(args[0]), { catalog });
     if (result.errors.length) throw new Error(result.errors.join('\n'));
-    writeOrPrint(renderAudit(result.audit), option(args, '--output', path.join(path.dirname(args[0]), 'AUDIT.mdx')));
+    writeOrPrint(renderAudit(result.audit, { catalog }), option(args, '--output', path.join(path.dirname(args[0]), 'AUDIT.mdx')));
     return 0;
   }
   if (command === 'sarif') {

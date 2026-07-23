@@ -21,7 +21,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-A-UI-1 through A-UI-20 mirror R-UI-1 through R-UI-20 one to one; A-UI-21 through A-UI-23 are audit-only. A grep hit is a lead, not a finding: read the cited template or stylesheet and confirm the rendered output before recording. Severities are funded-product calibration; in plan-aware mode every finding's Checks line adds the matching R-UI id.
+A grep hit is a lead, not a finding: read the cited template or stylesheet and confirm the rendered output before recording. Severities are funded-product calibration; in plan-aware mode every finding's Checks line adds the matching R-UI id.
+
+Mirror boundary: A-UI-1..20 mirror R-UI-1..20 one to one; A-UI-21 and up are audit-only. Cross-verified against godplans: R-UI-1..21 defined.
 
 1. A-UI-1 The stack contract is reconstructable and singular: one framework, one rendering model, one styling model, exactly one design-token source, a named design system, deliberate Web Components use.
    Look: `package.json`, `next.config.*`, `astro.config.*`, `nuxt.config.*`, `vite.config.*`, `tailwind.config.*`, `tokens.json`, `theme.ts`, `:root` blocks.

@@ -19,7 +19,9 @@ Inventory before any check runs, citing the intake fingerprint for what it alrea
 
 ## Checks
 
-A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severities are funded-product calibration; scale them per intake. In plan-aware mode every finding's Checks line also carries the mirrored R-SEC id.
+Severities are funded-product calibration; scale them per intake. In plan-aware mode every finding's Checks line also carries the mirrored R-SEC id.
+
+Mirror boundary: A-SEC-1..25 mirror R-SEC-1..25 one to one; A-SEC-26 and up are audit-only. Cross-verified against godplans: R-SEC-1..30 defined.
 
 1. A-SEC-1: The threat model is reconstructable from the repo: entry points enumerable, every trust boundary has a locatable enforcement mechanism, principals and their limits discernible; plan-aware mode also diffs the plan's threat-model subsection against the routes on disk.
    Look: route registration, middleware mounts, webhook and upload handlers, queue consumers, README deployment claims, `.godplans/PLAN.mdx`.

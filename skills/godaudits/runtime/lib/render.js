@@ -52,6 +52,19 @@ function evidenceSentence(ids, evidence) {
   }).join('; ');
 }
 
+// Plan-aware traceability: A-to-R is a mechanical prefix substitution because
+// every mirrored check shares its domain segment with the godplans requirement
+// it numbers against (A-ARCH-5 -> R-ARCH-5). The catalog's audit_only flag,
+// itself cross-verified against the godplans R-catalog, gates it: an audit-only
+// check has no plan requirement, so its finding line carries the A-id alone. No
+// R-id is ever asserted for a check the catalog does not vouch for.
+function findingChecks(finding, planAware, auditOnly) {
+  return finding.checks.map((id) => {
+    if (planAware && auditOnly.get(id) === false) return `${id} (${id.replace(/^A-/, 'R-')})`;
+    return id;
+  }).join(', ');
+}
+
 function evidenceProvenance(item) {
   if (item.type === 'tool' || item.type === 'runtime') return `${item.tool} ${item.tool_version}; ${item.command}`;
   if (item.type === 'absence') return item.command;
@@ -59,11 +72,13 @@ function evidenceProvenance(item) {
   return 'source content hash';
 }
 
-function renderAudit(audit) {
+function renderAudit(audit, options = {}) {
   if (!audit.computed) throw new Error('audit must be compiled before rendering');
   const metadata = audit.audit;
   const computed = audit.computed;
   const evidence = new Map(audit.evidence.map((item) => [item.id, item]));
+  const planAware = metadata.plan_aware === true;
+  const auditOnly = new Map(((options.catalog && options.catalog.checks) || []).map((check) => [check.id, check.audit_only === true]));
   const lines = [];
   lines.push('---');
   lines.push(`name: ${yamlString(metadata.name)}`);
@@ -158,7 +173,7 @@ function renderAudit(audit) {
       lines.push(`- Impact: ${mdxText(finding.impact)}`);
       lines.push(`- Fix: ${mdxText(finding.fix)}`);
       lines.push(`- Verify the fix: ${inlineCode(finding.verify)}`);
-      lines.push(`- Checks: ${finding.checks.join(', ')}`);
+      lines.push(`- Checks: ${findingChecks(finding, planAware, auditOnly)}`);
       lines.push(`- Status: ${finding.status}`);
       lines.push(`- Remediation: ${(finding.remediation || []).join(', ') || 'none'}`, '');
     }

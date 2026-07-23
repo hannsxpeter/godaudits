@@ -22,6 +22,8 @@ Inventory before checking; the intake fingerprint already records stack, routes,
 
 ## Checks
 
+Mirror boundary: A-LAUNCH-1..22 mirror R-LAUNCH-1..22 one to one; A-LAUNCH-23 and up are audit-only. Cross-verified against godplans: R-LAUNCH-1..22 defined.
+
 1. A-LAUNCH-1 Positioning exists and survives the substitution test: the four sentences (who it is for, what it replaces, what it does differently, the differentiator test) are recoverable from a positioning doc or the landing hero, each falsified by swapping in at least two named competitors. In plan-aware mode, diff against the plan's positioning block.
    Look: `docs/launch/POSITIONING.md`, `.launch-ready/POSITIONING.md`, hero headline and sub-headline in the landing source.
    Fail: a hero that stays plausible under a competitor-name swap is High (hero fatigue); no positioning artifact at funded-product scale is Medium.
@@ -88,7 +90,7 @@ Inventory before checking; the intake fingerprint already records stack, routes,
 22. A-LAUNCH-22 No fabricated or dead social surfaces: no invented testimonials, no logos of non-customers, no "as seen in" badges for outlets that never covered the product, no placeholder user counts, no lorem ipsum, no dead "Learn more" links.
     Look: social-proof markup, testimonial data files, anchor hrefs on the landing page, grep `lorem`.
     Fail: fabricated proof is High (trust and legal exposure on the most public surface); lorem ipsum or dead links on a shipped landing is Medium.
-23. A-LAUNCH-23 Launch state matches reality: state and registry files agree with the repo and the calendar; a passed launch date with status still pre-launch, a UTM campaign slug reused across launches, or a completed launch with no retrospective are drift.
+23. A-LAUNCH-23 (audit-only) Launch state matches reality: state and registry files agree with the repo and the calendar; a passed launch date with status still pre-launch, a UTM campaign slug reused across launches, or a completed launch with no retrospective are drift.
     Look: `.launch-ready/STATE.md` dates against today, utm-registry campaign values, `retrospectives/` against the launch log.
     Fail: reused campaign slugs polluting analytics history is Medium; stale state contradicting a completed launch is Low.
 

@@ -21,7 +21,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-Severities are funded-product calibration; the intake scale moves them, never the evidence. A-CODE-1 through A-CODE-22 mirror R-CODE-1 through 22 one to one; A-CODE-23 and A-CODE-24 are audit-only.
+Severities are funded-product calibration; the intake scale moves them, never the evidence.
+
+Mirror boundary: A-CODE-1..22 mirror R-CODE-1..22 one to one; A-CODE-23 and up are audit-only. Cross-verified against godplans: R-CODE-1..24 defined.
 
 1. A-CODE-1: A maturity and deployment-context declaration exists and the code's quality bars match it.
    Look: `README.md` status lines, `docs/`, and in plan-aware mode the `.godplans/PLAN.mdx` objective; intake scale signals.
@@ -89,10 +91,10 @@ Severities are funded-product calibration; the intake scale moves them, never th
 22. A-CODE-22: Recorded conventions are enforced, not aspirational: every quality rule stated in `AGENTS.md` or `CONTRIBUTING.md` maps to a config or check.
     Look: convention files against lint, type, and CI configs; grep the code for violations of stated rules.
     Fail: a stated rule with no enforcement and live violations: Medium (paper convention).
-23. A-CODE-23: Complexity stays out of load-bearing code: no deep nesting, long parameter lists, or god modules there.
+23. A-CODE-23 (audit-only): Complexity stays out of load-bearing code: no deep nesting, long parameter lists, or god modules there.
     Look: nesting past depth 4 and functions past 50 lines in files the fingerprint marks load-bearing; one module imported by most others.
     Fail: a hotspot on a load-bearing path: Medium.
-24. A-CODE-24: Dependencies are alive: not majors behind, not abandoned, no deprecated APIs in active use.
+24. A-CODE-24 (audit-only): Dependencies are alive: not majors behind, not abandoned, no deprecated APIs in active use.
     Look: manifest versions against known majors; deprecation warnings in code; staleness signals readable offline.
     Fail: an abandoned dependency on a critical path: Medium, Tentative when advisory knowledge cannot be confirmed offline.
 25. A-CODE-25 (audit-only): Live controls and lawful state machines: every stored or configured flag meant to gate behavior is actually read on the enforcement path (not only written and displayed), and every lifecycle state machine rejects transitions that release a still-committed resource before its end or that run out of lifecycle order.

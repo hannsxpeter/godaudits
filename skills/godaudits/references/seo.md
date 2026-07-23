@@ -22,6 +22,8 @@ Inventory before checking; the intake fingerprint already records stack, framewo
 
 ## Checks
 
+Mirror boundary: A-SEO-1..22 mirror R-SEO-1..22 one to one; A-SEO-23 and up are audit-only. Cross-verified against godplans: R-SEO-1..22 defined.
+
 1. A-SEO-1 Every route class has a deliberate indexation disposition: public content indexable, authed app routes, previews, and internal search noindexed. In plan-aware mode, diff against the plan's route-class matrix.
    Look: robots meta in layouts and `generateMetadata`, middleware `X-Robots-Tag`, per-route `robots` exports.
    Fail: an indexable content route shipping noindex is Critical; authed or search-result routes with no index control is Medium.
@@ -88,13 +90,13 @@ Inventory before checking; the intake fingerprint already records stack, framewo
 22. A-SEO-22 Zero paper controls anywhere: `noindex:` robots lines, `priority`/`changefreq`, rel=next/prev shipped as a fix, hardcoded homepage canonicals, dead-URL redirects to the homepage, `llms.txt` as the strategy.
     Look: sweep every emitter inventoried in the surface map.
     Fail: inert instances are Low (remove the dead weight); actively harmful instances bill once under their owning check above, never twice.
-23. A-SEO-23 No canonical contradictions: no page emits both a canonical-to-elsewhere and a noindex, no canonical points at a redirecting, 404, or noindexed URL, and exactly one canonical emitter exists (no theme-plus-plugin stacking).
+23. A-SEO-23 (audit-only) No canonical contradictions: no page emits both a canonical-to-elsewhere and a noindex, no canonical points at a redirecting, 404, or noindexed URL, and exactly one canonical emitter exists (no theme-plus-plugin stacking).
     Look: all canonical sources found in the surface map, SEO plugin output vs hand-rolled head components.
     Fail: multiple conflicting canonicals on one page is High; canonical to a non-200 target is Medium.
-24. A-SEO-24 Analytics hygiene: no duplicate tag firing (hardcoded gtag plus the same GA4 via GTM), no placeholder IDs (`G-XXXX`, legacy `UA-`), no dead experiment snippets (Google Optimize, sunset 2023).
+24. A-SEO-24 (audit-only) Analytics hygiene: no duplicate tag firing (hardcoded gtag plus the same GA4 via GTM), no placeholder IDs (`G-XXXX`, legacy `UA-`), no dead experiment snippets (Google Optimize, sunset 2023).
     Look: analytics snippets in layouts, GTM containers, head includes.
     Fail: double-firing tags is Medium; placeholder IDs or dead snippets is Low.
-25. A-SEO-25 Head hygiene: `meta charset` early in head, exactly one title element per rendered page, `html lang` present and matching the content language.
+25. A-SEO-25 (audit-only) Head hygiene: `meta charset` early in head, exactly one title element per rendered page, `html lang` present and matching the content language.
     Look: root layouts and document templates.
     Fail: missing `html lang` on a content site is Medium; duplicate or missing core head tags is Low.
 

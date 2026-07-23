@@ -128,7 +128,7 @@ For each applicable domain, in this order, read its module at the moment of use 
 | 17 | Observability | `references/observe.md` |
 | 18 | Launch readiness | `references/launch.md` |
 
-For each check, update its outcome, confidence, evidence references, and finding ids. Preserve the catalog-provided weight. A routing check with zero direct weight must map its finding to the weighted owning check it affects. In plan-aware mode, add the corresponding R-id to finding and task traceability.
+For each check, update its outcome, confidence, evidence references, and finding ids. Preserve the catalog-provided weight. A routing check with zero direct weight must map its finding to the weighted owning check it affects. In plan-aware mode, the generated AUDIT.mdx derives each finding's R-id from its mirrored check ids by A-to-R substitution and skips audit-only checks; nothing is hand-added and no R-id is stored in AUDIT.json.
 
 ### Phase 4: Adversarial verification and clustering
 
@@ -967,7 +967,9 @@ The intake fingerprint already inventories routes, entities, roles, contributor 
 
 ## Checks
 
-Severities are funded-product calibration; scale them per `intake.md`. A-PRD-1 through A-PRD-17 mirror R-PRD-1 through R-PRD-17 one to one; A-PRD-18 through A-PRD-20 are audit-only. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+Severities are funded-product calibration; scale them per `intake.md`. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+
+Mirror boundary: A-PRD-1..17 mirror R-PRD-1..17 one to one; A-PRD-18 and up are audit-only. Cross-verified against godplans: R-PRD-1..17 defined.
 
 1. A-PRD-1 Verify the repo carries a product definition answering the seven pre-flight questions: problem, who has it, today's workaround, why now, concrete cost, 90-day success as an outcome, appetite; unknowns recorded as assumptions, never fabricated.
    Look: the product record surfaces above; plan-aware: the PLAN.mdx mode declaration and pre-flight block.
@@ -1020,13 +1022,13 @@ Severities are funded-product calibration; scale them per `intake.md`. A-PRD-1 t
 17. A-PRD-17 Verify closure artifacts: a 30-day retro record or schedule with metric baselines, a top-5 support runbook, and a one-paragraph rollback statement.
     Look: `docs/runbook.md` with `## Failure:` entries, `docs/retro*.md` with `Baseline:` lines.
     Fail: deployed product with no runbook or no rollback statement: Medium. Rollback pipeline mechanics cross-reference F-DEPLOY.
-18. A-PRD-18 Verify every outward promise has a shipped counterpart: README and landing feature claims map to live routes, commands, or screens.
+18. A-PRD-18 (audit-only) Verify every outward promise has a shipped counterpart: README and landing feature claims map to live routes, commands, or screens.
     Look: promise surface claims against the route and handler inventory in the intake fingerprint.
     Fail: an advertised capability with no code path: High. A stub-backed promise cites the F-BUILD stub finding per the ownership map instead of re-scoring it here.
-19. A-PRD-19 Verify the metric-event mapping holds in both directions: every documented metric is computable from emitted events, and "active" has an event-level definition.
+19. A-PRD-19 (audit-only) Verify the metric-event mapping holds in both directions: every documented metric is computable from emitted events, and "active" has an event-level definition.
     Look: emitted event names in code versus the mappings in `docs/metrics.md`.
     Fail: a success metric no event can compute, or an undefined "active": Medium. Orphan events no metric consumes: Low.
-20. A-PRD-20 Verify monetization promises are enforced: every documented tier cap, quota, or plan boundary has an enforcement branch in code.
+20. A-PRD-20 (audit-only) Verify monetization promises are enforced: every documented tier cap, quota, or plan boundary has an enforcement branch in code.
     Look: pricing copy and tier constants; grep `tier`, `quota`, `limit`, `plan` in `src/` for the enforcing conditionals.
     Fail: a documented cap with no enforcement code (silent revenue leak or overpromise): High.
 21. A-PRD-21 (audit-only) Requirements traceability: a traceability record links each requirement to its design component, its build task or slice, and its verifying test, so nothing is planned but unbuilt or built but unverified. In plan-aware mode the R-id-to-check-to-task tracing is the in-repo mechanism.
@@ -1132,7 +1134,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-Severities are funded-product calibration; intake's scale calibration moves them, never the evidence. A-ARCH-1 through A-ARCH-19 mirror R-ARCH-1 through R-ARCH-19; A-ARCH-20 onward are audit-only.
+Severities are funded-product calibration; intake's scale calibration moves them, never the evidence.
+
+Mirror boundary: A-ARCH-1..19 mirror R-ARCH-1..19 one to one; A-ARCH-20 and up are audit-only. Cross-verified against godplans: R-ARCH-1..20 defined.
 
 1. A-ARCH-1 Architecture claims trace to a product constraint or a labeled assumption; plan-aware, the plan's architecture section traces to its product section.
    Look: `README.md`, `docs/architecture/`, ADR Context sections in `docs/adr/*.md`, `ARCH.md`, `.godplans/PLAN.mdx`.
@@ -1191,13 +1195,13 @@ Severities are funded-product calibration; intake's scale calibration moves them
 19. A-ARCH-19 Architecture records are specific: they fail the substitution test and stay under three pages of prose.
     Look: swap the domain nouns in any architecture paragraph; if it still reads true, it decided nothing.
     Fail: horoscope prose ("modern scalable backend with a well-designed data layer"): Low; prose past three pages: Low.
-20. A-ARCH-20 No distributed monolith: no table written by more than one deployable, no request path chaining three or more sync service hops.
+20. A-ARCH-20 (audit-only) No distributed monolith: no table written by more than one deployable, no request path chaining three or more sync service hops.
     Look: connection strings and migration consumers per service; grep `INSERT INTO`/`UPDATE` targets across `services/*`; trace one hot request path end to end.
     Fail: multi-writer table with divergent invariant enforcement: Critical (silent data corruption); request path fanning through three or more sync hops: High.
-21. A-ARCH-21 Context boundaries hold at import level: no deep imports into another context's internals, no shared mutable singletons across contexts.
+21. A-ARCH-21 (audit-only) Context boundaries hold at import level: no deep imports into another context's internals, no shared mutable singletons across contexts.
     Look: `grep -rn "\.\./\.\." src/` where the path crosses context directories; imports of a sibling context's `internal/` or `db/` paths.
     Fail: cross-context deep imports bypassing the public index: Medium; shared mutable singletons crossing contexts: Medium.
-22. A-ARCH-22 A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions are not coded inline in transport handlers.
+22. A-ARCH-22 (audit-only) A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions are not coded inline in transport handlers.
     Look: bodies of `routes/`, `pages/api/`, controllers, and UI event handlers for business rules.
     Fail: load-bearing invariants enforced only inside transport handlers: Medium; the same invariant duplicated across handlers with drift between copies: High.
 23. A-ARCH-23 (audit-only) API contract design, when an API or service surface exists: the API style is declared and applied consistently (REST, GraphQL, or RPC, not a different shape per endpoint); a versioning strategy exists that does not break existing consumers; a machine-readable contract (an OpenAPI document or a GraphQL schema) is present and matches the routes on disk; resources and URIs are modeled consistently for REST; and errors use one consistent envelope (RFC 7807 Problem Details or a documented equivalent), not an ad-hoc shape per endpoint.
@@ -1300,7 +1304,9 @@ Inventory before any check runs: manifests (`package.json`, `pyproject.toml`, `g
 
 ## Checks
 
-Mirrors `R-STACK-1` through `R-STACK-20` one to one; `A-STACK-21` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`.
+Severities are funded-product calibration; scale per `intake.md`.
+
+Mirror boundary: A-STACK-1..20 mirror R-STACK-1..20 one to one; A-STACK-21 and up are audit-only. Cross-verified against godplans: R-STACK-1..21 defined.
 
 1. **A-STACK-1 Inventory truth.** Rebuild the stack inventory from manifests and import sites; compare against any recorded verdicts.
    Look: intake fingerprint; `.stack-ready/DECISION.md`, `docs/stack/inventory.md`; plan-aware: the plan's keep/adjust/replace labels.
@@ -1463,7 +1469,9 @@ Inventory before any check runs. The intake fingerprint already lists schema fil
 
 ## Checks
 
-`A-DB-n` mirrors `R-DB-n` from the godplans database module one to one; A-DB-23 is audit-only. Default severities are funded-product calibration; intake scale calibration moves severity, never evidence. Anything that depends on row counts or plans static code cannot show is labeled Tentative.
+Default severities are funded-product calibration; intake scale calibration moves severity, never evidence. Anything that depends on row counts or plans static code cannot show is labeled Tentative.
+
+Mirror boundary: A-DB-1..22 mirror R-DB-1..22 one to one; A-DB-23 and up are audit-only. Cross-verified against godplans: R-DB-1..23 defined.
 
 1. A-DB-1 The data-layer profile is reconstructable from the repo: paradigm (OLTP, analytics, document, mixed), engine and version, sensitivity classes, tenancy model, growth expectations; every denormalized or derived column has a maintaining job, trigger, or generated column.
     Look: manifests, `docker-compose.yml`, ORM config, migration headers, `docs/`; derived columns (`*_count`, `*_total`, copied parent fields) diffed against jobs and triggers.
@@ -1629,7 +1637,9 @@ Inventory before any check runs, citing the intake fingerprint for what it alrea
 
 ## Checks
 
-A-SEC-n mirrors R-SEC-n one to one; A-SEC-26 and A-SEC-27 are audit-only. Severities are funded-product calibration; scale them per intake. In plan-aware mode every finding's Checks line also carries the mirrored R-SEC id.
+Severities are funded-product calibration; scale them per intake. In plan-aware mode every finding's Checks line also carries the mirrored R-SEC id.
+
+Mirror boundary: A-SEC-1..25 mirror R-SEC-1..25 one to one; A-SEC-26 and up are audit-only. Cross-verified against godplans: R-SEC-1..30 defined.
 
 1. A-SEC-1: The threat model is reconstructable from the repo: entry points enumerable, every trust boundary has a locatable enforcement mechanism, principals and their limits discernible; plan-aware mode also diffs the plan's threat-model subsection against the routes on disk.
    Look: route registration, middleware mounts, webhook and upload handlers, queue consumers, README deployment claims, `.godplans/PLAN.mdx`.
@@ -1824,7 +1834,9 @@ Two conditional sub-surfaces must be declared present or absent, with the reason
 
 ## Checks
 
-A-LLM-1 through A-LLM-23 mirror R-LLM-1 through R-LLM-23; A-LLM-24 and A-LLM-25 are audit-only. In plan-aware mode, also check the matching PLAN.mdx section and tag the R-id.
+In plan-aware mode, also check the matching PLAN.mdx section and tag the R-id.
+
+Mirror boundary: A-LLM-1..23 mirror R-LLM-1..23 one to one; A-LLM-24 and up are audit-only. Cross-verified against godplans: R-LLM-1..23 defined.
 
 1. A-LLM-1: The trust-boundary architecture is real per LLM feature: every untrusted content source (RAG docs, tool results, web, files) is isolated from privileged channels, and every lethal-trifecta path has a structural mitigation, not a prompt line.
    Look: retrieval-to-prompt paths, agent orchestration, tool wiring; in plan-aware mode, the plan's trust-boundary map. Fail: a lethal-trifecta path guarded only by delimiters or instructions: Critical, filed as F-SEC per the ownership map and cited here.
@@ -1985,7 +1997,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-A-UX-1 through A-UX-20 mirror R-UX-1 through R-UX-20 one to one; A-UX-21 and A-UX-22 are audit-only. Severities are funded-product calibration; scale them per intake. In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id.
+Severities are funded-product calibration; scale them per intake. In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id.
+
+Mirror boundary: A-UX-1..20 mirror R-UX-1..20 one to one; A-UX-21 and up are audit-only. Cross-verified against godplans: R-UX-1..20 defined.
 
 1. A-UX-1: One primary actor per journey is reconstructible from the product itself, with functional, emotional, and social jobs and a context of use.
    Look: README, landing and onboarding copy, role or persona enums, `docs/`; plan-aware: the actor decision in PLAN.mdx.
@@ -2150,7 +2164,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-A-UI-1 through A-UI-20 mirror R-UI-1 through R-UI-20 one to one; A-UI-21 through A-UI-23 are audit-only. A grep hit is a lead, not a finding: read the cited template or stylesheet and confirm the rendered output before recording. Severities are funded-product calibration; in plan-aware mode every finding's Checks line adds the matching R-UI id.
+A grep hit is a lead, not a finding: read the cited template or stylesheet and confirm the rendered output before recording. Severities are funded-product calibration; in plan-aware mode every finding's Checks line adds the matching R-UI id.
+
+Mirror boundary: A-UI-1..20 mirror R-UI-1..20 one to one; A-UI-21 and up are audit-only. Cross-verified against godplans: R-UI-1..21 defined.
 
 1. A-UI-1 The stack contract is reconstructable and singular: one framework, one rendering model, one styling model, exactly one design-token source, a named design system, deliberate Web Components use.
    Look: `package.json`, `next.config.*`, `astro.config.*`, `nuxt.config.*`, `vite.config.*`, `tailwind.config.*`, `tokens.json`, `theme.ts`, `:root` blocks.
@@ -2328,6 +2344,8 @@ Inventory before checking; the intake fingerprint already records stack, framewo
 
 ## Checks
 
+Mirror boundary: A-SEO-1..22 mirror R-SEO-1..22 one to one; A-SEO-23 and up are audit-only. Cross-verified against godplans: R-SEO-1..22 defined.
+
 1. A-SEO-1 Every route class has a deliberate indexation disposition: public content indexable, authed app routes, previews, and internal search noindexed. In plan-aware mode, diff against the plan's route-class matrix.
    Look: robots meta in layouts and `generateMetadata`, middleware `X-Robots-Tag`, per-route `robots` exports.
    Fail: an indexable content route shipping noindex is Critical; authed or search-result routes with no index control is Medium.
@@ -2394,13 +2412,13 @@ Inventory before checking; the intake fingerprint already records stack, framewo
 22. A-SEO-22 Zero paper controls anywhere: `noindex:` robots lines, `priority`/`changefreq`, rel=next/prev shipped as a fix, hardcoded homepage canonicals, dead-URL redirects to the homepage, `llms.txt` as the strategy.
     Look: sweep every emitter inventoried in the surface map.
     Fail: inert instances are Low (remove the dead weight); actively harmful instances bill once under their owning check above, never twice.
-23. A-SEO-23 No canonical contradictions: no page emits both a canonical-to-elsewhere and a noindex, no canonical points at a redirecting, 404, or noindexed URL, and exactly one canonical emitter exists (no theme-plus-plugin stacking).
+23. A-SEO-23 (audit-only) No canonical contradictions: no page emits both a canonical-to-elsewhere and a noindex, no canonical points at a redirecting, 404, or noindexed URL, and exactly one canonical emitter exists (no theme-plus-plugin stacking).
     Look: all canonical sources found in the surface map, SEO plugin output vs hand-rolled head components.
     Fail: multiple conflicting canonicals on one page is High; canonical to a non-200 target is Medium.
-24. A-SEO-24 Analytics hygiene: no duplicate tag firing (hardcoded gtag plus the same GA4 via GTM), no placeholder IDs (`G-XXXX`, legacy `UA-`), no dead experiment snippets (Google Optimize, sunset 2023).
+24. A-SEO-24 (audit-only) Analytics hygiene: no duplicate tag firing (hardcoded gtag plus the same GA4 via GTM), no placeholder IDs (`G-XXXX`, legacy `UA-`), no dead experiment snippets (Google Optimize, sunset 2023).
     Look: analytics snippets in layouts, GTM containers, head includes.
     Fail: double-firing tags is Medium; placeholder IDs or dead snippets is Low.
-25. A-SEO-25 Head hygiene: `meta charset` early in head, exactly one title element per rendered page, `html lang` present and matching the content language.
+25. A-SEO-25 (audit-only) Head hygiene: `meta charset` early in head, exactly one title element per rendered page, `html lang` present and matching the content language.
     Look: root layouts and document templates.
     Fail: missing `html lang` on a content site is Medium; duplicate or missing core head tags is Low.
 
@@ -2499,7 +2517,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-Severities are funded-product calibration; the intake scale moves them, never the evidence. A-CODE-1 through A-CODE-22 mirror R-CODE-1 through 22 one to one; A-CODE-23 and A-CODE-24 are audit-only.
+Severities are funded-product calibration; the intake scale moves them, never the evidence.
+
+Mirror boundary: A-CODE-1..22 mirror R-CODE-1..22 one to one; A-CODE-23 and up are audit-only. Cross-verified against godplans: R-CODE-1..24 defined.
 
 1. A-CODE-1: A maturity and deployment-context declaration exists and the code's quality bars match it.
    Look: `README.md` status lines, `docs/`, and in plan-aware mode the `.godplans/PLAN.mdx` objective; intake scale signals.
@@ -2567,10 +2587,10 @@ Severities are funded-product calibration; the intake scale moves them, never th
 22. A-CODE-22: Recorded conventions are enforced, not aspirational: every quality rule stated in `AGENTS.md` or `CONTRIBUTING.md` maps to a config or check.
     Look: convention files against lint, type, and CI configs; grep the code for violations of stated rules.
     Fail: a stated rule with no enforcement and live violations: Medium (paper convention).
-23. A-CODE-23: Complexity stays out of load-bearing code: no deep nesting, long parameter lists, or god modules there.
+23. A-CODE-23 (audit-only): Complexity stays out of load-bearing code: no deep nesting, long parameter lists, or god modules there.
     Look: nesting past depth 4 and functions past 50 lines in files the fingerprint marks load-bearing; one module imported by most others.
     Fail: a hotspot on a load-bearing path: Medium.
-24. A-CODE-24: Dependencies are alive: not majors behind, not abandoned, no deprecated APIs in active use.
+24. A-CODE-24 (audit-only): Dependencies are alive: not majors behind, not abandoned, no deprecated APIs in active use.
     Look: manifest versions against known majors; deprecation warnings in code; staleness signals readable offline.
     Fail: an abandoned dependency on a critical path: Medium, Tentative when advisory knowledge cannot be confirmed offline.
 25. A-CODE-25 (audit-only): Live controls and lawful state machines: every stored or configured flag meant to gate behavior is actually read on the enforcement path (not only written and displayed), and every lifecycle state machine rejects transitions that release a still-committed resource before its end or that run out of lifecycle order.
@@ -2673,6 +2693,8 @@ Inventory before any check runs; cite the intake fingerprint for stack, manifest
 ## Checks
 
 Default severities are funded-product calibration; scale per intake. Where a concern belongs to another domain, file nothing here and cross-reference per the ownership map.
+
+Mirror boundary: A-DNA-1..20 mirror R-DNA-1..20 one to one; A-DNA-21 and up are audit-only. Cross-verified against godplans: R-DNA-1..20 defined.
 
 1. A-DNA-1 Enforced layer real. Formatter and linter configs exist, their exact commands are wired into scripts or CI, and no prose doc restates what they settle.
    Look: the enforced-layer globs above; `package.json` scripts, `Makefile`, `.pre-commit-config.yaml`, `.github/workflows/*` for the commands.
@@ -2840,7 +2862,9 @@ Inventory before any check runs. The intake fingerprint already locates the inst
 
 ## Checks
 
-Checks A-MEM-1 through A-MEM-18 mirror R-MEM-1 through R-MEM-18 one to one. A-MEM-19 onward are audit-only checks. When the repo uses a non-Pillars memory convention, run A-MEM-19 first and re-scope the structural checks to their equivalents as it directs. In plan-aware mode, tag findings from A-MEM-1 through A-MEM-18 with the matching R-MEM id.
+When the repo uses a non-Pillars memory convention, run A-MEM-19 first and re-scope the structural checks to their equivalents as it directs. In plan-aware mode, tag findings from mirrored checks with the matching R-MEM id.
+
+Mirror boundary: A-MEM-1..18 mirror R-MEM-1..18 one to one; A-MEM-19 and up are audit-only. Cross-verified against godplans: R-MEM-1..22 defined.
 
 1. A-MEM-1: The declared archetype matches the code. The project type stated in `agents/context.md` (or PLAN.mdx when plan-aware) must agree with at least two file signals pillars-init would detect.
    Look: `agents/context.md`, `AGENTS.md` `excluded:` block, manifests and directory shape from the fingerprint.
@@ -3008,7 +3032,9 @@ Inventory before any check runs: root docs (`README.md`, `LICENSE`, `CONTRIBUTIN
 
 ## Checks
 
-Mirrors `R-REPO-1` through `R-REPO-20` one to one; `A-REPO-21` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`.
+Severities are funded-product calibration; scale per `intake.md`.
+
+Mirror boundary: A-REPO-1..20 mirror R-REPO-1..20 one to one; A-REPO-21 and up are audit-only. Cross-verified against godplans: R-REPO-1..21 defined.
 
 1. **A-REPO-1 Tier coherence.** Reconstruct the type x stage x audience triple from signals and check the file inventory sits in its band (MVP 5-8 files, Growth 12-18, Enterprise 20-30 plus).
    Look: root inventory count; contributor count, releases, and CI reality from the fingerprint; any pinned tier in docs or the plan.
@@ -3184,7 +3210,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-A-BUILD-1 through A-BUILD-20 mirror R-BUILD-1 through R-BUILD-20 one to one; A-BUILD-21 and A-BUILD-22 are audit-only. In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id on its findings.
+In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id on its findings.
+
+Mirror boundary: A-BUILD-1..20 mirror R-BUILD-1..20 one to one; A-BUILD-21 and up are audit-only. Cross-verified against godplans: R-BUILD-1..20 defined.
 
 1. A-BUILD-1: The 12 pre-flight answers are reconstructable from the repo: who uses it and for what job, entities, stack, persistence, auth model, permission matrix, route map, deploy target, responsive scope.
    Look: README, docs, schema files, manifests, `.godplans/STATE.md`; in plan-aware mode, the PLAN.mdx build sections themselves.
@@ -3350,7 +3378,9 @@ The intake fingerprint already carries contributor count, commit recency, tags, 
 
 ## Checks
 
-Severities are funded-product calibration; scale them per `intake.md`. A-ROAD-1 through A-ROAD-20 mirror R-ROAD-1 through R-ROAD-20 one to one; A-ROAD-21 through A-ROAD-23 are audit-only. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+Severities are funded-product calibration; scale them per `intake.md`. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+
+Mirror boundary: A-ROAD-1..20 mirror R-ROAD-1..20 one to one; A-ROAD-21 and up are audit-only. Cross-verified against godplans: R-ROAD-1..21 defined.
 
 1. A-ROAD-1 Verify every calendar date rests on capacity math: executor count, engineer-weeks per cycle, rotation share, and a serial-fraction estimate.
    Look: roadmap artifacts; grep `20[0-9]{2}-[0-9]{2}-[0-9]{2}` for dates and `engineer-weeks`, `capacity` for the block.
@@ -3511,7 +3541,9 @@ Inventory before any check runs: CI/CD workflows (`.github/workflows/*.yml`, `.g
 
 ## Checks
 
-Mirrors `R-DEPLOY-1` through `R-DEPLOY-18` one to one; `A-DEPLOY-19` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`.
+Severities are funded-product calibration; scale per `intake.md`.
+
+Mirror boundary: A-DEPLOY-1..18 mirror R-DEPLOY-1..18 one to one; A-DEPLOY-19 and up are audit-only. Cross-verified against godplans: R-DEPLOY-1..18 defined.
 
 1. **A-DEPLOY-1 Same-artifact promotion.** One build step produces one content-addressed artifact promoted unchanged; per-region platform rebuilds record a source commit and build config pin as the artifact identity.
    Look: deploy workflows; count `docker build` and bundler build invocations; build steps inside promote jobs; image tags (digest or SHA vs branch names).
@@ -3665,7 +3697,9 @@ Inventory before any check runs: SLO artifacts (`.observe-ready/SLOs.md`, `obser
 
 ## Checks
 
-Mirrors `R-OBS-1` through `R-OBS-20` one to one; `A-OBS-21` onward are audit-only. Severities are funded-product calibration; scale per `intake.md`. PII anywhere in telemetry belongs to security (it owns log redaction): cross-reference F-SEC, never bill it here.
+Severities are funded-product calibration; scale per `intake.md`. PII anywhere in telemetry belongs to security (it owns log redaction): cross-reference F-SEC, never bill it here.
+
+Mirror boundary: A-OBS-1..20 mirror R-OBS-1..20 one to one; A-OBS-21 and up are audit-only. Cross-verified against godplans: R-OBS-1..21 defined.
 
 1. **A-OBS-1 Service and journey inventory truth.** A durable inventory names every service with its topology type and every user journey, and it matches the code.
    Look: `.observe-ready/STATE.md`, `observability/SLOS.md`, `docs/topology.md` vs the fingerprint's entry points, workers, and consumers; plan-aware: the plan's service table.
@@ -3839,6 +3873,8 @@ Inventory before checking; the intake fingerprint already records stack, routes,
 
 ## Checks
 
+Mirror boundary: A-LAUNCH-1..22 mirror R-LAUNCH-1..22 one to one; A-LAUNCH-23 and up are audit-only. Cross-verified against godplans: R-LAUNCH-1..22 defined.
+
 1. A-LAUNCH-1 Positioning exists and survives the substitution test: the four sentences (who it is for, what it replaces, what it does differently, the differentiator test) are recoverable from a positioning doc or the landing hero, each falsified by swapping in at least two named competitors. In plan-aware mode, diff against the plan's positioning block.
    Look: `docs/launch/POSITIONING.md`, `.launch-ready/POSITIONING.md`, hero headline and sub-headline in the landing source.
    Fail: a hero that stays plausible under a competitor-name swap is High (hero fatigue); no positioning artifact at funded-product scale is Medium.
@@ -3905,7 +3941,7 @@ Inventory before checking; the intake fingerprint already records stack, routes,
 22. A-LAUNCH-22 No fabricated or dead social surfaces: no invented testimonials, no logos of non-customers, no "as seen in" badges for outlets that never covered the product, no placeholder user counts, no lorem ipsum, no dead "Learn more" links.
     Look: social-proof markup, testimonial data files, anchor hrefs on the landing page, grep `lorem`.
     Fail: fabricated proof is High (trust and legal exposure on the most public surface); lorem ipsum or dead links on a shipped landing is Medium.
-23. A-LAUNCH-23 Launch state matches reality: state and registry files agree with the repo and the calendar; a passed launch date with status still pre-launch, a UTM campaign slug reused across launches, or a completed launch with no retrospective are drift.
+23. A-LAUNCH-23 (audit-only) Launch state matches reality: state and registry files agree with the repo and the calendar; a passed launch date with status still pre-launch, a UTM campaign slug reused across launches, or a completed launch with no retrospective are drift.
     Look: `.launch-ready/STATE.md` dates against today, utm-registry campaign values, `retrospectives/` against the launch log.
     Fail: reused campaign slugs polluting analytics history is Medium; stale state contradicting a completed launch is Low.
 

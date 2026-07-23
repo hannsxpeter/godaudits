@@ -1,11 +1,15 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const path = require('node:path');
 const test = require('node:test');
 const { compileAudit, evidenceBasis, validateAudit } = require('../skills/godaudits/runtime/lib/audit');
 const { renderAudit } = require('../skills/godaudits/runtime/lib/render');
+const { buildCatalog } = require('../skills/godaudits/runtime/lib/catalog');
 const { auditToSarif } = require('../skills/godaudits/runtime/lib/sarif');
 const { validAudit } = require('./helpers');
+
+const catalog = buildCatalog(path.resolve(__dirname, '..'));
 
 test('valid audit compiles deterministic scores and coverage', () => {
   const result = compileAudit(validAudit());
@@ -183,6 +187,56 @@ test('renderer produces a standalone audit with computed state', () => {
   assert.match(mdx, /Coverage: 2 of 2 applicable checks evaluated \(100%\)/);
   assert.match(mdx, /#### F-SEC-1 Board lookup omits the tenant predicate/);
   assert.match(mdx, /- \[ \] GA-101 \[W1\.1\]/);
+});
+
+test('a plan-blind audit prints A-ids alone, with no derived R-id', () => {
+  // The fixture is plan_aware: false. Even handed the catalog, the finding's
+  // Checks line stays bare so the mirror only surfaces where the plan exists.
+  const compiled = compileAudit(validAudit()).audit;
+  const mdx = renderAudit(compiled, { catalog });
+  assert.match(mdx, /- Checks: A-SEC-3\n/);
+  assert.doesNotMatch(mdx, /R-SEC-3/);
+});
+
+test('a plan-aware finding traces its mirrored check to the godplans R-id', () => {
+  const audit = validAudit();
+  audit.audit.plan_aware = true;
+  const compiled = compileAudit(audit).audit;
+  const mdx = renderAudit(compiled, { catalog });
+  // A-SEC-3 is at or below the security mirror boundary, so it substitutes to
+  // R-SEC-3 next to the A-id, exactly as intake.md promises.
+  assert.match(mdx, /- Checks: A-SEC-3 \(R-SEC-3\)\n/);
+});
+
+test('a plan-aware audit-only check carries no R-id, even beside a mirrored one', () => {
+  const audit = validAudit();
+  audit.audit.plan_aware = true;
+  // A-SEC-29 is above the security mirror boundary (audit-only): it has no
+  // godplans requirement, so it must render as the bare A-id.
+  audit.domains[0].checks.push({
+    id: 'A-SEC-29',
+    outcome: 'fail',
+    confidence: 'Firm',
+    weight: 0,
+    evidence: ['E-2'],
+    finding_ids: ['F-SEC-1']
+  });
+  audit.findings[0].checks.push('A-SEC-29');
+  audit.tasks[0].checks.push('A-SEC-29');
+  const { audit: compiled, errors } = compileAudit(audit);
+  assert.deepEqual(errors, []);
+  const mdx = renderAudit(compiled, { catalog });
+  assert.match(mdx, /- Checks: A-SEC-3 \(R-SEC-3\), A-SEC-29\n/);
+  assert.doesNotMatch(mdx, /R-SEC-29/);
+});
+
+test('plan-aware rendering without a catalog degrades to bare A-ids rather than guessing', () => {
+  const audit = validAudit();
+  audit.audit.plan_aware = true;
+  const compiled = compileAudit(audit).audit;
+  const mdx = renderAudit(compiled);
+  assert.match(mdx, /- Checks: A-SEC-3\n/);
+  assert.doesNotMatch(mdx, /R-SEC-3/);
 });
 
 test('the grade never appears without its method scope on any consumer surface', () => {

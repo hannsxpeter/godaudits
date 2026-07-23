@@ -130,7 +130,7 @@ For each applicable domain, in this order, read its module at the moment of use 
 | 17 | Observability | `references/observe.md` |
 | 18 | Launch readiness | `references/launch.md` |
 
-For each check, update its outcome, confidence, evidence references, and finding ids. Preserve the catalog-provided weight. A routing check with zero direct weight must map its finding to the weighted owning check it affects. In plan-aware mode, add the corresponding R-id to finding and task traceability.
+For each check, update its outcome, confidence, evidence references, and finding ids. Preserve the catalog-provided weight. A routing check with zero direct weight must map its finding to the weighted owning check it affects. In plan-aware mode, the generated AUDIT.mdx derives each finding's R-id from its mirrored check ids by A-to-R substitution and skips audit-only checks; nothing is hand-added and no R-id is stored in AUDIT.json.
 
 ### Phase 4: Adversarial verification and clustering
 

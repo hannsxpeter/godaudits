@@ -23,7 +23,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-A-BUILD-1 through A-BUILD-20 mirror R-BUILD-1 through R-BUILD-20 one to one; A-BUILD-21 and A-BUILD-22 are audit-only. In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id on its findings.
+In plan-aware mode each check also inspects the matching PLAN.mdx section and tags the R-id on its findings.
+
+Mirror boundary: A-BUILD-1..20 mirror R-BUILD-1..20 one to one; A-BUILD-21 and up are audit-only. Cross-verified against godplans: R-BUILD-1..20 defined.
 
 1. A-BUILD-1: The 12 pre-flight answers are reconstructable from the repo: who uses it and for what job, entities, stack, persistence, auth model, permission matrix, route map, deploy target, responsive scope.
    Look: README, docs, schema files, manifests, `.godplans/STATE.md`; in plan-aware mode, the PLAN.mdx build sections themselves.

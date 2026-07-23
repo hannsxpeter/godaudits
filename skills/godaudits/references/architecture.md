@@ -23,7 +23,9 @@ Conditional sub-surfaces, each declared present or absent with the reason record
 
 ## Checks
 
-Severities are funded-product calibration; intake's scale calibration moves them, never the evidence. A-ARCH-1 through A-ARCH-19 mirror R-ARCH-1 through R-ARCH-19; A-ARCH-20 onward are audit-only.
+Severities are funded-product calibration; intake's scale calibration moves them, never the evidence.
+
+Mirror boundary: A-ARCH-1..19 mirror R-ARCH-1..19 one to one; A-ARCH-20 and up are audit-only. Cross-verified against godplans: R-ARCH-1..20 defined.
 
 1. A-ARCH-1 Architecture claims trace to a product constraint or a labeled assumption; plan-aware, the plan's architecture section traces to its product section.
    Look: `README.md`, `docs/architecture/`, ADR Context sections in `docs/adr/*.md`, `ARCH.md`, `.godplans/PLAN.mdx`.
@@ -82,13 +84,13 @@ Severities are funded-product calibration; intake's scale calibration moves them
 19. A-ARCH-19 Architecture records are specific: they fail the substitution test and stay under three pages of prose.
     Look: swap the domain nouns in any architecture paragraph; if it still reads true, it decided nothing.
     Fail: horoscope prose ("modern scalable backend with a well-designed data layer"): Low; prose past three pages: Low.
-20. A-ARCH-20 No distributed monolith: no table written by more than one deployable, no request path chaining three or more sync service hops.
+20. A-ARCH-20 (audit-only) No distributed monolith: no table written by more than one deployable, no request path chaining three or more sync service hops.
     Look: connection strings and migration consumers per service; grep `INSERT INTO`/`UPDATE` targets across `services/*`; trace one hot request path end to end.
     Fail: multi-writer table with divergent invariant enforcement: Critical (silent data corruption); request path fanning through three or more sync hops: High.
-21. A-ARCH-21 Context boundaries hold at import level: no deep imports into another context's internals, no shared mutable singletons across contexts.
+21. A-ARCH-21 (audit-only) Context boundaries hold at import level: no deep imports into another context's internals, no shared mutable singletons across contexts.
     Look: `grep -rn "\.\./\.\." src/` where the path crosses context directories; imports of a sibling context's `internal/` or `db/` paths.
     Fail: cross-context deep imports bypassing the public index: Medium; shared mutable singletons crossing contexts: Medium.
-22. A-ARCH-22 A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions are not coded inline in transport handlers.
+22. A-ARCH-22 (audit-only) A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions are not coded inline in transport handlers.
     Look: bodies of `routes/`, `pages/api/`, controllers, and UI event handlers for business rules.
     Fail: load-bearing invariants enforced only inside transport handlers: Medium; the same invariant duplicated across handlers with drift between copies: High.
 23. A-ARCH-23 (audit-only) API contract design, when an API or service surface exists: the API style is declared and applied consistently (REST, GraphQL, or RPC, not a different shape per endpoint); a versioning strategy exists that does not break existing consumers; a machine-readable contract (an OpenAPI document or a GraphQL schema) is present and matches the routes on disk; resources and URIs are modeled consistently for REST; and errors use one consistent envelope (RFC 7807 Problem Details or a documented equivalent), not an ad-hoc shape per endpoint.

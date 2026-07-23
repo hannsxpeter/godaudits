@@ -21,7 +21,9 @@ The intake fingerprint already carries contributor count, commit recency, tags, 
 
 ## Checks
 
-Severities are funded-product calibration; scale them per `intake.md`. A-ROAD-1 through A-ROAD-20 mirror R-ROAD-1 through R-ROAD-20 one to one; A-ROAD-21 through A-ROAD-23 are audit-only. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+Severities are funded-product calibration; scale them per `intake.md`. In plan-aware mode each check also reads the matching PLAN.mdx section and tags the R-id.
+
+Mirror boundary: A-ROAD-1..20 mirror R-ROAD-1..20 one to one; A-ROAD-21 and up are audit-only. Cross-verified against godplans: R-ROAD-1..21 defined.
 
 1. A-ROAD-1 Verify every calendar date rests on capacity math: executor count, engineer-weeks per cycle, rotation share, and a serial-fraction estimate.
    Look: roadmap artifacts; grep `20[0-9]{2}-[0-9]{2}-[0-9]{2}` for dates and `engineer-weeks`, `capacity` for the block.
