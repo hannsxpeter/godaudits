@@ -3,6 +3,63 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.11.0] - 2026-07-22
+
+A measurement-and-honesty release, drawn from reviewing what the parallel-
+ideation project uditakhourii/adhd could contribute. Its reasoning machinery was
+already present here as weighted checks; its discipline about provenance,
+limits, and a mechanical generator/critic split was the part worth taking.
+
+### Added
+
+- `godaudits refute plan` and `godaudits refute apply`: serialize independent
+  refutation into a brief-and-apply handoff. `plan` emits one brief per open
+  Critical or High finding (claim, source citation, owning check, expected
+  behavior) with the originating reasoning stripped so a separate pass reads the
+  code fresh; `apply` folds verdicts (refuted, weakened, no-refutation) into a
+  read-only disposition report. It adds no evidence to a finding: a refuted
+  finding's guard citation supports a strength or the check's pass, never the
+  finding. New zero-dependency `runtime/lib/refute.js`, covered by tests.
+- `recall_by_severity` and `missed_by_severity` in `godaudits evaluate`: a
+  dangerous miss can no longer hide behind many Low findings. Critical and High
+  are always reported, as null when unseeded, never a perfect ratio.
+- `tasks.closures` in `godaudits diff`: one entry per completed task with its
+  fixes and a closure (all-resolved, partly-open, none-resolved,
+  no-linked-findings), computed only from open-to-resolved transitions, tying a
+  score move to the remediation that earned it. Auditor-asserted, not observed,
+  and not joined to check outcomes.
+- `attribution` block in `benchmarks/blind-runs.json`: fixture and recording
+  commit, capture-era engine and pack version, capabilities, and explicit
+  model/harness null. The corpus builder reads the anchors instead of
+  placeholders and refuses to build recorded cases without the block. The
+  block and the docs also state the standing limits of the recorded detection
+  rate: no control arm, small fixtures, model and harness not captured.
+- lint gates `catalog-claims` (every prose "N checks"/"N domains" claim must
+  match the generated catalog) and `zero-dependency` (no runtime/optional/peer
+  dependency, no model-client devDependency, no third-party require in the
+  shipped runtime).
+- `.nvmrc` pinning Node 22.
+
+### Changed
+
+- Supported Node floor raised from 18 (end of life) to 22, matching CI, across
+  `engines`, the runtime doctor gate, and the docs.
+- Second-opinion pass and Phase 6 remediation gained merge discipline and a
+  class-fix rule: apply the pass whole, collide candidates against the catalog
+  before calling them novel, cross-reference rather than delete, and fix a
+  three-or-more-site finding at one shared enforcement point with a regression
+  guard.
+- Renamed `npm run eval` to `npm run eval:suites`; it runs deterministic Node
+  suites, not the behavioral cases under `evals/cases/`.
+- The npm tarball now ships `CONTRIBUTING.md`, `SECURITY.md`, and
+  `CODE_OF_CONDUCT.md`.
+
+### Fixed
+
+- Reconciled the check count: nine surfaces had claimed 419, 424, or 429 while
+  the catalog holds 431. The prompt generator now derives the count from the
+  catalog instead of a frozen literal, and `catalog-claims` gates it.
+
 ## [2.10.0] - 2026-07-16
 
 The detector corpus now measures something real. 2.9.0 built the machinery and
