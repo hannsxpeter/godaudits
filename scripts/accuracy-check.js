@@ -14,6 +14,7 @@ const { buildCatalog } = require('../skills/godaudits/runtime/lib/catalog');
 const root = path.resolve(__dirname, '..');
 const program = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/accuracy-program.json'), 'utf8'));
 const paired = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/paired-runs.json'), 'utf8'));
+const attempts = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/run-attempts.json'), 'utf8'));
 const legacy = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/blind-runs.json'), 'utf8'));
 const groundTruth = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/accuracy-ground-truth.json'), 'utf8'));
 const catalog = buildCatalog(root);
@@ -29,6 +30,7 @@ function same(left, right) {
 
 if (program.schema_version !== '1.0') errors.push('accuracy program schema_version must be 1.0');
 if (paired.schema_version !== '1.0') errors.push('paired runs schema_version must be 1.0');
+if (attempts.schema_version !== '1.0' || !Array.isArray(attempts.attempts)) errors.push('run attempts must use schema_version 1.0 and contain attempts');
 if (program.program_version !== paired.program_version) errors.push('program and paired-run versions must match');
 if (!program.protocol || !program.protocol.ground_truth_before_runs || !program.protocol.ground_truth_hidden_from_auditor) {
   errors.push('accuracy protocol must require hidden ground truth authored before runs');
@@ -182,6 +184,25 @@ for (const [pairId, runs] of pairs) {
   }
 }
 
+const attemptIds = new Set();
+let technicalFailures = 0;
+for (const attempt of attempts.attempts || []) {
+  if (attemptIds.has(attempt.attempt_id)) errors.push(`duplicate attempt id ${attempt.attempt_id}`);
+  attemptIds.add(attempt.attempt_id);
+  if (!['control', 'skill'].includes(attempt.arm)) errors.push(`${attempt.attempt_id} has invalid arm`);
+  if (attempt.status === 'recorded') {
+    const runs = pairs.get(attempt.pair_id) || [];
+    if (!runs.some((run) => run.arm === attempt.arm)) errors.push(`${attempt.attempt_id} recorded without a paired-run observation`);
+    if (typeof attempt.transcript !== 'string' || !attempt.transcript) errors.push(`${attempt.attempt_id} recorded without a transcript`);
+    else if (!fs.existsSync(path.join(root, attempt.transcript))) errors.push(`${attempt.attempt_id} transcript does not exist`);
+    if (attempt.error !== null) errors.push(`${attempt.attempt_id} recorded with an error`);
+  } else if (attempt.status === 'technical-failure') {
+    technicalFailures += 1;
+    if (attempt.transcript !== null) errors.push(`${attempt.attempt_id} technical failure must not claim a transcript`);
+    requireText(attempt.error, `${attempt.attempt_id}.error`);
+  } else errors.push(`${attempt.attempt_id} has invalid status`);
+}
+
 if (!legacy.attribution || !Object.prototype.hasOwnProperty.call(legacy.attribution, 'model')
   || !Object.prototype.hasOwnProperty.call(legacy.attribution, 'harness')) {
   errors.push('legacy blind runs must retain explicit model and harness attribution, including null');
@@ -266,6 +287,7 @@ const summary = {
   paired_observations: pairs.size,
   complete_suites: completeSuites,
   skill_lift_measured: completeSuites.length > 0,
+  technical_failures: technicalFailures,
   arms: armResults,
   errors
 };

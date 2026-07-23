@@ -15,6 +15,7 @@ const { spawn, spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const groundTruthPath = path.join(root, 'benchmarks/accuracy-ground-truth.json');
 const pairedPath = path.join(root, 'benchmarks/paired-runs.json');
+const attemptsPath = path.join(root, 'benchmarks/run-attempts.json');
 const schemaPath = path.join(root, 'benchmarks/accuracy-output.schema.json');
 const catalogPath = path.join(root, 'skills/godaudits/catalog/checks.json');
 const skillPath = fs.realpathSync(path.join(root, 'skills/godaudits/SKILL.md'));
@@ -155,7 +156,7 @@ function modelAttribution(model) {
   };
 }
 
-function harnessAttribution(options) {
+function harnessAttribution(options, check) {
   const versionResult = spawnSync('codex', ['--version'], { encoding: 'utf8' });
   if (versionResult.status !== 0) throw new Error('codex CLI is unavailable');
   const version = versionResult.stdout.trim().replace(/^codex-cli\s+/, '');
@@ -170,7 +171,14 @@ function harnessAttribution(options) {
     plugins_enabled: false,
     filesystem_skills_isolated: true,
     prompt_version: 1,
-    output_schema_sha256: schemaHash
+    output_schema_sha256: schemaHash,
+    runner_sha256: sha256(fs.readFileSync(__filename)),
+    check_definition_sha256: sha256(JSON.stringify({
+      id: check.id,
+      title: check.title,
+      look: check.look,
+      fail: check.fail
+    }))
   };
   return {
     name: 'codex-cli',
@@ -324,6 +332,22 @@ function writeArtifact(relative, content) {
   fs.writeFileSync(file, content);
 }
 
+function appendAttempt(attempt) {
+  const ledger = JSON.parse(fs.readFileSync(attemptsPath, 'utf8'));
+  ledger.attempts.push(attempt);
+  fs.writeFileSync(attemptsPath, `${JSON.stringify(ledger, null, 2)}\n`);
+}
+
+function recordPairedRun(run) {
+  const paired = JSON.parse(fs.readFileSync(pairedPath, 'utf8'));
+  paired.runs = (paired.runs || []).filter((existing) => !(existing.pair_id === run.pair_id && existing.arm === run.arm));
+  paired.runs.push(run);
+  paired.runs.sort((left, right) => left.repo.localeCompare(right.repo)
+    || left.repetition - right.repetition
+    || left.arm.localeCompare(right.arm));
+  fs.writeFileSync(pairedPath, `${JSON.stringify(paired, null, 2)}\n`);
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const suite = loadSuite(options.suite);
@@ -334,15 +358,21 @@ async function main() {
   if (selected.length === 0) throw new Error('no cases selected');
   if (options.cases.some((id) => !suite.cases.some((caseData) => caseData.id === id))) throw new Error('an unknown case was selected');
 
-  const tasks = [];
+  const requestedTasks = [];
   for (const caseData of selected) {
     for (let repetition = 1; repetition <= options.repetitions; repetition += 1) {
-      for (const arm of options.arms) tasks.push({ suiteId: suite.id, caseData, repetition, arm });
+      for (const arm of options.arms) requestedTasks.push({ suiteId: suite.id, caseData, repetition, arm });
     }
   }
+  const recorded = JSON.parse(fs.readFileSync(pairedPath, 'utf8'));
+  const completed = new Set((recorded.runs || []).map((run) => `${run.pair_id}\n${run.arm}`));
+  const tasks = requestedTasks.filter((task) => {
+    const pairId = `P-${suite.check}-${task.caseData.id.toUpperCase()}-R${task.repetition}`;
+    return !completed.has(`${pairId}\n${task.arm}`);
+  });
 
   const model = modelAttribution(options.model);
-  const harness = harnessAttribution(options);
+  const harness = harnessAttribution(options, check);
   const fixtureCommit = git('rev-parse', 'HEAD');
   const allSkills = discoverSkillFiles();
   const plan = {
@@ -351,7 +381,8 @@ async function main() {
     cases: selected.map((caseData) => caseData.id),
     repetitions: options.repetitions,
     arms: options.arms,
-    runs: tasks.length,
+    requested_runs: requestedTasks.length,
+    pending_runs: tasks.length,
     concurrency: options.concurrency,
     model,
     harness,
@@ -364,52 +395,80 @@ async function main() {
 
   const context = { options, suite, check, allSkills };
   const results = await runPool(tasks, options.concurrency, async (task, index) => {
+    const pairId = `P-${suite.check}-${task.caseData.id.toUpperCase()}-R${task.repetition}`;
+    const attemptId = crypto.randomUUID();
+    const started = new Date().toISOString();
     process.stdout.write(`[${index + 1}/${tasks.length}] ${task.caseData.id} repetition ${task.repetition} ${task.arm}\n`);
-    const run = await runCodex(task, context);
-    const artifacts = artifactPaths(task);
-    writeArtifact(artifacts.audit, `${JSON.stringify(run.audit, null, 2)}\n`);
-    writeArtifact(artifacts.transcript, run.stdout);
-    return {
-      pair_id: `P-${suite.check}-${task.caseData.id.toUpperCase()}-R${task.repetition}`,
-      arm: task.arm,
-      repo: `${suite.id}/${task.caseData.id}`,
-      check: suite.check,
-      repetition: task.repetition,
-      captured: new Date().toISOString().slice(0, 10),
-      model,
-      harness: {
-        name: harness.name,
-        version: harness.version,
-        config_sha256: harness.config_sha256
-      },
-      fixture_commit: fixtureCommit,
-      skill_commit: task.arm === 'skill' ? fixtureCommit : null,
-      skill_installed: task.arm === 'skill',
-      capabilities: ['static'],
-      result: grade(task.caseData, run.audit),
-      artifacts,
-      cost: {
-        input_tokens: run.usage && Number.isInteger(run.usage.input_tokens) ? run.usage.input_tokens : null,
-        output_tokens: run.usage && Number.isInteger(run.usage.output_tokens) ? run.usage.output_tokens : null,
-        elapsed_ms: run.elapsed
-      }
-    };
+    try {
+      const execution = await runCodex(task, context);
+      const artifacts = artifactPaths(task);
+      writeArtifact(artifacts.audit, `${JSON.stringify(execution.audit, null, 2)}\n`);
+      writeArtifact(artifacts.transcript, execution.stdout);
+      const run = {
+        pair_id: pairId,
+        arm: task.arm,
+        repo: `${suite.id}/${task.caseData.id}`,
+        check: suite.check,
+        repetition: task.repetition,
+        captured: new Date().toISOString().slice(0, 10),
+        model,
+        harness: {
+          name: harness.name,
+          version: harness.version,
+          config_sha256: harness.config_sha256
+        },
+        fixture_commit: fixtureCommit,
+        skill_commit: task.arm === 'skill' ? fixtureCommit : null,
+        skill_installed: task.arm === 'skill',
+        capabilities: ['static'],
+        result: grade(task.caseData, execution.audit),
+        artifacts,
+        cost: {
+          input_tokens: execution.usage && Number.isInteger(execution.usage.input_tokens) ? execution.usage.input_tokens : null,
+          output_tokens: execution.usage && Number.isInteger(execution.usage.output_tokens) ? execution.usage.output_tokens : null,
+          elapsed_ms: execution.elapsed
+        }
+      };
+      recordPairedRun(run);
+      appendAttempt({
+        attempt_id: attemptId,
+        pair_id: pairId,
+        arm: task.arm,
+        started,
+        completed: new Date().toISOString(),
+        status: 'recorded',
+        transcript: artifacts.transcript,
+        error: null
+      });
+      return { run, error: null };
+    } catch (error) {
+      appendAttempt({
+        attempt_id: attemptId,
+        pair_id: pairId,
+        arm: task.arm,
+        started,
+        completed: new Date().toISOString(),
+        status: 'technical-failure',
+        transcript: null,
+        error: error.message.slice(0, 2000)
+      });
+      return { run: null, error };
+    }
   });
 
-  const paired = JSON.parse(fs.readFileSync(pairedPath, 'utf8'));
-  const repos = new Set(selected.map((caseData) => `${suite.id}/${caseData.id}`));
-  paired.runs = (paired.runs || []).filter((run) => !repos.has(run.repo));
-  paired.runs.push(...results);
-  paired.runs.sort((left, right) => left.repo.localeCompare(right.repo)
-    || left.repetition - right.repetition
-    || left.arm.localeCompare(right.arm));
-  fs.writeFileSync(pairedPath, `${JSON.stringify(paired, null, 2)}\n`);
+  const successful = results.filter((result) => result.run).map((result) => result.run);
+  const failures = results.filter((result) => result.error);
   process.stdout.write(`${JSON.stringify({
-    recorded: results.length,
-    hits: results.reduce((sum, run) => sum + run.result.hits, 0),
-    misses: results.reduce((sum, run) => sum + run.result.misses, 0),
-    false_positives: results.reduce((sum, run) => sum + run.result.false_positives, 0)
+    recorded: successful.length,
+    technical_failures: failures.length,
+    hits: successful.reduce((sum, run) => sum + run.result.hits, 0),
+    misses: successful.reduce((sum, run) => sum + run.result.misses, 0),
+    false_positives: successful.reduce((sum, run) => sum + run.result.false_positives, 0)
   }, null, 2)}\n`);
+  if (failures.length) {
+    for (const failure of failures) process.stderr.write(`${failure.error.message}\n`);
+    process.exitCode = 1;
+  }
 }
 
 if (require.main === module) {

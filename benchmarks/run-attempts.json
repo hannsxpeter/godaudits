@@ -1,0 +1,5 @@
+{
+  "schema_version": "1.0",
+  "note": "Append-only technical attempt ledger for paired model runs. Failed harness attempts remain visible and do not become accuracy observations. A successful pair arm is never rerun under the same program version.",
+  "attempts": []
+}
