@@ -3,6 +3,16 @@
   "note": "Verbatim output of blind A-SEC-3 audit runs against benchmarks/fixtures/seeded/. Each run was given only one repository path and the catalog's own A-SEC-3 definition: no ground truth, no count of defects, and no indication that any repository was a clean control. Recorded exactly as returned, hits and misses alike. These recordings are the input the detector corpus derives its `recorded` cases from; regenerating the corpus never re-runs the audits, so the measurement is what the tool actually produced at capture time.",
   "captured": "2026-07-16",
   "method": "Six independent agents, one per repository, static read only, structured verdict per run.",
+  "attribution": {
+    "note": "Provenance and limits of these runs, recorded so the only detection rate the repository reports stays reproducible and legible. model and harness were not collected by the original capture schema; an explicit null records that gap rather than hiding it behind a missing field. These runs are a check-definition arm, not a skill arm: each auditor received the A-SEC-3 definition alone, not the installed skill, so nothing here compares an audit carrying the skill against the same model without it. The seeded fixtures are small, three to five files each, so a high detection rate cannot separate detector quality from fixture difficulty.",
+    "recording_commit": "37ea52e",
+    "fixture_commit": "37ea52e",
+    "engine_version": "2.10.0",
+    "pack_version": "2.10.0",
+    "capabilities": ["static"],
+    "model": null,
+    "harness": null
+  },
   "runs": [
     {
       "repo": "export-unscoped",

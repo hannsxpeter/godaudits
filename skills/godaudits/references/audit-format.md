@@ -269,8 +269,10 @@ one thing: whether seeded defects are still detected after a catalog change. Eac
 case declares its provenance. An `authored` case is a maintainer-built fixture
 that detects its own seed by construction, so it earns regression coverage and
 may never contribute to a detection rate; only a `recorded` real audit run may,
-and only above a floor of independent audits. The corpus estimates nothing about
-unseen repositories, and no number it produces reaches a per-repo score.
+and only above a floor of independent audits, carrying the provenance and limits
+in its `attribution` block (no control arm, small fixtures, model and harness not
+captured). The corpus estimates nothing about unseen repositories, and no number
+it produces reaches a per-repo score.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and
