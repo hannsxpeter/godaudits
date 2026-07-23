@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens use a non-cryptographic random source",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 6,
+      "quote": "const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;"
+    }
+  ],
+  "reasoning": "All repository files were inspected. Password hashing uses bcrypt with cost 12 and verification uses bcrypt.compare. Reset-token digest comparison is length-checked and uses timingSafeEqual, and the password reset limiter is mounted before its route. However, reset tokens are generated with Date.now and Math.random rather than a CSPRNG, so A-SEC-6 fails."
+}

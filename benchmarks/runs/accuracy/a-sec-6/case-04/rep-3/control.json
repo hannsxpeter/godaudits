@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens use predictable non-CSPRNG generation",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 6,
+      "quote": "const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset token verification does not consume the token",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "bcrypt cost 12 with bcrypt-managed salts and bcrypt.compare is used for passwords. Reset-token comparison is timing-safe and the reset endpoint returns a generic message. However, reset tokens are generated with Date.now and Math.random rather than a CSPRNG, and successful verification never marks the token used, so tokens are reusable until expiry."
+}

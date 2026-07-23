@@ -381,6 +381,366 @@
       "status": "recorded",
       "transcript": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.jsonl",
       "error": null
+    },
+    {
+      "attempt_id": "133ea188-956c-44f1-83a4-f262b6b63eb8",
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:50:38.689Z",
+      "completed": "2026-07-23T04:51:01.289Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "9e998b4c-5ca6-475e-bca0-fdef88bba3b7",
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:50:38.684Z",
+      "completed": "2026-07-23T04:51:01.979Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "672c4f0e-92fe-4324-85d6-2faf60e16721",
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:50:38.691Z",
+      "completed": "2026-07-23T04:51:12.998Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "c6dcb919-7e1a-41a8-9cee-8b2317b88e82",
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:51:01.290Z",
+      "completed": "2026-07-23T04:51:20.193Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "9665c754-a9f3-4dbb-8c62-4eeefbed2bb1",
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:01.979Z",
+      "completed": "2026-07-23T04:51:24.453Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "8bd1884c-a142-4acf-b027-dbe2080fcf89",
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:51:12.999Z",
+      "completed": "2026-07-23T04:51:36.206Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a7d563a4-0f10-41fd-81dd-1e85ab18784f",
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:51:24.453Z",
+      "completed": "2026-07-23T04:51:46.500Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2afea9a1-84fa-455a-842d-5d387529418f",
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:50:38.687Z",
+      "completed": "2026-07-23T04:51:54.874Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "dd65d6cd-e6c2-4eb8-9093-3d25f45a2f10",
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:51:46.500Z",
+      "completed": "2026-07-23T04:52:10.037Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2721831e-658a-4176-8cbb-95f23b5d95f5",
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:20.194Z",
+      "completed": "2026-07-23T04:52:11.919Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a8710942-1618-4c4a-a501-aa9eef01811c",
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:52:10.038Z",
+      "completed": "2026-07-23T04:52:29.121Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "3c235f18-4ea4-465d-8841-b5c9cbdf5bc0",
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:36.207Z",
+      "completed": "2026-07-23T04:52:29.953Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "aceb26bf-f83e-4872-b5fb-b4cef059234f",
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:54.874Z",
+      "completed": "2026-07-23T04:52:37.098Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "c5bbb89e-fab4-4560-8b31-6c64bacd9a2f",
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:11.920Z",
+      "completed": "2026-07-23T04:52:45.128Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "265b8213-090d-4d35-a4eb-aa7a307c015a",
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:52:29.123Z",
+      "completed": "2026-07-23T04:52:50.601Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "5c630be2-3b68-4f83-8995-a4f5171adc00",
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:52:37.098Z",
+      "completed": "2026-07-23T04:52:55.943Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "fc68b42c-f8b3-4192-ad52-7325e5640ed9",
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:52:50.602Z",
+      "completed": "2026-07-23T04:53:10.919Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "e187af40-105b-4b1b-9da4-ab14a40a5d00",
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:29.954Z",
+      "completed": "2026-07-23T04:53:12.958Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a9acd55e-02dd-4657-8ca3-266e450e5213",
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:45.128Z",
+      "completed": "2026-07-23T04:53:17.137Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "dd894f3c-6291-407c-a2ac-0cbcec3055ff",
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:53:10.919Z",
+      "completed": "2026-07-23T04:53:30.730Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "7bcd5392-4923-4857-a7a1-1e292d3c0883",
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:12.958Z",
+      "completed": "2026-07-23T04:53:34.381Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2e3c4151-60a8-4c13-901b-e9a437d8a646",
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:53:17.137Z",
+      "completed": "2026-07-23T04:53:34.460Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "c2bb387f-4770-4195-9099-cd635e0edba8",
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:55.943Z",
+      "completed": "2026-07-23T04:53:36.729Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "54b70084-e550-48ae-b85a-6fbf287804b1",
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:53:36.729Z",
+      "completed": "2026-07-23T04:53:52.069Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "940d005b-b478-441b-aea4-e297d37b1042",
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:53:34.382Z",
+      "completed": "2026-07-23T04:53:52.856Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "8452a9ae-d920-45a6-b9d2-3b9e67b0a75e",
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:30.730Z",
+      "completed": "2026-07-23T04:53:58.154Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "260b59a4-16cd-4c61-9468-48c341548adc",
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:52.070Z",
+      "completed": "2026-07-23T04:54:09.187Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "ad9c4730-e01d-44f9-a8f8-dc6af8a7563d",
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:53:52.856Z",
+      "completed": "2026-07-23T04:54:11.862Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "fccca18a-c65c-48cc-aa54-c88c3ef446ec",
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:58.155Z",
+      "completed": "2026-07-23T04:54:17.309Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "5d9d5426-bc5b-4d43-866e-5f8d66fa063d",
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:34.461Z",
+      "completed": "2026-07-23T04:54:20.235Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a4ae36f8-669e-48e5-bdac-108e6210b1f0",
+      "pair_id": "P-A-SEC-6-CASE-07-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:54:09.188Z",
+      "completed": "2026-07-23T04:54:24.292Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "e02d3d46-41d8-4761-8f50-8911fb9b6c5e",
+      "pair_id": "P-A-SEC-6-CASE-07-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:54:17.310Z",
+      "completed": "2026-07-23T04:54:32.326Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2cbf5cc3-3151-42bc-bd94-8196c7718f90",
+      "pair_id": "P-A-SEC-6-CASE-07-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:54:24.293Z",
+      "completed": "2026-07-23T04:54:41.374Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "04f16be8-6407-47dd-b242-63485b872412",
+      "pair_id": "P-A-SEC-6-CASE-07-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:54:11.862Z",
+      "completed": "2026-07-23T04:54:41.744Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "7146c5d2-6a7f-44e1-a6df-fab2c417118a",
+      "pair_id": "P-A-SEC-6-CASE-07-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:54:20.236Z",
+      "completed": "2026-07-23T04:54:47.682Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "658501bc-fa47-46a3-a511-f399d61a87c2",
+      "pair_id": "P-A-SEC-6-CASE-07-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:54:32.326Z",
+      "completed": "2026-07-23T04:54:52.926Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/skill.jsonl",
+      "error": null
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token comparison is not constant-time",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 20,
+      "quote": "return record.digest === suppliedDigest;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset token is not consumed after successful verification",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 20,
+      "quote": "return record.digest === suppliedDigest;"
+    }
+  ],
+  "reasoning": "bcrypt uses cost 12 with bcrypt-managed per-password salts, and the reset token is CSPRNG-generated. The limiter precedes the reset route and its error is generic. However, reset-token validation uses direct equality rather than a constant-time comparison, and verification does not mark the token used, so single-use behavior is not established."
+}

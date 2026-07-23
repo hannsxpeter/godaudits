@@ -72,6 +72,7 @@
     "test:detectors": "node scripts/detector-gate.js",
     "accuracy:check": "node scripts/accuracy-check.js",
     "accuracy:run": "node scripts/run-paired-accuracy.js",
+    "accuracy:regrade": "node scripts/regrade-accuracy.js",
     "dogfood:check": "node scripts/dogfood-check.js",
     "corpus": "node benchmarks/build-detector-corpus.js",
     "corpus:check": "node benchmarks/build-detector-corpus.js --check"

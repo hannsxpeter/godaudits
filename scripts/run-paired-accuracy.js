@@ -228,6 +228,8 @@ function grade(caseData, audit) {
       outcome: audit.outcome,
       hits: 0,
       misses: 0,
+      unscored_true_findings: 0,
+      duplicate_findings: 0,
       false_positives: falsePositives,
       severity_matches: 0,
       severity_mismatches: 0,
@@ -236,33 +238,44 @@ function grade(caseData, audit) {
     };
   }
   const expected = Array.isArray(caseData.findings) ? caseData.findings : [caseData];
+  const metricExpected = expected.filter((finding) => finding.eligible_for_metrics !== false);
   const used = new Set();
   const matches = [];
+  const findingMatchesExpected = (finding, expectedFinding) => {
+    const acceptableLines = Array.isArray(expectedFinding.acceptable_lines)
+      ? expectedFinding.acceptable_lines
+      : [expectedFinding.line];
+    return finding.path === expectedFinding.path
+      && Number.isInteger(finding.line)
+      && acceptableLines.some((line) => Math.abs(finding.line - line) <= 2);
+  };
   if (audit.outcome === 'fail') {
     for (const expectedFinding of expected) {
-      const acceptableLines = Array.isArray(expectedFinding.acceptable_lines)
-        ? expectedFinding.acceptable_lines
-        : [expectedFinding.line];
       const index = findings.findIndex((finding, candidateIndex) => !used.has(candidateIndex)
-        && finding.path === expectedFinding.path
-        && Number.isInteger(finding.line)
-        && acceptableLines.some((line) => Math.abs(finding.line - line) <= 2));
+        && findingMatchesExpected(finding, expectedFinding));
       if (index >= 0) {
         used.add(index);
         matches.push({ expected: expectedFinding, actual: findings[index] });
       }
     }
   }
-  const severityMatches = matches.filter((match) => match.actual.severity === match.expected.severity).length;
+  const metricMatches = matches.filter((match) => match.expected.eligible_for_metrics !== false);
+  const unscoredMatches = matches.filter((match) => match.expected.eligible_for_metrics === false);
+  const duplicateFindings = findings.filter((finding, index) => !used.has(index)
+    && expected.some((expectedFinding) => findingMatchesExpected(finding, expectedFinding))).length;
+  const falsePositives = findings.length - matches.length - duplicateFindings;
+  const severityMatches = metricMatches.filter((match) => match.actual.severity === match.expected.severity).length;
   return {
     outcome: audit.outcome,
-    hits: matches.length,
-    misses: expected.length - matches.length,
-    false_positives: findings.length - matches.length,
+    hits: metricMatches.length,
+    misses: metricExpected.length - metricMatches.length,
+    unscored_true_findings: unscoredMatches.length,
+    duplicate_findings: duplicateFindings,
+    false_positives: falsePositives,
     severity_matches: severityMatches,
-    severity_mismatches: matches.length - severityMatches,
-    citation_matches: matches.length,
-    citation_mismatches: findings.length - matches.length
+    severity_mismatches: metricMatches.length - severityMatches,
+    citation_matches: metricMatches.length,
+    citation_mismatches: falsePositives
   };
 }
 

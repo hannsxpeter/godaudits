@@ -39,6 +39,8 @@ test('seed grading requires the expected citation and records severity separatel
     outcome: 'fail',
     hits: 1,
     misses: 0,
+    unscored_true_findings: 0,
+    duplicate_findings: 0,
     false_positives: 0,
     severity_matches: 0,
     severity_mismatches: 1,
@@ -56,6 +58,46 @@ test('a clean-control alarm is a false positive', () => {
   assert.equal(result.misses, 0);
   assert.equal(result.false_positives, 1);
   assert.equal(result.citation_mismatches, 1);
+});
+
+test('post-run truth and duplicate citations remain visible without changing causal metrics', () => {
+  const result = grade({
+    kind: 'seeded',
+    findings: [
+      {
+        eligible_for_metrics: true,
+        path: 'src/reset.js',
+        line: 6,
+        severity: 'High'
+      },
+      {
+        eligible_for_metrics: false,
+        path: 'src/reset.js',
+        line: 16,
+        severity: 'High'
+      }
+    ]
+  }, {
+    outcome: 'fail',
+    findings: [
+      { path: 'src/reset.js', line: 6, severity: 'High' },
+      { path: 'src/reset.js', line: 16, severity: 'High' },
+      { path: 'src/reset.js', line: 17, severity: 'High' },
+      { path: 'src/other.js', line: 2, severity: 'High' }
+    ]
+  });
+  assert.deepEqual(result, {
+    outcome: 'fail',
+    hits: 1,
+    misses: 0,
+    unscored_true_findings: 1,
+    duplicate_findings: 1,
+    false_positives: 1,
+    severity_matches: 1,
+    severity_mismatches: 0,
+    citation_matches: 1,
+    citation_mismatches: 1
+  });
 });
 
 test('transcript parser retains structured output and token usage', () => {

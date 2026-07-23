@@ -1,0 +1,31 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Passwords use unsalted fast SHA-256 hashing",
+      "severity": "Critical",
+      "path": "src/passwords.js",
+      "line": 6,
+      "quote": "return createHash('sha256').update(password).digest('hex');"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Password credential comparison is not constant-time",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "return hashPassword(password) === encoded;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset token verification does not consume the token",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 14,
+      "quote": "if (!record || record.used || record.expiresAt < Date.now()) return false;"
+    }
+  ],
+  "reasoning": "All repository files were inspected. Password hashing is SHA-256 with no per-user salt and is therefore a fast, unsalted password KDF. Credential verification uses strict string equality rather than a constant-time comparison. Reset tokens are generated with CSPRNG randomBytes and compared with timingSafeEqual, but successful verification never changes record.used, allowing replay until expiry. The reset limiter is mounted before its registered route, reset responses are generic, and no development-environment bypass branch was found."
+}

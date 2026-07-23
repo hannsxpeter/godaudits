@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Development environment bypass accepts every password",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "if (process.env.NODE_ENV === 'development') return true;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset token verification does not consume the token",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "bcrypt uses cost 12, reset tokens use randomBytes and constant-time comparison, and the reset limiter is registered before its route. However, development mode bypasses password verification, and successful reset-token verification never marks the record used, so the token is reusable."
+}

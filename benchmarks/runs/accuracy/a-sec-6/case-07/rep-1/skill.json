@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset route is registered before the password limiter",
+      "severity": "High",
+      "path": "src/server.js",
+      "line": 10,
+      "quote": "app.post('/password/reset', (req, res) => {"
+    }
+  ],
+  "reasoning": "A-SEC-6 fails: the reset route is registered at src/server.js:10, while its limiter is mounted later at line 16. Other inspected controls support bcrypt cost 12, CSPRNG reset tokens, SHA-256 token digests compared with timingSafeEqual, single-use enforcement, and a generic reset response."
+}

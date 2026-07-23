@@ -1,0 +1,6 @@
+{
+  "outcome": "pass",
+  "confidence": "Firm",
+  "findings": [],
+  "reasoning": "A-SEC-6 passes on repository evidence. Passwords use bcrypt with cost 12 and bcrypt.compare. Reset tokens use randomBytes(32), are stored only as SHA-256 digests, compared with timingSafeEqual, expire, and are marked used after a match. The password limiter is registered before the reset route, reset responses are generic, and no development-environment bypass exists. No login or MFA verification route is present."
+}

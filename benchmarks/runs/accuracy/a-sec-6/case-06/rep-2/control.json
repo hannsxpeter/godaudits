@@ -1,0 +1,6 @@
+{
+  "outcome": "pass",
+  "confidence": "Firm",
+  "findings": [],
+  "reasoning": "Repository evidence supports A-SEC-6: passwords use bcrypt with cost 12 and bcrypt.compare; reset tokens use randomBytes(32), are stored as SHA-256 digests, checked with timingSafeEqual, and marked single-use; the password rate limiter is mounted before the reset route; reset responses are generic; no development-environment bypass exists. No login or MFA verification routes are present."
+}

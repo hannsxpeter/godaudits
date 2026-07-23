@@ -171,6 +171,8 @@ for (const run of paired.runs || []) {
   for (const field of [
     'hits',
     'misses',
+    'unscored_true_findings',
+    'duplicate_findings',
     'false_positives',
     'severity_matches',
     'severity_mismatches',
@@ -250,6 +252,8 @@ function summarizeArm(arm) {
     runs: runs.length,
     hits: 0,
     misses: 0,
+    unscored_true_findings: 0,
+    duplicate_findings: 0,
     false_positives: 0,
     severity_matches: 0,
     severity_mismatches: 0,
@@ -265,6 +269,8 @@ function summarizeArm(arm) {
     for (const field of [
       'hits',
       'misses',
+      'unscored_true_findings',
+      'duplicate_findings',
       'false_positives',
       'severity_matches',
       'severity_mismatches',

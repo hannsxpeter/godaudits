@@ -1,0 +1,31 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Password hashing uses fast, unsalted SHA-256 instead of an approved password KDF",
+      "severity": "Critical",
+      "path": "src/passwords.js",
+      "line": 6,
+      "quote": "  return createHash('sha256').update(password).digest('hex');"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Password credential comparison is not constant-time",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "  return hashPassword(password) === encoded;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are not consumed after verification",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 10,
+      "quote": "    used: false"
+    }
+  ],
+  "reasoning": "All repository files were inspected. The reset route has a limiter mounted before it, uses a generic response, and reset tokens use randomBytes with timingSafeEqual. However, the repository contains no operation that changes a verified reset record's used flag to true, so tokens remain reusable until expiration."
+}

@@ -81,8 +81,8 @@
       "domain": "security",
       "check": "A-SEC-6",
       "default_weight": 7.5,
-      "ground_truth_revision": 2,
-      "fixture_status": "fixture-ready",
+      "ground_truth_revision": 3,
+      "fixture_status": "recorded",
       "severity": "High",
       "seed": "The password-reset route is mounted before its rate limiter and compares reset tokens with ordinary string equality.",
       "clean_control": "The login route uses a supported password KDF and is mounted behind its limiter."

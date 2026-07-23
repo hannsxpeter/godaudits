@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Development environment bypass accepts every password",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "if (process.env.NODE_ENV === 'development') return true;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token verifier does not consume a valid token",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "The repository uses bcrypt at cost 12, a route limiter before the reset route, generic reset messaging, CSPRNG reset-token generation, and constant-time reset-token comparison. However, the explicit development-environment branch bypasses password verification. Reset-token verification checks the used flag but never sets it after successful verification, so a valid token can be reused while unexpired."
+}

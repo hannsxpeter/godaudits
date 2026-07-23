@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token comparison is not constant-time",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 20,
+      "quote": "return record.digest === suppliedDigest;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are not consumed after successful verification and can be replayed",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 20,
+      "quote": "return record.digest === suppliedDigest;"
+    }
+  ],
+  "reasoning": "bcrypt uses cost 12 with bcrypt-managed per-password salts, and reset tokens use randomBytes(32). The reset route has a limiter registered before it and returns a generic response. However, reset-token verification uses strict equality rather than a constant-time comparison, and no repository code marks a verified reset-token record as used."
+}

@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset route is registered before its rate limiter",
+      "severity": "High",
+      "path": "src/server.js",
+      "line": 10,
+      "quote": "app.post('/password/reset', (req, res) => {"
+    }
+  ],
+  "reasoning": "All four repository files were inspected. The reset handler is registered at src/server.js:10, while the password limiter is mounted later at line 16. The handler sends a response without calling next, so reset requests reach it before the limiter. Password hashing uses bcrypt with cost 12 and bcrypt comparison; reset tokens use crypto.randomBytes(32), a SHA-256 stored digest, timingSafeEqual, expiry, and a used flag. The reset response is generic, and no development-environment bypass or login/MFA route is present."
+}

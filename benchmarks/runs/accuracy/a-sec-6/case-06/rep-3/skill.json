@@ -1,0 +1,6 @@
+{
+  "outcome": "pass",
+  "confidence": "Firm",
+  "findings": [],
+  "reasoning": "A-SEC-6 passes: bcrypt cost 12 hashing and bcrypt comparison are used for passwords; reset tokens use randomBytes(32), SHA-256 storage, timingSafeEqual verification, expiry, and a used flag; the password limiter is mounted before the reset route; reset responses are generic. Repository-wide inspection found no auth routes lacking the limiter, insecure password hash calls, direct token equality checks, HMAC paths, or environment development bypasses."
+}

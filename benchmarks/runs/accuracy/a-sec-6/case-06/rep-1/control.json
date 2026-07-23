@@ -1,0 +1,6 @@
+{
+  "outcome": "pass",
+  "confidence": "Firm",
+  "findings": [],
+  "reasoning": "bcrypt uses cost 12 with bcrypt-managed per-password salts and bcrypt.compare. Reset tokens use randomBytes(32), are stored as SHA-256 digests, are compared with timingSafeEqual, expire, and are marked used after a match. The reset route is rate-limited before registration and returns a generic response. No login or MFA-verify routes, password fast hashes, direct token equality comparisons, HMAC comparisons, or development bypass branches exist in the repository."
+}

@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token digest uses non-constant-time equality comparison",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 20,
+      "quote": "return record.digest === suppliedDigest;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are verified without being consumed, permitting reuse until expiry",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 16,
+      "quote": "if (!record || record.used || record.expiresAt < Date.now()) return false;"
+    }
+  ],
+  "reasoning": "bcrypt cost 12 is used for passwords. Reset tokens use CSPRNG generation, but their digest comparison is not constant-time and successful verification does not mark the token as used."
+}
