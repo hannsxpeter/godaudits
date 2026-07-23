@@ -44,7 +44,9 @@ test('evidence-derived init and freshness validation work through the shipped CL
     '--applicable', 'all', '--evidence', evidenceFile, '--repo', repository, '--output', auditFile
   ], temporary);
   assert.equal(initialize.status, 0, initialize.stderr);
-  assert.equal(JSON.parse(fs.readFileSync(auditFile, 'utf8')).audit.project_form, 'api-service');
+  const audit = JSON.parse(fs.readFileSync(auditFile, 'utf8'));
+  assert.equal(audit.audit.project_form, 'api-service');
+  assert.equal(audit.audit.budget, 'medium');
 
   const fresh = run(['validate', auditFile, '--repo', repository, '--require-fresh-evidence'], temporary);
   assert.equal(fresh.status, 0, fresh.stderr);
@@ -52,4 +54,33 @@ test('evidence-derived init and freshness validation work through the shipped CL
   const stale = run(['validate', auditFile, '--repo', repository, '--require-fresh-evidence'], temporary);
   assert.equal(stale.status, 1);
   assert.match(stale.stderr, /fingerprint is stale/);
+});
+
+test('import-tool CLI requires and preserves scanner provenance', (t) => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'godaudits-import-'));
+  const reportFile = path.join(temporary, 'semgrep.json');
+  t.after(() => fs.rmSync(temporary, { recursive: true, force: true }));
+  fs.writeFileSync(reportFile, JSON.stringify({
+    version: '1.164.0',
+    results: [{
+      check_id: 'javascript.lang.security.audit',
+      path: 'src/app.js',
+      start: { line: 12 },
+      extra: { message: 'A scanner lead.' }
+    }]
+  }));
+
+  const missing = run(['import-tool', reportFile, '--tool', 'semgrep'], temporary);
+  assert.equal(missing.status, 1);
+  assert.match(missing.stderr, /requires --command/);
+
+  const imported = run([
+    'import-tool', reportFile, '--tool', 'semgrep',
+    '--command', 'semgrep scan --json .', '--start', '9'
+  ], temporary);
+  assert.equal(imported.status, 0, imported.stderr);
+  const evidence = JSON.parse(imported.stdout).evidence[0];
+  assert.equal(evidence.id, 'E-9');
+  assert.equal(evidence.tool_version, '1.164.0');
+  assert.equal(evidence.command, 'semgrep scan --json .');
 });

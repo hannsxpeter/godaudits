@@ -3,7 +3,12 @@
 - Case:
 - Date:
 - Skill version and commit:
-- Model and harness:
+- Model provider:
+- Model id:
+- Model snapshot:
+- Harness name:
+- Harness version:
+- Harness configuration SHA-256:
 - Target fixture and commit:
 - Capabilities:
 - Result: pass | fail | blocked | not-run

@@ -40,6 +40,7 @@
     "CONTRIBUTING.md",
     "SECURITY.md",
     "CODE_OF_CONDUCT.md",
+    "ACCURACY.md",
     "LICENSE",
     "CHANGELOG.md"
   ],
@@ -63,12 +64,14 @@
     "version:check": "node scripts/version-sync.js --check",
     "release:prepare": "node scripts/release-prepare.js",
     "lint": "bash scripts/lint.sh --all --verbose",
-    "check": "npm run version:check && npm run check-map:check && npm run corpus:check && npm run test && npm run benchmark && npm run test:detectors && npm run eval:suites && npm run lint",
+    "check": "npm run version:check && npm run check-map:check && npm run corpus:check && npm run accuracy:check && npm run dogfood:check && npm run test && npm run benchmark && npm run test:detectors && npm run eval:suites && npm run lint",
     "release:check": "bash scripts/release-check.sh",
     "install:skill": "sh install.sh",
     "prepack": "npm run check",
     "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'",
     "test:detectors": "node scripts/detector-gate.js",
+    "accuracy:check": "node scripts/accuracy-check.js",
+    "dogfood:check": "node scripts/dogfood-check.js",
     "corpus": "node benchmarks/build-detector-corpus.js",
     "corpus:check": "node benchmarks/build-detector-corpus.js --check"
   }

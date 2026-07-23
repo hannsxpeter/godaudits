@@ -26,6 +26,85 @@ const MODULES = [
   ['launch', 'launch.md']
 ];
 
+// Product depth is separate from per-check cost. Security and build
+// completeness have a deep-capable method because their modules require
+// execution-path and vertical-slice tracing. Every other domain is explicitly
+// screening-grade and carries a specialist escalation criterion.
+const DOMAIN_DEPTH = {
+  product: {
+    grade: 'screening',
+    escalation: 'Escalate when metric definitions cannot be joined to emitted events or user evidence, or when product claims conflict across code and artifacts.'
+  },
+  architecture: {
+    grade: 'screening',
+    escalation: 'Escalate when trust boundaries, load-bearing dependencies, or failure domains cannot be reconstructed without a dedicated architecture review.'
+  },
+  stack: {
+    grade: 'screening',
+    escalation: 'Escalate when supported-version, compatibility, or migration claims need current ecosystem research or executable upgrade testing.'
+  },
+  database: {
+    grade: 'screening',
+    escalation: 'Escalate money, tenant isolation, destructive migration, query-plan, and data-integrity leads to a database specialist with runtime metadata access.'
+  },
+  security: {
+    grade: 'deep-capable',
+    escalation: 'Escalate any Critical or High lead, unresolved authorization boundary, secret exposure, or runtime-only exploit path to an independent security assessment.'
+  },
+  llm: {
+    grade: 'screening',
+    escalation: 'Escalate privileged model-output sinks, prompt-injection boundaries, agent tools, and quality-critical paths without adversarial eval evidence to an AI security review.'
+  },
+  ux: {
+    grade: 'screening',
+    escalation: 'Escalate critical journeys whose usability, recovery, consent, or accessibility behavior cannot be established without moderated or runtime testing.'
+  },
+  ui: {
+    grade: 'screening',
+    escalation: 'Escalate responsive, cross-browser, visual-regression, and accessibility leads that require rendered pixels or assistive-technology testing.'
+  },
+  seo: {
+    grade: 'screening',
+    escalation: 'Escalate crawl, indexation, canonical, structured-data, and performance leads that require live crawl data, search-console data, or field measurements.'
+  },
+  'code-quality': {
+    grade: 'screening',
+    escalation: 'Escalate concurrency, lifecycle, dead-control, or performance leads that require execution, profiling, mutation testing, or property testing.'
+  },
+  'style-genome': {
+    grade: 'screening',
+    escalation: 'Escalate authorship, generated-code, and intentional-style ambiguities that cannot be resolved from representative history and repository evidence.'
+  },
+  'agent-memory': {
+    grade: 'screening',
+    escalation: 'Escalate conflicting scoped instructions, missing authority, or unresolved memory precedence to the repository governance owner.'
+  },
+  repo: {
+    grade: 'screening',
+    escalation: 'Escalate protected-branch, secret-history, provenance, and supply-chain leads that require forge administration or organization-level evidence.'
+  },
+  build: {
+    grade: 'deep-capable',
+    escalation: 'Escalate incomplete vertical slices, dead controls, runtime-only flows, or unverifiable acceptance paths to an implementation audit with executable access.'
+  },
+  roadmap: {
+    grade: 'screening',
+    escalation: 'Escalate plan-versus-delivery contradictions that require issue-tracker history, ownership decisions, or portfolio sequencing.'
+  },
+  deploy: {
+    grade: 'screening',
+    escalation: 'Escalate state migrations, rollback parity, release ordering, and production-topology leads to a release-engineering rehearsal.'
+  },
+  observe: {
+    grade: 'screening',
+    escalation: 'Escalate paper SLO, alert, runbook, and telemetry leads that require production queries, incident history, or a live failure exercise.'
+  },
+  launch: {
+    grade: 'screening',
+    escalation: 'Escalate positioning, attribution, support, and operational-readiness leads that require customer, analytics, or channel evidence.'
+  }
+};
+
 const ROUTING_CHECKS = new Set([
   'A-DB-22',
   'A-DB-24',
@@ -65,6 +144,134 @@ const BEHAVIORAL_CHECKS = new Set([
   'A-DB-24',
   'A-CODE-25',
   'A-CODE-26'
+]);
+
+// Cost tier. A deep check cannot be graded faithfully from the evidence
+// fingerprint, a manifest, or one targeted read: it needs a multi-file
+// execution-path trace (source to sink, mount order against every handler), a
+// cross-module join (declared shape against built shape, promised tiers against
+// enforcement), a full git-history pass, or runtime-shaped reasoning. Every
+// behavioral check is deep by definition; the rest are maintainer-curated from
+// each module's Look guidance. The set is validated against the parsed catalog
+// below, so a renamed or deleted check fails the build instead of silently
+// changing a tier. Everything not listed is screening: still evidence-bound,
+// but answerable from targeted reads. `godaudits init --budget medium` leaves
+// deep-trace checks unknown in the complete ledger. `--budget full` selects
+// both tiers.
+const DEEP_CHECKS = new Set([
+  'A-PRD-18',
+  'A-PRD-19',
+  'A-PRD-20',
+  'A-ARCH-10',
+  'A-ARCH-11',
+  'A-ARCH-13',
+  'A-ARCH-18',
+  'A-ARCH-20',
+  'A-ARCH-21',
+  'A-ARCH-22',
+  'A-STACK-14',
+  'A-STACK-15',
+  'A-STACK-19',
+  'A-DB-9',
+  'A-DB-10',
+  'A-DB-12',
+  'A-DB-14',
+  'A-DB-15',
+  'A-DB-19',
+  'A-DB-24',
+  'A-SEC-1',
+  'A-SEC-3',
+  'A-SEC-4',
+  'A-SEC-5',
+  'A-SEC-6',
+  'A-SEC-8',
+  'A-SEC-9',
+  'A-SEC-10',
+  'A-SEC-12',
+  'A-SEC-19',
+  'A-SEC-24',
+  'A-SEC-25',
+  'A-SEC-27',
+  'A-SEC-28',
+  'A-SEC-29',
+  'A-SEC-30',
+  'A-SEC-31',
+  'A-SEC-33',
+  'A-LLM-1',
+  'A-LLM-4',
+  'A-LLM-5',
+  'A-LLM-9',
+  'A-LLM-10',
+  'A-LLM-13',
+  'A-LLM-14',
+  'A-LLM-22',
+  'A-LLM-23',
+  'A-LLM-25',
+  'A-UX-2',
+  'A-UX-5',
+  'A-UX-8',
+  'A-UX-10',
+  'A-UX-11',
+  'A-UX-17',
+  'A-UX-21',
+  'A-UI-11',
+  'A-UI-13',
+  'A-UI-19',
+  'A-UI-22',
+  'A-UI-23',
+  'A-SEO-2',
+  'A-SEO-5',
+  'A-SEO-8',
+  'A-SEO-16',
+  'A-SEO-21',
+  'A-SEO-23',
+  'A-CODE-2',
+  'A-CODE-8',
+  'A-CODE-12',
+  'A-CODE-14',
+  'A-CODE-22',
+  'A-CODE-23',
+  'A-CODE-25',
+  'A-CODE-26',
+  'A-DNA-13',
+  'A-DNA-20',
+  'A-DNA-22',
+  'A-MEM-9',
+  'A-MEM-10',
+  'A-MEM-11',
+  'A-MEM-14',
+  'A-MEM-17',
+  'A-REPO-4',
+  'A-REPO-11',
+  'A-REPO-16',
+  'A-REPO-24',
+  'A-BUILD-4',
+  'A-BUILD-5',
+  'A-BUILD-6',
+  'A-BUILD-8',
+  'A-BUILD-9',
+  'A-BUILD-13',
+  'A-BUILD-19',
+  'A-ROAD-6',
+  'A-ROAD-15',
+  'A-ROAD-16',
+  'A-ROAD-21',
+  'A-ROAD-22',
+  'A-DEPLOY-5',
+  'A-DEPLOY-6',
+  'A-DEPLOY-13',
+  'A-DEPLOY-14',
+  'A-DEPLOY-16',
+  'A-OBS-10',
+  'A-OBS-11',
+  'A-OBS-17',
+  'A-OBS-22',
+  'A-OBS-23',
+  'A-OBS-24',
+  'A-LAUNCH-5',
+  'A-LAUNCH-11',
+  'A-LAUNCH-22',
+  'A-LAUNCH-23'
 ]);
 
 function sha256(value) {
@@ -215,6 +422,9 @@ function buildCatalog(root) {
   const projectContextErrors = validateProjectContextCatalog(projectContext);
   if (projectContextErrors.length) throw new Error(projectContextErrors.join('; '));
   const domainNames = MODULES.map(([domain]) => domain);
+  if (JSON.stringify(Object.keys(DOMAIN_DEPTH).sort()) !== JSON.stringify([...domainNames].sort())) {
+    throw new Error('domain depth registry must cover all and only catalog domains');
+  }
   for (const [name, profile] of Object.entries(profiles)) {
     const keys = Object.keys(profile.weights || {}).sort();
     if (JSON.stringify(keys) !== JSON.stringify([...domainNames].sort())) throw new Error(`risk profile ${name} must weight all and only catalog domains`);
@@ -245,6 +455,8 @@ function buildCatalog(root) {
     domains.push({
       id: domain,
       module,
+      depth_grade: DOMAIN_DEPTH[domain].grade,
+      escalation: DOMAIN_DEPTH[domain].escalation,
       check_count: domainChecks.length,
       mirror_boundary: boundary.boundary,
       godplans_requirements: boundary.godplansMax,
@@ -258,6 +470,12 @@ function buildCatalog(root) {
   sources.push(`profiles.json\n${profilesSource}`);
   sources.push(`standards.json\n${standardsSource}`);
   sources.push(`project-context.json\n${projectContextSource}`);
+  sources.push(`runtime-axes\n${JSON.stringify({
+    behavioral: [...BEHAVIORAL_CHECKS].sort(),
+    deep_trace: [...DEEP_CHECKS].sort(),
+    depth: DOMAIN_DEPTH,
+    routing: [...ROUTING_CHECKS].sort()
+  })}`);
 
   const duplicates = checks
     .map((check) => check.id)
@@ -299,6 +517,7 @@ function buildCatalog(root) {
     check.dimension_weight = dimension ? dimension.weight : 0;
     check.scoring_role = dimension ? 'weighted' : 'routing';
     check.verifiability = BEHAVIORAL_CHECKS.has(check.id) ? 'behavioral' : 'static';
+    check.cost_tier = DEEP_CHECKS.has(check.id) ? 'deep-trace' : 'screening';
   }
   for (const domain of domains) {
     if (!domain.dimensions.length) throw new Error(`${domain.id} contains no parsed scoring dimensions`);
@@ -331,6 +550,14 @@ function buildCatalog(root) {
   if (unknownBehavioral.length) {
     throw new Error(`behavioral check axis references unknown check ${unknownBehavioral.join(', ')}`);
   }
+  const unknownDeep = [...DEEP_CHECKS].filter((id) => !checkMap.has(id));
+  if (unknownDeep.length) {
+    throw new Error(`deep cost tier references unknown check ${unknownDeep.join(', ')}`);
+  }
+  const behavioralNotDeep = [...BEHAVIORAL_CHECKS].filter((id) => !DEEP_CHECKS.has(id));
+  if (behavioralNotDeep.length) {
+    throw new Error(`behavioral checks must also be deep-tier: ${behavioralNotDeep.join(', ')}`);
+  }
 
   return {
     schema_version: '1.0',
@@ -350,4 +577,4 @@ function buildCatalog(root) {
   };
 }
 
-module.exports = { BEHAVIORAL_CHECKS, MODULES, ROUTING_CHECKS, buildCatalog, expandChecks, parseChecks, parseDimensions, parseMirrorBoundary };
+module.exports = { BEHAVIORAL_CHECKS, DEEP_CHECKS, DOMAIN_DEPTH, MODULES, ROUTING_CHECKS, buildCatalog, expandChecks, parseChecks, parseDimensions, parseMirrorBoundary };

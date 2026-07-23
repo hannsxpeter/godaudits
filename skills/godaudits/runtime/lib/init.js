@@ -14,6 +14,8 @@ function commitFor(root) {
 function initAudit(catalog, options) {
   const root = path.resolve(options.root || process.cwd());
   const date = options.date || new Date().toISOString().slice(0, 10);
+  const budget = options.budget || 'medium';
+  if (!['medium', 'full'].includes(budget)) throw new Error(`unknown budget: ${budget} (known: medium, full)`);
   const applicable = new Set(options.applicable === 'all' ? catalog.domains.map((domain) => domain.id) : options.applicable);
   const knownDomains = new Set(catalog.domains.map((domain) => domain.id));
   const unknownDomains = [...applicable].filter((domain) => !knownDomains.has(domain));
@@ -79,6 +81,7 @@ function initAudit(catalog, options) {
       updated: date,
       mode: 'fresh',
       plan_aware: Boolean(options.planAware),
+      budget,
       commit: options.commit || commitFor(root),
       archetype: options.archetype,
       scale: options.scale,
@@ -117,7 +120,12 @@ function initAudit(catalog, options) {
     }],
     accepted_risks: [],
     open_questions: [],
-    session_log: [{ date, summary: 'Audit state initialized; every selected check is unknown until evaluated.' }]
+    session_log: [{
+      date,
+      summary: budget === 'medium'
+        ? 'Audit initialized at medium budget; deep-trace checks stay unknown.'
+        : 'Audit initialized at full budget; every selected check is unknown.'
+    }]
   };
 }
 

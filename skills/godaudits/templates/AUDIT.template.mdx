@@ -14,6 +14,7 @@ evidence_fingerprint_sha256: "SHA-256"
 evidence_commit: "COMMIT-SHA"
 scale: SCALE
 risk_profile: balanced
+budget: medium
 engine_version: "2.1.0"
 pack_version: "2.1.0"
 overall: 0
@@ -34,9 +35,10 @@ and biggest evidence-backed strength.
 
 ## Scope and method
 
-Commit, date, mode, archetype, scale, capability list, tool and pack versions,
-assumptions, what was examined, and what was not. Static-mode statement: no
-application code, tests, live systems, network requests, or product models ran.
+Commit, date, mode, archetype, scale, budget, capability list, tool and pack
+versions, assumptions, what was examined, and what was not. Static-mode
+statement: no application code, tests, live systems, network requests, or
+product models ran.
 
 Coverage: evaluated checks divided by applicable checks. Unknown checks are
 reported and cap the verdict.
@@ -58,10 +60,16 @@ All 18 domains appear. Excluded domains appear nowhere else.
 
 ## Scorecard
 
-| Domain | Score | Cap | Evaluated |
-|---|---:|---|---:|
-| DOMAIN | 0 | none-or-cap | 0/0 |
-| Overall | 0 | coverage, critical, weak-domain caps | 0/0 |
+| Domain | Depth | Score | Cap | Evaluated |
+|---|---|---:|---|---:|
+| DOMAIN | screening-or-deep-capable | 0 | none-or-cap | 0/0 |
+| Overall | mixed | 0 | coverage, critical, weak-domain caps | 0/0 |
+
+## Depth and escalation
+
+| Domain | Label | Deep-trace state | Escalation criterion | Up to three current finding leads |
+|---|---|---|---|---|
+| DOMAIN | screening-or-deep-capable | unknown-or-evaluated | specialist threshold | F-DOM-n or A-DOM-n |
 
 ## Standards coverage
 
@@ -74,9 +82,9 @@ Standards coverage routes to owning checks and adds no score weight.
 
 ## Check ledger
 
-| Check | Outcome | Confidence | Weight | Evidence |
-|---|---|---|---:|---|
-| A-DOM-1 | pass-fail-unknown-not-applicable | Certain-Firm-Tentative | 0 | E-1 |
+| Check | Cost tier | Outcome | Confidence | Weight | Evidence |
+|---|---|---|---|---:|---|
+| A-DOM-1 | screening-or-deep-trace | pass-fail-unknown-not-applicable | Certain-Firm-Tentative | 0 | E-1 |
 
 Every selected catalog check appears exactly once. A pass without evidence and
 an uninspected pass are validation defects.

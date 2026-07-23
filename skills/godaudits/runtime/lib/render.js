@@ -78,7 +78,10 @@ function renderAudit(audit, options = {}) {
   const computed = audit.computed;
   const evidence = new Map(audit.evidence.map((item) => [item.id, item]));
   const planAware = metadata.plan_aware === true;
-  const auditOnly = new Map(((options.catalog && options.catalog.checks) || []).map((check) => [check.id, check.audit_only === true]));
+  const catalogChecks = (options.catalog && options.catalog.checks) || [];
+  const auditOnly = new Map(catalogChecks.map((check) => [check.id, check.audit_only === true]));
+  const costTiers = new Map(catalogChecks.map((check) => [check.id, check.cost_tier || 'unlabeled']));
+  const domainDefinitions = new Map((((options.catalog && options.catalog.domains) || []).map((domain) => [domain.id, domain])));
   const lines = [];
   lines.push('---');
   lines.push(`name: ${yamlString(metadata.name)}`);
@@ -94,6 +97,7 @@ function renderAudit(audit, options = {}) {
   if (metadata.project_form) lines.push(`project_form: ${yamlString(metadata.project_form)}`);
   lines.push(`scale: ${metadata.scale}`);
   lines.push(`risk_profile: ${metadata.risk_profile}`);
+  if (metadata.budget) lines.push(`budget: ${yamlString(metadata.budget)}`);
   lines.push(`engine_version: ${yamlString(metadata.engine_version)}`);
   lines.push(`pack_version: ${yamlString(metadata.pack_version)}`);
   lines.push(`overall: ${computed.overall.score}`);
@@ -111,6 +115,8 @@ function renderAudit(audit, options = {}) {
   lines.push(`Static-read grade ${computed.overall.score}/100 (${computed.overall.verdict}): ${computed.overall.grade_scope}. Evidence basis: ${computed.overall.evidence_basis}. ${biggest ? `Biggest risk: ${mdxText(biggest.title)}.` : 'No open findings.'} ${strength ? `Biggest strength: ${mdxText(strength.title)}.` : ''}`.trim(), '');
   lines.push('## Scope and method', '');
   lines.push(`Commit ${mdxText(metadata.commit)}; ${metadata.mode} audit; ${mdxText(metadata.project_form || metadata.archetype)} form at ${metadata.scale} scale; ${metadata.risk_profile} risk profile. Capabilities: ${metadata.capabilities.map(mdxText).join(', ')}.`);
+  if (metadata.budget === 'medium') lines.push('Budget: medium. Screening checks are selected for judgment; deep-trace checks remain unknown in the complete ledger and reduce coverage.');
+  if (metadata.budget === 'full') lines.push('Budget: full. Screening and deep-trace checks are selected for judgment.');
   if (metadata.secondary_forms && metadata.secondary_forms.length) lines.push(`Secondary forms: ${metadata.secondary_forms.map(mdxText).join(', ')}.`);
   if (metadata.domain_overlays && metadata.domain_overlays.length) lines.push(`Context candidates: ${metadata.domain_overlays.map((item) => `${mdxText(item.axis)}/${mdxText(item.id)} (${item.confidence}${item.requires_verification ? ', verify' : ''})`).join('; ')}.`);
   lines.push(`Assumptions: ${metadata.assumptions.length ? metadata.assumptions.map(mdxText).join('; ') : 'none'}.`);
@@ -122,14 +128,32 @@ function renderAudit(audit, options = {}) {
   lines.push('| Domain | Status | Reason |', '|---|---|---|');
   for (const domain of audit.domains) lines.push(`| ${domain.id} | ${domain.status} | ${tableText(domain.reason || 'Checks evaluated below')} |`);
   lines.push('', '## Scorecard', '');
-  lines.push('| Domain | Score | Cap | Evaluated | Evidence basis |', '|---|---:|---|---:|---|');
+  lines.push('| Domain | Depth | Score | Cap | Evaluated | Evidence basis |', '|---|---|---:|---|---:|---|');
   for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {
     const score = computed.domains[domain.id];
     const evaluated = domain.checks.filter((check) => ['pass', 'fail'].includes(check.outcome)).length;
-    lines.push(`| ${domain.id} | ${score.score} | ${score.cap || 'none'} | ${evaluated}/${domain.checks.filter((check) => check.outcome !== 'not-applicable').length} | ${score.evidence_basis} |`);
+    const definition = domainDefinitions.get(domain.id);
+    lines.push(`| ${domain.id} | ${definition ? definition.depth_grade : 'unlabeled'} | ${score.score} | ${score.cap || 'none'} | ${evaluated}/${domain.checks.filter((check) => check.outcome !== 'not-applicable').length} | ${score.evidence_basis} |`);
   }
-  lines.push(`| Overall | ${computed.overall.score} | coverage ${computed.overall.coverage_cap}; critical ${computed.overall.critical_cap}; weak-domain ${computed.overall.weak_domain_cap} | ${computed.coverage.evaluated}/${computed.coverage.applicable} | ${computed.overall.evidence_basis} |`, '');
+  lines.push(`| Overall | mixed | ${computed.overall.score} | coverage ${computed.overall.coverage_cap}; critical ${computed.overall.critical_cap}; weak-domain ${computed.overall.weak_domain_cap} | ${computed.coverage.evaluated}/${computed.coverage.applicable} | ${computed.overall.evidence_basis} |`, '');
   lines.push(`Every score above is ${computed.overall.grade_scope}. Confidence is the auditor's own, so the evidence basis states what the grade rests on, not how often such a grade proves right.`, '');
+  if (domainDefinitions.size) {
+    lines.push('## Depth and escalation', '');
+    lines.push('Security and build completeness are deep-capable. Every other domain is screening-grade. A domain label describes this audit method, not the importance of the domain. Scanner and inventory signals remain leads until traced and refuted.', '');
+    lines.push('| Domain | Label | Deep-trace state | Escalation criterion | Up to three current finding leads |', '|---|---|---|---|---|');
+    for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {
+      const definition = domainDefinitions.get(domain.id);
+      const unknownDeep = domain.checks.filter((check) => costTiers.get(check.id) === 'deep-trace' && check.outcome === 'unknown');
+      const activeFindings = audit.findings
+        .filter((finding) => finding.domain === domain.id && ['open', 'accepted-risk'].includes(finding.status))
+        .sort(compareFinding)
+        .slice(0, 3)
+        .map((finding) => finding.id);
+      const deepState = unknownDeep.length ? `${unknownDeep.length} unknown` : 'none unknown';
+      lines.push(`| ${domain.id} | ${definition ? definition.depth_grade : 'unlabeled'} | ${deepState} | ${tableText(definition ? definition.escalation : 'No catalog criterion recorded.')} | ${activeFindings.join(', ') || 'none'} |`);
+    }
+    lines.push('');
+  }
   if (audit.standards) {
     lines.push('## Standards coverage', '');
     lines.push('Control-evidence readiness, not certification. These frameworks evidence the technical controls a code audit can see (encryption, access control, consent code, DSAR paths, audit logging, accessible markup). They do not evidence the organizational and process controls (policies, training, vendor management, incident response, physical security) that SOC 2, ISO/IEC 27001, or PCI certification require. A category below reports control-evidence readiness and never claims certification.', '');
@@ -140,10 +164,10 @@ function renderAudit(audit, options = {}) {
     lines.push('');
   }
   lines.push('## Check ledger', '');
-  lines.push('| Check | Outcome | Confidence | Weight | Evidence |', '|---|---|---|---:|---|');
+  lines.push('| Check | Cost tier | Outcome | Confidence | Weight | Evidence |', '|---|---|---|---|---:|---|');
   for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {
     for (const check of domain.checks) {
-      lines.push(`| ${check.id} | ${check.outcome} | ${check.confidence} | ${check.weight} | ${(check.evidence || []).join(', ')} |`);
+      lines.push(`| ${check.id} | ${costTiers.get(check.id) || 'unlabeled'} | ${check.outcome} | ${check.confidence} | ${check.weight} | ${(check.evidence || []).join(', ')} |`);
     }
   }
   lines.push('', '## Evidence ledger', '');

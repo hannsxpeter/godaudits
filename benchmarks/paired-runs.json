@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0",
+  "program_version": "1.0.0",
+  "note": "Paired accuracy runs only. Every pair uses the same model, model snapshot, harness, harness configuration, repository, fixture commit, target check, capabilities, and repetition. The control arm receives no installed skill; the skill arm receives the pinned skill commit. Empty means the paired experiment has not been run, not that it passed.",
+  "runs": []
+}

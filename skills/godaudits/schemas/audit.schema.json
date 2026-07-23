@@ -49,6 +49,7 @@
         "archetype": { "type": "string", "minLength": 1 },
         "scale": { "enum": ["weekend", "side-project", "funded-product", "enterprise"] },
         "risk_profile": { "enum": ["balanced", "security-critical", "growth", "library"] },
+        "budget": { "enum": ["medium", "full"] },
         "engine_version": { "type": "string", "minLength": 1 },
         "pack_version": { "type": "string", "minLength": 1 },
         "project_form": { "enum": ["web-application", "api-service", "cli-sdk", "mobile-desktop", "data-ml", "infrastructure-iac", "unknown"] },

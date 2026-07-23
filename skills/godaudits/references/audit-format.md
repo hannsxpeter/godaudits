@@ -43,6 +43,9 @@ coverage until evaluated.
 
 - `name`, `audit_version`, `status`, `created`, `updated`, and `mode`.
 - `plan_aware`, audited `commit`, `archetype`, `scale`, and `risk_profile`.
+- `budget`: `medium` selects screening checks while deep-trace checks remain
+  unknown in the complete ledger; `full` selects both cost tiers. New audits
+  default to medium. Its unknowns lower compiled coverage.
 - Optional `project_form`, `secondary_forms`, and `domain_overlays` preserve the four-axis intake result while `archetype` remains the compatibility field.
 - Optional `evidence_fingerprint_sha256` and `evidence_commit` bind the audit to the evidence snapshot. Release and re-audit gates require them.
 - `engine_version` and `pack_version`.
@@ -79,10 +82,14 @@ Required: tool name, tool version, exact command, normalized result, and
 provenance. Import scanner output as evidence; do not copy a scanner conclusion
 directly into a finding without tracing reachability and ownership.
 
-Use `godaudits import-sarif scanner.sarif` to normalize SARIF 2.1.0 results.
-Select a non-conflicting starting evidence id with `--start` before merging the
-records into AUDIT.json. Imported messages pass through secret masking and
-remain evidence leads, never automatic findings.
+Use `godaudits import-sarif scanner.sarif` to normalize SARIF 2.1.0 results, or
+`godaudits import-tool REPORT --tool TOOL --command "COMMAND"` for SARIF,
+Semgrep, ast-grep, Gitleaks, and OSV-Scanner JSON. Supply `--tool-version` when
+the report does not embed it. Select a non-conflicting starting evidence id
+with `--start` before merging the records into AUDIT.json. Imported messages
+and command lines pass through secret masking and remain evidence leads, never
+automatic findings. Gitleaks secret values never enter output; only a short
+one-way fingerprint is retained for correlation.
 
 ### Runtime evidence
 

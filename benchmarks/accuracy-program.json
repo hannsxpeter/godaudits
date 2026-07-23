@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0",
+  "program_version": "1.0.0",
+  "authored": "2026-07-22",
+  "selection": {
+    "rule": "Select the highest default-weight check in each catalog domain. When checks tie, select the lowest numeric check id.",
+    "catalog_pack": "2.11.0"
+  },
+  "protocol": {
+    "ground_truth_before_runs": true,
+    "ground_truth_hidden_from_auditor": true,
+    "seeded_repositories_per_target": 5,
+    "clean_controls_per_target": 1,
+    "runs_per_arm": 3,
+    "arms": ["control", "skill"],
+    "same_model_repo_harness_within_pair": true,
+    "required_attribution": [
+      "model.provider",
+      "model.id",
+      "model.snapshot",
+      "harness.name",
+      "harness.version",
+      "harness.config_sha256",
+      "fixture_commit",
+      "skill_commit"
+    ],
+    "publication": "Publish hits, misses, false positives, severity accuracy, clean-control rate, token cost, and elapsed time in ACCURACY.md. Never publish a skill-lift number without complete paired arms."
+  },
+  "legacy_pilot": {
+    "check": "A-SEC-3",
+    "ground_truth": "benchmarks/seeded-ground-truth.json",
+    "runs": "benchmarks/blind-runs.json",
+    "eligible_for_skill_lift": false,
+    "reason": "The original capture did not record model or harness and has no installed-skill arm."
+  },
+  "targets": [
+    {
+      "domain": "product",
+      "check": "A-PRD-5",
+      "default_weight": 10,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "The product artifact names activation and retention success metrics, but no shipped event or aggregation can compute either metric.",
+      "clean_control": "A neighboring metric has an explicit event-level definition and a live emitting call site."
+    },
+    {
+      "domain": "architecture",
+      "check": "A-ARCH-13",
+      "default_weight": 15,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "A multi-tenant mutation relies on one route-local tenant check, with no second isolation layer and one sibling path outside the guard.",
+      "clean_control": "Authentication and network-edge boundaries have two independent enforcement layers."
+    },
+    {
+      "domain": "stack",
+      "check": "A-STACK-14",
+      "default_weight": 8.33333333,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Medium",
+      "seed": "A pinned direct production dependency is archived and has been silent for more than 18 months at the fixture's evidence date.",
+      "clean_control": "A superficially old direct dependency remains maintained and supported at the pinned version."
+    },
+    {
+      "domain": "database",
+      "check": "A-DB-6",
+      "default_weight": 7,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "An orders.customer_id column and ORM association exist without a database foreign key in the shipped migrations.",
+      "clean_control": "A disposable sessions.user_id relationship has a correctly typed foreign key and intentional cascade."
+    },
+    {
+      "domain": "security",
+      "check": "A-SEC-6",
+      "default_weight": 7.5,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "The password-reset route is mounted before its rate limiter and compares reset tokens with ordinary string equality.",
+      "clean_control": "The login route uses a supported password KDF and is mounted behind its limiter."
+    },
+    {
+      "domain": "llm",
+      "check": "A-LLM-14",
+      "default_weight": 8,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Critical",
+      "seed": "A model-returned boolean is parsed from JSON without schema validation and directly authorizes a privileged action.",
+      "clean_control": "A neighboring extraction path validates strict structured output before using it."
+    },
+    {
+      "domain": "ux",
+      "check": "A-UX-8",
+      "default_weight": 13,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "The sign-in form blocks paste into the password field while a nearby profile form permits normal keyboard and autofill behavior.",
+      "clean_control": "The core recovery flow remains keyboard reachable and preserves focus order."
+    },
+    {
+      "domain": "ui",
+      "check": "A-UI-12",
+      "default_weight": 10.25641026,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Critical",
+      "seed": "The primary application shell has a fixed 1200px width and forces horizontal scrolling at a 320px viewport.",
+      "clean_control": "A sibling public page uses fluid containers, reserved media dimensions, and non-hover controls."
+    },
+    {
+      "domain": "seo",
+      "check": "A-SEO-2",
+      "default_weight": 6.5,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Critical",
+      "seed": "An indexable product route emits an empty server shell and adds its body, title, canonical, and JSON-LD only after client hydration.",
+      "clean_control": "A sibling indexable route returns complete metadata and body content in initial HTML."
+    },
+    {
+      "domain": "code-quality",
+      "check": "A-CODE-18",
+      "default_weight": 6,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Medium",
+      "seed": "The README names a removed start command and omits a required production environment variable used by the entry point.",
+      "clean_control": "Build and test commands in the same README match package scripts."
+    },
+    {
+      "domain": "style-genome",
+      "check": "A-DNA-4",
+      "default_weight": 8,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Medium",
+      "seed": "One load-bearing module has narration comments at more than three times the representative sample's comment density.",
+      "clean_control": "Neighboring modules use sparse comments that explain decisions rather than restating code."
+    },
+    {
+      "domain": "agent-memory",
+      "check": "A-MEM-5",
+      "default_weight": 10,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "A repository claiming Pillars compliance has agents/context.md marked present but stubbed and agents/repo.md missing.",
+      "clean_control": "A scoped optional pillar is intentionally excluded with a reason and does not stand in for either floor pillar."
+    },
+    {
+      "domain": "repo",
+      "check": "A-REPO-15",
+      "default_weight": 8,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Low",
+      "seed": "A gitleaks configuration exists but no pre-commit or CI command loads it, creating an unwired paper control.",
+      "clean_control": "A pre-push hook explicitly rejects force pushes to protected branches."
+    },
+    {
+      "domain": "build",
+      "check": "A-BUILD-11",
+      "default_weight": 10,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Medium",
+      "seed": "Theme tokens are declared, but the only rendered primary component retains the framework's unmodified default theme and hard-coded colors.",
+      "clean_control": "A sibling component inherits the committed primary-color token and uses the installed icon library."
+    },
+    {
+      "domain": "roadmap",
+      "check": "A-ROAD-3",
+      "default_weight": 7.5,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "Medium",
+      "seed": "Scheduled roadmap rows are bare feature names such as SSO and dark mode, with no outcome, appetite, or owner.",
+      "clean_control": "A neighboring row is outcome-framed and names its checkpoint and owner."
+    },
+    {
+      "domain": "deploy",
+      "check": "A-DEPLOY-5",
+      "default_weight": 10,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "One populated-table migration adds a required replacement column, backfills it, and drops the old column in the same deploy.",
+      "clean_control": "A neighboring schema change separates expand and contract with an explicit cutover."
+    },
+    {
+      "domain": "observe",
+      "check": "A-OBS-13",
+      "default_weight": 5,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "A request metric sends user_id and request_id as labels to a per-series backend with no exclusion rule.",
+      "clean_control": "Trace identifiers remain in logs and spans, not metric labels."
+    },
+    {
+      "domain": "launch",
+      "check": "A-LAUNCH-1",
+      "default_weight": 6.66666667,
+      "ground_truth_revision": 1,
+      "fixture_status": "ground-truth-authored",
+      "severity": "High",
+      "seed": "The landing hero remains equally plausible after substituting two direct competitor names and states no falsifiable differentiator.",
+      "clean_control": "A supporting positioning note names the audience and replacement but is not enough to repair the generic hero."
+    }
+  ]
+}
