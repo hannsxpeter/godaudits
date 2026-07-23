@@ -196,6 +196,9 @@ test('a plan-blind audit prints A-ids alone, with no derived R-id', () => {
   const mdx = renderAudit(compiled, { catalog });
   assert.match(mdx, /- Checks: A-SEC-3\n/);
   assert.doesNotMatch(mdx, /R-SEC-3/);
+  assert.match(mdx, /## Depth and escalation/);
+  assert.match(mdx, /\| security \| deep-capable \|/);
+  assert.match(mdx, /\| A-SEC-3 \| deep-trace \| fail \|/);
 });
 
 test('a plan-aware finding traces its mirrored check to the godplans R-id', () => {

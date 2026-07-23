@@ -64,6 +64,26 @@ number is narrower than it reads. Three limits are recorded in the file's
 The rate is an internal regression signal, never a reliability estimate for
 unseen repositories, and no number it produces reaches a per-repo score.
 
+## Standing accuracy program
+
+[`../ACCURACY.md`](../ACCURACY.md) is the versioned public result. It reports
+hits, misses, false positives, severity matches, clean controls, and the gaps
+that make a number ineligible for a broader claim.
+
+`benchmarks/accuracy-program.json` records ground truth before runs for one
+highest-weight check in each domain. A deterministic tie-break selects the
+lowest numeric check id when weights tie. Every target records its intended
+defect, clean control, severity, and ground-truth revision outside the future
+fixture repository.
+
+`benchmarks/paired-runs.json` is reserved for the missing causal arm: the same
+model, snapshot, harness, harness configuration, repository, fixture commit,
+check, capabilities, and repetition with and without the installed skill. New
+runs require non-null model and harness attribution. `npm run accuracy:check`
+rejects incomplete pairs, duplicate arms, target drift, attribution gaps, and
+any pinned field that differs across the pair. An empty runs array means skill
+lift has not been measured.
+
 ## Deterministic product evaluations
 
 `npm run eval:suites` runs focused suites for Pillars 1.1 routing, all six project
@@ -95,8 +115,11 @@ For a full model benchmark:
 3. Run the audit in a fresh context at a pinned commit and pack version.
 4. Validate and compile AUDIT.json.
 5. Evaluate against the hidden expected manifest.
-6. Repeat across models, harnesses, and at least three runs.
-7. Report mean, worst run, score variance, token cost, and elapsed time.
+6. Pair the same model, repository, and harness without and with the installed
+   skill.
+7. Repeat each arm at least three times.
+8. Report mean, worst run, score variance, misses, false positives, token cost,
+   and elapsed time.
 
 Critical and High recall should be reported separately because aggregate recall
 can hide a dangerous miss behind many Low findings.
@@ -112,6 +135,10 @@ can hide a dangerous miss behind many Low findings.
 - Licensing permits fixture redistribution.
 - Fixture commits are immutable after publication; corrections create a new
   fixture version.
+- Every run records model provider, model id, model snapshot, harness name,
+  harness version, harness configuration hash, fixture commit, and skill commit.
+- Public OSS retrospectives require a documented CVE or postmortem tied to a
+  repository revision and specific code-level ground truth.
 
 ## What the benchmark does not prove
 

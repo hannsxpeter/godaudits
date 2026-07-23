@@ -13,6 +13,7 @@ const { initAudit } = require('./lib/init');
 const { renderAudit } = require('./lib/render');
 const { auditToSarif } = require('./lib/sarif');
 const { importSarif } = require('./lib/sarif-import');
+const { importTool, ADAPTERS } = require('./lib/tool-import');
 const { analyzePillars } = require('./lib/pillars');
 const { validateProjectContextCatalog } = require('./lib/project-context');
 const { planProbes, applyResults } = require('./lib/verify-runtime');
@@ -25,11 +26,12 @@ function usage() {
   return `godaudits evidence [repo] [--output file]
 godaudits pillars [repo] --task "work description" [--target path] [--output file]
 godaudits catalog [--output file]
-godaudits init --name slug [--archetype type] --scale scale --profile balanced --applicable all|domain,domain [--evidence file] [--output file]
+godaudits init --name slug [--archetype type] --scale scale --profile balanced --applicable domain,domain [--budget medium|full] [--evidence file] [--output file]
 godaudits validate <AUDIT.json> [--repo directory] [--require-fresh-evidence] [--write]
 godaudits render <AUDIT.json> [--output AUDIT.mdx]
 godaudits sarif <AUDIT.json> [--output AUDIT.sarif]
 godaudits import-sarif <tool.sarif> [--start 1] [--output TOOL-EVIDENCE.json]
+godaudits import-tool <report.json> --tool sarif|semgrep|ast-grep|gitleaks|osv-scanner --command "scanner command" [--tool-version version] [--start 1] [--output TOOL-EVIDENCE.json]
 godaudits diff <previous.json> <current.json>
 godaudits evaluate <AUDIT.json> <expected.json>
 godaudits verify-runtime plan <AUDIT.json> [--output PROBES.json]
@@ -148,6 +150,7 @@ function main() {
       scale,
       riskProfile: option(args, '--profile', 'balanced'),
       applicable,
+      budget: option(args, '--budget', 'medium'),
       root: option(args, '--repo', process.cwd()),
       planAware: args.includes('--plan-aware'),
       policyPack: option(args, '--policy-pack', 'provider-neutral@1'),
@@ -194,6 +197,21 @@ function main() {
     const start = Number(option(args, '--start', '1'));
     if (!Number.isInteger(start) || start < 1) throw new Error('--start must be a positive integer');
     const imported = importSarif(readJson(args[0]), { source: args[0], start });
+    writeOrPrint(imported, option(args, '--output'));
+    return 0;
+  }
+  if (command === 'import-tool') {
+    if (!args[0] || args[0].startsWith('--')) throw new Error('import-tool requires a report file');
+    const tool = option(args, '--tool');
+    if (!tool) throw new Error(`import-tool requires --tool (${Object.keys(ADAPTERS).join('|')})`);
+    const start = Number(option(args, '--start', '1'));
+    if (!Number.isInteger(start) || start < 1) throw new Error('--start must be a positive integer');
+    const imported = importTool(tool, readJson(args[0]), {
+      source: args[0],
+      start,
+      toolVersion: option(args, '--tool-version'),
+      command: option(args, '--command')
+    });
     writeOrPrint(imported, option(args, '--output'));
     return 0;
   }

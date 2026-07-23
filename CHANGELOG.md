@@ -3,7 +3,7 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
-## [2.11.0] - 2026-07-22
+## [2.11.0] - 2026-07-23
 
 A measurement-and-honesty release, drawn from reviewing what the parallel-
 ideation project uditakhourii/adhd could contribute. Its reasoning machinery was
@@ -39,6 +39,21 @@ limits, and a mechanical generator/critic split was the part worth taking.
   dependency, no model-client devDependency, no third-party require in the
   shipped runtime).
 - `.nvmrc` pinning Node 22.
+- `ACCURACY.md` and a versioned accuracy program covering the highest-weight
+  check in every domain. The protocol requires ground truth before runs,
+  model and harness attribution, clean controls, misses and false positives,
+  and matched with-skill versus without-skill arms before reporting skill
+  lift. The validator currently reports the honest baseline: zero replicated
+  target pairs and no measured lift.
+- `godaudits import-tool` adapters for SARIF, Semgrep, ast-grep, Gitleaks, and
+  OSV-Scanner. Imported scanner output remains evidence leads rather than
+  findings, preserves command and version provenance, and fingerprints rather
+  than reproduces detected secrets.
+- A versioned dogfood publication contract and repository index. A published
+  entry must pin the audited revision, record model and harness attribution,
+  include source evidence plus generated audit artifacts, and disclose misses
+  and false positives. The empty index makes the current absence of qualifying
+  public OSS audits explicit.
 
 ### Changed
 
@@ -53,6 +68,20 @@ limits, and a mechanical generator/critic split was the part worth taking.
   suites, not the behavioral cases under `evals/cases/`.
 - The npm tarball now ships `CONTRIBUTING.md`, `SECURITY.md`, and
   `CODE_OF_CONDUCT.md`.
+- Every catalog check now declares a `screening` or `deep-trace` cost tier.
+  `godaudits init` defaults to `--budget medium`, which keeps the complete
+  ledger but leaves deep-trace checks unknown. `--budget full` enables both
+  tiers, so a smaller budget cannot silently overstate coverage.
+- Focused audits are now the documented default. Per-domain work runs in fresh
+  context with the domain module, selected checks, and only the relevant leads
+  from `EVIDENCE.json`; full all-domain audits are an explicit exception.
+- Domain metadata now labels security and build as deep-capable and all other
+  domains as screening-grade. Each domain carries an escalation criterion, and
+  reports surface up to three repository-specific leads when the catalog
+  ceiling is reached.
+- Stable releases are limited to one per 30-day window except for security,
+  broken installation, or material accuracy corrections. Ordinary changes
+  accumulate without a version bump.
 
 ### Fixed
 

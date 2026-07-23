@@ -114,6 +114,7 @@ function validateAudit(audit, options = {}) {
     if (!['static', 'sandbox', 'connected'].includes(capability)) errors.push(`invalid audit capability: ${capability}`);
   }
   if (!metadata.risk_profile) errors.push('audit.risk_profile is required');
+  if (metadata.budget !== undefined && !['medium', 'full'].includes(metadata.budget)) errors.push(`invalid audit.budget: ${metadata.budget}`);
   if (metadata.project_form !== undefined && !['web-application', 'api-service', 'cli-sdk', 'mobile-desktop', 'data-ml', 'infrastructure-iac', 'unknown'].includes(metadata.project_form)) {
     errors.push(`invalid audit.project_form: ${metadata.project_form}`);
   }
@@ -495,10 +496,22 @@ function validateAudit(audit, options = {}) {
     const expectedDomains = new Set(catalog.domains.map((domain) => domain.id));
     for (const id of expectedDomains) if (!domainIds.has(id)) errors.push(`missing applicability row for ${id}`);
     for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {
+      // The ledger stays complete at every budget. Medium selects screening
+      // checks for judgment and leaves deep-trace checks unknown, so coverage
+      // exposes the work not performed. Legacy audits without a budget retain
+      // the pre-budget full-catalog behavior.
       const expected = new Set(catalog.checks.filter((check) => check.domain === domain.id).map((check) => check.id));
       const actual = new Set(domain.checks.map((check) => check.id));
       for (const id of expected) if (!actual.has(id)) errors.push(`${domain.id} ledger is missing ${id}`);
       for (const id of actual) if (!expected.has(id)) errors.push(`${domain.id} ledger contains unknown check ${id}`);
+      if (metadata.budget === 'medium') {
+        for (const check of domain.checks) {
+          const definition = catalog.checks.find((item) => item.id === check.id);
+          if (definition && definition.cost_tier === 'deep-trace' && check.outcome !== 'unknown') {
+            errors.push(`${check.id} is deep-trace and must stay unknown at a medium budget`);
+          }
+        }
+      }
       for (const check of domain.checks) {
         const definition = catalog.checks.find((item) => item.id === check.id);
         if (definition && Math.abs(check.weight - definition.default_weight) > 0.0001) {

@@ -31,7 +31,9 @@ deterministic runtime. Contributions must protect both halves of that contract.
 4. Add or update a deterministic evaluation and behavioral case when routing,
    artifact truth, standards, freshness, or remediation behavior changes.
 5. Regenerate the catalog and prompts when their sources change.
-6. Add a CHANGELOG entry and update every version surface for a release.
+6. Accumulate ordinary changes without a version bump. Follow
+   `docs/RELEASE-POLICY.md`; add one CHANGELOG entry and update version surfaces
+   only when cutting the batched stable release.
 7. Run `npm run check` until it passes.
 8. Install both pinned validator requirement files, then run
    `npm run release:check` before a release.

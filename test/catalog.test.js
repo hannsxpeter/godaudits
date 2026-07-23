@@ -73,3 +73,19 @@ test('catalog records inspection and failure guidance', () => {
   assert.match(check.look, /route|handler|middleware/i);
   assert.match(check.fail, /Critical|High|authorization|tenant/i);
 });
+
+test('catalog assigns every check a cost tier and every domain an honest depth label', () => {
+  const catalog = buildCatalog(root);
+  assert.ok(catalog.checks.every((check) => ['screening', 'deep-trace'].includes(check.cost_tier)));
+  for (const domain of catalog.domains) {
+    const checks = catalog.checks.filter((check) => check.domain === domain.id);
+    assert.ok(checks.some((check) => check.cost_tier === 'screening'), `${domain.id} has screening checks`);
+    assert.ok(checks.some((check) => check.cost_tier === 'deep-trace'), `${domain.id} has deep-trace checks`);
+    assert.ok(['screening', 'deep-capable'].includes(domain.depth_grade));
+    assert.match(domain.escalation, /^Escalate /);
+  }
+  assert.deepEqual(
+    catalog.domains.filter((domain) => domain.depth_grade === 'deep-capable').map((domain) => domain.id),
+    ['security', 'build']
+  );
+});

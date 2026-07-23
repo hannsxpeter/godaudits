@@ -18,9 +18,9 @@ function importSarif(sarif, options = {}) {
   for (const run of sarif.runs) {
     const driver = run.tool && run.tool.driver ? run.tool.driver : {};
     const tool = driver.name || 'unknown-sarif-tool';
-    const toolVersion = driver.semanticVersion || driver.version || 'unknown';
+    const toolVersion = options.toolVersion || driver.semanticVersion || driver.version || 'unknown';
     const invocation = run.invocations && run.invocations[0];
-    const command = redactSecrets(invocation && invocation.commandLine ? invocation.commandLine : `imported SARIF ${source}`);
+    const command = redactSecrets(options.command || (invocation && invocation.commandLine) || `imported SARIF ${source}`);
     for (const result of run.results || []) {
       const location = result.locations && result.locations[0] && result.locations[0].physicalLocation;
       const artifact = location && location.artifactLocation;

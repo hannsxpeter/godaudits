@@ -8,7 +8,7 @@ not lose it when they copy only the canonical skill directory.
 
 | Component | Responsibility |
 |---|---|
-| `lib/catalog.js` | Parse modules, checks, Look and Fail guidance, scoring dimensions, routing checks, weights, risk profiles, version, and source hash |
+| `lib/catalog.js` | Parse modules, checks, Look and Fail guidance, scoring dimensions, cost tiers, depth and escalation labels, routing checks, weights, risk profiles, version, and source hash |
 | `lib/evidence.js` | Deterministic file inventory, hashes, language counts, static signals, absence evidence, context composition, exclusions, and redaction |
 | `lib/project-context.js` | Validate six forms and 37 arc-ready profiles, detect overlays, and audit arc-ready artifact and ledger drift |
 | `lib/pillars.js` | Parse and validate Pillars 1.1 memory, nested scopes, portable routing, references, state, and budgets |
@@ -17,6 +17,7 @@ not lose it when they copy only the canonical skill directory.
 | `lib/render.js` | Render GFM-safe MDX from compiled state |
 | `lib/sarif.js` | Export SARIF 2.1.0 findings and source locations |
 | `lib/sarif-import.js` | Import SARIF 2.1.0 results as secret-safe tool evidence |
+| `lib/tool-import.js` | Normalize Semgrep, ast-grep, Gitleaks, OSV-Scanner, and SARIF reports as versioned evidence leads |
 | `lib/diff.js` | Compare stable finding ids and score movement across re-audits |
 | `lib/evaluate.js` | Measure expected-finding recall, precision, severity, citations, closure, and clean controls |
 | `lib/verify-runtime.js` | Plan runtime probes for behavioral findings and fold executed results into a verification report |
@@ -33,6 +34,7 @@ cross-record rules that JSON Schema cannot express conveniently:
 
 - Pack version and complete catalog coverage.
 - Risk-profile domain weights and catalog check weights.
+- Medium or full budget semantics, including deep-trace unknowns at medium.
 - Unique ids and evidence references.
 - Pass, fail, unknown, and not-applicable semantics.
 - Mandatory per-type evidence provenance and credential-shape rejection.
@@ -60,6 +62,11 @@ Scoring dimension weights are divided across their listed checks. Conditional
 checks retain catalog weights and drop out through `not-applicable`, after which
 the compiler normalizes active evaluated weights. Sweep checks that score inside
 another control are marked `routing` with zero direct weight.
+Every check is also labeled `screening` or `deep-trace`. A medium-budget audit
+keeps the full selected-domain ledger but must leave deep-trace checks unknown,
+so the normal coverage compiler exposes skipped work. Domain metadata labels
+security and build completeness deep-capable, labels the rest screening-grade,
+and carries a specialist escalation criterion for each domain.
 `catalog/standards.json` maps OWASP Web Top 10:2025 categories to existing
 checks. `catalog/project-context.json` pins the six forms, 37 arc-ready profiles,
 regulatory candidates, and canonical artifact paths. Both catalogs are
@@ -92,9 +99,13 @@ Pillars-absent evidence, then proves malformed nested state is rejected.
 The collector intentionally uses conservative regex signals. Domain evaluators
 must trace reachability, framework behavior, and compensating controls.
 
-`import-sarif` provides the same trust separation for external scanners. It
-normalizes tool name, version, command provenance, result text, and location,
-masks credential-shaped values, and creates evidence records only.
+`import-sarif` and `import-tool` provide the same trust separation for external
+scanners. Adapters cover SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner.
+They normalize tool name, version, producing command, result text, rule or
+package scope, and location, mask credential-shaped values, and create evidence
+records only. Non-SARIF adapters refuse missing command provenance and refuse an
+unknown tool version when the report does not embed one. Gitleaks never emits
+the matched secret; it emits only a short SHA-256 fingerprint.
 
 ## Freshness and artifact truth
 

@@ -2,7 +2,13 @@
 
 The deterministic runtime suite proves parsers, routing, schemas, and invariants. These cases test the agent behavior that code alone cannot prove: evidence judgment, refutation, ownership, and remediation quality.
 
-Run each case in a clean task with the current canonical `skills/godaudits/` directory installed. Record the exact model, harness, skill commit, target fixture commit, capabilities, outputs, and scored invariants in a copy of `RESULTS-TEMPLATE.md`. A result is publishable only when the generated audit artifacts are retained or linked. Do not claim a live-harness score from deterministic tests.
+Run each case in a clean task with the current canonical `skills/godaudits/`
+directory installed. Record the model provider, model id, model snapshot,
+harness name, harness version, harness configuration SHA-256, skill commit,
+target fixture commit, capabilities, outputs, and scored invariants in a copy of
+`RESULTS-TEMPLATE.md`. A result is publishable only when the generated audit
+artifacts are retained or linked. Do not claim a live-harness score from
+deterministic tests.
 
 Release policy:
 

@@ -58,16 +58,17 @@ Commands below use `godaudits`. When it is not on PATH, replace it with `node <s
 godaudits doctor
 godaudits evidence . --output .godaudits/EVIDENCE.json
 godaudits pillars . --task "TASK" --target PATH
-godaudits init --name PROJECT --scale SCALE --profile PROFILE --applicable all --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
+godaudits init --name PROJECT --scale SCALE --profile PROFILE --applicable security,build,repo --budget medium --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
 godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 godaudits import-sarif scanner.sarif --output .godaudits/TOOL-EVIDENCE.json
+godaudits import-tool semgrep.json --tool semgrep --command "semgrep scan --json ." --output .godaudits/TOOL-EVIDENCE.json
 godaudits diff .godaudits/archive/AUDIT-v1.json .godaudits/AUDIT.json
 godaudits evaluate .godaudits/AUDIT.json expected.json
 ```
 
-The runtime never decides whether a signal is a finding. `EVIDENCE.json` contains deterministic inventory leads and absence records. `import-sarif` converts scanner results into secret-safe tool evidence without creating findings. Domain passes trace, interpret, and refute both sources.
+The runtime never decides whether a signal is a finding. `EVIDENCE.json` contains deterministic inventory leads and absence records. `import-sarif` and `import-tool` convert SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner results into secret-safe tool evidence without creating findings. Non-SARIF adapters require the producing command and a tool version when the report does not embed one. Domain passes trace, interpret, and refute both sources.
 
 ## Method
 
@@ -82,6 +83,8 @@ Read the mode-detection section of `references/intake.md`.
 - No source -> refuse and point to godplans.
 - `.godplans/PLAN.mdx` exists -> add the plan-aware overlay.
 - User names domains -> focused audit. Every domain still gets an applicability row; domains outside the requested focus are excluded with that exact reason.
+- No domain scope named -> focused audit is still the default. Select the smallest set justified by the requested concern, project form, and highest-risk evidence leads. Record every other domain as excluded with that scope reason.
+- Full audit -> only when the user explicitly requests full-project due diligence or equivalent breadth. Pass `--applicable all --budget full` and ensure every domain module fits the available context.
 
 Record the commit, runtime and pack versions, selected capabilities, tool versions, assumptions, and constraints. Run `godaudits doctor`. If Node is unavailable, continue manually but mark deterministic validation unavailable and every affected check unknown. Never claim full coverage in degraded mode.
 
@@ -101,7 +104,7 @@ Read `references/intake.md` fully. Run the static fingerprint command before dom
 
 Complete the primary and secondary project forms, product and industry overlays, regulatory candidates, compatibility archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. A regulatory candidate never establishes legal applicability without verification. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
 
-Initialize AUDIT.json after intake. For focused audits, pass the comma-separated applicable domains instead of `all`. Initialization creates the complete catalog ledger with every selected check marked unknown.
+Initialize AUDIT.json after intake. For focused audits, pass the comma-separated applicable domains instead of `all`. Medium is the default budget: evaluate screening checks and leave every deep-trace check unknown in the complete selected-domain ledger. Unknowns lower coverage. Full budget selects both tiers and is explicit.
 
 ### Phase 3: Domain passes and check ledger
 
@@ -129,6 +132,10 @@ For each applicable domain, in this order, read its module at the moment of use 
 | 18 | Launch readiness | `references/launch.md` |
 
 For each check, update its outcome, confidence, evidence references, and finding ids. Preserve the catalog-provided weight. A routing check with zero direct weight must map its finding to the weighted owning check it affects. In plan-aware mode, the generated AUDIT.mdx derives each finding's R-id from its mirrored check ids by A-to-R substitution and skips audit-only checks; nothing is hand-added and no R-id is stored in AUDIT.json.
+
+When the host supports subagents, fan out one applicable domain per fresh context. Give each context only its domain module, the selected check definitions, audit metadata, and the relevant paths, signals, absences, and hashes already present in EVIDENCE.json. Do not send prior domain reasoning or the whole repository transcript. Each domain context returns a read-only check-ledger delta, evidence references, candidate findings, and escalation leads. The orchestrator alone merges ids, applies ownership, refutes candidates, and writes AUDIT.json. When subagents are unavailable, preserve the same isolation by loading one module at a time and discarding domain-local reasoning after its delta is merged.
+
+The generated catalog labels security and build completeness `deep-capable`; all other domains are `screening`. It also carries one escalation criterion per domain. When that criterion is met, state that the catalog ceiling was reached, name the specialist assessment required, and list up to three repository-specific leads. A depth label is never a certification or a claim that specialist work occurred.
 
 ### Phase 4: Adversarial verification and clustering
 
@@ -187,6 +194,8 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - **Fresh audit**: full method at a new commit.
 - **Re-audit**: preserve ids and history, update check outcomes, resolve findings with evidence, add new ids only, compile both versions, and run `godaudits diff`.
 - **Focused audit**: only requested domains are applicable; all others carry a scope-specific exclusion. Never present a focused score as a full-project score.
+- **Medium budget**: screening checks are evaluated and deep-trace checks remain unknown in the complete ledger. This is the default.
+- **Full budget**: screening and deep-trace checks are selected. Use only with explicit full-project scope and adequate context.
 - **Plan-aware overlay**: conformance checks run inside every domain and carry matching R-ids.
 - **Static capability**: default and always available.
 - **Sandbox capability**: explicit user authorization, disposable environment, no outbound network or production secrets.
@@ -257,6 +266,9 @@ coverage until evaluated.
 
 - `name`, `audit_version`, `status`, `created`, `updated`, and `mode`.
 - `plan_aware`, audited `commit`, `archetype`, `scale`, and `risk_profile`.
+- `budget`: `medium` selects screening checks while deep-trace checks remain
+  unknown in the complete ledger; `full` selects both cost tiers. New audits
+  default to medium. Its unknowns lower compiled coverage.
 - Optional `project_form`, `secondary_forms`, and `domain_overlays` preserve the four-axis intake result while `archetype` remains the compatibility field.
 - Optional `evidence_fingerprint_sha256` and `evidence_commit` bind the audit to the evidence snapshot. Release and re-audit gates require them.
 - `engine_version` and `pack_version`.
@@ -293,10 +305,14 @@ Required: tool name, tool version, exact command, normalized result, and
 provenance. Import scanner output as evidence; do not copy a scanner conclusion
 directly into a finding without tracing reachability and ownership.
 
-Use `godaudits import-sarif scanner.sarif` to normalize SARIF 2.1.0 results.
-Select a non-conflicting starting evidence id with `--start` before merging the
-records into AUDIT.json. Imported messages pass through secret masking and
-remain evidence leads, never automatic findings.
+Use `godaudits import-sarif scanner.sarif` to normalize SARIF 2.1.0 results, or
+`godaudits import-tool REPORT --tool TOOL --command "COMMAND"` for SARIF,
+Semgrep, ast-grep, Gitleaks, and OSV-Scanner JSON. Supply `--tool-version` when
+the report does not embed it. Select a non-conflicting starting evidence id
+with `--start` before merging the records into AUDIT.json. Imported messages
+and command lines pass through secret masking and remain evidence leads, never
+automatic findings. Gitleaks secret values never enter output; only a short
+one-way fingerprint is retained for correlation.
 
 ### Runtime evidence
 
@@ -4035,6 +4051,7 @@ evidence_fingerprint_sha256: "SHA-256"
 evidence_commit: "COMMIT-SHA"
 scale: SCALE
 risk_profile: balanced
+budget: medium
 engine_version: "2.1.0"
 pack_version: "2.1.0"
 overall: 0
@@ -4055,9 +4072,10 @@ and biggest evidence-backed strength.
 
 ## Scope and method
 
-Commit, date, mode, archetype, scale, capability list, tool and pack versions,
-assumptions, what was examined, and what was not. Static-mode statement: no
-application code, tests, live systems, network requests, or product models ran.
+Commit, date, mode, archetype, scale, budget, capability list, tool and pack
+versions, assumptions, what was examined, and what was not. Static-mode
+statement: no application code, tests, live systems, network requests, or
+product models ran.
 
 Coverage: evaluated checks divided by applicable checks. Unknown checks are
 reported and cap the verdict.
@@ -4079,10 +4097,16 @@ All 18 domains appear. Excluded domains appear nowhere else.
 
 ## Scorecard
 
-| Domain | Score | Cap | Evaluated |
-|---|---:|---|---:|
-| DOMAIN | 0 | none-or-cap | 0/0 |
-| Overall | 0 | coverage, critical, weak-domain caps | 0/0 |
+| Domain | Depth | Score | Cap | Evaluated |
+|---|---|---:|---|---:|
+| DOMAIN | screening-or-deep-capable | 0 | none-or-cap | 0/0 |
+| Overall | mixed | 0 | coverage, critical, weak-domain caps | 0/0 |
+
+## Depth and escalation
+
+| Domain | Label | Deep-trace state | Escalation criterion | Up to three current finding leads |
+|---|---|---|---|---|
+| DOMAIN | screening-or-deep-capable | unknown-or-evaluated | specialist threshold | F-DOM-n or A-DOM-n |
 
 ## Standards coverage
 
@@ -4095,9 +4119,9 @@ Standards coverage routes to owning checks and adds no score weight.
 
 ## Check ledger
 
-| Check | Outcome | Confidence | Weight | Evidence |
-|---|---|---|---:|---|
-| A-DOM-1 | pass-fail-unknown-not-applicable | Certain-Firm-Tentative | 0 | E-1 |
+| Check | Cost tier | Outcome | Confidence | Weight | Evidence |
+|---|---|---|---|---:|---|
+| A-DOM-1 | screening-or-deep-trace | pass-fail-unknown-not-applicable | Certain-Firm-Tentative | 0 | E-1 |
 
 Every selected catalog check appears exactly once. A pass without evidence and
 an uninspected pass are validation defects.

@@ -34,6 +34,10 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 - Explicit OWASP Web Top 10:2025 coverage without duplicate score weight.
 - Every applicable check records `pass`, `fail`, `unknown`, or
   `not-applicable`. Uninspected never means pass.
+- Every check is labeled `screening` or `deep-trace`. Medium-budget audits keep
+  deep-trace checks in the ledger as unknown, so skipped work lowers coverage.
+- Security and build completeness are deep-capable. The other domains are
+  explicitly screening-grade and carry specialist escalation criteria.
 - Quality score and audit coverage are separate. Low coverage caps the verdict.
 - Evidence supports source, absence, tool, runtime, and human records.
 - Source evidence carries a content hash. Secret evidence is masked and
@@ -45,8 +49,8 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 - Re-audits preserve ids and produce structured added, resolved, reopened,
   changed, removed-id, score, and coverage deltas.
 - MDX and SARIF are generated views. JSON is the source of truth.
-- SARIF scanners can be imported as redacted evidence without promoting their
-  conclusions into findings.
+- SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner results can be imported as
+  versioned redacted evidence without promoting their conclusions into findings.
 - An eight-repository fixture corpus, deterministic product evaluations, and
   live-harness cases test the auditor itself.
 - JSON Schema 2020-12 validation tests real emitted evidence and rejects
@@ -92,7 +96,7 @@ All audit writes stay under `.godaudits/`:
 | `AUDIT.json` | Canonical schema-versioned check, standards, evidence, finding, task, risk, freshness, and computed state |
 | `AUDIT.mdx` | Generated standalone report and remediation handoff |
 | `AUDIT.sarif` | Optional SARIF 2.1.0 output for code-host annotations |
-| `TOOL-EVIDENCE.json` | Optional secret-safe evidence imported from SARIF scanners |
+| `TOOL-EVIDENCE.json` | Optional secret-safe evidence imported from SARIF, Semgrep, ast-grep, Gitleaks, or OSV-Scanner |
 | `archive/` | Paired prior JSON and MDX versions for re-audit history |
 
 `AUDIT.json` is authoritative. MDX and SARIF are disposable derived views.
@@ -120,17 +124,26 @@ The normal command sequence is:
 godaudits doctor
 godaudits evidence . --output .godaudits/EVIDENCE.json
 godaudits pillars . --task "audit request routing" --target src/router.js
-godaudits init --name my-project --scale funded-product --profile security-critical --applicable all --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
+godaudits init --name my-project --scale funded-product --profile security-critical --applicable security,build,repo --budget medium --evidence .godaudits/EVIDENCE.json --output .godaudits/AUDIT.json
 godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 ```
 
-Import existing SARIF scanner results as evidence leads, never automatic
-findings:
+Focused medium-budget audits are the default. Request `--applicable all
+--budget full` only when the larger context and deep-trace work are explicitly
+warranted.
+
+Import external scanner results as evidence leads, never automatic findings.
+The generalized importer requires the scanner command and a version when the
+report does not embed one:
 
 ```bash
 godaudits import-sarif scanner.sarif --start 1000 --output .godaudits/TOOL-EVIDENCE.json
+godaudits import-tool semgrep.json --tool semgrep --command "semgrep scan --json ." --start 1000 --output .godaudits/TOOL-EVIDENCE.json
+godaudits import-tool ast-grep.json --tool ast-grep --tool-version VERSION --command "ast-grep scan --json=pretty" --start 2000 --output .godaudits/TOOL-EVIDENCE.json
+godaudits import-tool gitleaks.json --tool gitleaks --tool-version VERSION --command "gitleaks dir --report-format json" --start 3000 --output .godaudits/TOOL-EVIDENCE.json
+godaudits import-tool osv.json --tool osv-scanner --tool-version VERSION --command "osv-scanner scan --format json ." --start 4000 --output .godaudits/TOOL-EVIDENCE.json
 ```
 
 The Agent Skill orchestrates these commands and performs the domain judgment
@@ -160,7 +173,8 @@ evidence stay Tentative or unknown.
 The generated catalog at
 [`skills/godaudits/catalog/checks.json`](skills/godaudits/catalog/checks.json)
 contains all checks, source modules, source lines, inspection guidance, failure
-guidance, scoring dimensions, routing behavior, and default weights.
+guidance, scoring dimensions, routing behavior, cost tiers, depth labels,
+specialist escalation criteria, and default weights.
 
 Risk profiles live in
 [`skills/godaudits/catalog/profiles.json`](skills/godaudits/catalog/profiles.json):
@@ -223,6 +237,9 @@ remediation closure, clean-control rate, misses, and false positives. The
 built-in corpus is a runtime regression net, not proof that an unseen model
 audit is accurate. Behavioral cases and the result template live under
 `evals/`; they are never reported as passed without retained harness evidence.
+The versioned standing result, including misses and false positives, is in
+[`ACCURACY.md`](ACCURACY.md). `npm run accuracy:check` validates one
+highest-weight target per domain and refuses unattributed or unpaired new runs.
 
 ## Re-audits
 
@@ -287,12 +304,15 @@ verify into one id system.
 | `skills/godaudits/runtime/` | Self-contained zero-dependency engine |
 | `skills/godaudits/policies/` | Versioned compliance policy packs |
 | `benchmarks/` | Multi-language deterministic corpus |
+| `ACCURACY.md` | Versioned model-run results, gaps, misses, and false positives |
 | `evals/` | Live-harness behavioral cases and result contract |
 | `test/` | Compiler, evidence, renderer, evaluator, init, diff, and SARIF tests |
 | `scripts/lint.sh` | Repository, runtime, catalog, schema, benchmark, and prompt gates |
 | `scripts/validate-evidence-schema.py` | Pinned JSON Schema 2020-12 evidence validation |
 | `docs/ENGINE.md` | Runtime architecture and invariants |
 | `docs/EVALUATION.md` | Benchmark and accuracy methodology |
+| `docs/RELEASE-POLICY.md` | Stable release cadence and external OSS dogfood publication contract |
+| `dogfood/` | Indexed versioned external OSS audit artifacts; an empty index makes no track-record claim |
 | `docs/MIGRATION-2.0.md` | Version 1 to version 2 migration |
 | `docs/MIGRATION-2.1.md` | Version 2.0 to version 2.1 migration |
 | `docs/THREAT-MODEL.md` | Auditor safety and evidence threat model |
@@ -302,6 +322,7 @@ verify into one id system.
 ```bash
 npm test
 npm run benchmark
+npm run accuracy:check
 npm run eval:suites
 npm run catalog
 npm run build:prompt

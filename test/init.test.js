@@ -17,6 +17,7 @@ test('initializer creates a complete unknown ledger that passes strict catalog v
     archetype: 'saas-dashboard',
     scale: 'funded-product',
     riskProfile: 'balanced',
+    budget: 'full',
     applicable: 'all',
     root,
     date: '2026-07-13'
@@ -33,6 +34,51 @@ test('initializer creates a complete unknown ledger that passes strict catalog v
   assert.equal(result.audit.computed.overall.score, 0);
 });
 
+test('medium budget keeps the complete ledger and leaves deep-trace work unknown', () => {
+  const catalog = buildCatalog(root);
+  const audit = initAudit(catalog, {
+    name: 'medium-fixture',
+    archetype: 'saas-dashboard',
+    scale: 'funded-product',
+    riskProfile: 'balanced',
+    budget: 'medium',
+    applicable: ['security', 'build'],
+    root,
+    date: '2026-07-22'
+  });
+  assert.equal(audit.audit.budget, 'medium');
+  const applicable = audit.domains.filter((domain) => domain.status === 'applicable');
+  const expectedCount = catalog.checks.filter((check) => ['security', 'build'].includes(check.domain)).length;
+  assert.equal(applicable.flatMap((domain) => domain.checks).length, expectedCount);
+  for (const domain of applicable) {
+    for (const check of domain.checks) {
+      const definition = catalog.checks.find((item) => item.id === check.id);
+      if (definition.cost_tier === 'deep-trace') assert.equal(check.outcome, 'unknown');
+    }
+  }
+  assert.deepEqual(compileAudit(audit, { catalog }).errors, []);
+});
+
+test('medium budget rejects a deep-trace verdict instead of overstating coverage', () => {
+  const catalog = buildCatalog(root);
+  const audit = initAudit(catalog, {
+    name: 'budget-violation',
+    archetype: 'api-service',
+    scale: 'side-project',
+    riskProfile: 'balanced',
+    budget: 'medium',
+    applicable: ['security'],
+    root,
+    date: '2026-07-22'
+  });
+  const check = audit.domains.find((domain) => domain.id === 'security').checks.find((item) => {
+    const definition = catalog.checks.find((candidate) => candidate.id === item.id);
+    return definition.cost_tier === 'deep-trace';
+  });
+  check.outcome = 'pass';
+  assert.ok(compileAudit(audit, { catalog }).errors.some((error) => error.includes('must stay unknown at a medium budget')));
+});
+
 test('initializer preserves evidence-bound project context', () => {
   const catalog = buildCatalog(root);
   const evidence = fingerprintRepository(path.join(root, 'benchmarks/fixtures/node-api'));
@@ -41,6 +87,7 @@ test('initializer preserves evidence-bound project context', () => {
     archetype: evidence.project_context.project_forms.primary.id,
     scale: 'side-project',
     riskProfile: 'balanced',
+    budget: 'full',
     applicable: 'all',
     root,
     date: '2026-07-13',
