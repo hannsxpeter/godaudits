@@ -511,7 +511,10 @@ if (require.main === module) {
 
 module.exports = {
   buildPrompt,
+  discoverSkillFiles,
   grade,
+  modelAttribution,
   parseArgs,
-  parseTranscript
+  parseTranscript,
+  skillConfig
 };

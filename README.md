@@ -1,7 +1,7 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.11.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.12.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -10,9 +10,8 @@ system that combines a 431-check Agent Skill with a zero-dependency runtime. It
 produces validated machine state, computed scores and coverage, a standalone
 remediation report, and optional SARIF annotations.
 
-Version 2.1 adds form-aware context, Pillars 1.1 routing, arc-ready 1.1 artifact
-truth, evidence freshness, and OWASP Web Top 10:2025 coverage to the validated
-version 2 engine. The model still performs
+Version 2.12 adds attributed paired accuracy runs, append-only adjudication, and
+the first public OSS retrospective to the validated version 2 engine. The model still performs
 the work that requires judgment: tracing code paths, testing competing
 explanations, clustering root causes, calibrating impact, and prescribing a
 specific fix. The runtime performs work that should never depend on model mood:
@@ -240,6 +239,11 @@ audit is accurate. Behavioral cases and the result template live under
 The versioned standing result, including misses and false positives, is in
 [`ACCURACY.md`](ACCURACY.md). `npm run accuracy:check` validates one
 highest-weight target per domain and refuses unattributed or unpaired new runs.
+The first complete suite measured no skill lift: both arms saturated the small
+A-SEC-6 fixtures, while the installed-skill arm cost more. The first public OSS
+retrospective recorded one miss against CVE-2015-9235. These null and negative
+results are published because benchmark credibility depends on retaining misses,
+not only wins.
 
 ## Re-audits
 
