@@ -232,7 +232,8 @@ check_zero_dependency() {
   # non-relative, non-node builtin module. Scoped to runtime/lib so it never
   # false-positives on this script's own use of the word require.
   out=$(node -e '
-const fs = require("fs");
+const fs = require("node:fs");
+const { isBuiltin } = require("node:module");
 const repo = process.argv[1];
 const pkg = JSON.parse(fs.readFileSync(repo + "/package.json", "utf8"));
 const bad = [];
@@ -253,7 +254,9 @@ for (const file of files) {
   let m;
   while ((m = RE.exec(text))) {
     const spec = m[1];
-    if (!spec.startsWith(".") && !spec.startsWith("node:")) {
+    // A core module is fine whether required as node:fs or bare fs; only a
+    // non-relative, non-builtin specifier is a third-party dependency.
+    if (!spec.startsWith(".") && !isBuiltin(spec)) {
       bad.push("runtime/lib/" + file + " requires third-party module: " + spec);
     }
   }
