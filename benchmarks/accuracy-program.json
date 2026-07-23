@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "program_version": "1.0.0",
-  "authored": "2026-07-22",
+  "program_version": "1.1.0",
+  "authored": "2026-07-23",
   "selection": {
     "rule": "Select the highest default-weight check in each catalog domain. When checks tie, select the lowest numeric check id.",
     "catalog_pack": "2.11.0"
@@ -14,10 +14,13 @@
     "runs_per_arm": 3,
     "arms": ["control", "skill"],
     "same_model_repo_harness_within_pair": true,
+    "complete_suite_required_for_lift": true,
     "required_attribution": [
       "model.provider",
       "model.id",
       "model.snapshot",
+      "model.snapshot_kind",
+      "model.catalog_fetched_at",
       "harness.name",
       "harness.version",
       "harness.config_sha256",
@@ -79,7 +82,7 @@
       "check": "A-SEC-6",
       "default_weight": 7.5,
       "ground_truth_revision": 1,
-      "fixture_status": "ground-truth-authored",
+      "fixture_status": "fixture-ready",
       "severity": "High",
       "seed": "The password-reset route is mounted before its rate limiter and compares reset tokens with ordinary string equality.",
       "clean_control": "The login route uses a supported password KDF and is mounted behind its limiter."

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["outcome", "confidence", "findings", "reasoning"],
+  "properties": {
+    "outcome": {
+      "enum": ["pass", "fail", "unknown"]
+    },
+    "confidence": {
+      "enum": ["Certain", "Firm", "Tentative"]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check", "title", "severity", "path", "line", "quote"],
+        "properties": {
+          "check": {
+            "const": "A-SEC-6"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reasoning": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

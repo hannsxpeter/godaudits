@@ -1,0 +1,8 @@
+{
+  "name": "member-service",
+  "private": true,
+  "dependencies": {
+    "express": "5.1.0",
+    "express-rate-limit": "8.0.1"
+  }
+}

@@ -38,11 +38,13 @@
           "captured": { "type": "string", "format": "date" },
           "model": {
             "type": "object",
-            "required": ["provider", "id", "snapshot"],
+            "required": ["provider", "id", "snapshot", "snapshot_kind", "catalog_fetched_at"],
             "properties": {
               "provider": { "type": "string", "minLength": 1 },
               "id": { "type": "string", "minLength": 1 },
-              "snapshot": { "type": "string", "minLength": 1 }
+              "snapshot": { "type": "string", "minLength": 1 },
+              "snapshot_kind": { "enum": ["immutable", "service-alias"] },
+              "catalog_fetched_at": { "type": "string", "format": "date-time" }
             },
             "additionalProperties": false
           },
@@ -67,12 +69,25 @@
           },
           "result": {
             "type": "object",
-            "required": ["outcome", "hits", "misses", "false_positives"],
+            "required": [
+              "outcome",
+              "hits",
+              "misses",
+              "false_positives",
+              "severity_matches",
+              "severity_mismatches",
+              "citation_matches",
+              "citation_mismatches"
+            ],
             "properties": {
               "outcome": { "enum": ["pass", "fail", "unknown"] },
               "hits": { "type": "integer", "minimum": 0 },
               "misses": { "type": "integer", "minimum": 0 },
-              "false_positives": { "type": "integer", "minimum": 0 }
+              "false_positives": { "type": "integer", "minimum": 0 },
+              "severity_matches": { "type": "integer", "minimum": 0 },
+              "severity_mismatches": { "type": "integer", "minimum": 0 },
+              "citation_matches": { "type": "integer", "minimum": 0 },
+              "citation_mismatches": { "type": "integer", "minimum": 0 }
             },
             "additionalProperties": false
           },

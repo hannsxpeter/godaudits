@@ -71,6 +71,7 @@
     "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'",
     "test:detectors": "node scripts/detector-gate.js",
     "accuracy:check": "node scripts/accuracy-check.js",
+    "accuracy:run": "node scripts/run-paired-accuracy.js",
     "dogfood:check": "node scripts/dogfood-check.js",
     "corpus": "node benchmarks/build-detector-corpus.js",
     "corpus:check": "node benchmarks/build-detector-corpus.js --check"

@@ -15,6 +15,7 @@ const root = path.resolve(__dirname, '..');
 const program = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/accuracy-program.json'), 'utf8'));
 const paired = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/paired-runs.json'), 'utf8'));
 const legacy = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/blind-runs.json'), 'utf8'));
+const groundTruth = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/accuracy-ground-truth.json'), 'utf8'));
 const catalog = buildCatalog(root);
 const errors = [];
 
@@ -34,6 +35,7 @@ if (!program.protocol || !program.protocol.ground_truth_before_runs || !program.
 }
 if (!same(program.protocol.arms, ['control', 'skill'])) errors.push('accuracy protocol arms must be control then skill');
 if (!program.protocol.same_model_repo_harness_within_pair) errors.push('paired protocol must pin model, repo, and harness within each pair');
+if (!program.protocol.complete_suite_required_for_lift) errors.push('skill lift must require a complete seeded and control suite');
 if (!Number.isInteger(program.protocol.seeded_repositories_per_target) || program.protocol.seeded_repositories_per_target < 1) {
   errors.push('accuracy protocol needs at least one seeded repository per target');
 }
@@ -44,7 +46,18 @@ if (!Number.isInteger(program.protocol.runs_per_arm) || program.protocol.runs_pe
   errors.push('accuracy protocol needs at least three runs per arm');
 }
 const attribution = new Set(program.protocol.required_attribution || []);
-for (const field of ['model.provider', 'model.id', 'model.snapshot', 'harness.name', 'harness.version', 'harness.config_sha256', 'fixture_commit', 'skill_commit']) {
+for (const field of [
+  'model.provider',
+  'model.id',
+  'model.snapshot',
+  'model.snapshot_kind',
+  'model.catalog_fetched_at',
+  'harness.name',
+  'harness.version',
+  'harness.config_sha256',
+  'fixture_commit',
+  'skill_commit'
+]) {
   if (!attribution.has(field)) errors.push(`accuracy protocol required_attribution is missing ${field}`);
 }
 
@@ -83,20 +96,73 @@ const catalogDomains = new Set(catalog.domains.map((domain) => domain.id));
 for (const domain of catalogDomains) if (!targetDomains.has(domain)) errors.push(`accuracy program is missing domain ${domain}`);
 for (const domain of targetDomains) if (!catalogDomains.has(domain)) errors.push(`accuracy program has unknown domain ${domain}`);
 
+const groundTruthCases = new Map();
+const suitesByCheck = new Map();
+for (const suite of groundTruth.suites || []) {
+  if (suitesByCheck.has(suite.check)) errors.push(`duplicate ground-truth suite for ${suite.check}`);
+  suitesByCheck.set(suite.check, suite);
+  const seeded = (suite.cases || []).filter((caseData) => caseData.kind === 'seeded');
+  const controls = (suite.cases || []).filter((caseData) => caseData.kind === 'control');
+  if (seeded.length !== program.protocol.seeded_repositories_per_target) {
+    errors.push(`${suite.id} must have ${program.protocol.seeded_repositories_per_target} seeded repositories`);
+  }
+  if (controls.length !== program.protocol.clean_controls_per_target) {
+    errors.push(`${suite.id} must have ${program.protocol.clean_controls_per_target} clean controls`);
+  }
+  const caseIds = new Set();
+  for (const caseData of suite.cases || []) {
+    if (caseIds.has(caseData.id)) errors.push(`${suite.id} duplicates case ${caseData.id}`);
+    caseIds.add(caseData.id);
+    const key = `${suite.id}/${caseData.id}`;
+    groundTruthCases.set(key, { ...caseData, suite });
+    const fixture = path.join(root, 'benchmarks/fixtures/accuracy', suite.id, caseData.id);
+    if (!fs.existsSync(fixture) || !fs.statSync(fixture).isDirectory()) errors.push(`${key} fixture directory is missing`);
+  }
+}
+for (const target of program.targets || []) {
+  if (['fixture-ready', 'recorded'].includes(target.fixture_status) && !suitesByCheck.has(target.check)) {
+    errors.push(`${target.check} is ${target.fixture_status} without a complete ground-truth suite`);
+  }
+}
+
 const pairs = new Map();
 for (const run of paired.runs || []) {
   requireText(run.pair_id, 'run.pair_id');
   requireText(run.repo, `${run.pair_id}.repo`);
   if (!targetChecks.has(run.check)) errors.push(`${run.pair_id} uses non-target check ${run.check}`);
-  for (const field of ['provider', 'id', 'snapshot']) requireText(run.model && run.model[field], `${run.pair_id}.model.${field}`);
+  for (const field of ['provider', 'id', 'snapshot', 'snapshot_kind', 'catalog_fetched_at']) {
+    requireText(run.model && run.model[field], `${run.pair_id}.model.${field}`);
+  }
+  if (run.model && !['immutable', 'service-alias'].includes(run.model.snapshot_kind)) {
+    errors.push(`${run.pair_id}.model.snapshot_kind must be immutable or service-alias`);
+  }
+  if (run.model && run.model.snapshot_kind === 'service-alias' && !run.model.snapshot.includes('service-alias:')) {
+    errors.push(`${run.pair_id} must label a mutable model alias honestly`);
+  }
   for (const field of ['name', 'version', 'config_sha256']) requireText(run.harness && run.harness[field], `${run.pair_id}.harness.${field}`);
   requireText(run.fixture_commit, `${run.pair_id}.fixture_commit`);
+  const groundCase = groundTruthCases.get(run.repo);
+  if (!groundCase) errors.push(`${run.pair_id} names unknown ground-truth repo ${run.repo}`);
+  else if (groundCase.suite.check !== run.check) errors.push(`${run.pair_id} check does not match ${run.repo}`);
   if (run.arm === 'control') {
     if (run.skill_installed !== false || run.skill_commit !== null) errors.push(`${run.pair_id} control arm must have skill_installed false and skill_commit null`);
   } else if (run.arm === 'skill') {
     if (run.skill_installed !== true) errors.push(`${run.pair_id} skill arm must have skill_installed true`);
     requireText(run.skill_commit, `${run.pair_id}.skill_commit`);
   } else errors.push(`${run.pair_id} has invalid arm ${run.arm}`);
+  for (const field of [
+    'hits',
+    'misses',
+    'false_positives',
+    'severity_matches',
+    'severity_mismatches',
+    'citation_matches',
+    'citation_mismatches'
+  ]) {
+    if (!run.result || !Number.isInteger(run.result[field]) || run.result[field] < 0) {
+      errors.push(`${run.pair_id}.result.${field} must be a non-negative integer`);
+    }
+  }
   const group = pairs.get(run.pair_id) || [];
   if (group.some((item) => item.arm === run.arm)) errors.push(`${run.pair_id} duplicates arm ${run.arm}`);
   group.push(run);
@@ -129,15 +195,78 @@ for (const runs of pairs.values()) {
   const key = `${runs[0].check}\n${runs[0].repo}`;
   pairCounts.set(key, (pairCounts.get(key) || 0) + 1);
 }
-const replicatedTargets = [...pairCounts.values()].filter((count) => count >= program.protocol.runs_per_arm).length;
+const completeSuites = [];
+for (const suite of groundTruth.suites || []) {
+  const complete = (suite.cases || []).every((caseData) => {
+    const key = `${suite.check}\n${suite.id}/${caseData.id}`;
+    return (pairCounts.get(key) || 0) >= program.protocol.runs_per_arm;
+  });
+  if (complete) completeSuites.push(suite.check);
+}
+
+function summarizeArm(arm) {
+  const runs = (paired.runs || []).filter((run) => run.arm === arm);
+  const totals = {
+    runs: runs.length,
+    hits: 0,
+    misses: 0,
+    false_positives: 0,
+    severity_matches: 0,
+    severity_mismatches: 0,
+    citation_matches: 0,
+    citation_mismatches: 0,
+    clean_controls: 0,
+    clean_controls_without_false_positive: 0,
+    input_tokens: 0,
+    output_tokens: 0,
+    elapsed_ms: 0
+  };
+  for (const run of runs) {
+    for (const field of [
+      'hits',
+      'misses',
+      'false_positives',
+      'severity_matches',
+      'severity_mismatches',
+      'citation_matches',
+      'citation_mismatches'
+    ]) totals[field] += run.result[field] || 0;
+    const groundCase = groundTruthCases.get(run.repo);
+    if (groundCase && groundCase.kind === 'control') {
+      totals.clean_controls += 1;
+      if (run.result.false_positives === 0) totals.clean_controls_without_false_positive += 1;
+    }
+    if (run.cost && Number.isInteger(run.cost.input_tokens)) totals.input_tokens += run.cost.input_tokens;
+    if (run.cost && Number.isInteger(run.cost.output_tokens)) totals.output_tokens += run.cost.output_tokens;
+    if (run.cost && Number.isInteger(run.cost.elapsed_ms)) totals.elapsed_ms += run.cost.elapsed_ms;
+  }
+  const recallDenominator = totals.hits + totals.misses;
+  const precisionDenominator = totals.hits + totals.false_positives;
+  const severityDenominator = totals.severity_matches + totals.severity_mismatches;
+  return {
+    ...totals,
+    recall: recallDenominator ? Number((totals.hits / recallDenominator).toFixed(4)) : null,
+    precision: precisionDenominator ? Number((totals.hits / precisionDenominator).toFixed(4)) : null,
+    severity_accuracy: severityDenominator ? Number((totals.severity_matches / severityDenominator).toFixed(4)) : null,
+    clean_control_rate: totals.clean_controls
+      ? Number((totals.clean_controls_without_false_positive / totals.clean_controls).toFixed(4))
+      : null
+  };
+}
+
+const armResults = {
+  control: summarizeArm('control'),
+  skill: summarizeArm('skill')
+};
 const summary = {
   program_version: program.program_version,
   targets: targetDomains.size,
   fixture_ready: fixtureReady,
   recorded_targets: recordedTargets,
   paired_observations: pairs.size,
-  replicated_targets: replicatedTargets,
-  skill_lift_measured: replicatedTargets > 0,
+  complete_suites: completeSuites,
+  skill_lift_measured: completeSuites.length > 0,
+  arms: armResults,
   errors
 };
 
