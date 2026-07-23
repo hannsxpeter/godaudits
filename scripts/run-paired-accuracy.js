@@ -235,19 +235,34 @@ function grade(caseData, audit) {
       citation_mismatches: findings.length
     };
   }
-  const citation = findings.find((finding) => finding.path === caseData.path
-    && Number.isInteger(finding.line) && Math.abs(finding.line - caseData.line) <= 2);
-  const hit = audit.outcome === 'fail' && Boolean(citation);
-  const severityMatch = hit && citation.severity === caseData.severity;
+  const expected = Array.isArray(caseData.findings) ? caseData.findings : [caseData];
+  const used = new Set();
+  const matches = [];
+  if (audit.outcome === 'fail') {
+    for (const expectedFinding of expected) {
+      const acceptableLines = Array.isArray(expectedFinding.acceptable_lines)
+        ? expectedFinding.acceptable_lines
+        : [expectedFinding.line];
+      const index = findings.findIndex((finding, candidateIndex) => !used.has(candidateIndex)
+        && finding.path === expectedFinding.path
+        && Number.isInteger(finding.line)
+        && acceptableLines.some((line) => Math.abs(finding.line - line) <= 2));
+      if (index >= 0) {
+        used.add(index);
+        matches.push({ expected: expectedFinding, actual: findings[index] });
+      }
+    }
+  }
+  const severityMatches = matches.filter((match) => match.actual.severity === match.expected.severity).length;
   return {
     outcome: audit.outcome,
-    hits: hit ? 1 : 0,
-    misses: hit ? 0 : 1,
-    false_positives: findings.filter((finding) => finding !== citation).length,
-    severity_matches: severityMatch ? 1 : 0,
-    severity_mismatches: hit && !severityMatch ? 1 : 0,
-    citation_matches: citation ? 1 : 0,
-    citation_mismatches: citation ? 0 : findings.length
+    hits: matches.length,
+    misses: expected.length - matches.length,
+    false_positives: findings.length - matches.length,
+    severity_matches: severityMatches,
+    severity_mismatches: matches.length - severityMatches,
+    citation_matches: matches.length,
+    citation_mismatches: findings.length - matches.length
   };
 }
 
@@ -354,7 +369,7 @@ async function main() {
   const check = checkDefinition(suite.check);
   const selected = options.cases.length
     ? suite.cases.filter((caseData) => options.cases.includes(caseData.id))
-    : suite.cases;
+    : suite.cases.filter((caseData) => caseData.eligible_for_lift !== false);
   if (selected.length === 0) throw new Error('no cases selected');
   if (options.cases.some((id) => !suite.cases.some((caseData) => caseData.id === id))) throw new Error('an unknown case was selected');
 
@@ -420,6 +435,9 @@ async function main() {
         fixture_commit: fixtureCommit,
         skill_commit: task.arm === 'skill' ? fixtureCommit : null,
         skill_installed: task.arm === 'skill',
+        ground_truth_revision_at_run: suite.revision,
+        grading_revision: suite.revision,
+        eligible_for_lift: task.caseData.eligible_for_lift !== false,
         capabilities: ['static'],
         result: grade(task.caseData, execution.audit),
         artifacts,

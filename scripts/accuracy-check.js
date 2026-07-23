@@ -103,8 +103,8 @@ const suitesByCheck = new Map();
 for (const suite of groundTruth.suites || []) {
   if (suitesByCheck.has(suite.check)) errors.push(`duplicate ground-truth suite for ${suite.check}`);
   suitesByCheck.set(suite.check, suite);
-  const seeded = (suite.cases || []).filter((caseData) => caseData.kind === 'seeded');
-  const controls = (suite.cases || []).filter((caseData) => caseData.kind === 'control');
+  const seeded = (suite.cases || []).filter((caseData) => caseData.kind === 'seeded' && caseData.eligible_for_lift !== false);
+  const controls = (suite.cases || []).filter((caseData) => caseData.kind === 'control' && caseData.eligible_for_lift !== false);
   if (seeded.length !== program.protocol.seeded_repositories_per_target) {
     errors.push(`${suite.id} must have ${program.protocol.seeded_repositories_per_target} seeded repositories`);
   }
@@ -124,6 +124,10 @@ for (const suite of groundTruth.suites || []) {
 for (const target of program.targets || []) {
   if (['fixture-ready', 'recorded'].includes(target.fixture_status) && !suitesByCheck.has(target.check)) {
     errors.push(`${target.check} is ${target.fixture_status} without a complete ground-truth suite`);
+  }
+  const suite = suitesByCheck.get(target.check);
+  if (suite && target.ground_truth_revision !== suite.revision) {
+    errors.push(`${target.check} target revision ${target.ground_truth_revision} does not match suite revision ${suite.revision}`);
   }
 }
 
@@ -146,6 +150,18 @@ for (const run of paired.runs || []) {
   const groundCase = groundTruthCases.get(run.repo);
   if (!groundCase) errors.push(`${run.pair_id} names unknown ground-truth repo ${run.repo}`);
   else if (groundCase.suite.check !== run.check) errors.push(`${run.pair_id} check does not match ${run.repo}`);
+  else {
+    if (run.eligible_for_lift !== (groundCase.eligible_for_lift !== false)) {
+      errors.push(`${run.pair_id} eligibility does not match ground truth`);
+    }
+    if (!Number.isInteger(run.ground_truth_revision_at_run) || run.ground_truth_revision_at_run < 1
+      || run.ground_truth_revision_at_run > groundCase.suite.revision) {
+      errors.push(`${run.pair_id} has invalid ground_truth_revision_at_run`);
+    }
+    if (run.grading_revision !== groundCase.suite.revision) {
+      errors.push(`${run.pair_id} grading revision must be current suite revision ${groundCase.suite.revision}`);
+    }
+  }
   if (run.arm === 'control') {
     if (run.skill_installed !== false || run.skill_commit !== null) errors.push(`${run.pair_id} control arm must have skill_installed false and skill_commit null`);
   } else if (run.arm === 'skill') {
@@ -171,8 +187,10 @@ for (const run of paired.runs || []) {
   pairs.set(run.pair_id, group);
 }
 
-const pinnedFields = ['repo', 'check', 'repetition', 'model', 'harness', 'fixture_commit', 'capabilities'];
+const pinnedFields = ['repo', 'check', 'repetition', 'model', 'harness', 'fixture_commit', 'grading_revision', 'eligible_for_lift', 'capabilities'];
 for (const [pairId, runs] of pairs) {
+  const groundCase = groundTruthCases.get(runs[0].repo);
+  if (groundCase && groundCase.eligible_for_lift === false) continue;
   if (runs.length !== 2 || !runs.some((run) => run.arm === 'control') || !runs.some((run) => run.arm === 'skill')) {
     errors.push(`${pairId} must contain exactly one control arm and one skill arm`);
     continue;
@@ -212,13 +230,14 @@ const fixtureReady = (program.targets || []).filter((target) => ['fixture-ready'
 const recordedTargets = (program.targets || []).filter((target) => target.fixture_status === 'recorded').length;
 const pairCounts = new Map();
 for (const runs of pairs.values()) {
-  if (runs.length !== 2) continue;
+  const groundCase = groundTruthCases.get(runs[0].repo);
+  if (runs.length !== 2 || !groundCase || groundCase.eligible_for_lift === false) continue;
   const key = `${runs[0].check}\n${runs[0].repo}`;
   pairCounts.set(key, (pairCounts.get(key) || 0) + 1);
 }
 const completeSuites = [];
 for (const suite of groundTruth.suites || []) {
-  const complete = (suite.cases || []).every((caseData) => {
+  const complete = (suite.cases || []).filter((caseData) => caseData.eligible_for_lift !== false).every((caseData) => {
     const key = `${suite.check}\n${suite.id}/${caseData.id}`;
     return (pairCounts.get(key) || 0) >= program.protocol.runs_per_arm;
   });
@@ -226,7 +245,7 @@ for (const suite of groundTruth.suites || []) {
 }
 
 function summarizeArm(arm) {
-  const runs = (paired.runs || []).filter((run) => run.arm === arm);
+  const runs = (paired.runs || []).filter((run) => run.arm === arm && run.eligible_for_lift !== false);
   const totals = {
     runs: runs.length,
     hits: 0,
@@ -285,6 +304,10 @@ const summary = {
   fixture_ready: fixtureReady,
   recorded_targets: recordedTargets,
   paired_observations: pairs.size,
+  eligible_paired_observations: [...pairs.values()].filter((runs) => {
+    const groundCase = groundTruthCases.get(runs[0].repo);
+    return runs.length === 2 && groundCase && groundCase.eligible_for_lift !== false;
+  }).length,
   complete_suites: completeSuites,
   skill_lift_measured: completeSuites.length > 0,
   technical_failures: technicalFailures,

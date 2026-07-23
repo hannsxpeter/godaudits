@@ -81,7 +81,7 @@
       "domain": "security",
       "check": "A-SEC-6",
       "default_weight": 7.5,
-      "ground_truth_revision": 1,
+      "ground_truth_revision": 2,
       "fixture_status": "fixture-ready",
       "severity": "High",
       "seed": "The password-reset route is mounted before its rate limiter and compares reset tokens with ordinary string equality.",

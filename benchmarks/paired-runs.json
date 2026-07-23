@@ -2,5 +2,54 @@
   "schema_version": "1.0",
   "program_version": "1.1.0",
   "note": "Paired accuracy runs only. Every pair uses the same model, model snapshot, harness, harness configuration, repository, fixture commit, target check, capabilities, and repetition. The control arm receives no installed skill; the skill arm receives the pinned skill commit. Empty means the paired experiment has not been run, not that it passed.",
-  "runs": []
+  "runs": [
+    {
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-01",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:47:16.905808Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:47:16.905808Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "6a120c5d9deb49a935492fb732897b1238d880ba76a961f8ac8313af26002a0c"
+      },
+      "fixture_commit": "e88a91c960331fcaf06c5ea48e48ab396a208731",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 1,
+      "grading_revision": 2,
+      "eligible_for_lift": false,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 2,
+        "misses": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 1,
+        "citation_matches": 2,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54137,
+        "output_tokens": 912,
+        "elapsed_ms": 20563
+      }
+    }
+  ]
 }

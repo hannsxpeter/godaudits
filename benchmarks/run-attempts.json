@@ -371,6 +371,16 @@
       "status": "technical-failure",
       "transcript": null,
       "error": "Codex exited 1\nstdout:\n{\"type\":\"thread.started\",\"thread_id\":\"019f8d4c-1f7d-73c2-9771-f55e434cc79c\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"error\",\"message\":\"{\\n  \\\"type\\\": \\\"error\\\",\\n  \\\"error\\\": {\\n    \\\"type\\\": \\\"invalid_request_error\\\",\\n    \\\"code\\\": \\\"invalid_json_schema\\\",\\n    \\\"message\\\": \\\"Invalid schema for response_format 'codex_output_schema': In context=('properties', 'findings', 'items', 'properties', 'check'), schema must have a 'type' key.\\\",\\n    \\\"param\\\": \\\"text.format.schema\\\"\\n  },\\n  \\\"status\\\": 400\\n}\"}\n{\"type\":\"turn.failed\",\"error\":{\"message\":\"{\\n  \\\"type\\\": \\\"error\\\",\\n  \\\"error\\\": {\\n    \\\"type\\\": \\\"invalid_request_error\\\",\\n    \\\"code\\\": \\\"invalid_json_schema\\\",\\n    \\\"message\\\": \\\"Invalid schema for response_format 'codex_output_schema': In context=('properties', 'findings', 'items', 'properties', 'check'), schema must have a 'type' key.\\\",\\n    \\\"param\\\": \\\"text.format.schema\\\"\\n  },\\n  \\\"status\\\": 400\\n}\"}}\nstderr:\ng find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.694231Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.697383Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.698994Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.700810Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.702938Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.705997Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.708333Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.711425Z  WARN codex_rollout::list: "
+    },
+    {
+      "attempt_id": "62f17935-01fe-4544-be9f-25154969e108",
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:47:18.314Z",
+      "completed": "2026-07-23T04:47:38.882Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.jsonl",
+      "error": null
     }
   ]
 }

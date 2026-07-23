@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Password reset rate limiter is registered after the reset route, so the route bypasses throttling",
+      "severity": "High",
+      "path": "src/server.js",
+      "line": 16,
+      "quote": "app.use('/password', passwordLimiter);"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token verification does not mark a valid token as used, so it is reusable until expiration",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "All repository files were inspected. Password hashing uses bcrypt cost 12 and bcrypt.compare. Reset tokens use randomBytes(32), SHA-256 storage, and timingSafeEqual. The reset route is registered before its limiter, and successful verification never consumes the token."
+}

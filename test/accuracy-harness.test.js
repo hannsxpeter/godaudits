@@ -85,8 +85,9 @@ test('transcript parser retains structured output and token usage', () => {
 test('A-SEC-6 ground truth has five seeds, one control, and standalone fixtures', () => {
   const groundTruth = JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/accuracy-ground-truth.json'), 'utf8'));
   const suite = groundTruth.suites.find((candidate) => candidate.id === 'a-sec-6');
-  assert.equal(suite.cases.filter((caseData) => caseData.kind === 'seeded').length, 5);
-  assert.equal(suite.cases.filter((caseData) => caseData.kind === 'control').length, 1);
+  assert.equal(suite.cases.filter((caseData) => caseData.kind === 'seeded' && caseData.eligible_for_lift).length, 5);
+  assert.equal(suite.cases.filter((caseData) => caseData.kind === 'control' && caseData.eligible_for_lift).length, 1);
+  assert.equal(suite.cases.filter((caseData) => !caseData.eligible_for_lift).length, 1);
   for (const caseData of suite.cases) {
     const fixture = path.join(root, 'benchmarks/fixtures/accuracy/a-sec-6', caseData.id);
     assert.ok(fs.statSync(fixture).isDirectory());
