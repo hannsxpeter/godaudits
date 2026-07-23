@@ -1,6 +1,6 @@
 # Runtime engine
 
-The godaudits runtime is zero-dependency CommonJS compatible with Node 18 and
+The godaudits runtime is zero-dependency CommonJS compatible with Node 22 and
 newer. It lives inside `skills/godaudits/runtime/` so Agent Skills installers do
 not lose it when they copy only the canonical skill directory.
 
@@ -19,6 +19,8 @@ not lose it when they copy only the canonical skill directory.
 | `lib/sarif-import.js` | Import SARIF 2.1.0 results as secret-safe tool evidence |
 | `lib/diff.js` | Compare stable finding ids and score movement across re-audits |
 | `lib/evaluate.js` | Measure expected-finding recall, precision, severity, citations, closure, and clean controls |
+| `lib/verify-runtime.js` | Plan runtime probes for behavioral findings and fold executed results into a verification report |
+| `lib/refute.js` | Plan independent refutation briefs for open Critical and High findings and fold verdicts into a disposition report |
 | `godaudits.js` | CLI command routing and file I/O |
 
 The root `bin/godaudits.js` is a package wrapper around the self-contained

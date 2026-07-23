@@ -1,12 +1,12 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.10.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.11.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Audit everything after anything. godaudits is an evidence-first codebase audit
-system that combines a 424-check Agent Skill with a zero-dependency runtime. It
+system that combines a 431-check Agent Skill with a zero-dependency runtime. It
 produces validated machine state, computed scores and coverage, a standalone
 remediation report, and optional SARIF annotations.
 
@@ -22,7 +22,7 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 
 ## What makes it different
 
-- 18 domains and 424 versioned checks, each with inspection and failure
+- 18 domains and 431 versioned checks, each with inspection and failure
   guidance.
 - Six project forms, secondary-form composition, all 37 arc-ready profiles, and
   conservative product, industry, and regulatory candidates.
@@ -80,7 +80,7 @@ Then invoke it inside an existing project:
 
 The runtime is bundled inside the skill. Agents use the installed `godaudits`
 command when available, or run `runtime/godaudits.js` beside SKILL.md with Node
-18 or newer.
+22 or newer.
 
 ## Outputs
 
@@ -103,7 +103,7 @@ All audit writes stay under `.godaudits/`:
 flowchart TD
   A[Repository] --> B[Static evidence fingerprint]
   B --> C[Applicability and risk profile]
-  C --> D[Complete 424-check ledger]
+  C --> D[Complete 431-check ledger]
   D --> E[18 domain evaluators]
   E --> F[Independent refutation and clustering]
   F --> G[Validated audit JSON]
@@ -209,7 +209,7 @@ secret redaction:
 
 ```bash
 npm run benchmark
-npm run eval
+npm run eval:suites
 ```
 
 When an expected-finding manifest exists, evaluate an actual audit:
@@ -302,7 +302,7 @@ verify into one id system.
 ```bash
 npm test
 npm run benchmark
-npm run eval
+npm run eval:suites
 npm run catalog
 npm run build:prompt
 npm run check

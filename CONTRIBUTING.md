@@ -43,7 +43,7 @@ Useful focused commands:
 ```sh
 npm test
 npm run benchmark
-npm run eval
+npm run eval:suites
 npm run catalog:check
 npm run prompt:check
 npm run lint

@@ -16,6 +16,10 @@
 // was authored before any of them ran. These are what a detection rate may be
 // computed from. Regenerating never re-runs the audits, so the measurement
 // stays what the tool actually produced at capture time.
+//
+// The recorded audit's commit and versions come from blind-runs.json's
+// attribution block, not placeholders, so the recording says where it came
+// from. A recorded case cannot be built without that block.
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -50,7 +54,7 @@ function scrub(value) {
   return typeof value === 'string' ? redactSecrets(value).text : value;
 }
 
-function recordedAuditFor(run, truth) {
+function recordedAuditFor(run, truth, attribution) {
   const failed = run.outcome === 'fail';
   const finding = run.findings[0] || null;
   // A pass records the file the auditor read; the capture schema collected
@@ -70,13 +74,16 @@ function recordedAuditFor(run, truth) {
       updated: '2026-07-16',
       mode: 'fresh',
       plan_aware: false,
-      commit: 'seeded0',
+      // Anchored to the recorded attribution, not a placeholder: the fixture the
+      // auditor read is pinned by that commit, and the versions are the capture-
+      // era catalog, so the recorded audit says where it actually came from.
+      commit: attribution.fixture_commit,
       archetype: 'api-service',
       scale: 'side-project',
       risk_profile: 'balanced',
-      engine_version: '2.0.0',
-      pack_version: '2.0.0',
-      capabilities: ['static'],
+      engine_version: attribution.engine_version,
+      pack_version: attribution.pack_version,
+      capabilities: attribution.capabilities,
       assumptions: ['Blind run: the auditor received only the repository path and the A-SEC-3 definition.']
     },
     compliance: { result: 'pass', screened: '2026-07-16', policy_pack: 'provider-neutral@1' },
@@ -409,6 +416,16 @@ const truthById = new Map(
   JSON.parse(fs.readFileSync(path.join(root, 'benchmarks/seeded-ground-truth.json'), 'utf8')).repos.map((item) => [item.repo, item])
 );
 
+// Recorded cases feed the only detection rate the repository reports, so they may
+// not be built from an unattributed capture. Every field must be present; model
+// and harness may be null (not collected), but an absent key is not attribution.
+const attribution = blind.attribution;
+const requiredAttribution = ['fixture_commit', 'engine_version', 'pack_version', 'capabilities', 'model', 'harness'];
+if (blind.runs.length && (!attribution || requiredAttribution.some((key) => !(key in attribution)))) {
+  process.stderr.write('blind-runs.json needs a complete attribution block before recorded cases can be built\n');
+  process.exit(1);
+}
+
 for (const run of blind.runs) {
   const truth = truthById.get(run.repo);
   if (!truth) {
@@ -416,7 +433,7 @@ for (const run of blind.runs) {
     process.exitCode = 1;
     continue;
   }
-  const { audit, errors } = compileAudit(recordedAuditFor(run, truth));
+  const { audit, errors } = compileAudit(recordedAuditFor(run, truth, attribution));
   if (errors.length) {
     process.stderr.write(`recorded ${run.repo} is not a valid audit: ${errors.join('; ')}\n`);
     process.exitCode = 1;

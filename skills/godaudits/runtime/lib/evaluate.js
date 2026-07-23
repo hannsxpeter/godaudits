@@ -55,6 +55,21 @@ function evaluateAudit(audit, expected) {
   for (const finding of activeFindings) {
     for (const check of finding.checks || []) if (cleanChecks.has(check)) violatedCleanChecks.add(check);
   }
+  // Aggregate recall hides a dangerous miss behind many Low findings, so report
+  // recall per severity. Critical and High are always keys, even with no seeds:
+  // an empty stratum reads as null (absent), never a ratio of 1 (perfect), so a
+  // benchmark with no Critical seed cannot masquerade as full Critical recall.
+  const recallBySeverity = {};
+  const missedBySeverity = {};
+  for (const severity of ['Critical', 'High', 'Medium', 'Low']) {
+    const stratum = matches.filter((match) => match.expected.severity === severity);
+    const alwaysReported = severity === 'Critical' || severity === 'High';
+    if (stratum.length === 0 && !alwaysReported) continue;
+    const detected = stratum.filter((match) => match.finding).length;
+    recallBySeverity[severity] = stratum.length ? ratio(detected, stratum.length) : null;
+    const missed = stratum.filter((match) => !match.finding).map((match) => match.expected);
+    if (missed.length || alwaysReported) missedBySeverity[severity] = missed;
+  }
   const metrics = {
     recall: ratio(truePositive, required.length),
     precision: ratio(matchedFindingIds.size, activeFindings.length),
@@ -66,7 +81,9 @@ function evaluateAudit(audit, expected) {
     detected_findings: truePositive,
     active_findings: activeFindings.length,
     false_positives: Math.max(0, activeFindings.length - matchedFindingIds.size),
-    missed: matches.filter((match) => !match.finding).map((match) => match.expected)
+    missed: matches.filter((match) => !match.finding).map((match) => match.expected),
+    recall_by_severity: recallBySeverity,
+    missed_by_severity: missedBySeverity
   };
   metrics.passed = metrics.recall >= 0.95
     && metrics.precision >= 0.95

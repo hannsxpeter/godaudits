@@ -41,7 +41,7 @@ jobs:
         run: npm run benchmark
 
       - name: Run deterministic evaluations
-        run: npm run eval
+        run: npm run eval:suites
 
       - name: Run repository contracts
         run: SKILLS_REF_BIN="$(command -v skills-ref)" npm run lint

@@ -20,6 +20,15 @@ COMPACT="$REPO_DIR/PROMPT.md"
 FULL="$REPO_DIR/PROMPT.full.md"
 MODE="${1:-write}"
 
+# Counts come from the generated catalog, never from a literal. A hand-typed
+# number here survives every freshness gate: prompt-fresh only compares this
+# script's output against the committed prompts, so a stale literal stays
+# self-consistent while contradicting the catalog. scripts/lint.sh
+# catalog-claims gates the surfaces that cannot be generated.
+CATALOG="$REPO_DIR/skills/godaudits/catalog/checks.json"
+CHECK_COUNT="$(node -p "require('$CATALOG').check_count")"
+DOMAIN_COUNT="$(node -p "require('$CATALOG').domain_count")"
+
 if [ "$MODE" != "write" ] && [ "$MODE" != "--check" ]; then
   echo "Unknown option: $MODE" >&2
   exit 1
@@ -51,13 +60,13 @@ EOF
 
 generate_compact() {
   write_header "compact"
-  cat <<'EOF'
+  cat <<EOF
 
 Coverage notice: this compact prompt inlines the orchestrator and core
-contracts, but not the 18 domain modules. Use it only for focused audits where
+contracts, but not the $DOMAIN_COUNT domain modules. Use it only for focused audits where
 the requested module is separately available. If a module is unavailable,
 mark its checks unknown and report reduced coverage. Never approximate a full
-audit from memory. Use PROMPT.full.md for the complete 424-check pack.
+audit from memory. Use PROMPT.full.md for the complete $CHECK_COUNT-check pack.
 
 EOF
   strip_frontmatter "$SKILL" | strip_file_map
@@ -69,9 +78,9 @@ EOF
 
 generate_full() {
   write_header "full"
-  cat <<'EOF'
+  cat <<EOF
 
-Coverage notice: this file includes all 18 domain modules and the complete
+Coverage notice: this file includes all $DOMAIN_COUNT domain modules and the complete
 report contract. Evaluate every applicable check. A check not inspected is
 unknown, never pass. Run the deterministic CLI validation before presenting.
 

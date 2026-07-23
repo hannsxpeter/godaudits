@@ -269,8 +269,10 @@ one thing: whether seeded defects are still detected after a catalog change. Eac
 case declares its provenance. An `authored` case is a maintainer-built fixture
 that detects its own seed by construction, so it earns regression coverage and
 may never contribute to a detection rate; only a `recorded` real audit run may,
-and only above a floor of independent audits. The corpus estimates nothing about
-unseen repositories, and no number it produces reaches a per-repo score.
+and only above a floor of independent audits, carrying the provenance and limits
+in its `attribution` block (no control arm, small fixtures, model and harness not
+captured). The corpus estimates nothing about unseen repositories, and no number
+it produces reaches a per-repo score.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and
@@ -317,3 +319,11 @@ large live view. Never delete ids from machine history.
 A removed historical finding or task id is a re-audit defect and makes the diff
 command exit nonzero. A moved source location updates through new hashed
 evidence without changing the finding id.
+
+The diff also rolls up `tasks.closures`: one entry per completed task carrying
+its `fixes` list and a `closure` of `all-resolved`, `partly-open`,
+`none-resolved`, or `no-linked-findings`, computed only from open-to-resolved
+finding transitions. This is auditor-asserted closure that ties a score move to
+the remediation that earned it, never an observed runtime outcome, and it is not
+joined to check outcomes because one check can carry findings that a single task
+does not fully resolve. No rate is derived from it.

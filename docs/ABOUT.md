@@ -19,7 +19,7 @@ halves.
 
 ## Judgment layer
 
-The Agent Skill and 18 reference modules define 419 checks across product,
+The Agent Skill and 18 reference modules define 431 checks across product,
 architecture, stack, database, security, LLM integration, UX, UI, SEO, code
 quality, style genome, agent memory, repository, build completeness, roadmap,
 deployment, observability, and launch readiness.
@@ -49,7 +49,7 @@ The bundled runtime performs operations where discretion is a liability:
 ## Why the split matters
 
 A model is good at interpreting code in context. It should not be trusted to
-remember 419 checks, maintain counters by hand, reproduce score arithmetic,
+remember 431 checks, maintain counters by hand, reproduce score arithmetic,
 notice every broken cross-reference, or keep generated views synchronized.
 
 A deterministic program is good at those invariants. It cannot decide whether

@@ -13,6 +13,9 @@ against known defects and known clean controls.
 - Citation validity: findings whose evidence type has the required provenance.
 - Remediation closure: findings with required reciprocal tasks.
 - Clean-control rate: clean checks that remain finding-free.
+- Recall by severity: recall within each expected severity, so a dangerous miss
+  cannot hide behind many Low findings. Critical and High are always reported,
+  as null when the benchmark seeds none, never as a perfect ratio.
 - Misses and false positives.
 
 A required finding matches only when both its check id and expected source path
@@ -41,9 +44,29 @@ remediation closure, and 95 percent clean-control rate.
 Run it with `npm run benchmark`. This corpus tests the runtime, not model
 judgment. It must stay fast, offline, deterministic, and safe for CI.
 
+## Recorded detection rate and its limits
+
+The detector gate (`npm run test:detectors`) may compute a detection rate, but
+only from the `recorded` blind runs in `benchmarks/blind-runs.json`, and that
+number is narrower than it reads. Three limits are recorded in the file's
+`attribution` block and hold whatever the rate says:
+
+- No control condition. Each blind auditor received one repository path and the
+  A-SEC-3 definition alone, not the installed skill. It is a check-definition
+  arm, not a skill arm, and nothing here compares an audit carrying the skill
+  against the same model without it.
+- Saturated fixtures. The seeded repositories are three to five files each, so a
+  high rate cannot separate detector quality from fixture difficulty.
+- Partial attribution. The original capture did not record the model or harness.
+  The block carries them as explicit null, and pins the fixture commit and
+  capture-era versions, so the gap is legible rather than hidden.
+
+The rate is an internal regression signal, never a reliability estimate for
+unseen repositories, and no number it produces reaches a per-repo score.
+
 ## Deterministic product evaluations
 
-`npm run eval` runs focused suites for Pillars 1.1 routing, all six project
+`npm run eval:suites` runs focused suites for Pillars 1.1 routing, all six project
 forms and 37 arc-ready profiles, overlay conservatism, arc-ready table-ledger
 drift, evidence freshness, all ten OWASP 2025 categories, and secret-safe
 fingerprinting. These suites guard product contracts separately from the full

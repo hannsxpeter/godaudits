@@ -3,16 +3,16 @@ name: godaudits
 description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 431 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.10.0"
+  version: "2.11.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
 
-> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 18 or newer.
+> Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 22 or newer.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.10 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.11 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -40,7 +40,9 @@ Static is the default and never runs the product. When the user explicitly autho
 
 The runtime supports this handoff directly: `godaudits verify-runtime plan AUDIT.json` emits a probe manifest for the behavioral findings, the authorized harness executes the probes and produces a results file, and `godaudits verify-runtime apply AUDIT.json RESULTS.json` folds confirmed and refuted dispositions into a verification report that a re-audit applies. Because AUDIT.json scores are compiled, dispositions are applied on re-audit, never hand-edited.
 
-Second opinion: the check catalog has a structural ceiling, it verifies control presence. To find what it would miss, an authorized run may add an unconstrained pass that reads the code fresh, without the catalog's framing, hunting behavioral defects (races, dead controls, early transitions, authorization gaps on non-primary paths) and feeding novel findings back as candidates. Verify each with the same evidence and refutation discipline before recording it.
+The runtime serializes independent refutation (ground rule 9) the same way: `godaudits refute plan AUDIT.json` emits one brief per open Critical or High finding carrying the claim, its citation, the owning check, and the expected behavior, with the originating reasoning stripped so a separate pass forms its own view; `godaudits refute apply AUDIT.json RESULTS.json` folds the verdicts (refuted, weakened, no-refutation) into a report a re-audit applies. This extends Phase 4, it does not replace it, and it adds no evidence to a finding: a refuted finding's guard citation may support a strength or the check's pass, never the finding it refuted.
+
+Second opinion: the check catalog has a structural ceiling, it verifies control presence. To find what it would miss, an authorized run may add an unconstrained pass that reads the code fresh, without the catalog's framing, hunting behavioral defects (races, dead controls, early transitions, authorization gaps on non-primary paths) and feeding novel findings back as candidates. Verify each with the same evidence and refutation discipline before recording it. Apply the pass whole, never a sampled subset. Before recording a candidate as novel, search the catalog for a check that already owns the claim: if one exists the candidate is not a discovery but evidence against that check, and it updates that check's outcome in place. A surviving candidate must still route to a weighted owning check in its own domain. A survivor that maps to an already-failing check is a distinct root cause recorded under the ownership map, never a deletion of the existing finding.
 
 ## Runtime commands
 
@@ -162,6 +164,8 @@ Convert findings into GA-numbered tasks in AUDIT.json:
 
 Every task carries files, dependencies, reuse guidance, reciprocal finding ids, 2 to 4 acceptance conditions, one exact Verify command, and check ids. Accepted risks require finding id, named owner, acceptance date, expiry date, and review command.
 
+When a finding's evidence lists three or more member sites, its task fixes the class, not the leaves: enforcement lands at one shared point (a central mount, a query builder, a schema constraint, a lint rule, or a CI gate) named in `reuses`, and one acceptance condition is a regression guard that fails when a new sibling site appears. A Phase 3 task that changes system shape, a module boundary, a storage shape, or an authorization model adds an acceptance condition that it write or update an in-repo ADR recording the rejected alternatives, with a Verify that greps for that record.
+
 ### Phase 7: Render and present
 
 Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
@@ -205,7 +209,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
 | `references/<domain>.md` | 18 domain modules |
-| `catalog/checks.json` | Generated 424-check machine catalog with scoring and standards metadata |
+| `catalog/checks.json` | Generated 431-check machine catalog with scoring and standards metadata |
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
 | `schemas/*.json` | Audit, evidence, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |
@@ -213,4 +217,4 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.10.0
+## Skill version: 2.11.0

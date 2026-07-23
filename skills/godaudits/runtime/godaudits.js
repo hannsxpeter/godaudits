@@ -16,6 +16,7 @@ const { importSarif } = require('./lib/sarif-import');
 const { analyzePillars } = require('./lib/pillars');
 const { validateProjectContextCatalog } = require('./lib/project-context');
 const { planProbes, applyResults } = require('./lib/verify-runtime');
+const { planRefutations, applyRefutations } = require('./lib/refute');
 
 const skillRoot = path.resolve(__dirname, '..');
 const packageRoot = path.resolve(skillRoot, '..', '..');
@@ -33,6 +34,8 @@ godaudits diff <previous.json> <current.json>
 godaudits evaluate <AUDIT.json> <expected.json>
 godaudits verify-runtime plan <AUDIT.json> [--output PROBES.json]
 godaudits verify-runtime apply <AUDIT.json> <RESULTS.json> [--output VERIFICATION.json]
+godaudits refute plan <AUDIT.json> [--output REFUTATION-BRIEFS.json]
+godaudits refute apply <AUDIT.json> <RESULTS.json> [--output REFUTATION.json]
 godaudits benchmark [directory]
 godaudits doctor`;
 }
@@ -227,6 +230,22 @@ function main() {
     }
     throw new Error('verify-runtime requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESULTS.json>');
   }
+  if (command === 'refute') {
+    const mode = args[0];
+    if (mode === 'plan') {
+      if (!args[1]) throw new Error('refute plan requires AUDIT.json');
+      const briefs = planRefutations(readJson(args[1]));
+      writeOrPrint(`${JSON.stringify(briefs, null, 2)}\n`, option(args, '--output', path.join(path.dirname(args[1]), 'REFUTATION-BRIEFS.json')));
+      return 0;
+    }
+    if (mode === 'apply') {
+      if (!args[1] || !args[2]) throw new Error('refute apply requires AUDIT.json and RESULTS.json');
+      const report = applyRefutations(readJson(args[1]), readJson(args[2]));
+      writeOrPrint(`${JSON.stringify(report, null, 2)}\n`, option(args, '--output', path.join(path.dirname(args[1]), 'REFUTATION.json')));
+      return 0;
+    }
+    throw new Error('refute requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESULTS.json>');
+  }
   if (command === 'benchmark') return benchmark(args[0]);
   if (command === 'doctor') {
     const catalog = buildCatalog(skillRoot);
@@ -242,7 +261,7 @@ function main() {
     const test = testsAvailable
       ? spawnSync(process.execPath, ['--test', ...testFiles], { cwd: packageRoot, encoding: 'utf8' })
       : { status: 0, stdout: '', stderr: '' };
-    const nodeSupported = Number(process.versions.node.split('.')[0]) >= 18;
+    const nodeSupported = Number(process.versions.node.split('.')[0]) >= 22;
     const projectContextErrors = validateProjectContextCatalog(readJson(path.join(skillRoot, 'catalog/project-context.json')));
     const standardsCategories = Object.values(catalog.standards.frameworks).reduce((sum, framework) => sum + framework.categories.length, 0);
     const schemasValid = fs.readdirSync(path.join(skillRoot, 'schemas')).filter((name) => name.endsWith('.json')).every((name) => {

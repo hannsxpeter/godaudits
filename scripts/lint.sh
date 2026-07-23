@@ -18,6 +18,11 @@
 #   modules-complete     every reference module has the six contract sections.
 #   symlinks-valid       .agents/skills and .claude/skills projections resolve.
 #   catalog-fresh        the generated machine catalog is current.
+#   catalog-claims       every prose claim of "N checks" or "N domains" agrees
+#                        with the generated catalog.
+#   zero-dependency      no runtime/optional/peer deps, no model-client
+#                        devDependency, and no third-party require in the
+#                        shipped runtime.
 #   schemas-valid        every committed JSON and schema document parses.
 #   runtime-tests        compiler, renderer, evidence, eval, and interop tests pass.
 #   benchmark            the deterministic multi-language corpus passes.
@@ -165,6 +170,108 @@ check_catalog_fresh() {
   if node "$SCRIPT_DIR/build-catalog.js" --check >/dev/null; then pass; else fail "check catalog is stale; run npm run catalog"; fi
 }
 
+check_catalog_claims() {
+  CHECK=catalog-claims
+  # Counts stated in prose drift silently. The freshness gates cannot catch it:
+  # prompt-fresh compares the generated prompts against their generator, so a
+  # literal typed into the generator stays self-consistent while contradicting
+  # the catalog. This scans the claim itself against catalog/checks.json.
+  #
+  # Scope is every tracked authored file except CHANGELOG.md (a released entry
+  # records the count that was true then), codeaudit.md (dated audit output),
+  # and benchmarks/fixtures (seeded repositories standing in for other
+  # projects, whose prose is not a godaudits claim).
+  #
+  # Check claims require three or more digits so the per-domain counts in
+  # docs/CHECK-MAP.md are not swept in. Domain claims exclude "domain score",
+  # which is a 0-100 scale rather than a count.
+  out=$(node -e '
+const fs = require("fs");
+const cp = require("child_process");
+const repo = process.argv[1];
+const cat = JSON.parse(fs.readFileSync(repo + "/skills/godaudits/catalog/checks.json", "utf8"));
+const skip = /^(CHANGELOG\.md|codeaudit\.md)$|^benchmarks\/fixtures\//;
+const files = cp.execSync("git ls-files", { cwd: repo }).toString().split("\n")
+  .filter((f) => /\.(md|mdx|json|js|sh|yml|yaml)$/.test(f))
+  .filter((f) => !skip.test(f));
+const CHECKS = /(\d{3,})[- ]+(?:versioned |unique )?checks?\b/g;
+const DOMAINS = /(\d+)[- ]+domains?\b(?! score)/g;
+const bad = [];
+for (const f of files) {
+  let text;
+  try { text = fs.readFileSync(repo + "/" + f, "utf8"); } catch (e) { continue; }
+  text.split("\n").forEach((line, i) => {
+    for (const m of line.matchAll(CHECKS)) {
+      if (Number(m[1]) !== cat.check_count) bad.push(f + ":" + (i + 1) + " claims " + m[1] + " checks; catalog has " + cat.check_count);
+    }
+    for (const m of line.matchAll(DOMAINS)) {
+      if (Number(m[1]) !== cat.domain_count) bad.push(f + ":" + (i + 1) + " claims " + m[1] + " domains; catalog has " + cat.domain_count);
+    }
+  });
+}
+if (bad.length) console.log(bad.join("\n"));
+' "$REPO_DIR") || { fail "claim scan did not run"; return; }
+  if [ -n "$out" ]; then
+    fail "count claims disagree with catalog/checks.json:"
+    printf '%s\n' "$out" >&2
+  else
+    note "claims agree with the catalog"
+    pass
+  fi
+}
+
+check_zero_dependency() {
+  CHECK=zero-dependency
+  # The runtime is copyable and model-free by contract (docs/ENGINE.md, and
+  # ground rule 1: static mode makes no model calls). The doctor smoke test
+  # loads 12 of 13 runtime/lib files from a dependency-free tree, so an added
+  # third-party require there fails at execution, but calibrate.js is outside
+  # that graph. Gate the contract directly instead of relying on that gap:
+  # reject any runtime/optional/peer dependency and any model-client
+  # devDependency, then scan every shipped runtime/lib file for a require of a
+  # non-relative, non-node builtin module. Scoped to runtime/lib so it never
+  # false-positives on this script's own use of the word require.
+  out=$(node -e '
+const fs = require("node:fs");
+const { isBuiltin } = require("node:module");
+const repo = process.argv[1];
+const pkg = JSON.parse(fs.readFileSync(repo + "/package.json", "utf8"));
+const bad = [];
+for (const field of ["dependencies", "optionalDependencies", "peerDependencies"]) {
+  const names = Object.keys(pkg[field] || {});
+  if (names.length) bad.push(field + " must be empty: " + names.join(", "));
+}
+for (const name of Object.keys(pkg.devDependencies || {})) {
+  if (/^@anthropic-ai\//.test(name) || /(^|[\/-])(openai|codex)([\/-]|$)/.test(name)) {
+    bad.push("model-client devDependency is banned: " + name);
+  }
+}
+const libDir = repo + "/skills/godaudits/runtime/lib";
+const files = fs.existsSync(libDir) ? fs.readdirSync(libDir).filter((f) => f.endsWith(".js")) : [];
+const RE = /\brequire\(\s*["\x27]([^"\x27]+)["\x27]\s*\)/g;
+for (const file of files) {
+  const text = fs.readFileSync(libDir + "/" + file, "utf8");
+  let m;
+  while ((m = RE.exec(text))) {
+    const spec = m[1];
+    // A core module is fine whether required as node:fs or bare fs; only a
+    // non-relative, non-builtin specifier is a third-party dependency.
+    if (!spec.startsWith(".") && !isBuiltin(spec)) {
+      bad.push("runtime/lib/" + file + " requires third-party module: " + spec);
+    }
+  }
+}
+if (bad.length) console.log(bad.join("\n"));
+' "$REPO_DIR") || { fail "dependency scan did not run"; return; }
+  if [ -n "$out" ]; then
+    fail "zero-dependency contract violated:"
+    printf '%s\n' "$out" >&2
+  else
+    note "no third-party runtime dependency or model client"
+    pass
+  fi
+}
+
 check_schemas_valid() {
   CHECK=schemas-valid
   if node -e 'const fs=require("fs"),path=require("path"); const roots=process.argv.slice(1); for(const root of roots){for(const file of fs.readdirSync(root)){if(file.endsWith(".json")) JSON.parse(fs.readFileSync(path.join(root,file),"utf8"));}}' "$SKILL_DIR/schemas" "$SKILL_DIR/catalog"; then pass; else fail "schema or catalog JSON did not parse"; fi
@@ -246,6 +353,8 @@ case "$TARGET" in
     check_modules_complete
     check_symlinks_valid
     check_catalog_fresh
+    check_catalog_claims
+    check_zero_dependency
     check_schemas_valid
     check_runtime_tests
     check_benchmark
@@ -264,6 +373,8 @@ case "$TARGET" in
   modules-complete) check_modules_complete ;;
   symlinks-valid) check_symlinks_valid ;;
   catalog-fresh) check_catalog_fresh ;;
+  catalog-claims) check_catalog_claims ;;
+  zero-dependency) check_zero_dependency ;;
   schemas-valid) check_schemas_valid ;;
   runtime-tests) check_runtime_tests ;;
   benchmark) check_benchmark ;;

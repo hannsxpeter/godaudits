@@ -35,6 +35,22 @@ test('re-audit diff preserves ids and reports state transitions', () => {
   assert.deepEqual(delta.tasks.completed, ['GA-101']);
   assert.equal(delta.check_changes[0].id, 'A-SEC-3');
   assert.equal(delta.valid, true);
+  // GA-101 fixes F-SEC-1, which transitioned open -> resolved: full closure.
+  assert.deepEqual(delta.tasks.closures, [{ task: 'GA-101', fixes: ['F-SEC-1'], closure: 'all-resolved' }]);
+});
+
+test('task closure reads none-resolved when a completed task did not resolve its finding', () => {
+  const previous = compileAudit(validAudit()).audit;
+  const nextInput = validAudit();
+  nextInput.audit.mode = 're-audit';
+  nextInput.audit.audit_version = 2;
+  // The task is marked done but the finding it fixes is still open.
+  nextInput.tasks[0].status = 'done';
+  const current = compileAudit(nextInput).audit;
+  const delta = diffAudits(previous, current);
+  assert.deepEqual(delta.tasks.completed, ['GA-101']);
+  assert.deepEqual(delta.resolved, []);
+  assert.deepEqual(delta.tasks.closures, [{ task: 'GA-101', fixes: ['F-SEC-1'], closure: 'none-resolved' }]);
 });
 
 test('re-audit diff fails closed on removed history and invalid metadata', () => {

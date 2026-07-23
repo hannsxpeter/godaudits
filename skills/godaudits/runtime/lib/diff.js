@@ -66,6 +66,21 @@ function diffAudits(previous, current) {
   const reopenedTasks = [...afterTasks].filter(([id, task]) => beforeTasks.has(id) && beforeTasks.get(id).status === 'done' && task.status === 'open').map(([id]) => id);
   const removedTasks = [...beforeTasks.keys()].filter((id) => !afterTasks.has(id));
 
+  // Per completed task, roll up whether its linked findings actually closed.
+  // Strictly an open -> resolved transition over the task's own fixes list, so a
+  // re-audit reports which remediation earned the score move. This is
+  // auditor-asserted closure, never an observed outcome, and deliberately never
+  // joined to check outcomes: one check id can carry many findings, so a task
+  // that resolves one of them must not read as closing the whole check.
+  const resolvedTransition = new Set(resolved);
+  const taskClosures = sorted([...completedTasks]).map((id) => {
+    const fixes = sorted([...(afterTasks.get(id).fixes || [])]);
+    if (fixes.length === 0) return { task: id, fixes, closure: 'no-linked-findings' };
+    const closed = fixes.filter((findingId) => resolvedTransition.has(findingId)).length;
+    const closure = closed === fixes.length ? 'all-resolved' : closed === 0 ? 'none-resolved' : 'partly-open';
+    return { task: id, fixes, closure };
+  });
+
   const beforeEvidence = mapById(previous.evidence);
   const evidenceChanges = [];
   for (const [id, evidence] of mapById(current.evidence)) {
@@ -108,7 +123,8 @@ function diffAudits(previous, current) {
       added: sorted(addedTasks),
       completed: sorted(completedTasks),
       reopened: sorted(reopenedTasks),
-      removed: sorted(removedTasks)
+      removed: sorted(removedTasks),
+      closures: taskClosures
     },
     evidence_changes: evidenceChanges.sort((left, right) => left.id.localeCompare(right.id)),
     score: movement(previousScore, currentScore),

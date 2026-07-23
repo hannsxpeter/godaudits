@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-// The 429 checks are legible only if they roll up. This generates a browsable
+// The 431 checks are legible only if they roll up. This generates a browsable
 // map from the catalog - domain -> dimension/role -> checks -> standards - so a
 // contributor sees the shape without reading 18 modules. Generated, never
 // hand-maintained. Run: npm run check-map (or --check to verify freshness).
