@@ -4,9 +4,11 @@
   "required": ["outcome", "confidence", "findings", "reasoning"],
   "properties": {
     "outcome": {
+      "type": "string",
       "enum": ["pass", "fail", "unknown"]
     },
     "confidence": {
+      "type": "string",
       "enum": ["Certain", "Firm", "Tentative"]
     },
     "findings": {
@@ -16,6 +18,7 @@
         "required": ["check", "title", "severity", "path", "line", "quote"],
         "properties": {
           "check": {
+            "type": "string",
             "const": "A-SEC-6"
           },
           "title": {
@@ -23,6 +26,7 @@
             "minLength": 1
           },
           "severity": {
+            "type": "string",
             "enum": ["Critical", "High", "Medium", "Low"]
           },
           "path": {
