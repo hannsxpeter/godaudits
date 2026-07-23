@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are generated with predictable, non-cryptographic randomness",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 6,
+      "quote": "const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token verification does not consume the token, so it is reusable until expiry",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 16,
+      "quote": "if (!record || record.used || record.expiresAt < Date.now()) return false;"
+    }
+  ],
+  "reasoning": "bcrypt cost 12 is used for password hashing and bcrypt.compare for verification. Reset-token comparison uses timingSafeEqual, and the password reset limiter is mounted before its route. However, reset tokens use Date.now and Math.random instead of a CSPRNG, and verification checks record.used without ever marking the record used."
+}

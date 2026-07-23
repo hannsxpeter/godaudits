@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 431-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.11 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.12 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -216,7 +216,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.11.0
+## Skill version: 2.12.0
 
 
 ---

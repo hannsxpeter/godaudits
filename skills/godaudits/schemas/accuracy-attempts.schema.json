@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/accuracy-attempts.schema.json",
+  "title": "godaudits paired-run attempt ledger",
+  "type": "object",
+  "required": ["schema_version", "attempts"],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "note": {
+      "type": "string"
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "attempt_id",
+          "pair_id",
+          "arm",
+          "started",
+          "completed",
+          "status",
+          "transcript",
+          "error"
+        ],
+        "properties": {
+          "attempt_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pair_id": {
+            "type": "string",
+            "pattern": "^P-[A-Z0-9-]+$"
+          },
+          "arm": {
+            "enum": ["control", "skill"]
+          },
+          "started": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "enum": ["recorded", "technical-failure"]
+          },
+          "transcript": {
+            "type": ["string", "null"]
+          },
+          "error": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Password-reset token is generated with predictable non-CSPRNG sources",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 6,
+      "quote": "const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;"
+    }
+  ],
+  "reasoning": "The reset-token generator uses Date.now and Math.random rather than a cryptographic random source. The repository otherwise shows bcrypt cost 12, bcrypt.compare, timingSafeEqual for reset verification, a limiter mounted before the reset route, and a generic reset response."
+}

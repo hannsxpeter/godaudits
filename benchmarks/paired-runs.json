@@ -1,6 +1,1857 @@
 {
   "schema_version": "1.0",
-  "program_version": "1.0.0",
+  "program_version": "1.1.0",
   "note": "Paired accuracy runs only. Every pair uses the same model, model snapshot, harness, harness configuration, repository, fixture commit, target check, capabilities, and repetition. The control arm receives no installed skill; the skill arm receives the pinned skill commit. Empty means the paired experiment has not been run, not that it passed.",
-  "runs": []
+  "runs": [
+    {
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-01",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:47:16.905808Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:47:16.905808Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "6a120c5d9deb49a935492fb732897b1238d880ba76a961f8ac8313af26002a0c"
+      },
+      "fixture_commit": "e88a91c960331fcaf06c5ea48e48ab396a208731",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 1,
+      "grading_revision": 3,
+      "eligible_for_lift": false,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 2,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 1,
+        "citation_matches": 2,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54137,
+        "output_tokens": 912,
+        "elapsed_ms": 20563
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-02",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53945,
+        "output_tokens": 952,
+        "elapsed_ms": 23293
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "skill",
+      "repo": "a-sec-6/case-02",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 209638,
+        "output_tokens": 2926,
+        "elapsed_ms": 76185
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "control",
+      "repo": "a-sec-6/case-02",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54036,
+        "output_tokens": 938,
+        "elapsed_ms": 22592
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "skill",
+      "repo": "a-sec-6/case-02",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 96146,
+        "output_tokens": 1489,
+        "elapsed_ms": 34304
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "control",
+      "repo": "a-sec-6/case-02",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53879,
+        "output_tokens": 804,
+        "elapsed_ms": 18901
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "skill",
+      "repo": "a-sec-6/case-02",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 94602,
+        "output_tokens": 953,
+        "elapsed_ms": 22472
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-03",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 2,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53770,
+        "output_tokens": 994,
+        "elapsed_ms": 23205
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "skill",
+      "repo": "a-sec-6/case-03",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 2,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 94315,
+        "output_tokens": 2486,
+        "elapsed_ms": 51724
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "control",
+      "repo": "a-sec-6/case-03",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 2,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53968,
+        "output_tokens": 936,
+        "elapsed_ms": 22044
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "skill",
+      "repo": "a-sec-6/case-03",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 2,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 115854,
+        "output_tokens": 2475,
+        "elapsed_ms": 53743
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "control",
+      "repo": "a-sec-6/case-03",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 2,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54001,
+        "output_tokens": 914,
+        "elapsed_ms": 23534
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "skill",
+      "repo": "a-sec-6/case-03",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 2,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 95629,
+        "output_tokens": 2050,
+        "elapsed_ms": 42221
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-04",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53912,
+        "output_tokens": 749,
+        "elapsed_ms": 19079
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "skill",
+      "repo": "a-sec-6/case-04",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 114256,
+        "output_tokens": 1428,
+        "elapsed_ms": 33206
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "control",
+      "repo": "a-sec-6/case-04",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 1,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53993,
+        "output_tokens": 897,
+        "elapsed_ms": 21476
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "skill",
+      "repo": "a-sec-6/case-04",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 120663,
+        "output_tokens": 1727,
+        "elapsed_ms": 43001
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "control",
+      "repo": "a-sec-6/case-04",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53961,
+        "output_tokens": 790,
+        "elapsed_ms": 18843
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "skill",
+      "repo": "a-sec-6/case-04",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 70694,
+        "output_tokens": 1510,
+        "elapsed_ms": 32007
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-05",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54170,
+        "output_tokens": 893,
+        "elapsed_ms": 20314
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "skill",
+      "repo": "a-sec-6/case-05",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 134145,
+        "output_tokens": 1729,
+        "elapsed_ms": 40781
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "control",
+      "repo": "a-sec-6/case-05",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53958,
+        "output_tokens": 773,
+        "elapsed_ms": 19808
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "skill",
+      "repo": "a-sec-6/case-05",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 1,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 70168,
+        "output_tokens": 815,
+        "elapsed_ms": 21418
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "control",
+      "repo": "a-sec-6/case-05",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 53997,
+        "output_tokens": 661,
+        "elapsed_ms": 17320
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "skill",
+      "repo": "a-sec-6/case-05",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 1,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 70488,
+        "output_tokens": 1205,
+        "elapsed_ms": 27421
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-06",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "pass",
+        "hits": 0,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 0,
+        "citation_matches": 0,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54160,
+        "output_tokens": 608,
+        "elapsed_ms": 18466
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "skill",
+      "repo": "a-sec-6/case-06",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "pass",
+        "hits": 0,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 0,
+        "citation_matches": 0,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 210033,
+        "output_tokens": 1946,
+        "elapsed_ms": 45770
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "control",
+      "repo": "a-sec-6/case-06",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "pass",
+        "hits": 0,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 0,
+        "citation_matches": 0,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54170,
+        "output_tokens": 558,
+        "elapsed_ms": 15335
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "skill",
+      "repo": "a-sec-6/case-06",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "pass",
+        "hits": 0,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 0,
+        "citation_matches": 0,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 70792,
+        "output_tokens": 692,
+        "elapsed_ms": 17113
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "control",
+      "repo": "a-sec-6/case-06",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "pass",
+        "hits": 0,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 0,
+        "citation_matches": 0,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54658,
+        "output_tokens": 780,
+        "elapsed_ms": 19004
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "skill",
+      "repo": "a-sec-6/case-06",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "pass",
+        "hits": 0,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 0,
+        "severity_mismatches": 0,
+        "citation_matches": 0,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 70761,
+        "output_tokens": 805,
+        "elapsed_ms": 19150
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-07-R1",
+      "arm": "control",
+      "repo": "a-sec-6/case-07",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54093,
+        "output_tokens": 577,
+        "elapsed_ms": 15101
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-07-R1",
+      "arm": "skill",
+      "repo": "a-sec-6/case-07",
+      "check": "A-SEC-6",
+      "repetition": 1,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 98850,
+        "output_tokens": 1266,
+        "elapsed_ms": 29878
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-07-R2",
+      "arm": "control",
+      "repo": "a-sec-6/case-07",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54067,
+        "output_tokens": 579,
+        "elapsed_ms": 15012
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-07-R2",
+      "arm": "skill",
+      "repo": "a-sec-6/case-07",
+      "check": "A-SEC-6",
+      "repetition": 2,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 79747,
+        "output_tokens": 1219,
+        "elapsed_ms": 27443
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-07-R3",
+      "arm": "control",
+      "repo": "a-sec-6/case-07",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": null,
+      "skill_installed": false,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 1,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/control.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/control.jsonl"
+      },
+      "cost": {
+        "input_tokens": 54160,
+        "output_tokens": 627,
+        "elapsed_ms": 17078
+      }
+    },
+    {
+      "pair_id": "P-A-SEC-6-CASE-07-R3",
+      "arm": "skill",
+      "repo": "a-sec-6/case-07",
+      "check": "A-SEC-6",
+      "repetition": 3,
+      "captured": "2026-07-23",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T04:50:37.931997Z",
+        "snapshot_kind": "service-alias",
+        "catalog_fetched_at": "2026-07-23T04:50:37.931997Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "3b82db669207fe6abcf15817c348d23997798afb7adeb0fb71c16d39c2bdfddf"
+      },
+      "fixture_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_commit": "54ba64740de7f34474e568dc4bf8ffc3713d34f7",
+      "skill_installed": true,
+      "ground_truth_revision_at_run": 2,
+      "grading_revision": 3,
+      "eligible_for_lift": true,
+      "capabilities": [
+        "static"
+      ],
+      "result": {
+        "outcome": "fail",
+        "hits": 1,
+        "misses": 0,
+        "unscored_true_findings": 0,
+        "duplicate_findings": 0,
+        "false_positives": 0,
+        "severity_matches": 1,
+        "severity_mismatches": 0,
+        "citation_matches": 1,
+        "citation_mismatches": 0
+      },
+      "artifacts": {
+        "audit": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/skill.json",
+        "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/skill.jsonl"
+      },
+      "cost": {
+        "input_tokens": 70812,
+        "output_tokens": 849,
+        "elapsed_ms": 20597
+      }
+    }
+  ]
 }

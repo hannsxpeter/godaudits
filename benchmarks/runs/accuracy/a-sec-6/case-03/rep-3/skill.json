@@ -1,0 +1,31 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Passwords use unsalted SHA-256 instead of a password KDF",
+      "severity": "Critical",
+      "path": "src/passwords.js",
+      "line": 6,
+      "quote": "return createHash('sha256').update(password).digest('hex');"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Password credential comparison is not constant-time",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "return hashPassword(password) === encoded;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token verification does not consume the token",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "All repository files were inspected. The reset token is generated with randomBytes and compared with timingSafeEqual, and the reset route is rate-limited before registration with a generic response. However, no repository code changes record.used after successful verification, so single-use behavior is not established."
+}

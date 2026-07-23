@@ -3,6 +3,56 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.12.0] - 2026-07-23
+
+The first measured-results release. It is cut under the accuracy-evidence
+exception to the normal 30-day cadence because it replaces an unexecuted
+protocol with a retained causal experiment and publishes the first external
+retrospective, including their null and negative results.
+
+### Added
+
+- A complete paired A-SEC-6 experiment: five seeded repositories, one clean
+  control, three repetitions per arm, and 36 eligible observations. Every pair
+  pins the model, observed service alias, Codex CLI version, harness
+  configuration, fixture commit, check, capability, and repetition. The
+  control disables every discoverable filesystem skill; the treatment enables
+  only the pinned godaudits skill.
+- A retained attempt ledger with 37 pre-inference technical failures from
+  harness development. Failed schema submissions never become model misses,
+  hits, or false positives.
+- Append-only ground-truth corrections and deterministic regrading.
+  Post-run-discovered true defects remain visible but cannot contribute to
+  causal lift, and repeated citations to one expected defect are counted as
+  duplicates rather than false positives.
+- The first qualifying external OSS dogfood package:
+  `auth0/node-jsonwebtoken` at the parent of the CVE-2015-9235 fix. It retains
+  EVIDENCE.json, compiled AUDIT.json, generated AUDIT.mdx, model and harness
+  attribution, a secret-safe path-redacted transcript, artifact hashes, public
+  advisory ground truth, and claim-specific adjudication.
+- Reusable dogfood and transcript-redaction runners plus a strengthened
+  publication gate that verifies commits, attribution, ground-truth counts,
+  open unknowns, escalation leads, transcript safety, and every packaged hash.
+
+### Changed
+
+- `ACCURACY.md` now publishes the measured result: both A-SEC-6 arms reached 15
+  of 15 pre-authored observations with no false positives, so the measured
+  skill lift is zero on the small suite. The installed-skill arm used 1.94
+  times the input tokens and 1.82 times the elapsed time.
+- The public OSS retrospective records zero hits, one miss, and zero
+  adjudicated false positives. The run found a broad missing algorithm
+  allowlist but did not name the advisory's asymmetric-key to HMAC-key
+  confusion path, so disclosure did not convert the near hit into a hit.
+- Evaluation and release documentation now distinguish causal metrics,
+  post-run truth, duplicates, technical failures, outside-ground-truth
+  findings, and claim-specific retrospective misses.
+
+### Fixed
+
+- Accuracy grading no longer punishes a correct post-run-discovered finding as
+  a false positive or rewards it as a hindsight-supported hit.
+
 ## [2.11.0] - 2026-07-23
 
 A measurement-and-honesty release, drawn from reviewing what the parallel-

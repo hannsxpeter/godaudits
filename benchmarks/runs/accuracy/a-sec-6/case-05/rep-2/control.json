@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Development environment bypass accepts every password without verification",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "if (process.env.NODE_ENV === 'development') return true;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token verification never consumes the token, allowing reuse until expiry",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 15,
+      "quote": "function verifyResetToken(record, supplied) {"
+    }
+  ],
+  "reasoning": "bcrypt cost 12 is used for passwords, reset tokens use CSPRNG generation and constant-time comparison, and the reset limiter is mounted before its route. However, the development bypass violates the required absence of environment-based authentication bypasses, and reset verification does not set record.used to true."
+}

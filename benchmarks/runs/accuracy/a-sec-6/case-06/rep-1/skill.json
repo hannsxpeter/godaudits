@@ -1,0 +1,6 @@
+{
+  "outcome": "pass",
+  "confidence": "Firm",
+  "findings": [],
+  "reasoning": "All four repository files were inspected. Passwords use bcrypt with cost 12 at src/passwords.js:6 (\"return bcrypt.hash(password, 12);\") and bcrypt comparison at src/passwords.js:10 (\"return bcrypt.compare(password, encoded);\"). The reset token uses CSPRNG at src/reset.js:6 (\"const token = randomBytes(32).toString('hex');\"), is marked used only after a timing-safe digest comparison at src/reset.js:19-20 (\"const matched = expected.length === actual.length && timingSafeEqual(expected, actual);\" and \"if (matched) record.used = true;\"), and the limiter mounts before the reset route at src/server.js:11-12 (\"app.use('/password', passwordLimiter);\" before \"app.post('/password/reset', ...)\"). The reset response is generic at src/server.js:14. No login, MFA, alternate token comparison, fast password hash, or development bypass code exists in the inspected repository."
+}

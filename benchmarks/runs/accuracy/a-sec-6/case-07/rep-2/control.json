@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Password reset limiter is registered after the reset route",
+      "severity": "High",
+      "path": "src/server.js",
+      "line": 16,
+      "quote": "app.use('/password', passwordLimiter);"
+    }
+  ],
+  "reasoning": "The password reset route is registered at src/server.js:10 before the limiter mount at line 16, so the limiter does not protect that auth route. Password storage uses bcrypt cost 12; reset tokens use randomBytes, are hashed at rest, verified with timingSafeEqual, and marked single-use."
+}

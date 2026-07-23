@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Development environment bypasses password verification",
+      "severity": "High",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "if (process.env.NODE_ENV === 'development') return true;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are not marked used after successful verification",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "bcrypt cost 12 provides salted password hashing, reset tokens use randomBytes(32), reset comparison is constant-time after a length check, and the limiter is mounted before the reset route. However, password verification has an environment-based bypass, and successful reset-token verification does not set record.used, so a token can be reused until expiry."
+}

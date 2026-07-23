@@ -8,7 +8,7 @@ exceptions applies:
 - A security fix protects users or audit evidence.
 - A broken install, invalid artifact, or incompatible upstream change blocks
   normal use.
-- A published result is materially wrong and requires a correction release.
+- A material accuracy result or correction changes the public evidence record.
 
 Release candidates may be tested without changing the stable version. The
 release owner batches compatible work, writes one changelog entry at release
@@ -28,6 +28,8 @@ eligible only when all of these are retained in-repo:
 - Model provider, model id, model snapshot, harness name, harness version, and
   harness configuration hash.
 - EVIDENCE.json, compiled AUDIT.json, generated AUDIT.mdx, and optional SARIF.
+- A run manifest, redacted transcript, artifact hashes, and the disclosure
+  ground truth used for retrospective adjudication.
 - Misses, false positives, open unknowns, and specialist escalation leads.
 - A statement that scanner imports are leads and that static evidence does not
   certify vulnerability absence.
@@ -37,6 +39,12 @@ two deep-capable domains. Public projects with a documented CVE or postmortem
 are stronger retrospective cases when the public record identifies the affected
 revision and code-level defect. The disclosure record stays outside the
 repository shown to the auditor until the blind run is complete.
+
+Adjudication is claim-specific. A broad missing-control finding is not upgraded
+to a hit after disclosure unless it identifies the documented exploit path.
+Source-supported findings outside a narrow retrospective ground truth remain
+visible and are labeled outside-ground-truth rather than forced into hit or
+false-positive buckets.
 
 An empty dogfood index means no qualifying external artifact has been published.
 It must never be summarized as a clean record.

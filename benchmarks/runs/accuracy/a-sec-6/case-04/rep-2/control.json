@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are generated with a non-cryptographic PRNG",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 6,
+      "quote": "const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Successful reset-token verification does not consume the token",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "Password hashing uses bcrypt at cost 12 and bcrypt.compare. The reset-token digest comparison is length-checked and constant-time. The reset limiter is registered before the reset route, and the reset response is generic. However, reset tokens use Math.random rather than a CSPRNG, and verification only checks record.used without setting it, so a verified token remains reusable until another component changes the record."
+}

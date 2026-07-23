@@ -24,6 +24,9 @@
           "fixture_commit",
           "skill_commit",
           "skill_installed",
+          "ground_truth_revision_at_run",
+          "grading_revision",
+          "eligible_for_lift",
           "capabilities",
           "result",
           "artifacts",
@@ -38,11 +41,13 @@
           "captured": { "type": "string", "format": "date" },
           "model": {
             "type": "object",
-            "required": ["provider", "id", "snapshot"],
+            "required": ["provider", "id", "snapshot", "snapshot_kind", "catalog_fetched_at"],
             "properties": {
               "provider": { "type": "string", "minLength": 1 },
               "id": { "type": "string", "minLength": 1 },
-              "snapshot": { "type": "string", "minLength": 1 }
+              "snapshot": { "type": "string", "minLength": 1 },
+              "snapshot_kind": { "enum": ["immutable", "service-alias"] },
+              "catalog_fetched_at": { "type": "string", "format": "date-time" }
             },
             "additionalProperties": false
           },
@@ -59,6 +64,9 @@
           "fixture_commit": { "type": "string", "minLength": 7 },
           "skill_commit": { "type": ["string", "null"], "minLength": 7 },
           "skill_installed": { "type": "boolean" },
+          "ground_truth_revision_at_run": { "type": "integer", "minimum": 1 },
+          "grading_revision": { "type": "integer", "minimum": 1 },
+          "eligible_for_lift": { "type": "boolean" },
           "capabilities": {
             "type": "array",
             "minItems": 1,
@@ -67,12 +75,29 @@
           },
           "result": {
             "type": "object",
-            "required": ["outcome", "hits", "misses", "false_positives"],
+            "required": [
+              "outcome",
+              "hits",
+              "misses",
+              "unscored_true_findings",
+              "duplicate_findings",
+              "false_positives",
+              "severity_matches",
+              "severity_mismatches",
+              "citation_matches",
+              "citation_mismatches"
+            ],
             "properties": {
               "outcome": { "enum": ["pass", "fail", "unknown"] },
               "hits": { "type": "integer", "minimum": 0 },
               "misses": { "type": "integer", "minimum": 0 },
-              "false_positives": { "type": "integer", "minimum": 0 }
+              "unscored_true_findings": { "type": "integer", "minimum": 0 },
+              "duplicate_findings": { "type": "integer", "minimum": 0 },
+              "false_positives": { "type": "integer", "minimum": 0 },
+              "severity_matches": { "type": "integer", "minimum": 0 },
+              "severity_mismatches": { "type": "integer", "minimum": 0 },
+              "citation_matches": { "type": "integer", "minimum": 0 },
+              "citation_mismatches": { "type": "integer", "minimum": 0 }
             },
             "additionalProperties": false
           },

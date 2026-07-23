@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Development environment bypasses password verification",
+      "severity": "Medium",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "if (process.env.NODE_ENV === 'development') return true;"
+    }
+  ],
+  "reasoning": "bcrypt uses cost 12, reset tokens use randomBytes(32), are stored as SHA-256 digests with expiry and single-use state, and reset-token comparison uses timingSafeEqual. The reset limiter is mounted before the only reset route and its response is generic. However, password verification returns true when NODE_ENV is development, violating the required absence of an environment-based development bypass."
+}

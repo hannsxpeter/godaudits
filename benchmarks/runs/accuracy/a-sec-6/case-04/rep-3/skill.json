@@ -1,0 +1,23 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Reset tokens are generated with predictable non-CSPRNG values",
+      "severity": "High",
+      "path": "src/reset.js",
+      "line": 6,
+      "quote": "const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Reset-token verification does not consume the token",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 10,
+      "quote": "used: false"
+    }
+  ],
+  "reasoning": "bcrypt uses cost 12 and bcrypt.compare; the reset limiter is mounted before its route; reset responses are generic; and no development bypass exists. However, reset token generation uses Date.now and Math.random instead of a CSPRNG. The repository contains no mutation that changes record.used after successful verification, so issued reset tokens are not established as single-use."
+}

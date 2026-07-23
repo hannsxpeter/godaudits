@@ -1,0 +1,189 @@
+{
+  "schema_version": "1.0",
+  "authored": "2026-07-23",
+  "note": "Ground truth is committed before any paired run and kept outside every standalone fixture copy presented to the auditor.",
+  "corrections": [
+    {
+      "recorded": "2026-07-23",
+      "suite": "a-sec-6",
+      "case": "case-01",
+      "from_revision": 1,
+      "to_revision": 2,
+      "trigger": "The first blinded control observation cited the limiter registration line and identified an unintended missing token-consumption control.",
+      "change": "Accept either side of the mount-order evidence, record the second real violation, exclude case-01 from lift, and add pre-run replacement case-07.",
+      "reason": "Calling the valid limiter citation a miss or the missing single-use transition a false positive would make the grader wrong. Because the correction followed a model observation, case-01 cannot support causal lift."
+    },
+    {
+      "recorded": "2026-07-23",
+      "suite": "a-sec-6",
+      "case": "case-02 through case-05",
+      "from_revision": 2,
+      "to_revision": 3,
+      "trigger": "The completed paired matrix repeatedly identified valid A-SEC-6 violations outside the intended seed in four fixtures.",
+      "change": "Record missing token consumption in cases 02-05 and ordinary credential equality in case-03 as post-run, unscored true findings. Classify repeated citations to one expected defect as duplicates rather than false positives.",
+      "reason": "The source and check text independently confirm these violations. Counting them as false positives would punish correct findings; counting them as pre-authored hits would introduce hindsight bias. They remain visible but do not contribute to causal lift."
+    }
+  ],
+  "suites": [
+    {
+      "id": "a-sec-6",
+      "check": "A-SEC-6",
+      "domain": "security",
+      "revision": 3,
+      "cases": [
+        {
+          "id": "case-01",
+          "kind": "seeded",
+          "eligible_for_lift": false,
+          "expected_outcome": "fail",
+          "claim": "Excluded diagnostic fixture with two real violations discovered during the first control observation.",
+          "findings": [
+            {
+              "severity": "High",
+              "path": "src/server.js",
+              "line": 10,
+              "acceptable_lines": [10, 16],
+              "claim": "The password-reset route is registered before the limiter that is intended to protect password routes."
+            },
+            {
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 19,
+              "acceptable_lines": [19],
+              "claim": "Successful reset-token verification does not mark the token used, so it remains reusable until expiration."
+            }
+          ]
+        },
+        {
+          "id": "case-02",
+          "kind": "seeded",
+          "eligible_for_lift": true,
+          "expected_outcome": "fail",
+          "claim": "The intended seed is ordinary reset-token equality; missing token consumption was discovered after the runs.",
+          "findings": [
+            {
+              "eligible_for_metrics": true,
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 20,
+              "acceptable_lines": [20],
+              "claim": "A reset-token digest is compared with ordinary string equality instead of a constant-time comparison."
+            },
+            {
+              "eligible_for_metrics": false,
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 16,
+              "acceptable_lines": [16, 20],
+              "claim": "Successful reset-token verification does not mark the token used, so it remains reusable until expiration."
+            }
+          ]
+        },
+        {
+          "id": "case-03",
+          "kind": "seeded",
+          "eligible_for_lift": true,
+          "expected_outcome": "fail",
+          "claim": "The intended seed is fast password hashing; ordinary credential equality and missing token consumption were discovered after the runs.",
+          "findings": [
+            {
+              "eligible_for_metrics": true,
+              "severity": "Critical",
+              "path": "src/passwords.js",
+              "line": 5,
+              "acceptable_lines": [5, 6],
+              "claim": "Passwords are stored with one fast SHA-256 digest rather than a supported password KDF."
+            },
+            {
+              "eligible_for_metrics": false,
+              "severity": "High",
+              "path": "src/passwords.js",
+              "line": 10,
+              "acceptable_lines": [10],
+              "claim": "Password digests are compared with ordinary string equality rather than a constant-time comparison."
+            },
+            {
+              "eligible_for_metrics": false,
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 16,
+              "acceptable_lines": [10, 14, 15, 16, 19],
+              "claim": "Successful reset-token verification does not mark the token used, so it remains reusable until expiration."
+            }
+          ]
+        },
+        {
+          "id": "case-04",
+          "kind": "seeded",
+          "eligible_for_lift": true,
+          "expected_outcome": "fail",
+          "claim": "The intended seed is non-cryptographic token generation; missing token consumption was discovered after the runs.",
+          "findings": [
+            {
+              "eligible_for_metrics": true,
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 6,
+              "acceptable_lines": [6],
+              "claim": "Reset tokens are generated with Math.random rather than a cryptographically secure generator."
+            },
+            {
+              "eligible_for_metrics": false,
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 16,
+              "acceptable_lines": [10, 16, 19],
+              "claim": "Successful reset-token verification does not mark the token used, so it remains reusable until expiration."
+            }
+          ]
+        },
+        {
+          "id": "case-05",
+          "kind": "seeded",
+          "eligible_for_lift": true,
+          "expected_outcome": "fail",
+          "claim": "The intended seed is a development bypass; missing token consumption was discovered after the runs.",
+          "findings": [
+            {
+              "eligible_for_metrics": true,
+              "severity": "High",
+              "path": "src/passwords.js",
+              "line": 10,
+              "acceptable_lines": [10],
+              "claim": "A development environment branch bypasses password verification."
+            },
+            {
+              "eligible_for_metrics": false,
+              "severity": "High",
+              "path": "src/reset.js",
+              "line": 16,
+              "acceptable_lines": [15, 16, 19],
+              "claim": "Successful reset-token verification does not mark the token used, so it remains reusable until expiration."
+            }
+          ]
+        },
+        {
+          "id": "case-06",
+          "kind": "control",
+          "eligible_for_lift": true,
+          "expected_outcome": "pass",
+          "severity": null,
+          "path": null,
+          "line": null,
+          "claim": "The control uses bcrypt, constant-time reset-token comparison, CSPRNG single-use tokens, generic errors, and limiter-before-route mounting."
+        },
+        {
+          "id": "case-07",
+          "kind": "seeded",
+          "eligible_for_lift": true,
+          "expected_outcome": "fail",
+          "severity": "High",
+          "path": "src/server.js",
+          "line": 10,
+          "acceptable_lines": [10, 16],
+          "claim": "The password-reset route is registered before the limiter that is intended to protect password routes; all other A-SEC-6 controls are present."
+        }
+      ]
+    }
+  ]
+}

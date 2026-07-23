@@ -1,5 +1,51 @@
 {
   "schema_version": "1.0",
   "note": "Only qualifying external OSS dogfood audits belong here. Empty means none have been published, not that all audited projects passed.",
-  "published": []
+  "published": [
+    {
+      "id": "node-jsonwebtoken-cve-2015-9235",
+      "repo_url": "https://github.com/auth0/node-jsonwebtoken",
+      "repo_commit": "f9f3c34f8478b1b81070bf0a6da3fd48f2ee70be",
+      "license": "MIT",
+      "audited_date": "2026-07-23",
+      "domains": [
+        "security"
+      ],
+      "budget": "medium",
+      "model": {
+        "provider": "openai",
+        "id": "gpt-5.6-terra",
+        "snapshot": "service-alias:gpt-5.6-terra;catalog-fetched:2026-07-23T05:19:46.055063Z"
+      },
+      "harness": {
+        "name": "codex-cli",
+        "version": "0.145.0",
+        "config_sha256": "4eae89fe4774a885fa89eb6d11b363828b59b20df35683c5bba354ca6b2961d9"
+      },
+      "hits": 0,
+      "misses": 1,
+      "false_positives": 0,
+      "open_unknowns": 20,
+      "specialist_escalation_leads": [
+        "Reproduce the asymmetric-public-key to HMAC-secret confusion at index.js:113 using the fix commit's regression case.",
+        "Trace algorithm and key-family enforcement across the jsonwebtoken to jws dependency boundary.",
+        "Run a full-budget history and supply-chain assessment for A-SEC-26 and A-SEC-27."
+      ],
+      "ground_truth": {
+        "id": "GHSA-c7hr-j4mj-j2w6",
+        "url": "https://github.com/advisories/GHSA-c7hr-j4mj-j2w6",
+        "fix_commit": "1bb584bc382295eeb7ee8c4452a673a77a68b687",
+        "expected_findings": 1
+      },
+      "artifacts": {
+        "evidence": "node-jsonwebtoken-cve-2015-9235/.godaudits/EVIDENCE.json",
+        "audit": "node-jsonwebtoken-cve-2015-9235/.godaudits/AUDIT.json",
+        "report": "node-jsonwebtoken-cve-2015-9235/.godaudits/AUDIT.mdx",
+        "run": "node-jsonwebtoken-cve-2015-9235/.godaudits/RUN.json",
+        "transcript": "node-jsonwebtoken-cve-2015-9235/.godaudits/CODEX.jsonl",
+        "ground_truth": "node-jsonwebtoken-cve-2015-9235/GROUND-TRUTH.json",
+        "packaging": "node-jsonwebtoken-cve-2015-9235/PACKAGING.json"
+      }
+    }
+  ]
 }

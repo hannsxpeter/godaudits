@@ -81,8 +81,19 @@ model, snapshot, harness, harness configuration, repository, fixture commit,
 check, capabilities, and repetition with and without the installed skill. New
 runs require non-null model and harness attribution. `npm run accuracy:check`
 rejects incomplete pairs, duplicate arms, target drift, attribution gaps, and
-any pinned field that differs across the pair. An empty runs array means skill
-lift has not been measured.
+any pinned field that differs across the pair.
+
+The first complete A-SEC-6 suite contains five seeded repositories, one clean
+control, and three repetitions per arm. Both arms reached 15 of 15 pre-authored
+hits with no false positives, so the measured skill lift is zero on that suite.
+The installed-skill arm used materially more tokens and elapsed time. Post-run
+true findings remain visible as unscored observations, and duplicate citations
+are counted separately. Neither can change the causal metrics.
+
+`benchmarks/run-attempts.json` retains technical failures separately from model
+observations. A response rejected before inference cannot become a miss, hit, or
+false positive. `npm run accuracy:regrade` applies the current append-only
+ground-truth correction revision to retained structured outputs.
 
 ## Deterministic product evaluations
 
@@ -139,6 +150,10 @@ can hide a dangerous miss behind many Low findings.
   harness version, harness configuration hash, fixture commit, and skill commit.
 - Public OSS retrospectives require a documented CVE or postmortem tied to a
   repository revision and specific code-level ground truth.
+- A finding that identifies a broad missing control but not the documented
+  exploit path remains a miss. Disclosure cannot be used to upgrade a near hit.
+- Post-run defects discovered in a seeded fixture are retained but excluded
+  from causal metrics.
 
 ## What the benchmark does not prove
 

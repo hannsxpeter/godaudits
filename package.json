@@ -1,6 +1,6 @@
 {
   "name": "godaudits",
-  "version": "2.11.0",
+  "version": "2.12.0",
   "description": "Evidence-first codebase auditing with a deterministic check catalog, validated audit state, computed scores, benchmarks, MDX reports, and SARIF output.",
   "keywords": [
     "agent-skills",
@@ -71,6 +71,9 @@
     "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'",
     "test:detectors": "node scripts/detector-gate.js",
     "accuracy:check": "node scripts/accuracy-check.js",
+    "accuracy:run": "node scripts/run-paired-accuracy.js",
+    "accuracy:regrade": "node scripts/regrade-accuracy.js",
+    "dogfood:run": "node scripts/run-dogfood-audit.js",
     "dogfood:check": "node scripts/dogfood-check.js",
     "corpus": "node benchmarks/build-detector-corpus.js",
     "corpus:check": "node benchmarks/build-detector-corpus.js --check"

@@ -1,0 +1,15 @@
+{
+  "outcome": "fail",
+  "confidence": "Certain",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Password reset route is registered before its rate limiter",
+      "severity": "High",
+      "path": "src/server.js",
+      "line": 16,
+      "quote": "app.use('/password', passwordLimiter);"
+    }
+  ],
+  "reasoning": "The password reset endpoint is registered at src/server.js:10 before the /password limiter is mounted at line 16, so the limiter does not precede the authentication route. Password hashing uses bcrypt at cost 12, reset tokens use randomBytes(32), reset verification uses timingSafeEqual, and the reset response is generic."
+}

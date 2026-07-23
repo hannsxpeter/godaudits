@@ -1,0 +1,31 @@
+{
+  "outcome": "fail",
+  "confidence": "Firm",
+  "findings": [
+    {
+      "check": "A-SEC-6",
+      "title": "Password storage uses a fast, unsalted SHA-256 hash rather than an approved password KDF.",
+      "severity": "Critical",
+      "path": "src/passwords.js",
+      "line": 6,
+      "quote": "return createHash('sha256').update(password).digest('hex');"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Password verification uses a non-constant-time equality comparison.",
+      "severity": "Medium",
+      "path": "src/passwords.js",
+      "line": 10,
+      "quote": "return hashPassword(password) === encoded;"
+    },
+    {
+      "check": "A-SEC-6",
+      "title": "Successful reset-token verification does not consume the token, allowing replay until expiry.",
+      "severity": "Medium",
+      "path": "src/reset.js",
+      "line": 19,
+      "quote": "return expected.length === actual.length && timingSafeEqual(expected, actual);"
+    }
+  ],
+  "reasoning": "All repository files were inspected. The reset route is rate-limited before registration and returns a generic message. Reset tokens use randomBytes and are compared with timingSafeEqual, but the issued used flag is never changed after successful verification. No development bypass branch was found."
+}

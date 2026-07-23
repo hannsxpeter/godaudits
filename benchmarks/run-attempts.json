@@ -1,0 +1,746 @@
+{
+  "schema_version": "1.0",
+  "note": "Append-only technical attempt ledger for paired model runs. Failed harness attempts remain visible and do not become accuracy observations. A successful pair arm is never rerun under the same program version.",
+  "attempts": [
+    {
+      "attempt_id": "9b8aa3f9-8b0b-4b60-b2a6-a67aa8dcc0aa",
+      "pair_id": "P-A-SEC-6-CASE-01-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:46:01.161Z",
+      "completed": "2026-07-23T04:46:02.902Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.678530Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.682904Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.685175Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.687274Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.691295Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.892991Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-7895-7442-af8a-780b227d0e60.1784781961366273000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "d67191a8-873d-4fd4-9221-160cdd19741d",
+      "pair_id": "P-A-SEC-6-CASE-01-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:01.163Z",
+      "completed": "2026-07-23T04:46:03.020Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.665655Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.669843Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.672879Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.675735Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.681487Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:03.010720Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-788b-72c3-9458-2b4cf9415e4c.1784781961356426000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "56286928-7e0d-435d-9f12-1762637b9f18",
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:01.159Z",
+      "completed": "2026-07-23T04:46:03.109Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: ancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.675051Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.681008Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.685709Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.688794Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.690854Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.692507Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.695660Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back"
+    },
+    {
+      "attempt_id": "461e33de-3393-407e-b99a-697e77bea3e1",
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:01.156Z",
+      "completed": "2026-07-23T04:46:03.146Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.666726Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.671240Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.674462Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.677403Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:02.683107Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:03.136463Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-7877-7492-a96a-a304d4291f4e.1784781961336426000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "11fa7884-828d-45d9-b8c5-36eec2b5edc5",
+      "pair_id": "P-A-SEC-6-CASE-01-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:46:02.902Z",
+      "completed": "2026-07-23T04:46:04.584Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.062822Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.067950Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.071116Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.074324Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.080959Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.574178Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-7ee9-7c10-ac9d-1c6141029a88.1784781962986288000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "b2c4ce07-6ae3-4bdb-943c-dcdb843d0a35",
+      "pair_id": "P-A-SEC-6-CASE-01-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:03.020Z",
+      "completed": "2026-07-23T04:46:04.652Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.270676Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.274052Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.276354Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.278714Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.283589Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.644390Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-7f6f-79e0-a91b-be3133ed71af.1784781963120233000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "cbcf0d55-413a-4da3-8a74-8ecd9494cf9b",
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:03.146Z",
+      "completed": "2026-07-23T04:46:04.771Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.354594Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.357006Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.358655Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.360257Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.363404Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.763345Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-8007-7383-9537-4bb848e3b78b.1784781963271873000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "2710b472-0df7-4aff-81d3-304450b64fd3",
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:04.652Z",
+      "completed": "2026-07-23T04:46:06.204Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.659759Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.662738Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.664696Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.667036Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.670985Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:06.190193Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-85d2-7d42-87aa-21591d26b397.1784781964755012000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "447c5047-623d-4c39-9884-34f1dcf59b9c",
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:46:04.584Z",
+      "completed": "2026-07-23T04:46:06.629Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.596182Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.599852Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.602037Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.604546Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.609663Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:06.621264Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-8586-7751-aa6c-eb3391672167.1784781964678750000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "28b753ec-45fa-4b82-af16-4305300a1844",
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:03.109Z",
+      "completed": "2026-07-23T04:46:07.247Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.332541Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.335601Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.337710Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.339653Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:04.343424Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.239803Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-7fcf-7923-8624-e72548d59911.1784781963216144000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "3d9e9ab9-5665-4707-9306-d78eb8f146f7",
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:46:04.772Z",
+      "completed": "2026-07-23T04:46:07.811Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.723662Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.726126Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.727820Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.729588Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:05.733190Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.802440Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-865d-7132-8c6e-212bc1a89422.1784781964894049000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "75ca601e-7fcb-4b61-b914-dc562353b4c9",
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:06.205Z",
+      "completed": "2026-07-23T04:46:07.826Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:06.998109Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.001204Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.003182Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.005031Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.009043Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.820033Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-8bdc-78a3-8368-b32337767307.1784781966301310000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "d2ac1df7-c8c7-46e6-b486-863571561e21",
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:07.248Z",
+      "completed": "2026-07-23T04:46:08.612Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.200497Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.204801Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.207393Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.209608Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.213790Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.603824Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-900a-7020-9914-14a7c079b4cd.1784781967371163000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "160a9e8e-6250-495a-8b69-51ac2478399e",
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:07.827Z",
+      "completed": "2026-07-23T04:46:09.452Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.019326Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.021984Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.024177Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.026196Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.030483Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.444525Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9256-7ba0-8b75-66ad650e9964.1784781967959394000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "581b33c1-c2bd-4d2d-b1d1-db139827fc0f",
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:06.629Z",
+      "completed": "2026-07-23T04:46:09.684Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.517155Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.520669Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.522965Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.524857Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:07.529022Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.677425Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-8d85-7e70-aadc-c2ab77a8ce23.1784781966725593000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "7aace017-b8b3-48ca-8487-a20d98f39f0d",
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:46:07.811Z",
+      "completed": "2026-07-23T04:46:09.786Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:08.997849Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.002504Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.004865Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.006783Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.010435Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.777144Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9256-7881-8784-1494eb0047f6.1784781967959427000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "36d565cc-1d63-464b-aee2-59d7f4312b5d",
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:46:08.613Z",
+      "completed": "2026-07-23T04:46:10.167Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.451208Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.456195Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.458145Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.460021Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:09.463521Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.159087Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9555-7f01-ba8d-ab5871d6508d.1784781968726478000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "7b836218-05f4-4d2f-9cde-bd308054215e",
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:09.452Z",
+      "completed": "2026-07-23T04:46:10.887Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.541596Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.545744Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.548775Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.551907Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.557828Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.876232Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9885-7fe1-84d7-c42e0d5a5479.1784781969542375000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "dcd46b0d-f82e-411d-9d01-b7ebb9545d89",
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:09.685Z",
+      "completed": "2026-07-23T04:46:11.420Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.887056Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.891183Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.894042Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.897471Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.903179Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.413067Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9978-7d22-ae46-37180003e8bc.1784781969786018000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "de4c3a42-6228-4f4a-9f8e-bb70995f52b2",
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:46:10.167Z",
+      "completed": "2026-07-23T04:46:11.633Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.212497Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.216286Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.218705Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.221030Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.225409Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.625277Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9b61-7ba2-92a6-7f69e7d108c6.1784781970273655000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "2e9a439c-b70a-48b7-97e1-52734799ceab",
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:09.786Z",
+      "completed": "2026-07-23T04:46:11.803Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.980473Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.984807Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.987226Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.991147Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:10.996595Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.795155Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-99ef-7341-9139-b9e382bf5b3a.1784781969903849000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "d1c2bf0d-eb30-434f-985e-412f5f726f59",
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:10.887Z",
+      "completed": "2026-07-23T04:46:12.415Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.749876Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.754828Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.758330Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.761088Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:11.765977Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.406657Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-9e35-7d52-a655-eed7377cec9b.1784781970997962000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "aef6dcb6-7552-448e-a619-107ef944becf",
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:11.633Z",
+      "completed": "2026-07-23T04:46:13.070Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.768130Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.772385Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.775211Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.778091Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.783989Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.059813Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a113-7e13-9bc8-384156aa0323.1784781971731902000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "ee86e4cc-6b40-47d3-9862-61e9aadac725",
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:46:11.421Z",
+      "completed": "2026-07-23T04:46:13.108Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.496881Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.500036Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.502598Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.505085Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.512423Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.099550Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a037-7041-9721-aafa6119b742.1784781971512020000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "85c74129-480d-464e-b6a2-6e6655e10f9c",
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:11.803Z",
+      "completed": "2026-07-23T04:46:13.786Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.923249Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.926210Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.928293Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.930230Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:12.934412Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.777709Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a1be-7fe2-91d2-da412c4b5a93.1784781971902797000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "5b47f0ef-780f-4abb-b54f-d39e14e5adc2",
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:12.415Z",
+      "completed": "2026-07-23T04:46:13.963Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.381481Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.384597Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.386460Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.388417Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.392950Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:13.954813Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a421-7d40-81c2-f4e6b210c43a.1784781972514346000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "8cbb16a3-4c51-4644-80a4-d0407baa23e3",
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:13.108Z",
+      "completed": "2026-07-23T04:46:14.626Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.164796Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.169445Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.172788Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.175947Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.182185Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.618060Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a6d8-7af2-8221-4a541c9bb9e0.1784781973208674000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "07c8025a-97d9-43b0-bf6f-8945df2a7c5d",
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:46:13.070Z",
+      "completed": "2026-07-23T04:46:15.142Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.164540Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.169280Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.172782Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.175893Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.182186Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.134683Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a6ac-71d2-afd4-b780290dcc35.1784781973164642000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "48114272-8497-43c9-b15e-bd6927788395",
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:46:13.786Z",
+      "completed": "2026-07-23T04:46:15.200Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.735341Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.739846Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.743133Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.746089Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.752601Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.191513Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-a981-7a42-84e8-ea217ec6da3a.1784781973890367000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "0e2779c8-f6dd-45c9-8dbe-fbeac3d800f4",
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:13.963Z",
+      "completed": "2026-07-23T04:46:15.365Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.908973Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.912351Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.914475Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.916475Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:14.920488Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.354790Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-aa34-77f2-930b-83fe81da047a.1784781974069250000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "27f0309b-5903-45f0-8cae-49136071d14e",
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:14.626Z",
+      "completed": "2026-07-23T04:46:16.169Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: ancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.601276Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.607569Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.614088Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.620419Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.623989Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.627743Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:15.634805Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back"
+    },
+    {
+      "attempt_id": "27dc0b24-5031-4001-aaa7-d90c441751f2",
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:15.365Z",
+      "completed": "2026-07-23T04:46:16.984Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.450914Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.454606Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.457265Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.459393Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.463551Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.977140Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-afbd-7f52-8815-c2c4fa9a6e2f.1784781975485885000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "376486fd-6629-4d5b-8384-3eaa04a07eab",
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:46:16.169Z",
+      "completed": "2026-07-23T04:46:17.592Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.939058Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.941491Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.943099Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.944634Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.947678Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.584541Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-b2cb-7161-8024-be1e52fc8d3a.1784781976268040000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "f4c214d9-f939-49bc-9330-2a9a3bf52ce1",
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:15.142Z",
+      "completed": "2026-07-23T04:46:18.316Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.228186Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.232246Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.234824Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.237066Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.242297Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:18.303600Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-aebf-7fb3-8170-7cca9521e7a1.1784781975231979000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "9861b11c-d5df-4567-a57c-de3db4c41212",
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:46:16.984Z",
+      "completed": "2026-07-23T04:46:19.516Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: ancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.750462Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.754207Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.757582Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.760179Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.762387Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.764252Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:17.768353Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back"
+    },
+    {
+      "attempt_id": "b84ed07b-c065-42ad-899a-792c211f85c1",
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:46:15.200Z",
+      "completed": "2026-07-23T04:46:20.137Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1: read_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.258530Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.261293Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.263217Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.264969Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:16.268991Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:20.122921Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/hprincivil/.codex/shell_snapshots/019f8d4b-af09-7a80-aaa2-9cde6a02d12a.1784781975306255000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }"
+    },
+    {
+      "attempt_id": "316ab6dd-44f3-4672-b397-98458a187c54",
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:46:43.997Z",
+      "completed": "2026-07-23T04:46:45.723Z",
+      "status": "technical-failure",
+      "transcript": null,
+      "error": "Codex exited 1\nstdout:\n{\"type\":\"thread.started\",\"thread_id\":\"019f8d4c-1f7d-73c2-9771-f55e434cc79c\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"error\",\"message\":\"{\\n  \\\"type\\\": \\\"error\\\",\\n  \\\"error\\\": {\\n    \\\"type\\\": \\\"invalid_request_error\\\",\\n    \\\"code\\\": \\\"invalid_json_schema\\\",\\n    \\\"message\\\": \\\"Invalid schema for response_format 'codex_output_schema': In context=('properties', 'findings', 'items', 'properties', 'check'), schema must have a 'type' key.\\\",\\n    \\\"param\\\": \\\"text.format.schema\\\"\\n  },\\n  \\\"status\\\": 400\\n}\"}\n{\"type\":\"turn.failed\",\"error\":{\"message\":\"{\\n  \\\"type\\\": \\\"error\\\",\\n  \\\"error\\\": {\\n    \\\"type\\\": \\\"invalid_request_error\\\",\\n    \\\"code\\\": \\\"invalid_json_schema\\\",\\n    \\\"message\\\": \\\"Invalid schema for response_format 'codex_output_schema': In context=('properties', 'findings', 'items', 'properties', 'check'), schema must have a 'type' key.\\\",\\n    \\\"param\\\": \\\"text.format.schema\\\"\\n  },\\n  \\\"status\\\": 400\\n}\"}}\nstderr:\ng find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.694231Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.697383Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.698994Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.700810Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.702938Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.705997Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.708333Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-23T04:46:44.711425Z  WARN codex_rollout::list: "
+    },
+    {
+      "attempt_id": "62f17935-01fe-4544-be9f-25154969e108",
+      "pair_id": "P-A-SEC-6-CASE-01-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:47:18.314Z",
+      "completed": "2026-07-23T04:47:38.882Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-01/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "133ea188-956c-44f1-83a4-f262b6b63eb8",
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:50:38.689Z",
+      "completed": "2026-07-23T04:51:01.289Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "9e998b4c-5ca6-475e-bca0-fdef88bba3b7",
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:50:38.684Z",
+      "completed": "2026-07-23T04:51:01.979Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "672c4f0e-92fe-4324-85d6-2faf60e16721",
+      "pair_id": "P-A-SEC-6-CASE-02-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:50:38.691Z",
+      "completed": "2026-07-23T04:51:12.998Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "c6dcb919-7e1a-41a8-9cee-8b2317b88e82",
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:51:01.290Z",
+      "completed": "2026-07-23T04:51:20.193Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "9665c754-a9f3-4dbb-8c62-4eeefbed2bb1",
+      "pair_id": "P-A-SEC-6-CASE-02-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:01.979Z",
+      "completed": "2026-07-23T04:51:24.453Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "8bd1884c-a142-4acf-b027-dbe2080fcf89",
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:51:12.999Z",
+      "completed": "2026-07-23T04:51:36.206Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a7d563a4-0f10-41fd-81dd-1e85ab18784f",
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:51:24.453Z",
+      "completed": "2026-07-23T04:51:46.500Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2afea9a1-84fa-455a-842d-5d387529418f",
+      "pair_id": "P-A-SEC-6-CASE-02-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:50:38.687Z",
+      "completed": "2026-07-23T04:51:54.874Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-02/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "dd65d6cd-e6c2-4eb8-9093-3d25f45a2f10",
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:51:46.500Z",
+      "completed": "2026-07-23T04:52:10.037Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2721831e-658a-4176-8cbb-95f23b5d95f5",
+      "pair_id": "P-A-SEC-6-CASE-03-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:20.194Z",
+      "completed": "2026-07-23T04:52:11.919Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a8710942-1618-4c4a-a501-aa9eef01811c",
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:52:10.038Z",
+      "completed": "2026-07-23T04:52:29.121Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "3c235f18-4ea4-465d-8841-b5c9cbdf5bc0",
+      "pair_id": "P-A-SEC-6-CASE-03-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:36.207Z",
+      "completed": "2026-07-23T04:52:29.953Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "aceb26bf-f83e-4872-b5fb-b4cef059234f",
+      "pair_id": "P-A-SEC-6-CASE-03-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:51:54.874Z",
+      "completed": "2026-07-23T04:52:37.098Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-03/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "c5bbb89e-fab4-4560-8b31-6c64bacd9a2f",
+      "pair_id": "P-A-SEC-6-CASE-04-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:11.920Z",
+      "completed": "2026-07-23T04:52:45.128Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "265b8213-090d-4d35-a4eb-aa7a307c015a",
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:52:29.123Z",
+      "completed": "2026-07-23T04:52:50.601Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "5c630be2-3b68-4f83-8995-a4f5171adc00",
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:52:37.098Z",
+      "completed": "2026-07-23T04:52:55.943Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "fc68b42c-f8b3-4192-ad52-7325e5640ed9",
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:52:50.602Z",
+      "completed": "2026-07-23T04:53:10.919Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "e187af40-105b-4b1b-9da4-ab14a40a5d00",
+      "pair_id": "P-A-SEC-6-CASE-04-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:29.954Z",
+      "completed": "2026-07-23T04:53:12.958Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a9acd55e-02dd-4657-8ca3-266e450e5213",
+      "pair_id": "P-A-SEC-6-CASE-04-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:45.128Z",
+      "completed": "2026-07-23T04:53:17.137Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-04/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "dd894f3c-6291-407c-a2ac-0cbcec3055ff",
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:53:10.919Z",
+      "completed": "2026-07-23T04:53:30.730Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "7bcd5392-4923-4857-a7a1-1e292d3c0883",
+      "pair_id": "P-A-SEC-6-CASE-05-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:12.958Z",
+      "completed": "2026-07-23T04:53:34.381Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2e3c4151-60a8-4c13-901b-e9a437d8a646",
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:53:17.137Z",
+      "completed": "2026-07-23T04:53:34.460Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "c2bb387f-4770-4195-9099-cd635e0edba8",
+      "pair_id": "P-A-SEC-6-CASE-05-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:52:55.943Z",
+      "completed": "2026-07-23T04:53:36.729Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "54b70084-e550-48ae-b85a-6fbf287804b1",
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:53:36.729Z",
+      "completed": "2026-07-23T04:53:52.069Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "940d005b-b478-441b-aea4-e297d37b1042",
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:53:34.382Z",
+      "completed": "2026-07-23T04:53:52.856Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "8452a9ae-d920-45a6-b9d2-3b9e67b0a75e",
+      "pair_id": "P-A-SEC-6-CASE-05-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:30.730Z",
+      "completed": "2026-07-23T04:53:58.154Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-05/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "260b59a4-16cd-4c61-9468-48c341548adc",
+      "pair_id": "P-A-SEC-6-CASE-06-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:52.070Z",
+      "completed": "2026-07-23T04:54:09.187Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "ad9c4730-e01d-44f9-a8f8-dc6af8a7563d",
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:53:52.856Z",
+      "completed": "2026-07-23T04:54:11.862Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "fccca18a-c65c-48cc-aa54-c88c3ef446ec",
+      "pair_id": "P-A-SEC-6-CASE-06-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:58.155Z",
+      "completed": "2026-07-23T04:54:17.309Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-3/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "5d9d5426-bc5b-4d43-866e-5f8d66fa063d",
+      "pair_id": "P-A-SEC-6-CASE-06-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:53:34.461Z",
+      "completed": "2026-07-23T04:54:20.235Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-06/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "a4ae36f8-669e-48e5-bdac-108e6210b1f0",
+      "pair_id": "P-A-SEC-6-CASE-07-R1",
+      "arm": "control",
+      "started": "2026-07-23T04:54:09.188Z",
+      "completed": "2026-07-23T04:54:24.292Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "e02d3d46-41d8-4761-8f50-8911fb9b6c5e",
+      "pair_id": "P-A-SEC-6-CASE-07-R2",
+      "arm": "control",
+      "started": "2026-07-23T04:54:17.310Z",
+      "completed": "2026-07-23T04:54:32.326Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "2cbf5cc3-3151-42bc-bd94-8196c7718f90",
+      "pair_id": "P-A-SEC-6-CASE-07-R3",
+      "arm": "control",
+      "started": "2026-07-23T04:54:24.293Z",
+      "completed": "2026-07-23T04:54:41.374Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/control.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "04f16be8-6407-47dd-b242-63485b872412",
+      "pair_id": "P-A-SEC-6-CASE-07-R1",
+      "arm": "skill",
+      "started": "2026-07-23T04:54:11.862Z",
+      "completed": "2026-07-23T04:54:41.744Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-1/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "7146c5d2-6a7f-44e1-a6df-fab2c417118a",
+      "pair_id": "P-A-SEC-6-CASE-07-R2",
+      "arm": "skill",
+      "started": "2026-07-23T04:54:20.236Z",
+      "completed": "2026-07-23T04:54:47.682Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-2/skill.jsonl",
+      "error": null
+    },
+    {
+      "attempt_id": "658501bc-fa47-46a3-a511-f399d61a87c2",
+      "pair_id": "P-A-SEC-6-CASE-07-R3",
+      "arm": "skill",
+      "started": "2026-07-23T04:54:32.326Z",
+      "completed": "2026-07-23T04:54:52.926Z",
+      "status": "recorded",
+      "transcript": "benchmarks/runs/accuracy/a-sec-6/case-07/rep-3/skill.jsonl",
+      "error": null
+    }
+  ]
+}
