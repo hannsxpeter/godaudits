@@ -291,7 +291,7 @@ function runCodex(task, context) {
       const elapsed = Date.now() - started;
       fs.rmSync(fixture, { recursive: true, force: true });
       if (code !== 0) {
-        reject(new Error(`Codex exited ${code}: ${stderr.trim().slice(-1000)}`));
+        reject(new Error(`Codex exited ${code}\nstdout:\n${stdout.trim().slice(-3000)}\nstderr:\n${stderr.trim().slice(-3000)}`));
         return;
       }
       try {
