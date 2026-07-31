@@ -3,7 +3,7 @@ name: godaudits
 description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 431 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.12.0"
+  version: "2.13.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.12 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.13 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -60,6 +60,7 @@ godaudits import-sarif scanner.sarif --output .godaudits/TOOL-EVIDENCE.json
 godaudits import-tool semgrep.json --tool semgrep --command "semgrep scan --json ." --output .godaudits/TOOL-EVIDENCE.json
 godaudits diff .godaudits/archive/AUDIT-v1.json .godaudits/AUDIT.json
 godaudits evaluate .godaudits/AUDIT.json expected.json
+godaudits wayfind .godaudits/AUDIT.json
 ```
 
 The runtime never decides whether a signal is a finding. `EVIDENCE.json` contains deterministic inventory leads and absence records. `import-sarif` and `import-tool` convert SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner results into secret-safe tool evidence without creating findings. Non-SARIF adapters require the producing command and a tool version when the report does not embed one. Domain passes trace, interpret, and refute both sources.
@@ -160,6 +161,11 @@ Validation blocks on missing catalog checks, unknown ids, wrong weights, missing
 
 ### Phase 6: Remediation plan
 
+Name the destination first. Record `audit.destination`: one or two sentences of
+prose saying what reaching the end of this plan looks like. The destination
+fixes the scope, so every later choice is made against it, and the final
+re-audit gate's acceptance conditions are its machine-checkable form.
+
 Convert findings into GA-numbered tasks in AUDIT.json:
 
 - Phase 1: Stop the bleeding, every Critical.
@@ -173,11 +179,29 @@ Every task carries files, dependencies, reuse guidance, reciprocal finding ids, 
 
 When a finding's evidence lists three or more member sites, its task fixes the class, not the leaves: enforcement lands at one shared point (a central mount, a query builder, a schema constraint, a lint rule, or a CI gate) named in `reuses`, and one acceptance condition is a regression guard that fails when a new sibling site appears. A Phase 3 task that changes system shape, a module boundary, a storage shape, or an authorization model adds an acceptance condition that it write or update an in-repo ADR recording the rejected alternatives, with a Verify that greps for that record.
 
+The plan is a map, not only a list, so record what it does not cover as
+carefully as what it does. Separate the two admissions by scope, never by
+sharpness. In scope and unresolved is fog: an unknown check carries the precise
+`question` that would resolve it wherever the gap is describable, and a lead
+this audit can see but cannot yet phrase as a check goes in `not_yet_specified`
+against an applicable domain, clearing from there the moment it graduates into
+a check. Ruled beyond the destination is out of scope: an excluded domain
+carries its reason and a not-applicable check carries its absence evidence.
+Out-of-scope work never graduates inside this audit, so it stays out of the
+remediation route entirely; redrawing the scope is a fresh audit.
+
+Run `godaudits wayfind .godaudits/AUDIT.json` to read the plan back as a route.
+It reports the destination, the frontier (open tasks whose every dependency is
+closed and which no session has claimed), what is blocked and by which named
+task, the fog, and the out-of-scope boundary. A remediating session claims its
+task before starting work so a concurrent session skips it, and re-derives the
+frontier rather than trusting a rendered report older than the task state.
+
 ### Phase 7: Render and present
 
 Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
 
-Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, and the exact artifact paths. The artifacts are the deliverable.
+Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. The artifacts are the deliverable.
 
 ### Phase 8: Evaluate the auditor when ground truth exists
 
@@ -222,8 +246,8 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
 | `schemas/*.json` | Audit, evidence, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |
-| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, and evaluation engine |
+| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, wayfinding, and evaluation engine |
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.12.0
+## Skill version: 2.13.0

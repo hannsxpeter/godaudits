@@ -22,6 +22,7 @@ not lose it when they copy only the canonical skill directory.
 | `lib/evaluate.js` | Measure expected-finding recall, precision, severity, citations, closure, and clean controls |
 | `lib/verify-runtime.js` | Plan runtime probes for behavioral findings and fold executed results into a verification report |
 | `lib/refute.js` | Plan independent refutation briefs for open Critical and High findings and fold verdicts into a disposition report |
+| `lib/wayfind.js` | Derive the destination, remediation frontier, claims, fog, and scope boundary from audit state on read |
 | `godaudits.js` | CLI command routing and file I/O |
 
 The root `bin/godaudits.js` is a package wrapper around the self-contained
@@ -43,6 +44,9 @@ cross-record rules that JSON Schema cannot express conveniently:
 - Finding and task reciprocity.
 - Critical and High closure.
 - Task dependency existence, order, cycles, and final-gate closure.
+- Task claim shape and claims left on tasks that are no longer open.
+- Destination prose, unknown-check resolving questions, and fog that names a
+  resolved check or a domain outside the audit's scope.
 - Parallel-task file isolation and bounded active report size.
 - Accepted-risk ownership and expiry.
 - Compliance findings and owned unknowns.

@@ -46,6 +46,18 @@ function readJson(file, label) {
   }
 }
 
+// Numeric SemVer ordering. String comparison is wrong here: "2.9.0" sorts
+// after "2.13.0" lexically, which would let a retained artifact from a future
+// engine pass the newer-than-current guard.
+function compareVersions(left, right) {
+  const a = String(left).split('.').map(Number);
+  const b = String(right).split('.').map(Number);
+  for (let index = 0; index < 3; index += 1) {
+    if ((a[index] || 0) !== (b[index] || 0)) return (a[index] || 0) - (b[index] || 0);
+  }
+  return 0;
+}
+
 function hashFile(file) {
   return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 }
@@ -97,7 +109,23 @@ if (index.schema_version !== '1.0' || !Array.isArray(index.published)) {
     const packagingFile = retained(artifacts.packaging, `${entry.id}.artifacts.packaging`);
     if (artifacts.sarif) retained(artifacts.sarif, `${entry.id}.artifacts.sarif`);
     if (auditFile) {
-      const result = compileAudit(JSON.parse(fs.readFileSync(auditFile, 'utf8')), { catalog });
+      const retainedAudit = JSON.parse(fs.readFileSync(auditFile, 'utf8'));
+      // A published dogfood artifact is evidence of one engine at one commit,
+      // so it pins the engine and pack version of the run that produced it. The
+      // live pack-version rule is right for a fresh audit and wrong here: every
+      // release after publication would otherwise fail the gate, and the only
+      // ways to pass would be editing the pinned versions (which misattributes
+      // the run) or dropping the artifact. Relax the version identity alone and
+      // keep every content rule live, so a future release that changes check
+      // ids or weights still fails here, which is the failure worth having.
+      const pinned = (retainedAudit.audit || {}).pack_version;
+      const engine = (retainedAudit.audit || {}).engine_version;
+      if (!pinned || !engine) errors.push(`${entry.id} audit must pin engine_version and pack_version`);
+      else if (pinned !== engine) errors.push(`${entry.id} audit pins engine ${engine} but pack ${pinned}`);
+      else if (compareVersions(pinned, catalog.pack_version) > 0) {
+        errors.push(`${entry.id} audit pins ${pinned}, which is newer than the current pack ${catalog.pack_version}`);
+      }
+      const result = compileAudit(retainedAudit, { catalog: { ...catalog, pack_version: pinned || catalog.pack_version } });
       for (const error of result.errors) errors.push(`${entry.id} audit: ${error}`);
       const applicable = result.audit.domains.filter((domain) => domain.status === 'applicable').map((domain) => domain.id).sort();
       if (JSON.stringify(applicable) !== JSON.stringify([...(entry.domains || [])].sort())) errors.push(`${entry.id} indexed domains do not match AUDIT.json`);

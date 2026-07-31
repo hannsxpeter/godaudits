@@ -52,9 +52,17 @@ coverage until evaluated.
 - `capabilities`: static, plus explicitly authorized sandbox or connected
   evidence capabilities.
 - `assumptions`: only facts the repository could not answer.
+- Optional `destination`: one or two sentences of prose naming what reaching
+  the end of the remediation plan looks like. It fixes the scope, so a
+  remediating session reads it before choosing a task. The final re-audit
+  gate's acceptance conditions are its machine-checkable form; the prose says
+  why that gate is the right end.
 
 The compiler writes `computed`: coverage, domain scores, caps, overall score,
 verdict, and counters. Computed state is derived and may always be rebuilt.
+The frontier is deliberately not computed into that block: it changes every
+time a task closes, so it is derived on demand by `godaudits wayfind` and can
+never be committed stale.
 
 ## Standards ledger
 
@@ -128,7 +136,11 @@ Rules:
 - `pass`: evidence proves the control or property holds.
 - `fail`: evidence proves a defect and at least one finding records it.
 - `unknown`: evidence is insufficient. Unknown never earns points and reduces
-  coverage.
+  coverage. An unknown check may carry an optional `question`: the precise
+  question whose answer resolves it. The question is what makes an unknown
+  takeable instead of merely uncounted, so record one wherever the gap is
+  describable. It is rejected on any other outcome, where it would restate a
+  question already answered.
 - `not-applicable`: the check's conditional surface is absent and evidence
   proves the absence.
 - Confidence is Certain, Firm, or Tentative.
@@ -202,7 +214,8 @@ findings. Flattery is invalid.
   ],
   "verify": "node --test test/security.test.js",
   "checks": ["A-SEC-3"],
-  "status": "open"
+  "status": "open",
+  "claim": { "owner": "remediation-session-a", "claimed": "2026-07-31" }
 }
 ```
 
@@ -216,6 +229,39 @@ Rules:
 - Acceptance has 2 to 4 observable conditions.
 - Finding-task links are reciprocal.
 - The one active final re-audit task depends on every active non-final task.
+- Optional `claim`: `{ "owner": "...", "claimed": "YYYY-MM-DD" }`. A session
+  claims a task before starting work so a concurrent session skips it. An open
+  unclaimed task is free to take. A claim is rejected on a task that is no
+  longer open, where it would read as work in flight that is not.
+
+## Wayfinding: the plan as a map
+
+The task graph already carries a route. `godaudits wayfind AUDIT.json` reads it
+as one, and reports what the phase-and-wave listing cannot:
+
+- **Destination.** `audit.destination` plus the final gate's acceptance
+  conditions. Read before choosing a task.
+- **Frontier.** The open tasks whose every dependency is closed, and which no
+  session has claimed. Superseded counts as closed: a replaced task will never
+  complete, so waiting on it would strand its dependents. The final gate is the
+  destination rather than a member of the route, so it is excluded from the
+  blocked list and from every task's unblock count.
+- **Not yet specified.** In scope and unresolved. Unknown checks are questions
+  the catalog phrases precisely and this audit left unanswered. The optional
+  root `not_yet_specified` array holds the dimmer view: `{ domain, gist,
+  revisit_when?, checks? }` for a lead this audit can see but cannot yet phrase
+  as a check. Its domain must be applicable, because fog only gathers toward
+  the destination, and its named checks must still be unknown, because fog that
+  graduated into a resolved check is cleared rather than restated.
+- **Out of scope.** Excluded domains with their reason, and not-applicable
+  checks with their evidence. Scope, not sharpness, lands work here. It never
+  graduates inside this audit and never enters the remediation route; redrawing
+  the scope is a fresh audit, not a resumption.
+
+Refer by name, never by a bare id. A wall of ids is illegible, so the rendered
+report writes each task and finding reference as its title with the id inside
+it. Check ids stay bare: their titles live in the catalog rather than in
+AUDIT.json, and the plan-aware mirror already uses that slot for the R-id.
 
 ## Accepted risks and open questions
 
@@ -259,7 +305,12 @@ Verdict bands remain: 90-100 audit-proof, 80-89 solid, 70-79 needs work,
 godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
+godaudits wayfind .godaudits/AUDIT.json
 ```
+
+`wayfind` is a read, never a write. It compiles nothing and mutates nothing, so
+it stays correct on a half-written plan and immediately after a task status
+changes. Flags are space-separated: `--format text|json` and `--output file`.
 
 Validation checks structure plus cross-record semantics: catalog completeness,
 pack version, ids, evidence, weights, check outcomes, finding closure,
@@ -283,7 +334,11 @@ it produces reaches a per-repo score.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and
-not-applicable support can be checked from the standalone report. SARIF 2.1.0
+not-applicable support can be checked from the standalone report. The
+remediation plan leads with the destination and the frontier, because both are
+read before a task is chosen, and reports fog and scope in separate sections so
+a coverage gap never reads as a deliberate boundary. Task and finding
+references render as a title carrying the id. SARIF 2.1.0
 carries check ids, severity, finding metadata, and source locations for
 code-host annotations.
 
@@ -298,6 +353,10 @@ The generated report contains a compact form of these rules:
    the compiler in one state transition.
 5. Failed verification leaves the task open and adds a dated session note.
 6. Never renumber or delete historical findings or completed tasks.
+7. Claim a task before starting work and release the claim when it closes, so a
+   concurrent session skips it rather than duplicating it.
+8. Re-derive the frontier with `godaudits wayfind` after each close. A rendered
+   report can be older than the task state; the map cannot.
 7. Patch the audit first when the true fix differs materially from the task.
 8. Regenerate MDX and SARIF after state changes.
 9. Finish with the final re-audit gate and record the score plus coverage delta.

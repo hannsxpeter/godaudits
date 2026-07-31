@@ -1,5 +1,7 @@
 'use strict';
 
+const { planWayfinding } = require('./wayfind');
+
 function yamlString(value) {
   if (typeof value === 'number' || typeof value === 'boolean') return String(value);
   return JSON.stringify(value ?? '');
@@ -63,6 +65,20 @@ function findingChecks(finding, planAware, auditOnly) {
     if (planAware && auditOnly.get(id) === false) return `${id} (${id.replace(/^A-/, 'R-')})`;
     return id;
   }).join(', ');
+}
+
+// Refer by name, never by a bare id. A remediating agent reading "Depends on:
+// GA-104, GA-107" has to go look both up before it knows whether it can start;
+// the same line carrying titles reads at a glance, and the id still rides
+// inside the name so machine traceability is unchanged. Ids for records this
+// report does not itself define (checks live in the catalog, not in
+// AUDIT.json) stay bare, because there is no title here to wrap them in.
+function namedRefs(ids, byId, kind) {
+  if (!ids || !ids.length) return null;
+  return ids.map((id) => {
+    const record = byId.get(id);
+    return record ? `${mdxText(record.title)} (${id})` : `${id} (missing ${kind})`;
+  }).join('; ');
 }
 
 function evidenceProvenance(item) {
@@ -203,6 +219,35 @@ function renderAudit(audit, options = {}) {
     }
   }
   lines.push('## Remediation plan', '');
+  const taskById = new Map(audit.tasks.map((task) => [task.id, task]));
+  const findingById = new Map(audit.findings.map((finding) => [finding.id, finding]));
+  // The destination and the frontier are read before a task is chosen, so they
+  // lead the plan rather than trailing it. Phases and waves below are the
+  // authoring order; the frontier is what is actually takeable right now.
+  const map = planWayfinding(audit);
+  lines.push('### Destination', '');
+  lines.push(map.destination.statement ? mdxText(map.destination.statement) : map.destination.note);
+  if (map.destination.gate) {
+    lines.push('', `Final gate: ${mdxText(map.destination.gate)} [${map.destination.gate_status}].`);
+    lines.push(`Gate acceptance: ${map.destination.gate_acceptance.map(mdxText).join(' ') || 'none recorded.'}`);
+    if (map.destination.gate_verify) lines.push(`Gate verify: ${inlineCode(map.destination.gate_verify)}`);
+  } else lines.push('', 'No active final re-audit gate is recorded, so the plan states no end condition.');
+  lines.push('', `### Frontier: ${map.counts.frontier} takeable now`, '');
+  lines.push(`Closed ${map.counts.done} of ${map.counts.route_total} remediation tasks; claimed ${map.counts.claimed}; blocked ${map.counts.blocked}. A task is takeable when every task it depends on is closed. Claim a task before starting work so a concurrent session skips it, and re-derive this list with \`godaudits wayfind\` rather than reading it from a report that may be older than the task state.`, '');
+  if (!map.frontier.length) {
+    lines.push((map.counts.blocked || map.counts.claimed)
+      ? 'Nothing is takeable. Every open task is already blocked or claimed.'
+      : 'Nothing is takeable. The route is walked; run the final re-audit gate.', '');
+  } else {
+    lines.push('| Order | Task | Phase and wave | Concurrency | Unblocks |', '|---:|---|---|---|---:|');
+    map.frontier.forEach((task, index) => {
+      const concurrency = task.conflicts_with.length
+        ? `shares files with ${tableText(task.conflicts_with.join('; '))}`
+        : (task.parallel ? 'parallel-safe' : 'serial');
+      lines.push(`| ${index + 1} | ${tableText(task.name)} | ${task.phase} / ${task.wave} | ${concurrency} | ${task.unblocks} |`);
+    });
+    lines.push('');
+  }
   const phases = [...new Set(audit.tasks.map((task) => task.phase))].sort((a, b) => a - b);
   for (const phase of phases) {
     const phaseTasks = audit.tasks.filter((task) => task.phase === phase);
@@ -213,14 +258,53 @@ function renderAudit(audit, options = {}) {
         const box = task.status === 'done' ? 'x' : ' ';
         lines.push(`- [${box}] ${task.id} [W${task.wave}]${task.parallel ? ' [P]' : ''} ${mdxText(task.title)}`);
         lines.push(`  - Files: ${task.files.length ? task.files.map(mdxText).join(', ') : 'none'}`);
-        lines.push(`  - Depends on: ${task.depends_on.length ? task.depends_on.join(', ') : 'none'}`);
+        lines.push(`  - Depends on: ${namedRefs(task.depends_on, taskById, 'task') || 'none'}`);
         lines.push(`  - Reuses: ${mdxText(task.reuses)}`);
-        lines.push(`  - Fixes: ${task.fixes.length ? task.fixes.join(', ') : 'none (final gate)'}`);
+        lines.push(`  - Fixes: ${namedRefs(task.fixes, findingById, 'finding') || 'none (final gate)'}`);
+        if (task.claim && task.claim.owner) lines.push(`  - Claimed by: ${mdxText(task.claim.owner)} on ${task.claim.claimed}`);
         lines.push(`  - Acceptance: ${task.acceptance.map(mdxText).join('; ')}`);
         lines.push(`  - Verify: ${inlineCode(task.verify)}`);
         lines.push(`  - Checks: ${task.checks.length ? task.checks.join(', ') : 'none'}`, '');
       }
     }
+  }
+  // Fog and scope are different admissions and are reported apart. Fog is in
+  // scope and unresolved: it lowers coverage and caps the verdict, and it
+  // graduates into checks as the audit deepens. Out of scope was ruled beyond
+  // this audit's destination and never graduates inside it. Collapsing the two
+  // into one "not covered" list would let a scope decision read as a coverage
+  // gap, or a coverage gap read as a deliberate boundary.
+  lines.push('## Not yet specified', '');
+  lines.push('In scope and unresolved. An unknown check is a question the catalog already phrases precisely and this audit left unanswered. An entry below is the dimmer view: a lead this audit can see but cannot yet phrase as a check. Both lower confidence in the grade; neither is a clean result.', '');
+  lines.push(`Unknown checks: ${map.fog.unknown_total} of ${computed.coverage.applicable} applicable, ${map.fog.unknown_with_question} carrying a stated resolving question. Coverage ${computed.coverage.percent}% caps the verdict at ${computed.overall.coverage_cap}.`, '');
+  if (!map.fog.not_yet_specified.length) lines.push('No unspecifiable lead was recorded.', '');
+  else {
+    lines.push('| Domain | Lead | Revisit when | Would sharpen |', '|---|---|---|---|');
+    for (const item of map.fog.not_yet_specified) {
+      lines.push(`| ${item.domain} | ${tableText(item.gist)} | ${tableText(item.revisit_when || 'not stated')} | ${item.checks.join(', ') || 'none named'} |`);
+    }
+    lines.push('');
+  }
+  const questioned = map.fog.unknown_checks.filter((item) => item.question);
+  if (questioned.length) {
+    lines.push('These unknown checks state the question that would resolve them. An unknown check without one is a gap this audit did not describe, and raising coverage starts by writing that question down.', '');
+    lines.push('| Unknown check | Domain | Question that would resolve it |', '|---|---|---|');
+    for (const item of questioned) lines.push(`| ${item.check} | ${item.domain} | ${tableText(item.question)} |`);
+    lines.push('');
+  }
+  lines.push('## Out of scope', '');
+  lines.push('Ruled beyond this audit rather than left unresolved, so it never graduates here and never enters the remediation route. Redrawing the scope is a fresh audit, not a resumption of this one.', '');
+  if (!map.out_of_scope.excluded_domains.length && !map.out_of_scope.not_applicable_total) {
+    lines.push('Nothing was ruled out of scope. Every domain is applicable and every check is in the ledger.', '');
+  } else {
+    lines.push('| Scope decision | Extent | Reason |', '|---|---|---|');
+    for (const item of map.out_of_scope.excluded_domains) {
+      lines.push(`| domain ${item.domain} | all checks excluded | ${tableText(item.reason)} |`);
+    }
+    for (const item of map.out_of_scope.not_applicable_by_domain) {
+      lines.push(`| ${item.domain} | ${item.count} not-applicable checks | Each carries evidence in the check ledger above. |`);
+    }
+    lines.push('');
   }
   lines.push('## Accepted risks and open questions', '');
   if (!audit.accepted_risks.length && !audit.open_questions.length) lines.push('None.', '');

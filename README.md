@@ -1,7 +1,7 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.12.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.13.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -10,8 +10,9 @@ system that combines a 431-check Agent Skill with a zero-dependency runtime. It
 produces validated machine state, computed scores and coverage, a standalone
 remediation report, and optional SARIF annotations.
 
-Version 2.12 adds attributed paired accuracy runs, append-only adjudication, and
-the first public OSS retrospective to the validated version 2 engine. The model still performs
+Version 2.13 adds wayfinding: the remediation plan is read back as a route with
+a destination, a live frontier, task claims for concurrent sessions, and an
+explicit split between what is unresolved and what was ruled out of scope. The model still performs
 the work that requires judgment: tracing code paths, testing competing
 explanations, clustering root causes, calibrating impact, and prescribing a
 specific fix. The runtime performs work that should never depend on model mood:
@@ -44,6 +45,9 @@ cycle detection, rendering, re-audit diffs, and benchmark metrics.
 - Scores are computed from catalog weights and outcomes, with Critical,
   weak-domain, and coverage caps.
 - Findings and remediation tasks are reciprocal and validator-enforced.
+- The remediation plan reads back as a route: a stated destination, a live
+  frontier of takeable tasks, claims that stop concurrent sessions colliding,
+  and an explicit split between unresolved and out of scope.
 - Accepted risks require an owner, acceptance date, expiry, and review command.
 - Re-audits preserve ids and produce structured added, resolved, reopened,
   changed, removed-id, score, and coverage deltas.
@@ -127,6 +131,7 @@ godaudits init --name my-project --scale funded-product --profile security-criti
 godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
+godaudits wayfind .godaudits/AUDIT.json
 ```
 
 Focused medium-budget audits are the default. Request `--applicable all
@@ -245,6 +250,36 @@ retrospective recorded one miss against CVE-2015-9235. These null and negative
 results are published because benchmark credibility depends on retaining misses,
 not only wins.
 
+## Wayfinding the remediation plan
+
+An audit ends with a task graph, and a list of phases and waves answers "what
+did the audit decide" rather than "what can I start now". `wayfind` reads the
+same graph as a route:
+
+```bash
+godaudits wayfind .godaudits/AUDIT.json
+godaudits wayfind .godaudits/AUDIT.json --format json
+```
+
+It reports the destination, the frontier (open tasks whose every dependency is
+closed and which no session has claimed), what is blocked and by which named
+task, what is in scope but unresolved, and what was ruled out of scope with the
+reason. It is a read: it compiles nothing and mutates nothing, so it stays
+correct on a half-written plan and the instant a task closes.
+
+Fog and scope stay separate on purpose. An unknown check is a question the
+catalog phrases precisely and the audit left unanswered, and it may carry the
+`question` whose answer resolves it. A `not_yet_specified` entry is a lead the
+audit can see but cannot yet phrase as a check. Both lower confidence in the
+grade. An excluded domain or a not-applicable check is neither: it was ruled
+beyond the destination, and it never graduates inside this audit. Collapsing
+the two would let a coverage gap read as a deliberate boundary.
+
+Task and finding references in the generated report now carry their title with
+the id inside, because a wall of bare ids is not readable at a glance. Every
+wayfinding field is optional, so an audit written before version 2.13 validates
+unchanged and still produces a map. See [docs/WAYFINDING.md](docs/WAYFINDING.md).
+
 ## Re-audits
 
 Re-audit mode preserves historical ids and compares compiled states:
@@ -315,6 +350,7 @@ verify into one id system.
 | `scripts/validate-evidence-schema.py` | Pinned JSON Schema 2020-12 evidence validation |
 | `docs/ENGINE.md` | Runtime architecture and invariants |
 | `docs/EVALUATION.md` | Benchmark and accuracy methodology |
+| `docs/WAYFINDING.md` | Destination, frontier, claims, fog, and scope boundary in the remediation plan |
 | `docs/RELEASE-POLICY.md` | Stable release cadence and external OSS dogfood publication contract |
 | `dogfood/` | Indexed versioned external OSS audit artifacts; an empty index makes no track-record claim |
 | `docs/MIGRATION-2.0.md` | Version 1 to version 2 migration |
