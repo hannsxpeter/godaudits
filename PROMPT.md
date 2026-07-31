@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 431-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.12 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, and evaluation metrics.
+Audit everything after anything. godaudits 2.13 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -68,6 +68,7 @@ godaudits import-sarif scanner.sarif --output .godaudits/TOOL-EVIDENCE.json
 godaudits import-tool semgrep.json --tool semgrep --command "semgrep scan --json ." --output .godaudits/TOOL-EVIDENCE.json
 godaudits diff .godaudits/archive/AUDIT-v1.json .godaudits/AUDIT.json
 godaudits evaluate .godaudits/AUDIT.json expected.json
+godaudits wayfind .godaudits/AUDIT.json
 ```
 
 The runtime never decides whether a signal is a finding. `EVIDENCE.json` contains deterministic inventory leads and absence records. `import-sarif` and `import-tool` convert SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner results into secret-safe tool evidence without creating findings. Non-SARIF adapters require the producing command and a tool version when the report does not embed one. Domain passes trace, interpret, and refute both sources.
@@ -168,6 +169,11 @@ Validation blocks on missing catalog checks, unknown ids, wrong weights, missing
 
 ### Phase 6: Remediation plan
 
+Name the destination first. Record `audit.destination`: one or two sentences of
+prose saying what reaching the end of this plan looks like. The destination
+fixes the scope, so every later choice is made against it, and the final
+re-audit gate's acceptance conditions are its machine-checkable form.
+
 Convert findings into GA-numbered tasks in AUDIT.json:
 
 - Phase 1: Stop the bleeding, every Critical.
@@ -181,11 +187,29 @@ Every task carries files, dependencies, reuse guidance, reciprocal finding ids, 
 
 When a finding's evidence lists three or more member sites, its task fixes the class, not the leaves: enforcement lands at one shared point (a central mount, a query builder, a schema constraint, a lint rule, or a CI gate) named in `reuses`, and one acceptance condition is a regression guard that fails when a new sibling site appears. A Phase 3 task that changes system shape, a module boundary, a storage shape, or an authorization model adds an acceptance condition that it write or update an in-repo ADR recording the rejected alternatives, with a Verify that greps for that record.
 
+The plan is a map, not only a list, so record what it does not cover as
+carefully as what it does. Separate the two admissions by scope, never by
+sharpness. In scope and unresolved is fog: an unknown check carries the precise
+`question` that would resolve it wherever the gap is describable, and a lead
+this audit can see but cannot yet phrase as a check goes in `not_yet_specified`
+against an applicable domain, clearing from there the moment it graduates into
+a check. Ruled beyond the destination is out of scope: an excluded domain
+carries its reason and a not-applicable check carries its absence evidence.
+Out-of-scope work never graduates inside this audit, so it stays out of the
+remediation route entirely; redrawing the scope is a fresh audit.
+
+Run `godaudits wayfind .godaudits/AUDIT.json` to read the plan back as a route.
+It reports the destination, the frontier (open tasks whose every dependency is
+closed and which no session has claimed), what is blocked and by which named
+task, the fog, and the out-of-scope boundary. A remediating session claims its
+task before starting work so a concurrent session skips it, and re-derives the
+frontier rather than trusting a rendered report older than the task state.
+
 ### Phase 7: Render and present
 
 Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
 
-Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, and the exact artifact paths. The artifacts are the deliverable.
+Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. The artifacts are the deliverable.
 
 ### Phase 8: Evaluate the auditor when ground truth exists
 
@@ -216,7 +240,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.12.0
+## Skill version: 2.13.0
 
 
 ---
@@ -277,9 +301,17 @@ coverage until evaluated.
 - `capabilities`: static, plus explicitly authorized sandbox or connected
   evidence capabilities.
 - `assumptions`: only facts the repository could not answer.
+- Optional `destination`: one or two sentences of prose naming what reaching
+  the end of the remediation plan looks like. It fixes the scope, so a
+  remediating session reads it before choosing a task. The final re-audit
+  gate's acceptance conditions are its machine-checkable form; the prose says
+  why that gate is the right end.
 
 The compiler writes `computed`: coverage, domain scores, caps, overall score,
 verdict, and counters. Computed state is derived and may always be rebuilt.
+The frontier is deliberately not computed into that block: it changes every
+time a task closes, so it is derived on demand by `godaudits wayfind` and can
+never be committed stale.
 
 ## Standards ledger
 
@@ -353,7 +385,11 @@ Rules:
 - `pass`: evidence proves the control or property holds.
 - `fail`: evidence proves a defect and at least one finding records it.
 - `unknown`: evidence is insufficient. Unknown never earns points and reduces
-  coverage.
+  coverage. An unknown check may carry an optional `question`: the precise
+  question whose answer resolves it. The question is what makes an unknown
+  takeable instead of merely uncounted, so record one wherever the gap is
+  describable. It is rejected on any other outcome, where it would restate a
+  question already answered.
 - `not-applicable`: the check's conditional surface is absent and evidence
   proves the absence.
 - Confidence is Certain, Firm, or Tentative.
@@ -427,7 +463,8 @@ findings. Flattery is invalid.
   ],
   "verify": "node --test test/security.test.js",
   "checks": ["A-SEC-3"],
-  "status": "open"
+  "status": "open",
+  "claim": { "owner": "remediation-session-a", "claimed": "2026-07-31" }
 }
 ```
 
@@ -441,6 +478,39 @@ Rules:
 - Acceptance has 2 to 4 observable conditions.
 - Finding-task links are reciprocal.
 - The one active final re-audit task depends on every active non-final task.
+- Optional `claim`: `{ "owner": "...", "claimed": "YYYY-MM-DD" }`. A session
+  claims a task before starting work so a concurrent session skips it. An open
+  unclaimed task is free to take. A claim is rejected on a task that is no
+  longer open, where it would read as work in flight that is not.
+
+## Wayfinding: the plan as a map
+
+The task graph already carries a route. `godaudits wayfind AUDIT.json` reads it
+as one, and reports what the phase-and-wave listing cannot:
+
+- **Destination.** `audit.destination` plus the final gate's acceptance
+  conditions. Read before choosing a task.
+- **Frontier.** The open tasks whose every dependency is closed, and which no
+  session has claimed. Superseded counts as closed: a replaced task will never
+  complete, so waiting on it would strand its dependents. The final gate is the
+  destination rather than a member of the route, so it is excluded from the
+  blocked list and from every task's unblock count.
+- **Not yet specified.** In scope and unresolved. Unknown checks are questions
+  the catalog phrases precisely and this audit left unanswered. The optional
+  root `not_yet_specified` array holds the dimmer view: `{ domain, gist,
+  revisit_when?, checks? }` for a lead this audit can see but cannot yet phrase
+  as a check. Its domain must be applicable, because fog only gathers toward
+  the destination, and its named checks must still be unknown, because fog that
+  graduated into a resolved check is cleared rather than restated.
+- **Out of scope.** Excluded domains with their reason, and not-applicable
+  checks with their evidence. Scope, not sharpness, lands work here. It never
+  graduates inside this audit and never enters the remediation route; redrawing
+  the scope is a fresh audit, not a resumption.
+
+Refer by name, never by a bare id. A wall of ids is illegible, so the rendered
+report writes each task and finding reference as its title with the id inside
+it. Check ids stay bare: their titles live in the catalog rather than in
+AUDIT.json, and the plan-aware mirror already uses that slot for the R-id.
 
 ## Accepted risks and open questions
 
@@ -484,7 +554,12 @@ Verdict bands remain: 90-100 audit-proof, 80-89 solid, 70-79 needs work,
 godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --write
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
+godaudits wayfind .godaudits/AUDIT.json
 ```
+
+`wayfind` is a read, never a write. It compiles nothing and mutates nothing, so
+it stays correct on a half-written plan and immediately after a task status
+changes. Flags are space-separated: `--format text|json` and `--output file`.
 
 Validation checks structure plus cross-record semantics: catalog completeness,
 pack version, ids, evidence, weights, check outcomes, finding closure,
@@ -508,7 +583,11 @@ it produces reaches a per-repo score.
 
 The renderer produces GFM-safe MDX: no JSX, ESM, bare MDX expressions, non-ASCII
 punctuation, or unescaped evidence. It expands every evidence record so pass and
-not-applicable support can be checked from the standalone report. SARIF 2.1.0
+not-applicable support can be checked from the standalone report. The
+remediation plan leads with the destination and the frontier, because both are
+read before a task is chosen, and reports fog and scope in separate sections so
+a coverage gap never reads as a deliberate boundary. Task and finding
+references render as a title carrying the id. SARIF 2.1.0
 carries check ids, severity, finding metadata, and source locations for
 code-host annotations.
 
@@ -523,6 +602,10 @@ The generated report contains a compact form of these rules:
    the compiler in one state transition.
 5. Failed verification leaves the task open and adds a dated session note.
 6. Never renumber or delete historical findings or completed tasks.
+7. Claim a task before starting work and release the claim when it closes, so a
+   concurrent session skips it rather than duplicating it.
+8. Re-derive the frontier with `godaudits wayfind` after each close. A rendered
+   report can be older than the task state; the map cannot.
 7. Patch the audit first when the true fix differs materially from the task.
 8. Regenerate MDX and SARIF after state changes.
 9. Finish with the final re-audit gate and record the score plus coverage delta.

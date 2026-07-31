@@ -3,6 +3,77 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.13.0] - 2026-07-31
+
+A readability release, drawn from reviewing what the wayfinder skill
+(mattpocock/skills, MIT) could contribute. Its planning machinery has no place
+here: godaudits does not chart decision tickets, and the audit already produces
+the graph wayfinder assembles by hand. What was worth taking was its discipline
+about reading a graph back, which godaudits had never applied to its own
+remediation plan.
+
+This is a minor feature release outside the 30-day cadence in
+`docs/RELEASE-POLICY.md` and matches none of its three exceptions. It is cut
+because the change alters the shape of the generated report and the published
+AUDIT.json contract, and a documented contract change is clearer as a version
+than as unversioned drift on main.
+
+### Added
+
+- `godaudits wayfind AUDIT.json` reads the remediation plan as a route:
+  destination, frontier, claims, blockers, fog, and scope boundary. `--format
+  json` returns the same map as data. It compiles nothing and mutates nothing,
+  so it stays correct on a half-written plan and the instant a task closes. The
+  frontier is deliberately not written into `computed`: a frontier committed
+  into the audit record is stale the moment a task closes.
+- The frontier is the open tasks whose every dependency is closed and which no
+  session has claimed. A `superseded` dependency counts as closed, because a
+  replaced task will never complete and waiting on it would strand its
+  dependents. The final re-audit gate is the destination rather than a member
+  of the route, so it never appears as a blocked task and never inflates a
+  task's unblock count. Frontier tasks that share a file are reported as a
+  concurrency conflict, which validation only rejects inside a single wave.
+- Optional `audit.destination`: one or two sentences of prose naming what
+  reaching the end of the remediation plan looks like. An audit that states
+  none is reported as stating none rather than silently omitting it.
+- Optional `task.claim` with owner and date. A session claims a task before
+  starting work so a concurrent session skips it. A claim on a task that is no
+  longer open is rejected, where it would read as work in flight that is not.
+- Optional `check.question` on unknown checks: the precise question whose
+  answer resolves the check, which is what makes an unknown takeable rather
+  than merely uncounted. It is rejected on any resolved outcome. There is no
+  rule requiring every unknown to carry one, because a fresh audit initializes
+  every check to unknown and a medium budget holds every deep-trace check
+  unknown by design.
+- Optional root `not_yet_specified`: leads the audit can see but cannot yet
+  phrase as a check. Its domain must be applicable, because fog only gathers
+  toward the destination, and any check it names must still be unknown, because
+  fog that graduated is cleared rather than restated.
+- `docs/WAYFINDING.md` records the borrowed disciplines, what was cut, and why.
+
+### Changed
+
+- The generated report leads the remediation plan with the destination and the
+  frontier, both of which are read before a task is chosen, and reports fog and
+  scope in separate sections. Collapsing the two would let a coverage gap read
+  as a deliberate boundary, or a boundary read as a gap.
+- Task and finding references in the report carry their title with the id
+  inside, replacing bare id lists on `Depends on` and `Fixes`. Check ids stay
+  bare: their titles live in the catalog rather than in AUDIT.json, and the
+  plan-aware mirror already uses that slot for the godplans R-id.
+### Compatibility
+
+Every wayfinding field is optional and nothing was added to `computed`. Audits
+written before 2.13, including the committed dogfood and detector artifacts,
+validate unchanged and still produce a map.
+
+The published `auth0/node-jsonwebtoken` dogfood report is deliberately not
+re-rendered. Its AUDIT.json pins `engine_version` and `pack_version` to 2.12.0,
+so rendering it with this engine would require editing those fields and would
+misattribute the run. A retained dogfood report is evidence of a specific
+engine at a specific commit, not a live view, so it stays as it was published
+and the next dogfood run will show the current report shape.
+
 ## [2.12.0] - 2026-07-23
 
 The first measured-results release. It is cut under the accuracy-evidence

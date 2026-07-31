@@ -84,3 +84,35 @@ test('import-tool CLI requires and preserves scanner provenance', (t) => {
   assert.equal(evidence.tool_version, '1.164.0');
   assert.equal(evidence.command, 'semgrep scan --json .');
 });
+
+test('wayfind prints the frontier through the shipped CLI in both formats', (t) => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'godaudits-wayfind-'));
+  const auditFile = path.join(temporary, 'AUDIT.json');
+  t.after(() => fs.rmSync(temporary, { recursive: true, force: true }));
+
+  const { compileAudit } = require('../skills/godaudits/runtime/lib/audit');
+  const { validAudit } = require('./helpers');
+  const audit = validAudit();
+  audit.audit.destination = 'Security reaches 85 with no open Critical finding, confirmed by a re-audit at this commit.';
+  const compiled = compileAudit(audit);
+  assert.deepEqual(compiled.errors, []);
+  fs.writeFileSync(auditFile, JSON.stringify(compiled.audit, null, 2));
+
+  const text = run(['wayfind', auditFile], temporary);
+  assert.equal(text.status, 0, text.stderr);
+  assert.match(text.stdout, /godaudits wayfinding map: fixture-app/);
+  assert.match(text.stdout, /Scope board lookups to the tenant \(GA-101\)/);
+
+  const json = run(['wayfind', auditFile, '--format', 'json'], temporary);
+  assert.equal(json.status, 0, json.stderr);
+  assert.equal(JSON.parse(json.stdout).frontier[0].id, 'GA-101');
+
+  // The positional is guarded: a flag written first is not read as the path.
+  const flagFirst = run(['wayfind', '--format', 'json', auditFile], temporary);
+  assert.equal(flagFirst.status, 1);
+  assert.match(flagFirst.stderr, /wayfind requires AUDIT\.json as the first argument/);
+
+  const badFormat = run(['wayfind', auditFile, '--format', 'yaml'], temporary);
+  assert.equal(badFormat.status, 1);
+  assert.match(badFormat.stderr, /--format must be text or json/);
+});

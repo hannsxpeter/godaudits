@@ -76,7 +76,8 @@
         "evidence_fingerprint_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
         "evidence_commit": { "type": "string", "minLength": 1 },
         "capabilities": { "type": "array", "minItems": 1, "items": { "enum": ["static", "sandbox", "connected"] }, "uniqueItems": true },
-        "assumptions": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+        "assumptions": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "destination": { "type": "string", "minLength": 1, "maxLength": 400 }
       },
       "additionalProperties": false
     },
@@ -149,6 +150,20 @@
           "owner": { "type": "string", "minLength": 1 },
           "due": { "type": "string", "format": "date" },
           "default": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "not_yet_specified": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "gist"],
+        "properties": {
+          "domain": { "type": "string", "minLength": 1 },
+          "gist": { "type": "string", "minLength": 1, "maxLength": 400 },
+          "revisit_when": { "type": "string", "minLength": 1, "maxLength": 240 },
+          "checks": { "type": "array", "items": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" }, "uniqueItems": true }
         },
         "additionalProperties": false
       }
@@ -244,7 +259,8 @@
           "type": "array",
           "items": { "type": "string", "pattern": "^F-[A-Z]+-[0-9]+$" },
           "uniqueItems": true
-        }
+        },
+        "question": { "type": "string", "minLength": 1, "maxLength": 400 }
       },
       "additionalProperties": false
     },
@@ -325,7 +341,16 @@
         "verify": { "type": "string", "minLength": 1 },
         "checks": { "type": "array", "items": { "type": "string", "pattern": "^A-[A-Z]+-[0-9]+$" }, "uniqueItems": true },
         "status": { "enum": ["open", "done", "superseded"] },
-        "final_gate": { "type": "boolean" }
+        "final_gate": { "type": "boolean" },
+        "claim": {
+          "type": "object",
+          "required": ["owner", "claimed"],
+          "properties": {
+            "owner": { "type": "string", "minLength": 1, "maxLength": 120 },
+            "claimed": { "type": "string", "format": "date" }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     }

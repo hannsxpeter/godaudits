@@ -229,6 +229,14 @@ function validateAudit(audit, options = {}) {
         errors.push(`${check.id} requires evidence`);
       }
       if (check.outcome === 'not-applicable' && (!check.evidence || check.evidence.length === 0)) errors.push(`${check.id} not-applicable outcome requires evidence`);
+      // An unknown check is a question already phrased precisely by the
+      // catalog and left unanswered, so it is the one outcome a stated
+      // question belongs on. On any other outcome the question is already
+      // answered and the field is noise that would survive into the map.
+      if (check.question !== undefined) {
+        if (typeof check.question !== 'string' || !check.question.trim()) errors.push(`${check.id}.question must be a non-empty string`);
+        else if (check.outcome !== 'unknown') errors.push(`${check.id} states a resolving question but its outcome is ${check.outcome}`);
+      }
       if (duplicates(check.evidence).length) errors.push(`${check.id}.evidence must be unique`);
       for (const id of check.evidence || []) {
         if (!evidenceIds.has(id)) errors.push(`${check.id} references missing evidence ${id}`);
@@ -354,6 +362,19 @@ function validateAudit(audit, options = {}) {
     if (!ALLOWED.taskStatus.has(task.status)) errors.push(`${task.id} has invalid status`);
     if (typeof task.parallel !== 'boolean') errors.push(`${task.id}.parallel must be a boolean`);
     if (task.final_gate !== undefined && typeof task.final_gate !== 'boolean') errors.push(`${task.id}.final_gate must be a boolean`);
+    // A claim is the mechanism that stops two concurrent remediation sessions
+    // from taking the same task: an open task with no claim is free to take.
+    // It therefore only means something while the task is open. Left on a
+    // closed task it reads as work in flight that is not, so it is rejected
+    // rather than ignored.
+    if (task.claim !== undefined) {
+      if (!task.claim || typeof task.claim !== 'object' || Array.isArray(task.claim)) errors.push(`${task.id}.claim must be an object`);
+      else {
+        if (typeof task.claim.owner !== 'string' || !task.claim.owner.trim()) errors.push(`${task.id}.claim.owner is required`);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(task.claim.claimed || '')) errors.push(`${task.id}.claim.claimed must be an ISO date`);
+        if (task.status !== 'open') errors.push(`${task.id} is ${task.status} but still carries a claim`);
+      }
+    }
     for (const field of ['title', 'reuses', 'verify']) {
       if (!task[field]) errors.push(`${task.id}.${field} is required`);
     }
@@ -467,6 +488,41 @@ function validateAudit(audit, options = {}) {
   for (const question of audit.open_questions) {
     for (const field of ['question', 'owner', 'due', 'default']) if (!question[field]) errors.push(`open question requires ${field}`);
     if (!isDate(question.due)) errors.push('open question due must be YYYY-MM-DD');
+  }
+  // Fog gathers only toward the destination. An entry naming an excluded or
+  // unknown domain is not fog, it is scope creep wearing fog's clothes, and it
+  // belongs in the excluded domain's reason instead. An entry whose checks have
+  // already resolved is fog that graduated and was never cleared, which is how
+  // a map starts telling a reader that settled ground is still unmapped.
+  if (audit.not_yet_specified !== undefined) {
+    if (!Array.isArray(audit.not_yet_specified)) errors.push('not_yet_specified must be an array');
+    else {
+      const applicableDomains = new Set(audit.domains.filter((domain) => domain.status === 'applicable').map((domain) => domain.id));
+      const outcomeById = new Map();
+      for (const domain of audit.domains) for (const check of domain.checks || []) outcomeById.set(check.id, check.outcome);
+      for (const entry of audit.not_yet_specified) {
+        const label = entry && entry.domain ? entry.domain : 'not_yet_specified entry';
+        if (!entry || typeof entry !== 'object') { errors.push('not_yet_specified entries must be objects'); continue; }
+        if (!entry.gist || typeof entry.gist !== 'string') errors.push(`${label} requires a gist`);
+        if (!entry.domain || typeof entry.domain !== 'string') errors.push('not_yet_specified entries require a domain');
+        else if (!applicableDomains.has(entry.domain)) errors.push(`${label} is not an applicable domain; fog only gathers toward the destination`);
+        if (entry.checks !== undefined) {
+          if (!Array.isArray(entry.checks)) errors.push(`${label} checks must be an array`);
+          else for (const id of entry.checks) {
+            if (!outcomeById.has(id)) errors.push(`${label} names check ${id} which is not in the ledger`);
+            else if (outcomeById.get(id) !== 'unknown') errors.push(`${label} names resolved check ${id}; clear graduated fog rather than restating it`);
+          }
+        }
+      }
+      if (audit.not_yet_specified.length > 12) errors.push(`not_yet_specified has ${audit.not_yet_specified.length} entries; maximum is 12`);
+    }
+  }
+  // The destination fixes the scope, so it is prose the reader orients to
+  // before choosing a task, not a slot for an id or a one-word placeholder.
+  if (metadata.destination !== undefined) {
+    if (typeof metadata.destination !== 'string' || metadata.destination.trim().length < 10) {
+      errors.push('audit.destination must state in prose what reaching the end of the remediation plan looks like');
+    }
   }
   for (const entry of audit.session_log) {
     if (!isDate(entry.date) || !entry.summary) errors.push('session log entries require date and summary');

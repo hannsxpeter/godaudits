@@ -120,6 +120,26 @@ here. Pass and not-applicable support remains inspectable without opening chat.
 
 ## Remediation plan
 
+### Destination
+
+One or two sentences naming what reaching the end of this plan looks like, so a
+remediating session orients to it before choosing a task.
+
+Final gate: Re-run godaudits at the remediated commit (GA-N01) [open].
+Gate acceptance: expected score and coverage movement, no open Critical findings.
+Gate verify: `godaudits validate .godaudits/AUDIT.json`
+
+### Frontier: N takeable now
+
+Closed N of M remediation tasks; claimed N; blocked N. A task is takeable when
+every task it depends on is closed. Claim a task before starting work so a
+concurrent session skips it, and re-derive this list with `godaudits wayfind`
+rather than reading it from a report that may be older than the task state.
+
+| Order | Task | Phase and wave | Concurrency | Unblocks |
+|---:|---|---|---|---:|
+| 1 | Imperative root-cause fix (GA-101) | 1 / 1.1 | serial | 2 |
+
 ## Phase 1: Stop the bleeding
 
 ### Wave 1.1
@@ -128,7 +148,7 @@ here. Pass and not-applicable support remains inspectable without opening chat.
   - Files: exact existing paths and explicitly named new test path
   - Depends on: none
   - Reuses: an existing control or pattern
-  - Fixes: F-DOM-1
+  - Fixes: Root-cause finding title (F-DOM-1)
   - Acceptance: 2 to 4 observable conditions
   - Verify: `exact command`
   - Checks: A-DOM-n

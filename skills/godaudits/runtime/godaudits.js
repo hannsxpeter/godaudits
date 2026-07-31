@@ -18,6 +18,7 @@ const { analyzePillars } = require('./lib/pillars');
 const { validateProjectContextCatalog } = require('./lib/project-context');
 const { planProbes, applyResults } = require('./lib/verify-runtime');
 const { planRefutations, applyRefutations } = require('./lib/refute');
+const { planWayfinding, renderWayfinding } = require('./lib/wayfind');
 
 const skillRoot = path.resolve(__dirname, '..');
 const packageRoot = path.resolve(skillRoot, '..', '..');
@@ -38,6 +39,7 @@ godaudits verify-runtime plan <AUDIT.json> [--output PROBES.json]
 godaudits verify-runtime apply <AUDIT.json> <RESULTS.json> [--output VERIFICATION.json]
 godaudits refute plan <AUDIT.json> [--output REFUTATION-BRIEFS.json]
 godaudits refute apply <AUDIT.json> <RESULTS.json> [--output REFUTATION.json]
+godaudits wayfind <AUDIT.json> [--format text|json] [--output file]
 godaudits benchmark [directory]
 godaudits doctor`;
 }
@@ -264,6 +266,21 @@ function main() {
       return 0;
     }
     throw new Error('refute requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESULTS.json>');
+  }
+  if (command === 'wayfind') {
+    // Guard the positional the way import-tool does. option() returns the raw
+    // next token, so an audit path written after a flag would otherwise be
+    // read as that flag's value and the flag itself read as the audit path.
+    if (!args[0] || args[0].startsWith('--')) throw new Error('wayfind requires AUDIT.json as the first argument');
+    const map = planWayfinding(readJson(args[0]));
+    const format = option(args, '--format', 'text');
+    if (!['text', 'json'].includes(format)) throw new Error('wayfind --format must be text or json');
+    // Text by default: this is an orientation read, taken at the start of a
+    // remediation session before any task is chosen. JSON is for a caller that
+    // wants the frontier as data rather than as a briefing.
+    const body = format === 'json' ? `${JSON.stringify(map, null, 2)}\n` : renderWayfinding(map);
+    writeOrPrint(body, option(args, '--output'));
+    return 0;
   }
   if (command === 'benchmark') return benchmark(args[0]);
   if (command === 'doctor') {
