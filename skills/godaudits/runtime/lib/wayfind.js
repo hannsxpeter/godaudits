@@ -106,8 +106,7 @@ function claimOf(task) {
   return { owner: task.claim.owner, claimed: task.claim.claimed || null };
 }
 
-function describeTask(task, audit, byId, frontier) {
-  const findings = new Map((audit.findings || []).map((finding) => [finding.id, finding]));
+function describeTask(task, audit, byId, frontier, findings) {
   return {
     id: task.id,
     name: named(task),
@@ -224,7 +223,9 @@ function outOfScopeOf(audit) {
 // the catalog or the repository, so the map is exactly as current as the audit
 // state it is handed.
 function planWayfinding(audit) {
+  if (!audit || typeof audit !== 'object' || !audit.audit) throw new Error('wayfind requires a compiled or authored AUDIT.json with audit metadata');
   const byId = taskIndex(audit);
+  const findings = new Map((audit.findings || []).map((finding) => [finding.id, finding]));
   const active = (audit.tasks || []).filter((task) => task.status !== 'superseded');
   const route = active.filter((task) => !isFinalGate(task));
   const open = route.filter((task) => task.status === 'open');
@@ -235,7 +236,7 @@ function planWayfinding(audit) {
   const blockedTasks = open.filter((task) => openBlockers(task, byId).length > 0).sort(compareTask);
   const doneTasks = route.filter((task) => task.status === 'done').sort(compareTask);
 
-  const frontier = frontierTasks.map((task) => describeTask(task, audit, byId, frontierTasks));
+  const frontier = frontierTasks.map((task) => describeTask(task, audit, byId, frontierTasks, findings));
   const destination = destinationOf(audit);
 
   return {
@@ -246,8 +247,8 @@ function planWayfinding(audit) {
     note: 'Read-only view of the remediation plan. The frontier is the set of open tasks whose every dependency is closed. Claim a task before starting work so a concurrent session skips it, then re-run wayfind after each task closes. Fog is in scope and unresolved; out of scope was ruled beyond this audit and never graduates inside it.',
     destination,
     frontier,
-    claimed: claimedTasks.map((task) => describeTask(task, audit, byId, null)),
-    blocked: blockedTasks.map((task) => describeTask(task, audit, byId, null)),
+    claimed: claimedTasks.map((task) => describeTask(task, audit, byId, null, findings)),
+    blocked: blockedTasks.map((task) => describeTask(task, audit, byId, null, findings)),
     done: doneTasks.map((task) => ({ id: task.id, name: named(task), phase: task.phase, wave: task.wave })),
     counts: {
       route_total: route.length,
