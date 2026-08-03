@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.13 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.14 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -238,7 +238,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.13.0
+## Skill version: 2.14.0
 
 
 ---
@@ -1228,8 +1228,12 @@ Inventory before any check runs. The intake fingerprint already lists entry poin
 - Conformance tooling: `.dependency-cruiser.cjs`, ArchUnit or NetArchTest test files, `eslint-plugin-boundaries`, `import/no-restricted-paths` rules, and the CI steps that run them.
 - Boundary and tenancy signals: middleware mounts, scoped DB client wrappers, `tenant_id`/`org_id` columns and RLS statements in migrations.
 - Integration sites: HTTP client wrappers, queue producers and consumers, webhook handlers, retry and timeout config.
+- Caching layers: CDN and edge config (`vercel.json`, CloudFront distributions, `Cache-Control` and `s-maxage` headers), Redis or Memcached clients, HTTP response caches, ORM or query caches, `revalidate`, `unstable_cache`, and `@Cacheable` call sites, paired with the write paths for the same entity.
+- Backpressure signals: consumer concurrency, prefetch, and visibility settings (`prefetch`, `maxInFlight`, `concurrency`, `visibilityTimeout`); unbounded in-process buffers such as module-level arrays or `Promise.all` over caller-supplied input; producer-side admission control.
+- Recovery records: `docs/runbooks/`, `docs/deploy/`, disaster-recovery or continuity docs, backup and PITR config in `*.tf` and compose files, and restore-drill evidence (a dated log, a scheduled restore workflow, a runbook entry with a completion date).
+- Scale-out state signals: module-scope mutable state on a request path, local filesystem writes outside temp, in-process cron or interval schedulers, session-affinity config, and replica or process counts in deploy config.
 
-Conditional sub-surfaces, each declared present or absent with the reason recorded in the audit: multi-service topology, multi-tenancy, async infrastructure, external integrations.
+Conditional sub-surfaces, each declared present or absent with the reason recorded in the audit: multi-service topology, multi-tenancy, async infrastructure, external integrations, a caching layer, a durable store the project owns, and a horizontally scaled runtime.
 
 ## Checks
 
@@ -1306,6 +1310,18 @@ Mirror boundary: A-ARCH-1..19 mirror R-ARCH-1..19 one to one; A-ARCH-20 and up a
 23. A-ARCH-23 (audit-only) API contract design, when an API or service surface exists: the API style is declared and applied consistently (REST, GraphQL, or RPC, not a different shape per endpoint); a versioning strategy exists that does not break existing consumers; a machine-readable contract (an OpenAPI document or a GraphQL schema) is present and matches the routes on disk; resources and URIs are modeled consistently for REST; and errors use one consistent envelope (RFC 7807 Problem Details or a documented equivalent), not an ad-hoc shape per endpoint.
     Look: route registration and handler signatures; an `openapi.*`, `swagger.*`, or GraphQL schema file diffed against the routes; version prefixes or content negotiation; the error-response shape across handlers.
     Fail: mixed API styles with no stated reason, no versioning strategy on a consumer-facing API, a contract file drifted from the routes, or inconsistent ad-hoc error shapes: Medium (High when consumers are external and a breaking change ships with no version). Cross-reference F-SEC for API auth and residue.
+24. A-ARCH-24 (audit-only) Caching is a recorded decision with an invalidation story, when a caching layer exists: each layer names what it holds and for how long, every cached entity has a write path that invalidates or versions it, and no per-user or per-tenant value is served from a key with no user or tenant component.
+    Look: the caching layers from the surface map paired with the write sites for the same entity; TTL and `s-maxage` values against the freshness the product states; cache key construction; `Cache-Control: public` or a shared CDN cache on an authenticated response.
+    Fail: a cached entity whose write path performs no invalidation and whose TTL is unbounded or longer than the stated freshness: High; per-user or per-tenant data cached under a key carrying neither identifier, or an authenticated response marked publicly cacheable: High, with the exploitable disclosure cross-referenced to F-SEC per the ownership map; a caching layer with no recorded decision anywhere: Low. Unbounded in-process caches are A-CODE-16's; cite, do not re-score.
+25. A-ARCH-25 (audit-only) Backpressure exists where work is queued, when async infrastructure is present: every consumer bounds its in-flight work, unbounded producer paths carry admission control, and overload has a recorded shed-or-degrade behavior rather than an out-of-memory kill.
+    Look: the backpressure signals from the surface map; `Promise.all`, `asyncio.gather`, or channel sends over caller-supplied input on a request path; the retry policy's effect on an already-saturated downstream.
+    Fail: a consumer with unbounded concurrency, or an unbounded in-process buffer on a growth path: High; retries with no circuit breaker amplifying load into a saturated dependency: High; no recorded behavior for a queue that grows without bound: Medium. Queue-depth alerting is F-OBS's; cite, do not re-score.
+26. A-ARCH-26 (audit-only) Recovery objectives are numbers with evidence, when the project owns a durable store: an RTO and an RPO are recorded per store, the backup mechanism satisfies the RPO arithmetically, and at least one restore has been performed and dated.
+    Look: the recovery records from the surface map; backup interval and retention against the stated RPO; the PITR window; a dated restore drill, a scheduled restore workflow, or a runbook entry with a completion date.
+    Fail: a stated RPO shorter than the backup interval, or an RTO that assumes a failover target the infrastructure does not have: High; durable user data with no RTO or RPO recorded anywhere: Medium; backups configured with no evidence any restore was ever performed: Medium. Backup configuration and destructive-command gating are F-DEPLOY's and migration reversibility is F-DB's; cite, do not re-score.
+27. A-ARCH-27 (audit-only) The runtime scales out if the deployment says it does: no request-serving state lives in one process, no scheduled job runs once per replica by accident, and no correctness depends on session affinity.
+    Look: the scale-out state signals from the surface map against the replica or instance count in deploy config; `setInterval`, `node-cron`, or `@Scheduled` in a replicated service with no lock or leader election; in-memory session, rate-limit, or lock stores; uploads written to local disk.
+    Fail: a replica count above one with request state in module scope, an in-memory session or rate-limit store, or uploads on local disk: High; a scheduler firing in every replica with no distributed lock or leader election: High; an architecture record promising horizontal scale over a runtime that cannot leave one process: Medium.
 
 ## Scoring
 
@@ -1320,6 +1336,8 @@ Weighted dimensions summing to 100. Conditional dimensions drop out and the rest
 - Decision records and drift (A-ARCH-14 to A-ARCH-19): 10
 
 A-ARCH-23 carries no weight of its own: its findings score inside the integration-discipline or trust-boundary dimension of the API surface they implicate.
+
+A-ARCH-24 through A-ARCH-27 carry no weight of their own either. Their findings score inside the dimension of the surface they implicate: caching and backpressure into integration discipline, recovery objectives into data architecture and invariants, scale-out readiness into component boundaries and dependency structure. Each is skipped with its reason recorded when its sub-surface is declared absent, so a static site is never graded on a cache it has no reason to hold.
 
 Any active Critical finding, including an accepted risk, caps this domain at 69.
 
@@ -1369,6 +1387,30 @@ Seed patterns in the audit-format task grammar. At audit time the agent adds the
   - Verify: `grep -q -- "-->" docs/architecture/containers.mmd`
   - Checks: A-ARCH-15, A-ARCH-18
 
+- [ ] GA-xxx Record the caching contract and wire invalidation to the write paths
+  - Files: docs/architecture/caching.md, src/lib/cache.ts
+  - Acceptance: every cache layer is listed with what it holds, its TTL, and the write path that invalidates it; each entry carries an "Invalidated by:" line naming that path; every key holding per-user or per-tenant data includes that identifier; no authenticated response is marked publicly cacheable
+  - Verify: `grep -q "Invalidated by:" docs/architecture/caching.md`
+  - Checks: A-ARCH-24
+
+- [ ] GA-xxx Bound consumer concurrency and record the overload behavior
+  - Files: src/workers/, docs/architecture/backpressure.md
+  - Acceptance: every consumer sets an explicit prefetch or max-in-flight value; no request path awaits an unbounded fan-out over caller-supplied input; the record names what the system sheds or degrades first when the queue grows and what the retry policy does against a saturated downstream
+  - Verify: `grep -rqE "maxInFlight|prefetch|concurrency" src/workers/`
+  - Checks: A-ARCH-25, A-ARCH-9
+
+- [ ] GA-xxx Record RTO and RPO per store and complete a dated restore drill
+  - Files: docs/runbooks/recovery.md
+  - Acceptance: every durable store the project owns has a numeric RTO and RPO; the backup interval is shorter than the stated RPO; the file records a completed restore with its date, the artifact restored, and the elapsed time against the stated RTO
+  - Verify: `grep -q "RPO:" docs/runbooks/recovery.md && grep -q "Restore drill completed:" docs/runbooks/recovery.md`
+  - Checks: A-ARCH-26
+
+- [ ] GA-xxx Move request-serving state out of the process
+  - Files: src/server/session.ts, src/server/rate-limit.ts, src/jobs/scheduler.ts
+  - Acceptance: sessions, rate-limit counters, and locks live in a shared store instead of module scope; uploads go to object storage instead of local disk; scheduled jobs acquire a distributed lock or run in one dedicated worker; no route depends on session affinity
+  - Verify: `grep -rq "acquireLock" src/jobs/scheduler.ts`
+  - Checks: A-ARCH-27
+
 ## Anti-patterns hunted
 
 - Architecture theater: ADRs and diagram boxes no code path corresponds to. Pair every box with a deployable or module; unpaired elements become A-ARCH-15 or A-ARCH-18 findings, not decoration to admire.
@@ -1380,6 +1422,10 @@ Seed patterns in the audit-format task grammar. At audit time the agent adds the
 - Anemic and god services: a deployable wrapping one table, or one module owning half the domain. A-ARCH-5; recommend merge or split at bounded-context lines.
 - Horoscope docs: architecture prose that survives a noun swap. A-ARCH-19; quote the surviving paragraph as evidence.
 - Paper fitness functions: conformance config committed but never run in CI. A-ARCH-16; a control that does not execute is a finding, not a control.
+- Accidental cache: a cache added to answer a latency complaint, with no record of what it holds and no writer that invalidates it. A-ARCH-24; the finding names the write path that leaves it stale, not the cache library.
+- Unbounded intake: a consumer that pulls as fast as the queue delivers and dies on the first burst. A-ARCH-25; the evidence is the consumer's missing concurrency bound, not the queue's current depth.
+- Backup theater: backup configuration with a retention policy and no evidence a restore was ever attempted. A-ARCH-26; an untested restore is a hope, and an RPO shorter than the backup interval is arithmetic that already failed.
+- Scale-out fiction: an architecture record promising horizontal scale over a process holding sessions, counters, uploads, or a scheduler in memory. A-ARCH-27; the finding pairs the declared replica count with the state site that blocks it.
 - Vague findings: every F-ARCH block carries file:line and quotable evidence, or it is labeled Tentative or deleted.
 - Double-billing: schema internals go to F-DB, exploitable isolation bypasses and injection to F-SEC, pipeline topology to F-DEPLOY, per the ownership map; this module cites, it does not re-score.
 - Severity inflation: a missing ADR corpus on a weekend repo is Low, not Medium; calibration moves severity, never evidence.

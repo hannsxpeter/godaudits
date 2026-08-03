@@ -13,14 +13,14 @@ Coverage notice: this compact prompt inlines the orchestrator and core
 contracts, but not the 18 domain modules. Use it only for focused audits where
 the requested module is separately available. If a module is unavailable,
 mark its checks unknown and report reduced coverage. Never approximate a full
-audit from memory. Use PROMPT.full.md for the complete 431-check pack.
+audit from memory. Use PROMPT.full.md for the complete 435-check pack.
 
 
 > Invocation: `/godaudits` in Claude Code, Cursor, VS Code, Zed, and Factory; `$godaudits` in Codex; `@godaudits` in Windsurf; auto-triggered elsewhere. Treat text after the command as a path, focus, or constraint. The runtime lives beside this file at `runtime/godaudits.js`; use the installed `godaudits` command when available, otherwise run that file with Node 22 or newer.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.13 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.14 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -240,7 +240,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.13.0
+## Skill version: 2.14.0
 
 
 ---

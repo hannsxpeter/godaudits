@@ -2,7 +2,7 @@
 
 Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand.
 
-18 domains, 431 checks, and 11 standards frameworks. Each check's ownership, weight, and standards mapping are derived from its domain module and the standards catalog.
+18 domains, 435 checks, and 11 standards frameworks. Each check's ownership, weight, and standards mapping are derived from its domain module and the standards catalog.
 
 ## Standards frameworks
 
@@ -50,7 +50,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 
 ### architecture (architecture.md)
 
-23 checks: 22 weighted, 1 routing.
+27 checks: 22 weighted, 5 routing.
 
 | Check | Role | Standards | Title |
 |---|---|---|---|
@@ -77,6 +77,10 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-ARCH-21 | weighted (Component boundaries and dependency structure) | - | Context boundaries hold at import level: no deep imports into another context's internals, no shared |
 | A-ARCH-22 | weighted (Component boundaries and dependency structure) | - | A domain layer exists where the record claims boundaries: invariants, pricing, and state transitions |
 | A-ARCH-23 | routing | - | API contract design, when an API or service surface exists: the API style is declared and applied co |
+| A-ARCH-24 | routing | - | Caching is a recorded decision with an invalidation story, when a caching layer exists: each layer n |
+| A-ARCH-25 | routing | - | Backpressure exists where work is queued, when async infrastructure is present: every consumer bound |
+| A-ARCH-26 | routing | - | Recovery objectives are numbers with evidence, when the project owns a durable store: an RTO and an  |
+| A-ARCH-27 | routing | - | The runtime scales out if the deployment says it does: no request-serving state lives in one process |
 
 ### stack (stack.md)
 
