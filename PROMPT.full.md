@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.14 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.15 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -238,7 +238,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.14.0
+## Skill version: 2.15.0
 
 
 ---
@@ -1232,14 +1232,16 @@ Inventory before any check runs. The intake fingerprint already lists entry poin
 - Backpressure signals: consumer concurrency, prefetch, and visibility settings (`prefetch`, `maxInFlight`, `concurrency`, `visibilityTimeout`); unbounded in-process buffers such as module-level arrays or `Promise.all` over caller-supplied input; producer-side admission control.
 - Recovery records: `docs/runbooks/`, `docs/deploy/`, disaster-recovery or continuity docs, backup and PITR config in `*.tf` and compose files, and restore-drill evidence (a dated log, a scheduled restore workflow, a runbook entry with a completion date).
 - Scale-out state signals: module-scope mutable state on a request path, local filesystem writes outside temp, in-process cron or interval schedulers, session-affinity config, and replica or process counts in deploy config.
+- Redundancy and routing signals: replica or instance counts and autoscaling ranges in deploy config, `livenessProbe` and `readinessProbe` definitions, load-balancer or ingress health-check config, standby and failover declarations, and multi-zone or multi-region placement.
+- Read-routing signals: read-replica connection strings and reader endpoints with their call sites, ORM read/write splitting config, and partition or shard key declarations in migrations.
 
-Conditional sub-surfaces, each declared present or absent with the reason recorded in the audit: multi-service topology, multi-tenancy, async infrastructure, external integrations, a caching layer, a durable store the project owns, and a horizontally scaled runtime.
+Conditional sub-surfaces, each declared present or absent with the reason recorded in the audit: multi-service topology, multi-tenancy, async infrastructure, external integrations, a caching layer, a durable store the project owns, a horizontally scaled runtime, a deployed runtime the project operates, and read replicas.
 
 ## Checks
 
 Severities are funded-product calibration; intake's scale calibration moves them, never the evidence.
 
-Mirror boundary: A-ARCH-1..19 mirror R-ARCH-1..19 one to one; A-ARCH-20 and up are audit-only. Cross-verified against godplans: R-ARCH-1..20 defined.
+Mirror boundary: A-ARCH-1..19 mirror R-ARCH-1..19 one to one; A-ARCH-20 and up are audit-only. Cross-verified against godplans: R-ARCH-1..24 defined.
 
 1. A-ARCH-1 Architecture claims trace to a product constraint or a labeled assumption; plan-aware, the plan's architecture section traces to its product section.
    Look: `README.md`, `docs/architecture/`, ADR Context sections in `docs/adr/*.md`, `ARCH.md`, `.godplans/PLAN.mdx`.
@@ -1322,6 +1324,12 @@ Mirror boundary: A-ARCH-1..19 mirror R-ARCH-1..19 one to one; A-ARCH-20 and up a
 27. A-ARCH-27 (audit-only) The runtime scales out if the deployment says it does: no request-serving state lives in one process, no scheduled job runs once per replica by accident, and no correctness depends on session affinity.
     Look: the scale-out state signals from the surface map against the replica or instance count in deploy config; `setInterval`, `node-cron`, or `@Scheduled` in a replicated service with no lock or leader election; in-memory session, rate-limit, or lock stores; uploads written to local disk.
     Fail: a replica count above one with request state in module scope, an in-memory session or rate-limit store, or uploads on local disk: High; a scheduler firing in every replica with no distributed lock or leader election: High; an architecture record promising horizontal scale over a runtime that cannot leave one process: Medium.
+28. A-ARCH-28 (audit-only) Read consistency is decided rather than accidental, when read replicas or a partitioned store exist: replica-served paths tolerate the staleness they get, post-write reads on money, auth, and inventory resolve to the primary, and a table projected past single-node scale carries a partition key instead of an open growth curve.
+    Look: the read-routing signals from the surface map against the write sites for the same entity; post-write redirect and confirmation handlers; the largest tables in migrations against the scale ceiling recorded under A-ARCH-3.
+    Fail: a balance, permission, or post-write confirmation read served from a replica with no staleness tolerance recorded: High; replica-backed reads with no stated staleness budget anywhere: Medium; a table projected past single-node capacity at the recorded ceiling with no partition key and no retention plan: Medium. Partition mechanics, index shape, and replication lag tuning are F-DB's; cite, do not re-score.
+29. A-ARCH-29 (audit-only) Availability claims have redundancy behind them, when the project operates a deployed runtime: a component carrying an availability target runs more than one instance behind a health-checked router, or its single instance is recorded with an accepted downtime number, and the router removes an unhealthy instance rather than continuing to route to it.
+    Look: the redundancy and routing signals from the surface map against the availability targets recorded under A-ARCH-3; probe definitions per replicated service; standby and failover declarations against the RTO recorded under A-ARCH-26.
+    Fail: a stated availability target above the single-instance baseline running one replica with no recorded acceptance: High; a replicated service with no liveness or readiness probe, so a broken instance keeps receiving traffic: High; a single point of failure on the critical path named nowhere: Medium. Request-state statelessness is A-ARCH-27's and pipeline topology is F-DEPLOY's; cite, do not re-score.
 
 ## Scoring
 
@@ -1337,7 +1345,7 @@ Weighted dimensions summing to 100. Conditional dimensions drop out and the rest
 
 A-ARCH-23 carries no weight of its own: its findings score inside the integration-discipline or trust-boundary dimension of the API surface they implicate.
 
-A-ARCH-24 through A-ARCH-27 carry no weight of their own either. Their findings score inside the dimension of the surface they implicate: caching and backpressure into integration discipline, recovery objectives into data architecture and invariants, scale-out readiness into component boundaries and dependency structure. Each is skipped with its reason recorded when its sub-surface is declared absent, so a static site is never graded on a cache it has no reason to hold.
+A-ARCH-24 through A-ARCH-29 carry no weight of their own either. Their findings score inside the dimension of the surface they implicate: caching and backpressure into integration discipline, recovery objectives and read consistency into data architecture and invariants, scale-out readiness into component boundaries and dependency structure, redundancy behind an availability claim into NFR reality. Each is skipped with its reason recorded when its sub-surface is declared absent, so a static site is never graded on a cache it has no reason to hold and a library is never graded on replicas it never runs.
 
 Any active Critical finding, including an accepted risk, caps this domain at 69.
 
@@ -1380,6 +1388,18 @@ Seed patterns in the audit-format task grammar. At audit time the agent adds the
   - Acceptance: each table receives writes from exactly one deployable; former writers call the owner's interface or publish events instead; an ADR records the ownership map with flip point and blast radius
   - Verify: `grep -rln "INSERT INTO orders" services/ | wc -l | grep -qx "1"`
   - Checks: A-ARCH-20, A-ARCH-8
+
+- [ ] GA-xxx Pin post-write reads to the primary and record the staleness budget
+  - Files: src/shared/db/read-routing.ts, docs/architecture/read-consistency.md
+  - Acceptance: money, auth, inventory, and post-write confirmation reads resolve to the primary; every remaining replica-served path is listed with the staleness it tolerates; a test writes and immediately reads on a pinned path and asserts the new value
+  - Verify: `grep -qE "primary|writer" src/shared/db/read-routing.ts && grep -qi "staleness" docs/architecture/read-consistency.md`
+  - Checks: A-ARCH-28, A-ARCH-7
+
+- [ ] GA-xxx Put redundancy behind the availability target
+  - Files: k8s/deployment.yaml, docs/architecture/capacity-model.md
+  - Acceptance: every component carrying an availability target runs more than one replica with a readiness probe the router honors, or is recorded in the capacity model with an accepted annual downtime number; each remaining single point of failure on the critical path is named
+  - Verify: `grep -q "readinessProbe" k8s/deployment.yaml && grep -qi "single point of failure" docs/architecture/capacity-model.md`
+  - Checks: A-ARCH-29, A-ARCH-11
 
 - [ ] GA-xxx Author a labeled container diagram from the built system
   - Files: docs/architecture/containers.mmd
@@ -1426,6 +1446,8 @@ Seed patterns in the audit-format task grammar. At audit time the agent adds the
 - Unbounded intake: a consumer that pulls as fast as the queue delivers and dies on the first burst. A-ARCH-25; the evidence is the consumer's missing concurrency bound, not the queue's current depth.
 - Backup theater: backup configuration with a retention policy and no evidence a restore was ever attempted. A-ARCH-26; an untested restore is a hope, and an RPO shorter than the backup interval is arithmetic that already failed.
 - Scale-out fiction: an architecture record promising horizontal scale over a process holding sessions, counters, uploads, or a scheduler in memory. A-ARCH-27; the finding pairs the declared replica count with the state site that blocks it.
+- Replica-served truth: a balance, permission, or post-write confirmation pointed at a replica because it was faster, with no record of the staleness that buys. A-ARCH-28; the finding names the read site and the write it can lag behind, not the replication setting.
+- Availability theater: an uptime target with one instance behind it, or a replica set whose router has no probe to remove a broken member. A-ARCH-29; the finding pairs the stated target with the replica count and the missing probe, and A-ARCH-11 stays the home for targets with no arithmetic at all.
 - Vague findings: every F-ARCH block carries file:line and quotable evidence, or it is labeled Tentative or deleted.
 - Double-billing: schema internals go to F-DB, exploitable isolation bypasses and injection to F-SEC, pipeline topology to F-DEPLOY, per the ownership map; this module cites, it does not re-score.
 - Severity inflation: a missing ADR corpus on a weekend repo is Low, not Medium; calibration moves severity, never evidence.
