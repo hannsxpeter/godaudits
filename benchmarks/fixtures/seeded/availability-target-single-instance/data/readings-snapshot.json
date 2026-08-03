@@ -1,0 +1,8 @@
+{
+  "generation": "2026-01-08T06:00:00Z",
+  "readings": [
+    { "deviceId": "dev-0001", "kwh": 41.7, "takenAt": "2026-01-08T06:00:00Z" },
+    { "deviceId": "dev-0002", "kwh": 12.4, "takenAt": "2026-01-08T06:00:00Z" },
+    { "deviceId": "dev-0003", "kwh": 88.1, "takenAt": "2026-01-08T06:00:00Z" }
+  ]
+}

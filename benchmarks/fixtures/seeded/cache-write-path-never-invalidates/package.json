@@ -1,0 +1,13 @@
+{
+  "name": "catalog-service",
+  "private": true,
+  "version": "2.3.0",
+  "description": "Public product and inventory reads for the storefront",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

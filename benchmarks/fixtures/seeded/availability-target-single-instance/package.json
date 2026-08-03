@@ -1,0 +1,10 @@
+{
+  "name": "meter-readings-api",
+  "private": true,
+  "version": "1.4.2",
+  "description": "Latest meter reading per device for the operations console",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  }
+}

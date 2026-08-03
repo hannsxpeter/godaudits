@@ -272,12 +272,130 @@ const SEEDS = [
     title: 'Invoice settles before provider confirmation',
     impact: 'A failed or disputed charge can still mark an invoice paid.',
     fix: 'Confirm provider status before marking the invoice final.'
+  },
+  // The six system-design seeds. Each carries an ownerCheck because its failing
+  // check is a routing check with no weight of its own, so the finding has to
+  // name the weighted check in the architecture domain that it scores into.
+  // Each fixture is written to satisfy exactly one Fail clause of its target
+  // check and to close every other clause, so a detection is attributable to
+  // the signal the seed is named for rather than to a neighbouring one.
+  {
+    name: 'cache-write-path-never-invalidates',
+    domain: 'architecture',
+    weight: 8,
+    failCheck: 'A-ARCH-24',
+    ownerCheck: 'A-ARCH-9',
+    passCheck: 'A-ARCH-12',
+    severity: 'High',
+    path: 'src/catalog.js',
+    quote: '  const row = await clients.postgres.updatePrice(sku, priceCents);',
+    cleanQuote: '- Scale ceiling: the catalog is scalable to 900000 SKUs and 1200 catalog reads per second at peak.',
+    cleanPath: 'docs/architecture.md',
+    seeded: 'A price change updates the Postgres row and never touches the cached product key, whose 604800 second TTL outlives the recorded 60 second price freshness.',
+    title: 'Price write path never invalidates the product cache key',
+    impact: 'A price change stays invisible to shoppers for up to a week, because reads answer from the cached key and never re-consult Postgres.',
+    fix: 'Delete the product key on the write path, the way the inventory path already deletes its own key.'
+  },
+  {
+    name: 'consumer-concurrency-unbounded',
+    domain: 'architecture',
+    weight: 8,
+    failCheck: 'A-ARCH-25',
+    ownerCheck: 'A-ARCH-9',
+    passCheck: 'A-ARCH-12',
+    severity: 'High',
+    path: 'src/consumer.js',
+    quote: '  return Promise.all(messages.map((message) => indexMessage(message)));',
+    cleanQuote: '- The pipeline is scalable to 2100 messages per minute on one worker process and to 8400 messages per minute on four.',
+    cleanPath: 'docs/architecture.md',
+    seeded: 'A prefetch of zero hands the whole backlog to the worker and the batch is fanned out at once, so in-flight work is set by the broker rather than by the worker.',
+    title: 'Ingest worker fans a whole broker batch out with no concurrency bound',
+    impact: 'A nightly re-crawl burst of 45000 messages starts 45000 concurrent index calls in a process budgeted at 512 MB, so the worker is killed mid-batch and restarts into the same backlog.',
+    fix: 'Set a prefetch the memory budget supports and drain each batch through a fixed-size worker pool.'
+  },
+  {
+    name: 'rpo-shorter-than-backup-interval',
+    domain: 'architecture',
+    weight: 8,
+    failCheck: 'A-ARCH-26',
+    ownerCheck: 'A-ARCH-7',
+    passCheck: 'A-ARCH-12',
+    severity: 'High',
+    path: 'src/recovery/objectives.js',
+    quote: '  rpoMinutes: 5,',
+    cleanQuote: '- Scale ceiling: scalable to 40000 orders per day and 90 order reads per second at peak; past 90 reads per second the recorded next step is a larger instance class for orders-postgres.',
+    cleanPath: 'docs/architecture.md',
+    seeded: 'The service publishes a 5 minute RPO for its one durable store while the only mechanism producing a recovery point is a once-per-day backup plan.',
+    title: 'Published 5 minute RPO is unreachable behind a once-per-day backup plan',
+    impact: 'A failure just before the nightly window loses up to a full day of accepted orders against a recovery objective that promises five minutes.',
+    fix: 'Make the mechanism match the objective or the objective match the mechanism, and record which was chosen.'
+  },
+  {
+    name: 'session-store-in-process-behind-replicas',
+    domain: 'architecture',
+    weight: 8,
+    failCheck: 'A-ARCH-27',
+    ownerCheck: 'A-ARCH-21',
+    passCheck: 'A-ARCH-12',
+    severity: 'High',
+    path: 'src/session-store.js',
+    quote: 'const sessions = new Map();',
+    cleanQuote: '- The login path is performant at p95 700 ms and p99 1100 ms measured at the Service, with the single identity directory lookup capped at 400 ms.',
+    cleanPath: 'docs/architecture.md',
+    seeded: 'Session and rate-limit state live in module scope while the deployment manifest runs six replicas, so correctness depends on which replica serves the request.',
+    title: 'Signed-in session state lives in one process behind six replicas',
+    impact: 'A shopper authenticated by one replica is unauthenticated the moment the Service routes their next request anywhere else, so the signed-in surface fails for most requests.',
+    fix: 'Move both request-serving collections into a store every replica reads, keeping the same TTL and window.'
+  },
+  {
+    name: 'post-write-confirmation-from-replica',
+    domain: 'architecture',
+    weight: 8,
+    failCheck: 'A-ARCH-28',
+    ownerCheck: 'A-ARCH-8',
+    passCheck: 'A-ARCH-12',
+    severity: 'High',
+    path: 'src/articles.js',
+    quote: '  const stored = await reader.articles.findOne({ articleId: ctx.articleId }, { timeoutMs: timeouts.reader });',
+    cleanQuote: '- The article library is scalable to 90000 articles and 220 reads per second at peak, which is the ceiling on this line and not a claim past it.',
+    cleanPath: 'docs/architecture.md',
+    seeded: 'A title rename writes to the primary and then builds its confirmation payload by re-reading the row from the async replica, with no staleness tolerance recorded anywhere.',
+    title: 'Rename confirmation is read back from the async replica',
+    impact: 'An editor who renames an article is shown the pre-rename title whenever the replica is behind, so the confirmation contradicts the write it is confirming.',
+    fix: 'Serve the confirmation from the primary, or have the update return the stored row.'
+  },
+  {
+    name: 'availability-target-single-instance',
+    domain: 'architecture',
+    weight: 8,
+    failCheck: 'A-ARCH-29',
+    ownerCheck: 'A-ARCH-11',
+    passCheck: 'A-ARCH-12',
+    severity: 'High',
+    path: 'k8s/deployment.yaml',
+    quote: '  replicas: 1',
+    cleanQuote: 'The read path is performant at 60 requests per second with p95 under 120 ms and p99 under 400 ms.',
+    cleanPath: 'docs/architecture.md',
+    seeded: 'A 99.95 percent monthly availability target is served by a Deployment running one replica, with no standby and no recorded acceptance of the downtime.',
+    title: 'A 99.95 percent availability target runs on one replica',
+    impact: 'Every restart, node drain, eviction, or crash is a full outage of the only source the operations console reads, against a target that allows about 21 minutes a month.',
+    fix: 'Raise the replica count behind the readiness-gated Service, or record the accepted downtime for staying at one.'
   }
 ];
 
 function auditFor(seed) {
   // Finding ids follow F-<PREFIX>-N, mirroring the check family they belong to.
   const findingId = `F-${seed.failCheck.split('-')[1]}-1`;
+  // A routing check carries no weight of its own, so a finding against one has
+  // to name the weighted check in its domain that the defect actually scores
+  // into. Seeds that set ownerCheck record both ids and put the owner in the
+  // ledger beside the routing check, which is what a real audit must do to pass
+  // the routing-ownership rule in audit.js. Seeds without it keep the original
+  // two-check ledger, so their generated fixtures do not move.
+  const routedChecks = seed.ownerCheck ? [seed.failCheck, seed.ownerCheck] : [seed.failCheck];
+  const ownerRow = seed.ownerCheck
+    ? [{ id: seed.ownerCheck, outcome: 'fail', confidence: 'Certain', weight: 60, evidence: ['E-1', 'E-2'], finding_ids: [findingId] }]
+    : [];
   return {
     schema_version: '2.0',
     audit: {
@@ -304,7 +422,8 @@ function auditFor(seed) {
         status: 'applicable',
         weight: seed.weight,
         checks: [
-          { id: seed.failCheck, outcome: 'fail', confidence: 'Certain', weight: 60, evidence: ['E-1', 'E-2'], finding_ids: [findingId] },
+          { id: seed.failCheck, outcome: 'fail', confidence: 'Certain', weight: seed.ownerCheck ? 0 : 60, evidence: ['E-1', 'E-2'], finding_ids: [findingId] },
+          ...ownerRow,
           { id: seed.passCheck, outcome: 'pass', confidence: 'Firm', weight: 40, evidence: ['E-2'], finding_ids: [] }
         ]
       }
@@ -326,7 +445,7 @@ function auditFor(seed) {
         impact: seed.impact,
         fix: seed.fix,
         verify: 'node --test test/seeded.test.js',
-        checks: [seed.failCheck],
+        checks: routedChecks,
         status: 'open',
         remediation: ['GA-101']
       }
@@ -347,7 +466,7 @@ function auditFor(seed) {
           `${seed.failCheck} passes with evidence on the remediated path.`
         ],
         verify: 'node --test test/seeded.test.js',
-        checks: [seed.failCheck],
+        checks: routedChecks,
         status: 'open'
       },
       {

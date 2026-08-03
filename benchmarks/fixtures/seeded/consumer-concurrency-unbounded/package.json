@@ -1,0 +1,9 @@
+{
+  "name": "ingest-worker",
+  "private": true,
+  "version": "1.0.0",
+  "main": "src/consumer.js",
+  "scripts": {
+    "start": "node src/consumer.js"
+  }
+}

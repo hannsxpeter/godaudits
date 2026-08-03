@@ -1,0 +1,12 @@
+{
+  "name": "orders-intake-api",
+  "version": "1.4.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Accepts and serves customer orders for one retail brand",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": { "node": ">=20" }
+}

@@ -93,6 +93,114 @@
       }
     },
     {
+      "name": "cache-write-path-never-invalidates",
+      "provenance": "authored",
+      "audit": "detectors/cache-write-path-never-invalidates.audit.json",
+      "seeded": "A price change updates the Postgres row and never touches the cached product key, whose 604800 second TTL outlives the recorded 60 second price freshness.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-ARCH-24",
+            "severity": "High",
+            "path": "src/catalog.js"
+          }
+        ],
+        "clean_checks": [
+          "A-ARCH-12"
+        ]
+      }
+    },
+    {
+      "name": "consumer-concurrency-unbounded",
+      "provenance": "authored",
+      "audit": "detectors/consumer-concurrency-unbounded.audit.json",
+      "seeded": "A prefetch of zero hands the whole backlog to the worker and the batch is fanned out at once, so in-flight work is set by the broker rather than by the worker.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-ARCH-25",
+            "severity": "High",
+            "path": "src/consumer.js"
+          }
+        ],
+        "clean_checks": [
+          "A-ARCH-12"
+        ]
+      }
+    },
+    {
+      "name": "rpo-shorter-than-backup-interval",
+      "provenance": "authored",
+      "audit": "detectors/rpo-shorter-than-backup-interval.audit.json",
+      "seeded": "The service publishes a 5 minute RPO for its one durable store while the only mechanism producing a recovery point is a once-per-day backup plan.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-ARCH-26",
+            "severity": "High",
+            "path": "src/recovery/objectives.js"
+          }
+        ],
+        "clean_checks": [
+          "A-ARCH-12"
+        ]
+      }
+    },
+    {
+      "name": "session-store-in-process-behind-replicas",
+      "provenance": "authored",
+      "audit": "detectors/session-store-in-process-behind-replicas.audit.json",
+      "seeded": "Session and rate-limit state live in module scope while the deployment manifest runs six replicas, so correctness depends on which replica serves the request.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-ARCH-27",
+            "severity": "High",
+            "path": "src/session-store.js"
+          }
+        ],
+        "clean_checks": [
+          "A-ARCH-12"
+        ]
+      }
+    },
+    {
+      "name": "post-write-confirmation-from-replica",
+      "provenance": "authored",
+      "audit": "detectors/post-write-confirmation-from-replica.audit.json",
+      "seeded": "A title rename writes to the primary and then builds its confirmation payload by re-reading the row from the async replica, with no staleness tolerance recorded anywhere.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-ARCH-28",
+            "severity": "High",
+            "path": "src/articles.js"
+          }
+        ],
+        "clean_checks": [
+          "A-ARCH-12"
+        ]
+      }
+    },
+    {
+      "name": "availability-target-single-instance",
+      "provenance": "authored",
+      "audit": "detectors/availability-target-single-instance.audit.json",
+      "seeded": "A 99.95 percent monthly availability target is served by a Deployment running one replica, with no standby and no recorded acceptance of the downtime.",
+      "expected": {
+        "required_findings": [
+          {
+            "check": "A-ARCH-29",
+            "severity": "High",
+            "path": "k8s/deployment.yaml"
+          }
+        ],
+        "clean_checks": [
+          "A-ARCH-12"
+        ]
+      }
+    },
+    {
       "name": "blind-export-unscoped",
       "provenance": "recorded",
       "audit": "detectors/blind-export-unscoped.audit.json",

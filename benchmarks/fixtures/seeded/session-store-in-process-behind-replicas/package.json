@@ -1,0 +1,10 @@
+{
+  "name": "checkout-session-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Signed-in checkout session and rate-limit API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  }
+}

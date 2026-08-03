@@ -1,0 +1,23 @@
+{
+  "primary": {
+    "role": "primary",
+    "host": "helpcenter-db-primary.internal",
+    "port": 5432,
+    "database": "helpcenter",
+    "user": "helpcenter_app",
+    "passwordEnv": "HELPCENTER_DB_PASSWORD",
+    "sslMode": "verify-full",
+    "statementTimeoutMs": 250
+  },
+  "reader": {
+    "role": "reader",
+    "host": "helpcenter-db-reader.internal",
+    "port": 5432,
+    "database": "helpcenter",
+    "user": "helpcenter_app",
+    "passwordEnv": "HELPCENTER_DB_PASSWORD",
+    "sslMode": "verify-full",
+    "statementTimeoutMs": 250
+  },
+  "listPageLimit": 50
+}

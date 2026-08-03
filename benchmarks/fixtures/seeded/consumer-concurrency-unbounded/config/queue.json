@@ -1,0 +1,17 @@
+{
+  "url": "amqps://queue.internal:5671",
+  "queue": "documents.ingest",
+  "consumerTag": "ingest-worker",
+  "prefetch": 0,
+  "receiveTimeoutMs": 10000,
+  "indexTimeoutMs": 3000,
+  "ackTimeoutMs": 2000,
+  "nackTimeoutMs": 2000,
+  "idlePollMs": 500,
+  "maxIndexAttempts": 4,
+  "retryBaseDelayMs": 200,
+  "retryMaxDelayMs": 5000,
+  "breakerFailureThreshold": 20,
+  "breakerOpenMs": 30000,
+  "processedIdCacheMax": 50000
+}

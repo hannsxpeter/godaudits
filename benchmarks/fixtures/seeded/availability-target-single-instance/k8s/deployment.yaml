@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meter-readings-api
+  namespace: grid-ops
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: meter-readings-api
+  template:
+    metadata:
+      labels:
+        app: meter-readings-api
+    spec:
+      containers:
+        - name: api
+          image: registry.internal/meter-readings-api:1.4.2
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meter-readings-api
+  namespace: grid-ops
+spec:
+  type: ClusterIP
+  selector:
+    app: meter-readings-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
