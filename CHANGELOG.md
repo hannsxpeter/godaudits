@@ -3,6 +3,60 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.14.0] - 2026-08-03
+
+The architecture domain already audited the structural half of system design:
+shape, bounded contexts, invariant ownership, trust boundaries, decision
+records. It was thin on the half that only shows up under load or after a
+failure. Four audit-only checks close that gap. All four are routing checks, so
+the catalog grows to 435 without shifting the scoring denominator.
+
+This is a minor feature release inside the 30-day window in
+`docs/RELEASE-POLICY.md` and matches none of its three exceptions. It is cut
+because `catalog/checks.json` is a pinned contract: consumers resolve checks by
+`pack_version`, and the same version resolving to a different check count is
+worse than an off-cadence bump.
+
+### Added
+
+- A-ARCH-24 (caching contract), conditional on a caching layer existing: each
+  layer records what it holds and for how long, every cached entity has a write
+  path that invalidates or versions it, and no per-user or per-tenant value is
+  served from a key carrying neither identifier. Unbounded in-process caches
+  stay A-CODE-16's and the exploitable cross-tenant disclosure stays F-SEC's;
+  this check owns the design decision and its missing invalidation.
+- A-ARCH-25 (backpressure), conditional on async infrastructure: every consumer
+  bounds its in-flight work, unbounded producer paths carry admission control,
+  and overload has a recorded shed-or-degrade behavior rather than an
+  out-of-memory kill. Retries with no circuit breaker into a saturated
+  dependency are graded here; queue-depth alerting stays F-OBS's.
+- A-ARCH-26 (recovery objectives), conditional on the project owning a durable
+  store: a numeric RTO and RPO per store, a backup mechanism that satisfies the
+  RPO arithmetically, and at least one restore actually performed and dated. An
+  RPO shorter than the backup interval is arithmetic that already failed, the
+  same treatment A-ARCH-11 gives latency budgets. Backup configuration stays
+  F-DEPLOY's and migration reversibility stays F-DB's.
+- A-ARCH-27 (scale-out readiness): no request-serving state in one process, no
+  scheduled job firing once per replica by accident, no correctness depending
+  on session affinity. The finding pairs the declared replica count with the
+  state site that blocks it, so an architecture record promising horizontal
+  scale over an in-memory session store is a finding rather than a claim.
+- Four remediation seeds and four anti-patterns for the new checks: accidental
+  cache, unbounded intake, backup theater, and scale-out fiction.
+- Surface-map inventory for the new sub-surfaces (caching layers, backpressure
+  signals, recovery records, scale-out state signals), and three new conditional
+  sub-surfaces so a domain absent a cache, a durable store, or a replicated
+  runtime records that reason instead of grading a surface it does not have.
+
+### Changed
+
+- A-ARCH-24, A-ARCH-25, and A-ARCH-27 are deep-trace: each needs a cross-module
+  join (cache reads against every writer, consumer bounds against producer
+  paths, in-process state against the deploy topology) that a targeted read
+  cannot settle. A medium budget leaves them unknown, which lowers coverage
+  rather than inventing a verdict. A-ARCH-26 is screening: its evidence is
+  recorded objectives and dated drill artifacts.
+
 ## [2.13.0] - 2026-07-31
 
 A readability release, drawn from reviewing what the wayfinder skill
