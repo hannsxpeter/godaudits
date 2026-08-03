@@ -2,7 +2,7 @@
 
 Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand.
 
-18 domains, 435 checks, and 11 standards frameworks. Each check's ownership, weight, and standards mapping are derived from its domain module and the standards catalog.
+18 domains, 437 checks, and 11 standards frameworks. Each check's ownership, weight, and standards mapping are derived from its domain module and the standards catalog.
 
 ## Standards frameworks
 
@@ -50,7 +50,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 
 ### architecture (architecture.md)
 
-27 checks: 22 weighted, 5 routing.
+29 checks: 22 weighted, 7 routing.
 
 | Check | Role | Standards | Title |
 |---|---|---|---|
@@ -81,6 +81,8 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-ARCH-25 | routing | - | Backpressure exists where work is queued, when async infrastructure is present: every consumer bound |
 | A-ARCH-26 | routing | - | Recovery objectives are numbers with evidence, when the project owns a durable store: an RTO and an  |
 | A-ARCH-27 | routing | - | The runtime scales out if the deployment says it does: no request-serving state lives in one process |
+| A-ARCH-28 | routing | - | Read consistency is decided rather than accidental, when read replicas or a partitioned store exist: |
+| A-ARCH-29 | routing | - | Availability claims have redundancy behind them, when the project operates a deployed runtime: a com |
 
 ### stack (stack.md)
 

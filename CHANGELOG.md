@@ -3,6 +3,68 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.15.0] - 2026-08-03
+
+Closes the mirror against godplans 1.12.0. That release added R-ARCH-21
+through R-ARCH-24 to the plan-time architecture module: read consistency and
+partition key per entity group, redundancy topology behind each availability
+number, cache tiering with a staleness budget, and an overload posture per
+entry surface. 2.14.0 had already covered caching, backpressure, recovery
+objectives, and scale-out readiness from the audit side, so two obligations
+were left with nothing checking them: what a read is allowed to see, and
+whether an availability target has any redundancy standing behind it.
+
+Two checks, 435 to 437. Both are audit-only and both are zero-weight routing
+checks, so a repo's architecture score moves only through the dimension the
+finding implicates, never through a new bucket. No scoring dimension changed
+weight, so a 2.14.0 audit re-run under 2.15.0 scores the same unless one of the
+two new checks fires.
+
+### Added
+
+- A-ARCH-28 (audit-only, deep-trace, conditional on read replicas or a
+  partitioned store) checks that read consistency was decided rather than
+  inherited: replica-served paths tolerate the staleness they get, post-write
+  reads on money, auth, and inventory resolve to the primary, and a table
+  projected past single-node scale carries a partition key instead of an open
+  growth curve. A balance or post-write confirmation served from a replica with
+  no recorded staleness tolerance is High. Partition mechanics, index shape, and
+  replication lag tuning stay F-DB's; this check cites them.
+- A-ARCH-29 (audit-only, conditional on a deployed runtime the project
+  operates) checks that availability claims have redundancy behind them: a
+  component carrying an availability target runs more than one instance behind a
+  health-checked router, or its single instance is recorded with an accepted
+  downtime number, and the router removes an unhealthy instance instead of
+  continuing to route to it. A stated target above the single-instance baseline
+  running one replica with no recorded acceptance is High, as is a replicated
+  service with no liveness or readiness probe. A-ARCH-11 remains the home for
+  targets with no arithmetic at all; this one is about the means, not the math.
+- Two remediation seeds: pin post-write reads to the primary and record the
+  staleness budget, and put redundancy behind the availability target.
+- Two anti-patterns hunted: replica-served truth (a balance or permission read
+  pointed at a replica because it was faster, with no record of the staleness
+  that buys) and availability theater (an uptime target with one instance behind
+  it, or a replica set whose router has no probe to remove a broken member).
+- Surface map gains redundancy and routing signals (replica counts, autoscaling
+  ranges, liveness and readiness probes, load-balancer health checks, standby
+  and failover declarations, multi-zone placement) and read-routing signals
+  (reader endpoints and their call sites, ORM read/write splitting, partition
+  and shard key declarations). Conditional sub-surfaces gain a deployed runtime
+  the project operates and read replicas, so a library is never graded on
+  replicas it never runs.
+
+### Changed
+
+- The architecture mirror boundary line records `R-ARCH-1..24 defined`, up from
+  `R-ARCH-1..20`, matching godplans 1.12.0. The boundary itself stays at 19: the
+  audit-only range is numbered by arrival, not renumbered to track godplans,
+  because a published check id has to keep resolving to the same check.
+- The zero-weight routing note covers A-ARCH-24 through A-ARCH-29 and names
+  where each lands: caching and backpressure into integration discipline,
+  recovery objectives and read consistency into data architecture and
+  invariants, scale-out readiness into component boundaries, redundancy behind
+  an availability claim into NFR reality.
+
 ## [2.14.0] - 2026-08-03
 
 The architecture domain already audited the structural half of system design:
