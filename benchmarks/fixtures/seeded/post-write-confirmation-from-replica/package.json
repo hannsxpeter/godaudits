@@ -1,0 +1,9 @@
+{
+  "name": "helpcenter-cms",
+  "private": true,
+  "version": "2.3.1",
+  "description": "Editorial service for the internal help center article library",
+  "scripts": {
+    "start": "node src/server.js"
+  }
+}

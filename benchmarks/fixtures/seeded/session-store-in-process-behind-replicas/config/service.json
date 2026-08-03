@@ -1,0 +1,6 @@
+{
+  "port": 8080,
+  "identityDirectoryUrl": "https://identity.internal/v1",
+  "identityLookupTimeoutMs": 400,
+  "identityPingTimeoutMs": 400
+}
