@@ -93,26 +93,28 @@ Overall score = sum(domain score x profile weight) / sum(active profile weights)
 - `growth`: public products dominated by activation, trust, visibility, conversion, and launch execution.
 - `library`: libraries and developer tools dominated by API quality, compatibility, maintainability, and repository discipline.
 
-The balanced profile is:
+The balanced profile is the following. `scripts/lint.sh profile-table` fails
+when this table and `catalog/profiles.json` disagree, because a published weight
+a reader cannot reproduce the score from is worse than no table:
 
 | Domain | Weight |
 |---|---|
 | security | 15 |
-| code-quality | 10 |
-| build | 10 |
-| database | 8 |
-| architecture | 8 |
-| product | 7 |
-| ux | 7 |
-| llm | 6 |
-| deploy | 6 |
-| observe | 5 |
-| repo | 5 |
+| build | 9 |
+| code-quality | 9 |
+| architecture | 7 |
+| database | 7 |
+| product | 6 |
+| ux | 6 |
+| deploy | 5 |
+| llm | 5 |
+| observe | 4 |
+| repo | 4 |
+| roadmap | 4 |
 | stack | 4 |
 | ui | 4 |
-| roadmap | 4 |
-| seo | 3 |
 | launch | 3 |
+| seo | 3 |
 | style-genome | 3 |
 | agent-memory | 2 |
 

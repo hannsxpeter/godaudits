@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 437-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.15 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.16 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -240,7 +240,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.15.1
+## Skill version: 2.16.0
 
 
 ---
@@ -743,26 +743,28 @@ Overall score = sum(domain score x profile weight) / sum(active profile weights)
 - `growth`: public products dominated by activation, trust, visibility, conversion, and launch execution.
 - `library`: libraries and developer tools dominated by API quality, compatibility, maintainability, and repository discipline.
 
-The balanced profile is:
+The balanced profile is the following. `scripts/lint.sh profile-table` fails
+when this table and `catalog/profiles.json` disagree, because a published weight
+a reader cannot reproduce the score from is worse than no table:
 
 | Domain | Weight |
 |---|---|
 | security | 15 |
-| code-quality | 10 |
-| build | 10 |
-| database | 8 |
-| architecture | 8 |
-| product | 7 |
-| ux | 7 |
-| llm | 6 |
-| deploy | 6 |
-| observe | 5 |
-| repo | 5 |
+| build | 9 |
+| code-quality | 9 |
+| architecture | 7 |
+| database | 7 |
+| product | 6 |
+| ux | 6 |
+| deploy | 5 |
+| llm | 5 |
+| observe | 4 |
+| repo | 4 |
+| roadmap | 4 |
 | stack | 4 |
 | ui | 4 |
-| roadmap | 4 |
-| seo | 3 |
 | launch | 3 |
+| seo | 3 |
 | style-genome | 3 |
 | agent-memory | 2 |
 

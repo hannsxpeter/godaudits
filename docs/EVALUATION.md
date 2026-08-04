@@ -76,9 +76,17 @@ Three conventions make a seed worth having:
   the defect implicates, the way each module's Scoring section routes them, not
   from a fixed per-check table.
 
-The gate itself calls `validateAudit` without a catalog, so the two rules that
-need catalog weights, routing ownership and weighted-owner presence, do not run
-inside it. Seeds are checked against those rules by hand when added.
+The gate validates every case catalog-aware and fragment-scoped
+(`validateAudit(audit, { catalog, fragment: true })`). Fragment scope drops the
+whole-audit rules a single-domain fixture cannot satisfy by construction (pinned
+versions, an applicability row per domain, a complete per-domain ledger, and the
+domain and per-check weights, which are a normalization across an audit the
+fragment does not contain) and keeps the conformance rules that expose a real
+defect in one: a check id the catalog no longer defines, a routing check whose
+finding names no weighted owner, and a finding with no weighted owner in its own
+domain. Before that, the gate withheld the catalog entirely, which withheld
+those rules too, and four fixtures drifted into exactly the shape the gate
+exists to catch.
 
 ## Recorded detection rate and its limits
 

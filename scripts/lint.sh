@@ -223,6 +223,45 @@ if (bad.length) console.log(bad.join("\n"));
   fi
 }
 
+check_profile_table() {
+  CHECK=profile-table
+  # The balanced-profile table in references/intake.md is loaded by the model on
+  # every audit and is what a reader reproduces a score from. It drifted once:
+  # it published the legacy pre-profile weights from audit.js, which sum to 110,
+  # while catalog/profiles.json scored with weights summing to 100. Nothing
+  # caught it because both files were internally consistent. This compares them.
+  out=$(node -e '
+const fs = require("fs");
+const repo = process.argv[1];
+const weights = JSON.parse(fs.readFileSync(repo + "/skills/godaudits/catalog/profiles.json", "utf8")).profiles.balanced.weights;
+const text = fs.readFileSync(repo + "/skills/godaudits/references/intake.md", "utf8");
+const start = text.indexOf("The balanced profile is");
+if (start < 0) { console.log("intake.md no longer states the balanced profile"); process.exit(0); }
+const table = text.slice(start).split("\n").filter((line) => /^\| [a-z-]+ \| \d+ \|$/.test(line));
+const published = {};
+for (const line of table) {
+  const cells = line.split("|").map((cell) => cell.trim()).filter(Boolean);
+  published[cells[0]] = Number(cells[1]);
+}
+const bad = [];
+for (const [domain, weight] of Object.entries(weights)) {
+  if (published[domain] === undefined) bad.push("intake.md omits " + domain);
+  else if (published[domain] !== weight) bad.push("intake.md publishes " + domain + " " + published[domain] + "; profiles.json has " + weight);
+}
+for (const domain of Object.keys(published)) if (weights[domain] === undefined) bad.push("intake.md lists unknown domain " + domain);
+const sum = Object.values(published).reduce((total, weight) => total + weight, 0);
+if (sum !== 100) bad.push("published weights sum to " + sum + ", expected 100");
+if (bad.length) console.log(bad.join("\n"));
+' "$REPO_DIR") || { fail "profile table scan did not run"; return; }
+  if [ -n "$out" ]; then
+    fail "the published balanced profile disagrees with catalog/profiles.json:"
+    printf '%s\n' "$out" >&2
+  else
+    note "the published balanced profile matches the catalog"
+    pass
+  fi
+}
+
 check_mirror_boundary() {
   CHECK=mirror-boundary
   # Each domain module declares one machine-parseable Mirror boundary line that
@@ -412,6 +451,7 @@ case "$TARGET" in
     check_symlinks_valid
     check_catalog_fresh
     check_catalog_claims
+    check_profile_table
     check_mirror_boundary
     check_zero_dependency
     check_schemas_valid
@@ -433,6 +473,7 @@ case "$TARGET" in
   symlinks-valid) check_symlinks_valid ;;
   catalog-fresh) check_catalog_fresh ;;
   catalog-claims) check_catalog_claims ;;
+  profile-table) check_profile_table ;;
   mirror-boundary) check_mirror_boundary ;;
   zero-dependency) check_zero_dependency ;;
   schemas-valid) check_schemas_valid ;;

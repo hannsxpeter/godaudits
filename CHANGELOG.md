@@ -3,6 +3,66 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.16.0] - 2026-08-04
+
+Two gates that could not fire, and the drift each one let through.
+
+The detector gate validated its fixtures without a catalog, so the two rules
+that need catalog weights never ran over them and four fixtures drifted into
+naming a routing check with no weighted owner. 2.15.1 fixed the fixtures by
+hand and recorded the gap; this release closes the gap itself.
+
+The balanced-profile table in `references/intake.md` published the legacy
+pre-profile weights from `audit.js`, which sum to 110, while
+`catalog/profiles.json` scored with weights summing to 100. Ten of eighteen
+domains disagreed. Nothing caught it because both files were internally
+consistent, and the module states that a reader can reproduce the overall score
+from the recorded profile and weights, which a reader following that table
+could not.
+
+No check text, check count, dimension, or scoring behavior changes. An audit
+re-run under 2.16.0 scores exactly what it scored under 2.15.1.
+
+### Added
+
+- `validateAudit(audit, { catalog, fragment: true })` scopes the catalog-aware
+  rules to a deliberately partial audit: a seeded corpus fixture, a
+  single-domain excerpt, a hand-built test case. Fragment scope drops what a
+  fragment cannot satisfy by construction (pinned versions, an applicability row
+  per domain, a complete per-domain ledger, and the domain and per-check
+  weights, since a weight normalizes across an audit the fragment does not
+  contain) and keeps the conformance rules that still catch a real defect in
+  one: an unknown check id, routing-check ownership, and a finding with no
+  weighted owner in its domain. A full audit passes no flag and is held to
+  everything.
+- `scripts/lint.sh profile-table` compares the balanced-profile table published
+  in `references/intake.md` against `catalog/profiles.json` and fails when they
+  disagree or when the published weights do not sum to 100.
+- Three regression tests covering fragment scope: that it drops the whole-audit
+  rules, that it keeps routing ownership in both directions, and that it still
+  rejects a check id the catalog no longer defines.
+
+### Fixed
+
+- `scripts/detector-gate.js` validates every corpus case catalog-aware and
+  fragment-scoped. Removing a seed's `ownerCheck` now turns the gate red with
+  the exact rule text instead of passing silently.
+- The balanced-profile table in `references/intake.md` matches
+  `catalog/profiles.json`. It previously published security 15, code-quality 10,
+  build 10, database 8, architecture 8, product 7, ux 7, llm 6, deploy 6,
+  observe 5, and repo 5 against actual weights of 15, 9, 9, 7, 7, 6, 6, 5, 5, 4,
+  and 4.
+
+### Changed
+
+- `DOMAIN_WEIGHTS` in `lib/audit.js` carries a comment recording that it is the
+  legacy pre-profile fallback for audits validated without a catalog, that it
+  does not sum to 100, and that it is not the balanced profile. Copying it into
+  documentation is what produced the table above.
+- `docs/ENGINE.md` and `docs/EVALUATION.md` document fragment scope and correct
+  the note, added one release earlier, that said the gate runs without a
+  catalog.
+
 ## [2.15.1] - 2026-08-04
 
 2.14.0 and 2.15.0 shipped six checks with no regression coverage. No benchmark

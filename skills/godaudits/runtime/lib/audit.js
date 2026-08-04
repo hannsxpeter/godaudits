@@ -2,6 +2,10 @@
 
 const { redactSecrets } = require('./evidence');
 
+// Legacy pre-profile domain weights, kept only as the fallback for an audit
+// validated without a catalog. This is NOT the balanced profile and does not
+// sum to 100: the authoritative profiles live in catalog/profiles.json and are
+// validated mechanically. Do not copy this table into documentation.
 const DOMAIN_WEIGHTS = {
   security: 15,
   'code-quality': 10,
@@ -213,7 +217,7 @@ function validateAudit(audit, options = {}) {
     domainIds.add(domain.id);
     if (!ALLOWED.domainStatus.has(domain.status)) errors.push(`${domain.id} has invalid status`);
     if (domain.status === 'excluded' && !domain.reason) errors.push(`${domain.id} exclusion requires a reason`);
-    if (domain.weight !== profileWeights[domain.id]) errors.push(`${domain.id} weight must be ${profileWeights[domain.id]} for ${metadata.risk_profile}`);
+    if (options.fragment !== true && domain.weight !== profileWeights[domain.id]) errors.push(`${domain.id} weight must be ${profileWeights[domain.id]} for ${metadata.risk_profile}`);
     if (!Array.isArray(domain.checks)) errors.push(`${domain.id}.checks must be an array`);
     if (domain.status === 'excluded' && domain.checks.length) errors.push(`${domain.id} is excluded but has checks`);
     let weight = 0;
@@ -547,10 +551,23 @@ function validateAudit(audit, options = {}) {
   if (audit.accepted_risks.length + audit.open_questions.length > 9) errors.push('active risks and open questions must total fewer than 10');
   if (options.catalog) {
     const catalog = options.catalog;
-    if (metadata.pack_version !== catalog.pack_version) errors.push(`audit.pack_version must match catalog ${catalog.pack_version}`);
-    if (metadata.engine_version !== catalog.pack_version) errors.push(`audit.engine_version must match runtime ${catalog.pack_version}`);
-    const expectedDomains = new Set(catalog.domains.map((domain) => domain.id));
-    for (const id of expectedDomains) if (!domainIds.has(id)) errors.push(`missing applicability row for ${id}`);
+    // A fragment is a deliberately partial audit: a seeded corpus fixture, a
+    // single-domain excerpt, a hand-built test case. It cannot satisfy the
+    // whole-audit rules (pinned versions, an applicability row per domain, a
+    // complete per-domain ledger) or the weight rules, because a weight is a
+    // normalization across an audit the fragment does not contain. Skipping
+    // those is the only way the conformance rules below can run over a
+    // fragment at all, and those are the ones that catch a real defect in one:
+    // a check id the catalog no longer has, and a routing check whose finding
+    // names no weighted owner. Full audits pass no fragment flag and are held
+    // to everything.
+    const fragment = options.fragment === true;
+    if (!fragment) {
+      if (metadata.pack_version !== catalog.pack_version) errors.push(`audit.pack_version must match catalog ${catalog.pack_version}`);
+      if (metadata.engine_version !== catalog.pack_version) errors.push(`audit.engine_version must match runtime ${catalog.pack_version}`);
+      const expectedDomains = new Set(catalog.domains.map((domain) => domain.id));
+      for (const id of expectedDomains) if (!domainIds.has(id)) errors.push(`missing applicability row for ${id}`);
+    }
     for (const domain of audit.domains.filter((item) => item.status === 'applicable')) {
       // The ledger stays complete at every budget. Medium selects screening
       // checks for judgment and leaves deep-trace checks unknown, so coverage
@@ -558,7 +575,7 @@ function validateAudit(audit, options = {}) {
       // the pre-budget full-catalog behavior.
       const expected = new Set(catalog.checks.filter((check) => check.domain === domain.id).map((check) => check.id));
       const actual = new Set(domain.checks.map((check) => check.id));
-      for (const id of expected) if (!actual.has(id)) errors.push(`${domain.id} ledger is missing ${id}`);
+      if (!fragment) for (const id of expected) if (!actual.has(id)) errors.push(`${domain.id} ledger is missing ${id}`);
       for (const id of actual) if (!expected.has(id)) errors.push(`${domain.id} ledger contains unknown check ${id}`);
       if (metadata.budget === 'medium') {
         for (const check of domain.checks) {
@@ -570,7 +587,7 @@ function validateAudit(audit, options = {}) {
       }
       for (const check of domain.checks) {
         const definition = catalog.checks.find((item) => item.id === check.id);
-        if (definition && Math.abs(check.weight - definition.default_weight) > 0.0001) {
+        if (!fragment && definition && Math.abs(check.weight - definition.default_weight) > 0.0001) {
           errors.push(`${check.id} weight must match catalog ${definition.default_weight}`);
         }
         if (definition && definition.scoring_role === 'routing' && check.outcome === 'fail') {

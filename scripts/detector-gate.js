@@ -21,7 +21,8 @@ const root = path.resolve(__dirname, '..');
 const corpusPath = path.join(root, 'benchmarks/detectors.json');
 const corpus = JSON.parse(fs.readFileSync(corpusPath, 'utf8'));
 
-const catalogChecks = new Set(buildCatalog(root).checks.map((check) => check.id));
+const catalog = buildCatalog(root);
+const catalogChecks = new Set(catalog.checks.map((check) => check.id));
 const cases = corpus.cases.map((item) => ({
   name: item.name,
   provenance: item.provenance,
@@ -42,7 +43,15 @@ for (const item of cases) {
   // hold it to the same invariants a real audit must satisfy. Otherwise the
   // fixtures backing the gate are exempt from the evidence rules the tool
   // enforces everywhere else.
-  for (const error of validateAudit(item.audit)) invalid.push(`${item.name}: ${error}`);
+  //
+  // Catalog-aware and fragment-scoped. Without the catalog the two rules that
+  // need catalog weights never ran here, and four fixtures drifted into naming
+  // a routing check with no weighted owner, which is exactly the shape this
+  // gate exists to catch. Fragment scope drops the whole-audit rules a
+  // single-domain fixture cannot satisfy (pinned versions, an applicability
+  // row per domain, a complete ledger, weights) and keeps the conformance
+  // rules that expose a real defect in one.
+  for (const error of validateAudit(item.audit, { catalog, fragment: true })) invalid.push(`${item.name}: ${error}`);
 }
 
 const report = aggregateCorpus(cases);
