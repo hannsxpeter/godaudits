@@ -191,7 +191,11 @@ function recordedAuditFor(run, truth, attribution) {
 }
 
 // Each seed: one domain, one failing check (the seeded defect), one clean check
-// in the same domain, and the source path the defect lives at.
+// in the same domain, and the source path the defect lives at. A seed whose
+// failing check is a routing check also names ownerCheck, the weighted check in
+// the same domain whose dimension the defect scores into, chosen per seed from
+// the control it implicates rather than from a fixed table, because that is how
+// each module's Scoring section routes them.
 const SEEDS = [
   {
     name: 'tenant-predicate-omitted',
@@ -214,6 +218,7 @@ const SEEDS = [
     domain: 'security',
     weight: 15,
     failCheck: 'A-SEC-30',
+    ownerCheck: 'A-SEC-3',
     passCheck: 'A-SEC-4',
     severity: 'High',
     path: 'src/profile.js',
@@ -230,6 +235,7 @@ const SEEDS = [
     domain: 'code-quality',
     weight: 10,
     failCheck: 'A-CODE-25',
+    ownerCheck: 'A-CODE-5',
     passCheck: 'A-CODE-1',
     severity: 'High',
     path: 'src/export.js',
@@ -246,6 +252,7 @@ const SEEDS = [
     domain: 'code-quality',
     weight: 10,
     failCheck: 'A-CODE-26',
+    ownerCheck: 'A-CODE-3',
     passCheck: 'A-CODE-1',
     severity: 'Medium',
     path: 'src/schedule.js',
@@ -262,6 +269,7 @@ const SEEDS = [
     domain: 'database',
     weight: 8,
     failCheck: 'A-DB-24',
+    ownerCheck: 'A-DB-15',
     passCheck: 'A-DB-1',
     severity: 'Critical',
     path: 'src/billing.js',
