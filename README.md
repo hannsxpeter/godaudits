@@ -1,7 +1,7 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.15.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.15.1-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -10,9 +10,11 @@ system that combines a 437-check Agent Skill with a zero-dependency runtime. It
 produces validated machine state, computed scores and coverage, a standalone
 remediation report, and optional SARIF annotations.
 
-Version 2.13 adds wayfinding: the remediation plan is read back as a route with
-a destination, a live frontier, task claims for concurrent sessions, and an
-explicit split between what is unresolved and what was ruled out of scope. The model still performs
+Version 2.15 closes the system-design half of the architecture domain: caching
+contracts, backpressure, recovery objectives, scale-out readiness, read
+consistency, and the redundancy behind an availability claim, each conditional
+on the surface it grades and each carrying a seeded fixture that keeps it
+honest. The model still performs
 the work that requires judgment: tracing code paths, testing competing
 explanations, clustering root causes, calibrating impact, and prescribing a
 specific fix. The runtime performs work that should never depend on model mood:
@@ -228,6 +230,17 @@ secret redaction:
 ```bash
 npm run benchmark
 npm run eval:suites
+```
+
+A separate seeded-defect corpus answers a different question: after a catalog
+change, do the defects deliberately seeded for a check still get detected? Each
+case pairs a small repository carrying one defect with the audit that finds it,
+and the gate turns red when a seeded check leaves the catalog or stops being
+detected. Authored cases earn regression coverage and nothing else; only a
+recorded real audit run may contribute to a detection rate.
+
+```bash
+npm run test:detectors
 ```
 
 When an expected-finding manifest exists, evaluate an actual audit:

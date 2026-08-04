@@ -3,6 +3,62 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.15.1] - 2026-08-04
+
+2.14.0 and 2.15.0 shipped six checks with no regression coverage. No benchmark
+fixture held a cache, a queue, or a replica count; the detector corpus covered
+eight checks and none in architecture; and nothing under `benchmarks/`,
+`evals/`, or `test/` referenced A-ARCH-24 through A-ARCH-29. A rename or a
+deletion would have stopped detecting them silently. This release closes that
+and the rule gap that allowed it.
+
+No check text, weight, dimension, or scoring behavior changes. An audit re-run
+under 2.15.1 scores exactly what it scored under 2.15.0.
+
+This is a patch release inside the 30-day window in `docs/RELEASE-POLICY.md`
+and matches none of its three exceptions. It is cut because `benchmarks/` ships
+in the published package, so the corpus a consumer receives is part of the
+artifact rather than repository-local scaffolding.
+
+### Added
+
+- Six seeded fixtures, one per system-design check, each a small repository
+  whose architecture record carries numeric targets and whose code contradicts
+  exactly one of them: a price write that never invalidates the cached key
+  (A-ARCH-24), a consumer that inherits its concurrency from the broker
+  (A-ARCH-25), a published 5 minute RPO behind a once-per-day backup plan
+  (A-ARCH-26), session and rate-limit state in module scope behind six replicas
+  (A-ARCH-27), a rename confirmation read back from the async replica
+  (A-ARCH-28), and a 99.95 percent target served by one replica (A-ARCH-29).
+  The corpus goes from 11 cases to 17.
+- `SEEDS` accepts an optional `ownerCheck`. A routing check carries no weight of
+  its own, so a seed whose failing check is one now names the weighted check in
+  the same domain whose dimension the defect scores into, and the generated
+  ledger carries both. That is what a real audit must do to satisfy the
+  routing-ownership rule in `lib/audit.js`.
+- `CONTRIBUTING.md` ground rule 6: a new check ships with a seeded fixture, and
+  a routing check's seed also names its owner. The rule exists because six
+  checks reached two releases without one.
+- `docs/EVALUATION.md` documents the authored half of the corpus: what it
+  covers, the one-clause-per-fixture rule, the no-collateral rule, the routing
+  owner convention, and the fact that the gate runs without a catalog so the
+  two catalog-aware rules are checked by hand when a seed is added.
+- README describes the seeded-defect corpus and `npm run test:detectors`
+  alongside the existing fixture corpus and evaluations.
+
+### Fixed
+
+- Four pre-existing authored fixtures seeded a routing check and named no
+  weighted owner, so each failed catalog-aware validation on both the
+  routing-ownership rule and the weighted-owner rule. The gate never caught it
+  because `detector-gate.js` calls `validateAudit` without a catalog and the
+  corpus builder calls `compileAudit` the same way, so the fixtures backing the
+  gate were exempt from a rule enforced on every real audit. A-SEC-30 now routes
+  to A-SEC-3, A-CODE-25 to A-CODE-5, A-CODE-26 to A-CODE-3, and A-DB-24 to
+  A-DB-15, each chosen from the control the seeded defect implicates rather than
+  from a fixed table.
+- The README lead described 2.13 as the current release.
+
 ## [2.15.0] - 2026-08-03
 
 Closes the mirror against godplans 1.12.0. That release added R-ARCH-21
