@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <style>
+    /* goddesign | structure: Letter | direction: Industrial inspection ledger | accent: cool blue */
+    .background { fill: #0b0f14; }
+    .surface { fill: #111821; }
+    .rule-fill { fill: #26313d; }
+    .accent-fill { fill: #2f6fed; }
+    .frame { fill: none; stroke: #26313d; stroke-width: 1; }
+    .ledger-line { stroke: #26313d; stroke-width: 1; shape-rendering: crispEdges; }
+    .wordmark, .tagline { fill: #f2f5f8; }
+    .wordmark {
+      font-family: "Avenir Next", sans-serif;
+      font-size: 108px;
+      font-weight: 700;
+      letter-spacing: -5px;
+    }
+    .tagline {
+      font-family: "Avenir Next", sans-serif;
+      font-size: 33px;
+      font-weight: 500;
+      letter-spacing: -0.7px;
+    }
+    .support {
+      fill: #9aa8b6;
+      font-family: Menlo, monospace;
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: -0.25px;
+    }
+  </style>
+  <rect class="background" width="1280" height="640"/>
+  <rect class="surface" x="28" y="28" width="1224" height="584"/>
+  <rect class="frame" x="28.5" y="28.5" width="1223" height="583"/>
+  <rect class="frame" x="44.5" y="44.5" width="1191" height="551"/>
+  <rect class="accent-fill" x="60" y="64" width="4" height="512"/>
+  <rect class="rule-fill" x="80" y="64" width="1" height="512"/>
+
+  <text class="wordmark" x="94" y="247">godaudits</text>
+  <text class="tagline" x="97" y="314">Audit everything after anything.</text>
+
+  <line class="ledger-line" x1="96" y1="468.5" x2="760" y2="468.5"/>
+  <rect class="accent-fill" x="96" y="466" width="54" height="5"/>
+  <rect class="rule-fill" x="738" y="458" width="22" height="22"/>
+  <rect class="accent-fill" x="745" y="465" width="8" height="8"/>
+  <text class="support" x="97" y="528">18 domains. 437 checks. Evidence at every line.</text>
+
+  <g>
+    <rect class="background" x="856" y="64" width="344" height="512"/>
+    <rect class="frame" x="856.5" y="64.5" width="343" height="511"/>
+    <line class="ledger-line" x1="1027.5" y1="64" x2="1027.5" y2="576"/>
+    <line class="ledger-line" x1="1083.5" y1="64" x2="1083.5" y2="576"/>
+    <line class="ledger-line" x1="1139.5" y1="64" x2="1139.5" y2="576"/>
+    <line class="ledger-line" x1="856" y1="92.5" x2="1200" y2="92.5"/>
+    <line class="ledger-line" x1="856" y1="120.5" x2="1200" y2="120.5"/>
+    <line class="ledger-line" x1="856" y1="148.5" x2="1200" y2="148.5"/>
+    <line class="ledger-line" x1="856" y1="176.5" x2="1200" y2="176.5"/>
+    <line class="ledger-line" x1="856" y1="204.5" x2="1200" y2="204.5"/>
+    <line class="ledger-line" x1="856" y1="232.5" x2="1200" y2="232.5"/>
+    <line class="ledger-line" x1="856" y1="260.5" x2="1200" y2="260.5"/>
+    <line class="ledger-line" x1="856" y1="288.5" x2="1200" y2="288.5"/>
+    <line class="ledger-line" x1="856" y1="316.5" x2="1200" y2="316.5"/>
+    <line class="ledger-line" x1="856" y1="344.5" x2="1200" y2="344.5"/>
+    <line class="ledger-line" x1="856" y1="372.5" x2="1200" y2="372.5"/>
+    <line class="ledger-line" x1="856" y1="400.5" x2="1200" y2="400.5"/>
+    <line class="ledger-line" x1="856" y1="428.5" x2="1200" y2="428.5"/>
+    <line class="ledger-line" x1="856" y1="456.5" x2="1200" y2="456.5"/>
+    <line class="ledger-line" x1="856" y1="484.5" x2="1200" y2="484.5"/>
+    <line class="ledger-line" x1="856" y1="512.5" x2="1200" y2="512.5"/>
+    <line class="ledger-line" x1="856" y1="540.5" x2="1200" y2="540.5"/>
+    <rect class="rule-fill" x="876" y="76" width="104" height="4"/>
+    <rect class="rule-fill" x="876" y="104" width="127" height="4"/>
+    <rect class="rule-fill" x="876" y="132" width="82" height="4"/>
+    <rect class="rule-fill" x="876" y="160" width="116" height="4"/>
+    <rect class="rule-fill" x="876" y="188" width="92" height="4"/>
+    <rect class="rule-fill" x="876" y="216" width="136" height="4"/>
+    <rect class="rule-fill" x="876" y="244" width="108" height="4"/>
+    <rect class="rule-fill" x="876" y="272" width="72" height="4"/>
+    <rect class="rule-fill" x="876" y="300" width="122" height="4"/>
+    <rect class="rule-fill" x="876" y="328" width="96" height="4"/>
+    <rect class="rule-fill" x="876" y="356" width="132" height="4"/>
+    <rect class="rule-fill" x="876" y="384" width="87" height="4"/>
+    <rect class="rule-fill" x="876" y="412" width="112" height="4"/>
+    <rect class="rule-fill" x="876" y="440" width="78" height="4"/>
+    <rect class="rule-fill" x="876" y="468" width="128" height="4"/>
+    <rect class="rule-fill" x="876" y="496" width="99" height="4"/>
+    <rect class="rule-fill" x="876" y="524" width="118" height="4"/>
+    <rect class="rule-fill" x="876" y="552" width="90" height="4"/>
+    <rect class="rule-fill" x="1047" y="74" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="102" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="130" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="158" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="186" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="214" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="242" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="270" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="298" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="326" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="354" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="382" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="410" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="438" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="466" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="494" width="17" height="8"/>
+    <rect class="rule-fill" x="1047" y="522" width="17" height="8"/>
+    <rect class="rule-fill" x="1103" y="550" width="17" height="8"/>
+    <rect class="accent-fill" x="1161" y="72" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="100" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="128" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="156" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="184" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="212" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="240" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="268" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="296" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="324" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="352" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="380" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="408" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="436" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="464" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="492" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="520" width="18" height="12"/>
+    <rect class="accent-fill" x="1161" y="548" width="18" height="12"/>
+  </g>
+</svg>

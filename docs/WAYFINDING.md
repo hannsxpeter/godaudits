@@ -1,5 +1,29 @@
 # Wayfinding: the remediation plan as a map
 
+## In plain terms
+
+An audit hands you a repair plan with a lot of tasks in it. A numbered list of
+those tasks tells you what the audit decided. It does not tell you what you can
+pick up right now, what is waiting on something else, what somebody else has
+already started, or what the audit deliberately did not look at.
+
+`wayfind` reads the same plan as a map instead of a list. It answers four
+questions:
+
+- **Where am I going?** The destination, and how you will know you arrived.
+- **What can I start right now?** Tasks with nothing left blocking them and
+  nobody else working on them.
+- **What is in the fog?** Things inside the scope that this audit could not
+  resolve, which lower confidence in the grade.
+- **What was ruled out?** Things deliberately placed outside the scope, which
+  do not lower confidence in anything.
+
+Those last two look similar and mean opposite things, which is why they are
+never merged into one "not covered" list. The rest of this document is the
+mechanics.
+
+## Why a list was the wrong shape
+
 An audit ends with a task graph. Until version 2.13 godaudits rendered that
 graph as a list: phases, waves, and a checkbox per task. A list is the right
 shape for authoring a plan and the wrong shape for working one. It answers

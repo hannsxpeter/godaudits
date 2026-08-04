@@ -1,5 +1,27 @@
 # Auditor threat model
 
+## The short version
+
+Running an audit means pointing an AI agent at a codebase and letting it read
+everything. If that codebase is hostile, or simply contains a file somebody
+wrote to manipulate an agent, the audit itself becomes an attack surface. Three
+things could go wrong:
+
+- The repository could talk the auditor into doing something, such as running a
+  command, leaking a secret, or marking a broken check as passed.
+- A real credential found during the audit could end up written into the
+  report.
+- An audit that was true last month could be presented as if it were still true
+  today.
+
+This document is the list of those risks and what stops each one. The short
+answers: text inside a repository is treated as evidence about the project and
+never as instructions to the auditor, secrets are masked before they can enter
+an artifact, and evidence is bound to a repository fingerprint and commit so it
+expires when the code moves.
+
+## Full model
+
 The auditor reads untrusted repositories. Source files, documentation, test
 fixtures, prompts, generated files, and instruction files may be malicious,
 misleading, or designed to manipulate an agent.
