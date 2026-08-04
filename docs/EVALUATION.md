@@ -1,7 +1,27 @@
 # Evaluation methodology
 
-Auditor quality is not established by a well-formed report. It is measured
-against known defects and known clean controls.
+A well-formed report proves nothing. Any capable model can produce a document
+that looks like a rigorous audit. Quality is only established by pointing the
+auditor at code whose defects are already known, and at code that is known to
+be clean, and counting what comes back.
+
+This document describes how that is done here. Four separate harnesses answer
+four different questions, and it matters which one a given number came from:
+
+| Harness | Question it answers | Command |
+|---|---|---|
+| Deterministic corpus | Does the runtime read repositories correctly? | `npm run benchmark` |
+| Authored seeded corpus | After a catalog change, are the planted defects still detected? | `npm run test:detectors` |
+| Product evaluations | Do routing, forms, standards, and freshness contracts still hold? | `npm run eval:suites` |
+| Accuracy program | Does a real model, on real code, actually find real defects? | `npm run accuracy:check` |
+
+Only the last of those measures audit quality. The first three measure the
+machinery around it. Conflating them is the most common way a tool in this
+category overstates itself, so the rules below keep them apart by construction:
+authored cases cannot contribute to a detection rate, and a run without
+attribution cannot contribute at all.
+
+The published results are in [`../ACCURACY.md`](../ACCURACY.md).
 
 ## Metric evaluator
 

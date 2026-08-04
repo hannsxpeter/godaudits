@@ -4,9 +4,32 @@ Accuracy evidence version: 1.1.0
 
 Published: 2026-07-23
 
-This file reports only retained model-run evidence. Deterministic runtime tests,
-authored detector fixtures, catalog size, and a polished audit report are not
-model-accuracy evidence.
+## What this file is
+
+Most tools tell you what they can find. This one tells you what it has been
+measured finding, and what it demonstrably missed.
+
+Here is the honest state of the evidence, up front:
+
+- **Installing the skill has not yet been shown to make a model better at
+  auditing.** The one complete controlled experiment measured zero improvement,
+  on deliberately small test cases that both arms solved perfectly. It cost
+  roughly twice the tokens and time.
+- **The one audit of a real open-source project with a known vulnerability
+  recorded a miss.** It spotted the general weakness and did not name the
+  specific exploit path in the advisory. A near hit was not upgraded to a hit
+  after the fact.
+- **Seventeen of eighteen areas have no completed measurement at all.** Their
+  targets are written down, and nothing is claimed for them.
+
+None of that is comfortable to publish, which is the point. A benchmark that
+retains only its wins is advertising. The rest of this file is the full record
+behind those three statements.
+
+Note also what does not count as accuracy evidence here: the deterministic
+runtime tests passing, the authored detector fixtures passing, the size of the
+check catalog, and a good-looking audit report. Those measure the machinery,
+not the judgment. This file reports only retained model-run evidence.
 
 ## Paired installed-skill experiment
 
