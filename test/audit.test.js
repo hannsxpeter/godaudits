@@ -358,3 +358,43 @@ test('compiler rejects stale hand-authored computed state unless rewrite is expl
   assert.deepEqual(rewritten.errors, []);
   assert.equal(rewritten.audit.computed.overall.score, 40);
 });
+
+// A seeded corpus fixture is a single-domain fragment. Before fragment scope
+// existed the only way to validate one was to withhold the catalog, which
+// silently withheld the two rules that need catalog weights, and four fixtures
+// drifted into naming a routing check with no weighted owner.
+test('fragment scope drops the whole-audit rules a single-domain excerpt cannot satisfy', () => {
+  const audit = validAudit();
+  audit.domains = audit.domains.filter((domain) => domain.id === 'security');
+  const full = validateAudit(audit, { catalog });
+  const fragment = validateAudit(audit, { catalog, fragment: true });
+  assert.ok(full.some((error) => /missing applicability row/.test(error)), 'a full audit still owes every applicability row');
+  assert.ok(full.some((error) => /ledger is missing/.test(error)), 'a full audit still owes a complete ledger');
+  assert.ok(!fragment.some((error) => /missing applicability row|ledger is missing|weight must (be|match)/.test(error)));
+});
+
+test('fragment scope keeps the routing-ownership rule, which is why the gate passes a catalog', () => {
+  const audit = validAudit();
+  audit.domains = audit.domains.filter((domain) => domain.id === 'security');
+  const routing = catalog.checks.find((check) => check.domain === 'security' && check.scoring_role === 'routing');
+  const owner = catalog.checks.find((check) => check.domain === 'security' && check.default_weight > 0);
+  const domain = audit.domains[0];
+  domain.checks = [{ id: routing.id, outcome: 'fail', confidence: 'Firm', weight: 100, evidence: ['E-1'], finding_ids: ['F-SEC-1'] }];
+  audit.findings = [{ ...audit.findings[0], id: 'F-SEC-1', domain: 'security', checks: [routing.id], evidence: ['E-1'], status: 'open', remediation: [audit.tasks[0].id] }];
+  audit.tasks[0].fixes = ['F-SEC-1'];
+  const unrouted = validateAudit(audit, { catalog, fragment: true });
+  assert.ok(unrouted.some((error) => error === `${routing.id} is a routing check and must map its finding to a weighted owning check`));
+  assert.ok(unrouted.some((error) => error === `F-SEC-1 must include a weighted owning check from security`));
+
+  audit.findings[0].checks = [routing.id, owner.id];
+  const routed = validateAudit(audit, { catalog, fragment: true });
+  assert.ok(!routed.some((error) => /routing check and must map|weighted owning check/.test(error)));
+});
+
+test('fragment scope still rejects a check id the catalog no longer defines', () => {
+  const audit = validAudit();
+  audit.domains = audit.domains.filter((domain) => domain.id === 'security');
+  audit.domains[0].checks[0].id = 'A-SEC-9999';
+  const errors = validateAudit(audit, { catalog, fragment: true });
+  assert.ok(errors.some((error) => /ledger contains unknown check A-SEC-9999/.test(error)));
+});

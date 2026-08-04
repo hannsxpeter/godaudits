@@ -55,6 +55,16 @@ cross-record rules that JSON Schema cannot express conveniently:
 - Evidence fingerprint and commit freshness when the release gate is enabled.
 - Derived score, coverage, cap, and counter state.
 
+`validateAudit(audit, { catalog, fragment: true })` scopes the catalog-aware
+rules to a deliberately partial audit: a seeded corpus fixture, a single-domain
+excerpt, a hand-built test case. Fragment scope drops what a fragment cannot
+satisfy by construction (pinned versions, an applicability row per domain, a
+complete per-domain ledger, and the domain and per-check weights, since a weight
+normalizes across an audit the fragment does not contain) and keeps the
+conformance rules that still catch a real defect in one: an unknown check id,
+routing-check ownership, and a finding with no weighted owner in its domain. A
+full audit passes no flag and is held to everything.
+
 ## Catalog compilation
 
 Domain modules remain the authored source. `npm run catalog` parses every check
