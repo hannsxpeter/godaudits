@@ -44,6 +44,42 @@ remediation closure, and 95 percent clean-control rate.
 Run it with `npm run benchmark`. This corpus tests the runtime, not model
 judgment. It must stay fast, offline, deterministic, and safe for CI.
 
+## Authored seeded corpus
+
+The other half of `benchmarks/detectors.json` is the authored cases, built from
+`SEEDS` in `benchmarks/build-detector-corpus.js`. Each pairs a small repository
+under `benchmarks/fixtures/seeded/` carrying one deliberate defect with the
+`AUDIT.json` that finds it. They exist for exactly one purpose: after a catalog
+change, do the seeded defects still get detected? A maintainer wrote both the
+defect and the audit, so they detect their own seeds by construction, and
+`calibrate.js` refuses to let them contribute to a detection rate.
+
+The authored cases currently cover A-SEC-3, A-SEC-30, A-CODE-25, A-CODE-26,
+A-DB-24, and A-ARCH-24 through A-ARCH-29.
+
+Three conventions make a seed worth having:
+
+- One clause per fixture. A fixture satisfies exactly one Fail clause of its
+  target check and closes the others, so a detection is attributable to the
+  signal the seed is named for rather than a neighbouring one.
+- No collateral. A fixture is a clean control for every check except its target.
+  A stray second defect in another domain reads as a false alarm, so a seed
+  closes the neighbouring checks its shape would otherwise trip: no runtime
+  dependency without a lockfile, bounded collections, explicit timeouts and
+  dedup, structured logging with stated retention, and an architecture record
+  that names only what the fixture ships.
+- Routing seeds name their owner. A routing check carries no weight of its own,
+  so a seed whose failing check is one sets `ownerCheck` to the weighted check
+  in the same domain whose dimension the defect scores into. The generated
+  ledger then carries both, which is what a real audit must do to satisfy the
+  routing-ownership rule in `lib/audit.js`. The owner is chosen from the control
+  the defect implicates, the way each module's Scoring section routes them, not
+  from a fixed per-check table.
+
+The gate itself calls `validateAudit` without a catalog, so the two rules that
+need catalog weights, routing ownership and weighted-owner presence, do not run
+inside it. Seeds are checked against those rules by hand when added.
+
 ## Recorded detection rate and its limits
 
 The detector gate (`npm run test:detectors`) may compute a detection rate, but

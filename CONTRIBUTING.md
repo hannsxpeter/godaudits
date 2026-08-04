@@ -16,11 +16,18 @@ deterministic runtime. Contributions must protect both halves of that contract.
    Checks, Scoring, Remediation seeds, and Anti-patterns hunted.
 5. Every check must be evidence-locatable. An unobservable opinion is not a
    check.
-6. Runtime behavior stays zero-dependency, deterministic, secret-safe, and
+6. A new check ships with a seeded fixture. Add a `SEEDS` entry in
+   `benchmarks/build-detector-corpus.js` and a small repository under
+   `benchmarks/fixtures/seeded/` that carries the defect, so a later rename or
+   deletion fails the detector gate instead of silently ceasing to detect. When
+   the new check is a routing check, its seed also names `ownerCheck`: the
+   weighted check in the same domain whose dimension the defect scores into,
+   chosen from the control the defect implicates.
+7. Runtime behavior stays zero-dependency, deterministic, secret-safe, and
    portable inside the skill directory.
-7. A scanner result is evidence, not automatically a finding. Human or agent
+8. A scanner result is evidence, not automatically a finding. Human or agent
    judgment must trace reachability, ownership, and counterevidence.
-8. The substitution test applies to contributions. Generic advice that fits
+9. The substitution test applies to contributions. Generic advice that fits
    any repository does not belong in the product.
 
 ## Making a change
