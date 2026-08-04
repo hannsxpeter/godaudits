@@ -34,6 +34,19 @@
           "id": "A-DB-24",
           "outcome": "fail",
           "confidence": "Certain",
+          "weight": 0,
+          "evidence": [
+            "E-1",
+            "E-2"
+          ],
+          "finding_ids": [
+            "F-DB-1"
+          ]
+        },
+        {
+          "id": "A-DB-15",
+          "outcome": "fail",
+          "confidence": "Certain",
           "weight": 60,
           "evidence": [
             "E-1",
@@ -93,7 +106,8 @@
       "fix": "Confirm provider status before marking the invoice final.",
       "verify": "node --test test/seeded.test.js",
       "checks": [
-        "A-DB-24"
+        "A-DB-24",
+        "A-DB-15"
       ],
       "status": "open",
       "remediation": [
@@ -123,7 +137,8 @@
       ],
       "verify": "node --test test/seeded.test.js",
       "checks": [
-        "A-DB-24"
+        "A-DB-24",
+        "A-DB-15"
       ],
       "status": "open"
     },
@@ -158,10 +173,10 @@
   ],
   "computed": {
     "coverage": {
-      "applicable": 2,
-      "evaluated": 2,
+      "applicable": 3,
+      "evaluated": 3,
       "passed": 1,
-      "failed": 1,
+      "failed": 2,
       "unknown": 0,
       "not_applicable": 0,
       "percent": 100
