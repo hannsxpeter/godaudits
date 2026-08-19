@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "review": {
+    "base": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "head": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "diff_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "date": "2026-08-19",
+  "authorization": {
+    "capability": "sandbox",
+    "authorized_by": "repository owner",
+    "environment": "disposable local fixture",
+    "isolation": "outbound network disabled and no production credentials"
+  },
+  "safety_facts": [
+    {
+      "fact": "SF-1",
+      "outcome": "proven",
+      "proof": {
+        "level": 4,
+        "kind": "executable",
+        "tool": "node:test",
+        "tool_version": "22.0.0",
+        "command": "node --test test/cache-contract.test.js",
+        "result": "passed",
+        "environment": "disposable local fixture",
+        "isolation": "outbound network disabled and no production credentials"
+      }
+    }
+  ],
+  "before_merge": {
+    "outcome": "passed",
+    "proof": {
+      "level": 4,
+      "kind": "executable",
+      "tool": "node:test",
+      "tool_version": "22.0.0",
+      "command": "node --test test/cache-contract.test.js",
+      "result": "passed",
+      "environment": "disposable local fixture",
+      "isolation": "outbound network disabled and no production credentials"
+    }
+  }
+}

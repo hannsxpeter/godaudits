@@ -16,7 +16,6 @@ const { BEHAVIORAL_CHECKS } = require('./catalog');
 const CONFIDENCE_UP = { Tentative: 'Firm', Firm: 'Certain', Certain: 'Certain' };
 
 function isBehavioral(finding) {
-  if (finding.runtime_probe) return true;
   return (finding.checks || []).some((id) => BEHAVIORAL_CHECKS.has(id));
 }
 
@@ -35,7 +34,7 @@ function planProbes(audit) {
       severity: finding.severity,
       confidence: finding.confidence,
       checks: finding.checks || [],
-      probe: finding.runtime_probe || {
+      probe: {
         steps: finding.verify || null,
         expected_defect: finding.impact || null,
         fix_if_confirmed: finding.fix || null

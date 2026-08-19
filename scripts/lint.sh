@@ -139,7 +139,7 @@ check_modules_complete() {
   for f in "$SKILL_DIR"/references/*.md; do
     base=$(basename "$f")
     case "$base" in
-      audit-format.md|intake.md|compliance.md|exemplar.md) continue ;;
+      audit-format.md|change-safety.md|intake.md|compliance.md|exemplar.md) continue ;;
     esac
     for section in "## Lineage" "## Surface map" "## Checks" "## Scoring" "## Remediation seeds" "## Anti-patterns hunted"; do
       if ! grep -q "^$section" "$f"; then
@@ -276,7 +276,7 @@ check_mirror_boundary() {
 const fs = require("node:fs");
 const path = require("node:path");
 const dir = process.argv[1];
-const skip = new Set(["audit-format.md", "intake.md", "compliance.md", "exemplar.md"]);
+const skip = new Set(["audit-format.md", "change-safety.md", "intake.md", "compliance.md", "exemplar.md"]);
 const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md") && !skip.has(f)).sort();
 const bad = [];
 for (const f of files) {

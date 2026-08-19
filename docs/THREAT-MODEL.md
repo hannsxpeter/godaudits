@@ -56,6 +56,12 @@ Static mode executes no product code. Fingerprinting reads text and metadata
 only, limits inspected file size, and excludes dependency, build, VCS, and audit
 directories. Sandbox execution requires explicit authority and isolation.
 
+Blast-radius planning also remains static. It invokes only read-only Git
+operations against explicit revisions. `blast-radius apply` imports proof text
+but never executes the recorded command. Executable and running-app proof is
+rejected unless the result records sandbox or connected capability, named
+authority, environment, and isolation.
+
 ### Credential exfiltration
 
 Credential-shaped values are redacted before serialization. Audit evidence
@@ -75,11 +81,23 @@ ledger, dependency order, and the content hash or Git revision in the
 prepublication gate. Clean tracked freshness derives from Git history and falls
 back to filesystem mtime for modified, untracked, or non-Git artifacts.
 
+Change-review state binds to immutable base and head commits and the SHA-256 of
+their patch. Every proof-results file must repeat and match those three values.
+Source proof requires its own content hash. Proof level and kind must agree,
+the execution environment must match its authorization, and the before-merge
+proof command must exactly match the command selected during planning. A
+different passing command cannot satisfy the gate.
+
 ### False pass and score laundering
 
 Every selected check starts unknown. Pass requires evidence. Unknown reduces
 coverage and caps the verdict. Domain exclusion requires a repository-specific
 reason. Risk profile and weights are versioned and validator-enforced.
+
+Change-safety disposition is compiled separately from repository scoring. A
+fact below executable proof, an unproved before-merge reproduction, or an open
+High or Critical consequence risk prevents a pass. A clean change review cannot
+raise an audit score.
 
 ### Finding inflation and duplication
 

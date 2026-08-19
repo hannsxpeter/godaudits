@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Generate the compact and full portable prompts.
 #
-# PROMPT.md contains the orchestrator plus the four core contracts. It is for
+# PROMPT.md contains the orchestrator plus the five core contracts. It is for
 # focused audits on constrained chat surfaces and declares reduced coverage.
 # PROMPT.full.md contains every domain module and the report template. It is
 # the standalone full-audit prompt for clients with a large context window.
@@ -71,7 +71,7 @@ audit from memory. Use PROMPT.full.md for the complete $CHECK_COUNT-check pack.
 
 EOF
   strip_frontmatter "$SKILL" | strip_file_map
-  for ref in audit-format intake compliance exemplar; do
+  for ref in audit-format change-safety intake compliance exemplar; do
     printf '\n\n---\n\n# INLINED REFERENCE: references/%s.md\n\n' "$ref"
     cat "$REFS/$ref.md"
   done
@@ -89,7 +89,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 EOF
   strip_frontmatter "$SKILL" | strip_file_map
-  for ref in audit-format intake compliance exemplar product architecture stack database security llm ux ui seo code-quality style-genome agent-memory repo build roadmap deploy observe launch; do
+  for ref in audit-format change-safety intake compliance exemplar product architecture stack database security llm ux ui seo code-quality style-genome agent-memory repo build roadmap deploy observe launch; do
     printf '\n\n---\n\n# INLINED REFERENCE: references/%s.md\n\n' "$ref"
     cat "$REFS/$ref.md"
   done

@@ -3,7 +3,7 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.17.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.18.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![audit domains](https://img.shields.io/badge/audit%20domains-18-2f6fed)](#what-it-examines)
 [![checks](https://img.shields.io/badge/checks-437-2f6fed)](skills/godaudits/catalog/checks.json)
@@ -18,6 +18,11 @@ godaudits answers that question. It is one command you run inside an existing
 codebase. It reads the project, grades it across 18 areas of software quality,
 shows the evidence behind every judgment, and hands back a repair plan detailed
 enough for an AI coding agent to work through task by task.
+
+It also reviews one diff before merge. Change-safety mode finds contract, data,
+configuration, dependency, lifecycle, cache, and cross-language impact that a
+caller search misses, then refuses to call the change safe until its one or two
+load-bearing facts have executable proof.
 
 It runs inside the AI coding tools you already use, as an Agent Skill: a
 package of instructions and tooling your assistant loads when you ask for it.
@@ -97,6 +102,8 @@ got better, what got worse, and what came back.
 | `EVIDENCE.json` | What was found in the repository, with hashes and review leads |
 | `AUDIT.sarif` | Optional output that annotates code on GitHub and similar hosts |
 | `TOOL-EVIDENCE.json` | Optional results imported from other scanners |
+| `CHANGE-REVIEW.json` | Diff-scoped safety facts, impact leads, proof, risks, clearances, and merge gate |
+| `CHANGE-REVIEW.mdx` | Generated readable change-safety review |
 | `archive/` | Previous audits, kept so re-audits can be compared |
 
 `AUDIT.json` is authoritative. The report and the SARIF file are generated
@@ -121,6 +128,9 @@ expensive.
 - **Findings are argued against before they ship.** Candidate findings go
   through an independent refutation pass, and related symptoms are clustered
   back to one root cause instead of being padded into a longer list.
+- **Change safety has an evidence ladder.** A source citation or convincing
+  failure-path trace remains unproven for merge. Safety facts and the cheapest
+  regression test must reach executable or running-app proof.
 - **It reads, it does not run.** The default mode never executes your
   application, your tests, your migrations, or a network request. Stronger
   evidence modes exist, and they require your explicit say-so.
@@ -220,6 +230,55 @@ default and the usual right answer. A full audit keeps every deep-trace check
 in play and costs considerably more. Anything skipped stays in the report as
 unknown and lowers coverage, so a cheap audit is honest about being cheap.
 
+## Reviewing a change before merge
+
+Repository health and change safety are different claims. A repository can
+score well while one diff breaks a wire contract, and a safe diff does not
+prove the rest of the repository is healthy. Blast-radius mode therefore uses
+a separate artifact and never changes the audit score.
+
+First, read the diff and state one or two specific facts its safety depends on.
+Then plan the review:
+
+```bash
+godaudits blast-radius plan . \
+  --base BASE_REV \
+  --head HEAD_REV \
+  --fact "Cache keys remain tenant-scoped after the helper signature changes." \
+  --fact "Existing API consumers can still parse every response." \
+  --verify "node --test test/change-contract.test.js" \
+  --output .godaudits/CHANGE-REVIEW.json
+```
+
+Planning reads only Git. It records direct reverse references, then expands
+into public contracts, database shapes, dependency versions and patches,
+configuration keys, serialized bytes, cross-language readers, lifecycle
+ordering, caches, generated files, and non-primary public entry points. Each
+record is an impact lead for a reviewer, not an automatic risk.
+
+Proof has five levels: assertion, source citation, failure path shown
+unreachable, executable proof against shipped code, and running-app
+reproduction. Only levels 4 and 5 can pass the merge gate. Executable proof is
+produced by an explicitly authorized external harness and imported, never run
+by the static planner:
+
+```bash
+godaudits blast-radius apply \
+  .godaudits/CHANGE-REVIEW.json \
+  .godaudits/CHANGE-RESULTS.json \
+  --output .godaudits/CHANGE-REVIEW.json
+godaudits blast-radius validate .godaudits/CHANGE-REVIEW.json
+godaudits blast-radius render .godaudits/CHANGE-REVIEW.json \
+  --output .godaudits/CHANGE-REVIEW.mdx
+godaudits blast-radius evidence .godaudits/CHANGE-REVIEW.json \
+  --start 1000 --output .godaudits/CHANGE-EVIDENCE.json
+```
+
+Confirmed risks carry separate likelihood and consequence. Cleared risks stay
+visible with the proof and the condition that would make the clearance stale.
+The compiled disposition is `blocked`, `unproven`, or `pass`. See the complete
+[`change-safety contract`](skills/godaudits/references/change-safety.md).
+
 ## Under the hood
 
 Everything below is for readers who want the mechanics. You do not need any of
@@ -239,6 +298,7 @@ godaudits validate .godaudits/AUDIT.json --repo . --require-fresh-evidence --wri
 godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 godaudits wayfind .godaudits/AUDIT.json
+godaudits blast-radius validate .godaudits/CHANGE-REVIEW.json
 ```
 
 The runtime is bundled inside the skill. Agents use the installed `godaudits`
@@ -266,6 +326,8 @@ rather than aspirational. It rejects:
 - Hand-authored scores or counters that disagree with derived state.
 - Stale repository evidence, incomplete OWASP category ledgers, or unsupported
   form and overlay metadata.
+- Change-review merge passes with a fact below proof level 4, an unproved
+  before-merge reproduction, or an open High or Critical consequence risk.
 
 Accepted risks are allowed, but each one needs an owner, an acceptance date, an
 expiry, and the command that revisits it.
@@ -275,6 +337,10 @@ expiry, and the command that revisits it.
 Static mode is the default: it reads repository source and git metadata, writes
 only under `.godaudits/`, and does not run the application, tests, migrations,
 live systems, product network requests, or product model calls.
+
+Blast-radius planning is static too. Applying proof imports results produced by
+an authorized harness; the command recorded in a proof is never executed by
+the godaudits runtime.
 
 Two stronger modes require explicit authority:
 
@@ -472,6 +538,7 @@ verify into one loop.
 | `docs/CHECK-MAP.md` | Every check, by domain |
 | `docs/EVALUATION.md` | Benchmark and accuracy methodology |
 | `docs/WAYFINDING.md` | Destination, frontier, claims, fog, and scope boundary |
+| `skills/godaudits/references/change-safety.md` | Diff impact, safety facts, proof ladder, risks, clearances, and merge gate |
 | `skills/godaudits/guides/copy-signals.md` | Copy-signal scope, interpretation, ownership, and provenance |
 | `docs/RELEASE-POLICY.md` | Release cadence and external audit publication contract |
 | `dogfood/` | Indexed external open-source audits; an empty index makes no track-record claim |

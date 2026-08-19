@@ -38,6 +38,8 @@ npm run check
 node bin/godaudits.js evidence benchmarks/fixtures/node-api --output "$EVIDENCE_NODE"
 node bin/godaudits.js evidence test/fixtures/pillars-routing --output "$EVIDENCE_PILLARS"
 "$PYTHON" scripts/validate-evidence-schema.py skills/godaudits/schemas/evidence.schema.json "$EVIDENCE_NODE" "$EVIDENCE_PILLARS" --assert-contract
+"$PYTHON" scripts/validate-evidence-schema.py skills/godaudits/schemas/change-review.schema.json test/fixtures/change-review/CHANGE-REVIEW.json
+"$PYTHON" scripts/validate-evidence-schema.py skills/godaudits/schemas/change-review-results.schema.json test/fixtures/change-review/RESULTS.json
 npm pack --dry-run
 node bin/godaudits.js doctor
 printf '%s\n' "Local release checks passed."
