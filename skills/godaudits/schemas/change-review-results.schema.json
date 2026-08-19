@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/change-review-results.schema.json",
+  "title": "godaudits change safety proof results",
+  "type": "object",
+  "required": ["schema_version", "review"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "review": {
+      "type": "object",
+      "required": ["base", "head", "diff_sha256"],
+      "properties": {
+        "base": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+        "head": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+        "diff_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "date": { "type": "string", "format": "date" },
+    "authorization": {
+      "type": "object",
+      "required": ["capability", "authorized_by", "environment", "isolation"],
+      "properties": {
+        "capability": { "enum": ["sandbox", "connected"] },
+        "authorized_by": { "type": "string", "minLength": 1 },
+        "environment": { "type": "string", "minLength": 1 },
+        "isolation": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "safety_facts": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["fact", "outcome", "proof"],
+        "properties": {
+          "fact": { "type": "string", "pattern": "^SF-[12]$" },
+          "outcome": { "enum": ["proven", "refuted", "unproven"] },
+          "stopped_because": { "type": "string", "minLength": 1, "maxLength": 400 },
+          "proof": { "$ref": "#/$defs/proofInput" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "mechanism", "likelihood", "consequence", "verify", "proof"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "mechanism": { "type": "string", "minLength": 1 },
+          "likelihood": { "enum": ["rare", "unlikely", "possible", "likely", "almost-certain"] },
+          "consequence": { "enum": ["Critical", "High", "Medium", "Low"] },
+          "verify": { "type": "string", "minLength": 1 },
+          "proof": { "$ref": "#/$defs/proofInput" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "cleared": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "rationale", "invalidated_by", "proof"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "rationale": { "type": "string", "minLength": 1 },
+          "invalidated_by": { "type": "string", "minLength": 1 },
+          "proof": { "$ref": "#/$defs/proofInput" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "before_merge": {
+      "type": "object",
+      "required": ["outcome"],
+      "properties": {
+        "outcome": { "enum": ["passed", "failed", "unproven"] },
+        "proof": { "$ref": "#/$defs/proofInput" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "proofInput": {
+      "type": "object",
+      "required": ["level", "kind"],
+      "properties": {
+        "level": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "kind": { "enum": ["assertion", "citation", "failure-path", "executable", "running-app"] },
+        "path": { "type": "string", "minLength": 1 },
+        "line": { "type": "integer", "minimum": 1 },
+        "quote": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "steps": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 } },
+        "tool": { "type": "string", "minLength": 1 },
+        "tool_version": { "type": "string", "minLength": 1 },
+        "command": { "type": "string", "minLength": 1 },
+        "result": { "type": "string", "minLength": 1 },
+        "environment": { "type": "string", "minLength": 1 },
+        "isolation": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "level": { "enum": [2, 3] } }, "required": ["level"] },
+          "then": { "required": ["path", "line", "quote", "sha256"] }
+        },
+        {
+          "if": { "properties": { "level": { "const": 3 } }, "required": ["level"] },
+          "then": { "required": ["steps"] }
+        },
+        {
+          "if": { "properties": { "level": { "enum": [4, 5] } }, "required": ["level"] },
+          "then": { "required": ["tool", "tool_version", "command", "result", "environment", "isolation"] }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

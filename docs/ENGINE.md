@@ -23,6 +23,7 @@ not lose it when they copy only the canonical skill directory.
 | `lib/evaluate.js` | Measure expected-finding recall, precision, severity, citations, closure, and clean controls |
 | `lib/verify-runtime.js` | Plan runtime probes for behavioral findings and fold executed results into a verification report |
 | `lib/refute.js` | Plan independent refutation briefs for open Critical and High findings and fold verdicts into a disposition report |
+| `lib/blast-radius.js` | Plan static diff impact beyond direct callers, validate and apply proof results, compile the merge gate, render reviews, and export proof as audit evidence leads |
 | `lib/wayfind.js` | Derive the destination, remediation frontier, claims, fog, and scope boundary from audit state on read |
 | `godaudits.js` | CLI command routing and file I/O |
 
@@ -65,6 +66,42 @@ normalizes across an audit the fragment does not contain) and keeps the
 conformance rules that still catch a real defect in one: an unknown check id,
 routing-check ownership, and a finding with no weighted owner in its domain. A
 full audit passes no flag and is held to everything.
+
+## Change-safety state
+
+`CHANGE-REVIEW.json` is separate from AUDIT.json and conforms to
+`schemas/change-review.schema.json`. It binds a review to immutable base and
+head commits plus the SHA-256 of their patch. The runtime validates:
+
+- One or two explicit safety facts, each with a stable SF id.
+- A five-level proof ladder whose level and evidence kind agree.
+- Source proof with path, line, quote, and content hash.
+- Executable and running-app proof with tool, version, command, result,
+  environment, isolation, capability, and named authority.
+- Confirmed risk likelihood and consequence as separate axes.
+- Cleared-risk proof plus the condition which invalidates the clearance.
+- Proof references, unique ids, and secret-redaction markers.
+- A before-merge reproduction and a merge disposition compiled from facts,
+  proof levels, reproduction status, and open High or Critical risks.
+
+`blast-radius plan` invokes only read-only Git commands. It inventories changed
+symbols and direct reverse references, then routes public contracts, database
+shapes, dependencies and patches, configuration keys, serialization, shared
+cross-language contracts, asynchronous lifecycle behavior, caches, generated
+artifacts, and public entry points. These are impact leads, never risks or
+findings by construction.
+
+`blast-radius apply` never executes proof commands. It consumes a
+`change-review-results.schema.json` artifact produced by an authorized harness,
+requires its base, head, and patch hash to match the review, redacts its text
+fields, records provenance, and recompiles the gate. The proof environment and
+isolation must match the authorization block. The review passes only when all
+safety facts and the before-merge reproduction have level 4 or 5 proof and no
+open High or Critical consequence risk remains.
+
+`blast-radius evidence` converts level 2 and 3 proof into hashed source evidence
+and level 4 and 5 proof into runtime evidence. The export creates evidence
+leads only. It cannot create a finding, update a check outcome, or move a score.
 
 ## Catalog compilation
 

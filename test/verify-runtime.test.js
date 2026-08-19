@@ -24,8 +24,8 @@ test('planProbes selects only behavioral findings and carries the probe', () => 
   assert.equal(mfa.probe.expected_defect, 'bypass');
 });
 
-test('isBehavioral respects an explicit runtime_probe', () => {
-  assert.equal(isBehavioral({ checks: ['A-PRD-1'], runtime_probe: { steps: 'x' } }), true);
+test('isBehavioral follows the catalog verifiability axis', () => {
+  assert.equal(isBehavioral({ checks: ['A-SEC-29'] }), true);
   assert.equal(isBehavioral({ checks: ['A-PRD-1'] }), false);
 });
 

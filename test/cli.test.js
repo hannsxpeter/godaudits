@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const test = require('node:test');
 
 const root = path.resolve(__dirname, '..');
@@ -115,4 +115,81 @@ test('wayfind prints the frontier through the shipped CLI in both formats', (t) 
   const badFormat = run(['wayfind', auditFile, '--format', 'yaml'], temporary);
   assert.equal(badFormat.status, 1);
   assert.match(badFormat.stderr, /--format must be text or json/);
+});
+
+test('blast-radius CLI plans, validates, applies, and renders a change review', (t) => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'godaudits-blast-cli-'));
+  const repository = path.join(temporary, 'repo');
+  const reviewFile = path.join(temporary, 'CHANGE-REVIEW.json');
+  const resultsFile = path.join(temporary, 'RESULTS.json');
+  const appliedFile = path.join(temporary, 'APPLIED.json');
+  const renderedFile = path.join(temporary, 'CHANGE-REVIEW.mdx');
+  const evidenceFile = path.join(temporary, 'CHANGE-EVIDENCE.json');
+  t.after(() => fs.rmSync(temporary, { recursive: true, force: true }));
+  fs.mkdirSync(repository);
+  const git = (args) => execFileSync('git', args, { cwd: repository, encoding: 'utf8' }).trim();
+  git(['init', '-q']);
+  git(['config', 'user.name', 'Test User']);
+  git(['config', 'user.email', 'test@example.com']);
+  fs.writeFileSync(path.join(repository, 'api.js'), 'function publicValue() { return 1; }\nmodule.exports = { publicValue };\n');
+  git(['add', '.']);
+  git(['commit', '-qm', 'base']);
+  const base = git(['rev-parse', 'HEAD']);
+  fs.writeFileSync(path.join(repository, 'api.js'), 'function publicValue() { return 2; }\nmodule.exports = { publicValue };\n');
+  git(['add', '.']);
+  git(['commit', '-qm', 'head']);
+  const head = git(['rev-parse', 'HEAD']);
+
+  const planned = run([
+    'blast-radius', 'plan', repository, '--base', base, '--head', head,
+    '--fact', 'The public value remains compatible with every consumer.',
+    '--verify', 'node --test test/api-contract.test.js', '--output', reviewFile
+  ], temporary);
+  assert.equal(planned.status, 0, planned.stderr);
+  const plannedReview = JSON.parse(fs.readFileSync(reviewFile, 'utf8'));
+  assert.equal(plannedReview.merge_gate.status, 'unproven');
+
+  const validated = run(['blast-radius', 'validate', reviewFile], temporary);
+  assert.equal(validated.status, 0, validated.stderr);
+  assert.match(validated.stdout, /valid change review/);
+
+  fs.writeFileSync(resultsFile, JSON.stringify({
+    schema_version: '1.0',
+    review: {
+      base: plannedReview.review.base,
+      head: plannedReview.review.head,
+      diff_sha256: plannedReview.review.diff_sha256
+    },
+    authorization: {
+      capability: 'sandbox',
+      authorized_by: 'repository owner',
+      environment: 'disposable local fixture',
+      isolation: 'outbound network disabled and no production credentials'
+    },
+    safety_facts: [{
+      fact: 'SF-1', outcome: 'proven', proof: {
+        level: 4, kind: 'executable', tool: 'node:test', tool_version: process.versions.node,
+        command: 'node --test test/api-contract.test.js', result: 'passed',
+        environment: 'disposable local fixture', isolation: 'outbound network disabled and no production credentials'
+      }
+    }],
+    before_merge: {
+      outcome: 'passed', proof: {
+        level: 4, kind: 'executable', tool: 'node:test', tool_version: process.versions.node,
+        command: 'node --test test/api-contract.test.js', result: 'passed',
+        environment: 'disposable local fixture', isolation: 'outbound network disabled and no production credentials'
+      }
+    }
+  }));
+  const applied = run(['blast-radius', 'apply', reviewFile, resultsFile, '--output', appliedFile], temporary);
+  assert.equal(applied.status, 0, applied.stderr);
+  assert.equal(JSON.parse(fs.readFileSync(appliedFile, 'utf8')).merge_gate.status, 'pass');
+
+  const rendered = run(['blast-radius', 'render', appliedFile, '--output', renderedFile], temporary);
+  assert.equal(rendered.status, 0, rendered.stderr);
+  assert.match(fs.readFileSync(renderedFile, 'utf8'), /Merge disposition: PASS/);
+
+  const evidence = run(['blast-radius', 'evidence', appliedFile, '--start', '20', '--output', evidenceFile], temporary);
+  assert.equal(evidence.status, 0, evidence.stderr);
+  assert.equal(JSON.parse(fs.readFileSync(evidenceFile, 'utf8')).evidence[0].id, 'E-20');
 });

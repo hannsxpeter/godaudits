@@ -1,9 +1,10 @@
 godaudits third-party notices
 
-The copy-signal taxonomy includes adapted concepts from the pstack `unslop`
-Agent Skill:
+The copy-signal taxonomy and change-safety proof workflow include adapted
+concepts from the pstack `unslop` and `blast-radius` Agent Skills:
 
   https://github.com/cursor/plugins/tree/main/pstack/skills/unslop
+  https://github.com/cursor/plugins/tree/main/pstack/skills/blast-radius
 
 MIT License
 

@@ -64,6 +64,8 @@ The bundled runtime performs the operations where discretion is a liability:
 - Compute scores, coverage, caps, counters, and verdicts.
 - Render the MDX report and SARIF output from canonical JSON state.
 - Diff re-audits without losing historical ids.
+- Plan diff-scoped impact beyond direct callers, validate proof provenance,
+  and compile a separate change-safety merge gate.
 - Measure audit output against expected findings and clean controls.
 
 It is a zero-dependency program that ships inside the skill, so a skill-only

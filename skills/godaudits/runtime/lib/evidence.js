@@ -31,6 +31,18 @@ function redactSecrets(value) {
       return `${prefix}<redacted:${hash(secret).slice(0, 12)}>`;
     });
   }
+  const barePatterns = [
+    /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/g,
+    /\bgithub_pat_[A-Za-z0-9_]{20,}\b/g,
+    /\bsk-(?:proj-|live_|test_)?[A-Za-z0-9_-]{20,}\b/g,
+    /\bAIza[0-9A-Za-z_-]{30,}\b/g
+  ];
+  for (const pattern of barePatterns) {
+    text = text.replace(pattern, (secret) => {
+      redacted = true;
+      return `<redacted:${hash(secret).slice(0, 12)}>`;
+    });
+  }
   return { text, redacted };
 }
 

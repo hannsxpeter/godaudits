@@ -19,6 +19,13 @@ const { validateProjectContextCatalog } = require('./lib/project-context');
 const { planProbes, applyResults } = require('./lib/verify-runtime');
 const { planRefutations, applyRefutations } = require('./lib/refute');
 const { planWayfinding, renderWayfinding } = require('./lib/wayfind');
+const {
+  applyBlastRadiusResults,
+  exportChangeReviewEvidence,
+  planBlastRadius,
+  renderBlastRadius,
+  validateChangeReview
+} = require('./lib/blast-radius');
 
 const skillRoot = path.resolve(__dirname, '..');
 const packageRoot = path.resolve(skillRoot, '..', '..');
@@ -39,6 +46,11 @@ godaudits verify-runtime plan <AUDIT.json> [--output PROBES.json]
 godaudits verify-runtime apply <AUDIT.json> <RESULTS.json> [--output VERIFICATION.json]
 godaudits refute plan <AUDIT.json> [--output REFUTATION-BRIEFS.json]
 godaudits refute apply <AUDIT.json> <RESULTS.json> [--output REFUTATION.json]
+godaudits blast-radius plan [repo] --base REV --head REV --fact "SAFETY FACT" [--fact "SECOND FACT"] --verify "COMMAND" [--audit AUDIT.json] [--output CHANGE-REVIEW.json]
+godaudits blast-radius validate <CHANGE-REVIEW.json>
+godaudits blast-radius apply <CHANGE-REVIEW.json> <RESULTS.json> [--output file]
+godaudits blast-radius render <CHANGE-REVIEW.json> [--output CHANGE-REVIEW.mdx]
+godaudits blast-radius evidence <CHANGE-REVIEW.json> [--start 1] [--output CHANGE-EVIDENCE.json]
 godaudits wayfind <AUDIT.json> [--format text|json] [--output file]
 godaudits benchmark [directory]
 godaudits doctor`;
@@ -47,6 +59,14 @@ godaudits doctor`;
 function option(args, name, fallback) {
   const index = args.indexOf(name);
   return index >= 0 && args[index + 1] ? args[index + 1] : fallback;
+}
+
+function options(args, name) {
+  const values = [];
+  for (let index = 0; index < args.length; index += 1) {
+    if (args[index] === name && args[index + 1] && !args[index + 1].startsWith('--')) values.push(args[index + 1]);
+  }
+  return values;
 }
 
 function writeOrPrint(value, output) {
@@ -266,6 +286,62 @@ function main() {
       return 0;
     }
     throw new Error('refute requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESULTS.json>');
+  }
+  if (command === 'blast-radius') {
+    const mode = args[0];
+    if (mode === 'plan') {
+      const repo = args[1] && !args[1].startsWith('--') ? args[1] : process.cwd();
+      const base = option(args, '--base');
+      const head = option(args, '--head');
+      const facts = options(args, '--fact');
+      const verify = option(args, '--verify');
+      const auditFile = option(args, '--audit');
+      if (!base || !head) throw new Error('blast-radius plan requires --base and --head');
+      const review = planBlastRadius(repo, {
+        base,
+        head,
+        facts,
+        verify,
+        audit: auditFile ? readJson(auditFile) : null
+      });
+      writeOrPrint(review, option(args, '--output', path.join(repo, '.godaudits', 'CHANGE-REVIEW.json')));
+      return 0;
+    }
+    if (mode === 'validate') {
+      if (!args[1] || args[1].startsWith('--')) throw new Error('blast-radius validate requires CHANGE-REVIEW.json');
+      const errors = validateChangeReview(readJson(args[1]));
+      if (errors.length) {
+        process.stderr.write(`${errors.map((error) => `- ${error}`).join('\n')}\n`);
+        return 1;
+      }
+      process.stdout.write(`valid change review: ${args[1]}\n`);
+      return 0;
+    }
+    if (mode === 'apply') {
+      if (!args[1] || !args[2] || args[1].startsWith('--') || args[2].startsWith('--')) {
+        throw new Error('blast-radius apply requires CHANGE-REVIEW.json and RESULTS.json');
+      }
+      const applied = applyBlastRadiusResults(readJson(args[1]), readJson(args[2]));
+      if (applied.errors.length) {
+        process.stderr.write(`${applied.errors.map((error) => `- ${error}`).join('\n')}\n`);
+        return 1;
+      }
+      writeOrPrint(applied.review, option(args, '--output'));
+      return applied.review.merge_gate.status === 'blocked' ? 1 : 0;
+    }
+    if (mode === 'render') {
+      if (!args[1] || args[1].startsWith('--')) throw new Error('blast-radius render requires CHANGE-REVIEW.json');
+      writeOrPrint(renderBlastRadius(readJson(args[1])), option(args, '--output', path.join(path.dirname(args[1]), 'CHANGE-REVIEW.mdx')));
+      return 0;
+    }
+    if (mode === 'evidence') {
+      if (!args[1] || args[1].startsWith('--')) throw new Error('blast-radius evidence requires CHANGE-REVIEW.json');
+      const start = Number(option(args, '--start', '1'));
+      if (!Number.isInteger(start) || start < 1) throw new Error('--start must be a positive integer');
+      writeOrPrint(exportChangeReviewEvidence(readJson(args[1]), { start, source: args[1] }), option(args, '--output'));
+      return 0;
+    }
+    throw new Error('blast-radius requires a mode: plan | validate | apply | render | evidence');
   }
   if (command === 'wayfind') {
     // Guard the positional the way import-tool does. option() returns the raw

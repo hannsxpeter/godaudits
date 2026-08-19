@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "review": {
+    "repository": "fixture",
+    "created": "2026-08-19",
+    "updated": "2026-08-19",
+    "base": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "head": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "diff_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "capabilities": ["static"],
+    "limitations": [
+      "Static planning only."
+    ]
+  },
+  "change": {
+    "summary": "1 changed file with 1 addition and 1 deletion.",
+    "languages": ["JavaScript"],
+    "files": [
+      {
+        "status": "modified",
+        "path": "src/cache.js",
+        "additions": 1,
+        "deletions": 1,
+        "symbols": ["cacheKey"]
+      }
+    ]
+  },
+  "impact_leads": [],
+  "affected_domains": [],
+  "affected_checks": [],
+  "safety_facts": [
+    {
+      "id": "SF-1",
+      "claim": "Cache keys remain tenant-scoped after the helper signature changes.",
+      "status": "unproven",
+      "proof_level": 1,
+      "proof_kind": "assertion",
+      "proof_ids": [],
+      "stopped_because": "No proof result has been applied."
+    }
+  ],
+  "proofs": [],
+  "risks": [],
+  "cleared": [],
+  "before_merge": {
+    "command": "node --test test/cache-contract.test.js",
+    "status": "unproven",
+    "proof_ids": []
+  },
+  "merge_gate": {
+    "status": "unproven",
+    "reasons": [
+      "SF-1 is unproven; level 4 executable proof is required.",
+      "The before-merge reproduction has not passed with executable proof."
+    ]
+  }
+}

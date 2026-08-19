@@ -1,9 +1,9 @@
 ---
 name: godaudits
-description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 437 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
+description: "Audit a codebase end to end and emit validated JSON plus remediation MDX, or review one diff for non-obvious blast radius with explicit safety facts and a compiled merge proof gate. godaudits fingerprints the repository, detects six project forms, validates Pillars 1.1 and arc-ready artifacts, evaluates 437 checks across 18 domains with pass/fail/unknown/not-applicable outcomes, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially refutes findings, computes scores with coverage and risk caps, and renders optional SARIF. Includes focused, full, re-audit, plan-aware, and change-safety modes. Static mode never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, remediation, blast-radius reviews, and pre-merge safety. Refuses stale evidence, invented citations, secrets, unsupported regulatory claims, double-billing, unproven merge safety, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.17.0"
+  version: "2.18.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.17 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.18 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -34,12 +34,15 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
 14. **Copy signals are leads.** Reader-facing phrase matches identify lines for product, UX, or launch review. They do not establish AI authorship or a writing defect without a source read, and broad technical words never fail by presence alone.
+15. **Change safety is proof, not prose.** A blast-radius review records one or two repository-specific safety facts, follows contracts and lifecycle edges beyond symbol search, and cannot pass its merge gate until every fact plus the cheapest before-merge reproduction reaches executable proof. Unproved facts say unproven.
 
 ## Dynamic verification (opt-in)
 
 Static is the default and never runs the product. When the user explicitly authorizes a disposable runtime environment (ground rule 2), godaudits may add a dynamic verification pass that CONFIRMS or REFUTES its behavioral findings against the running app rather than trusting static inference alone. Behavioral findings are the class static reading can suspect but not prove: race conditions and TOCTOU, dead controls that are stored but never read, lifecycle transitions that free a resource early, authorization gaps on a non-primary caller path, and accessibility or consent behavior that only appears at runtime. Each such finding carries a runtime-verification handoff (a route or request sequence with the expected-versus-actual outcome) that an authorized harness runs: the Godpowers `god-browser-tester` (headless browser against a runtime URL) or a project Playwright suite. Runtime confirmation upgrades a Tentative finding to Firm or Certain; refutation drops it. Dynamic verification never runs automatically, never touches production, and its results are recorded as runtime evidence with provenance.
 
 The runtime supports this handoff directly: `godaudits verify-runtime plan AUDIT.json` emits a probe manifest for the behavioral findings, the authorized harness executes the probes and produces a results file, and `godaudits verify-runtime apply AUDIT.json RESULTS.json` folds confirmed and refuted dispositions into a verification report that a re-audit applies. Because AUDIT.json scores are compiled, dispositions are applied on re-audit, never hand-edited.
+
+Change-safety execution follows the same authority boundary but uses a separate artifact. `godaudits blast-radius plan` reads only Git metadata and diffs. An authorized external harness produces level 4 executable or level 5 running-app results, and `godaudits blast-radius apply` imports them without executing their commands. Read `references/change-safety.md` before this workflow.
 
 The runtime serializes independent refutation (ground rule 9) the same way: `godaudits refute plan AUDIT.json` emits one brief per open Critical or High finding carrying the claim, its citation, the owning check, and the expected behavior, with the originating reasoning stripped so a separate pass forms its own view; `godaudits refute apply AUDIT.json RESULTS.json` folds the verdicts (refuted, weakened, no-refutation) into a report a re-audit applies. This extends Phase 4, it does not replace it, and it adds no evidence to a finding: a refuted finding's guard citation may support a strength or the check's pass, never the finding it refuted.
 
@@ -61,10 +64,30 @@ godaudits import-sarif scanner.sarif --output .godaudits/TOOL-EVIDENCE.json
 godaudits import-tool semgrep.json --tool semgrep --command "semgrep scan --json ." --output .godaudits/TOOL-EVIDENCE.json
 godaudits diff .godaudits/archive/AUDIT-v1.json .godaudits/AUDIT.json
 godaudits evaluate .godaudits/AUDIT.json expected.json
+godaudits blast-radius plan . --base BASE_REV --head HEAD_REV --fact "SAFETY FACT" --verify "COMMAND" --output .godaudits/CHANGE-REVIEW.json
+godaudits blast-radius validate .godaudits/CHANGE-REVIEW.json
+godaudits blast-radius apply .godaudits/CHANGE-REVIEW.json .godaudits/CHANGE-RESULTS.json --output .godaudits/CHANGE-REVIEW.json
+godaudits blast-radius render .godaudits/CHANGE-REVIEW.json --output .godaudits/CHANGE-REVIEW.mdx
+godaudits blast-radius evidence .godaudits/CHANGE-REVIEW.json --start 1000 --output .godaudits/CHANGE-EVIDENCE.json
 godaudits wayfind .godaudits/AUDIT.json
 ```
 
 The runtime never decides whether a signal is a finding. `EVIDENCE.json` contains deterministic inventory leads and absence records. `import-sarif` and `import-tool` convert SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner results into secret-safe tool evidence without creating findings. Non-SARIF adapters require the producing command and a tool version when the report does not embed one. Domain passes trace, interpret, and refute both sources.
+
+## Change-safety review (separate workflow)
+
+When the user asks what a diff could break, whether a change is safe, or for its blast radius, read `references/change-safety.md` and use the `blast-radius` commands. This workflow does not initialize, score, or mutate AUDIT.json.
+
+1. Read the diff and state one or two load-bearing safety facts. The deterministic runtime never invents them.
+2. Name the cheapest test or reproduction that fails loudly if the change is unsafe.
+3. Run `blast-radius plan` with immutable base and head revisions. Add `--audit AUDIT.json` when existing findings should be joined by changed evidence path.
+4. Trace the emitted leads across public contracts, storage, dependency source and patches, configuration keys, serialization, cross-language readers, lifecycle ordering, caches, generated artifacts, and non-primary entry points. Leads are not risks.
+5. Record confirmed risks with separate likelihood and consequence. Record cleared risks with proof and the condition that invalidates the clearance.
+6. Under explicit sandbox or connected authority, run the smallest real-code proof for each fact and the before-merge command. Import the result with `blast-radius apply`.
+7. Validate and render. `blocked` means a refuted fact, failed reproduction, or open High or Critical consequence risk. `unproven` means any fact or the reproduction stopped below level 4. Only `pass` is merge-ready.
+8. When a re-audit needs the proof, export it with `blast-radius evidence`. The export creates evidence leads only; the owning domain still traces, refutes, and updates its existing checks.
+
+Proof levels are assertion (1), source citation (2), failure path shown unreachable (3), executable proof against shipped code (4), and running-app reproduction (5). Confidence never substitutes for proof level. CHANGE-REVIEW.json is the machine source of truth and CHANGE-REVIEW.mdx is generated.
 
 ## Method
 
@@ -216,6 +239,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - **Medium budget**: screening checks are evaluated and deep-trace checks remain unknown in the complete ledger. This is the default.
 - **Full budget**: screening and deep-trace checks are selected. Use only with explicit full-project scope and adequate context.
 - **Plan-aware overlay**: conformance checks run inside every domain and carry matching R-ids.
+- **Change-safety review**: separate diff-scoped state with impact leads, one or two safety facts, a five-level proof ledger, confirmed and cleared risks, and a compiled merge gate. It never contributes a repository score.
 - **Static capability**: default and always available.
 - **Sandbox capability**: explicit user authorization, disposable environment, no outbound network or production secrets.
 - **Connected capability**: explicitly authorized read-only external evidence with connector, query, timestamp, and provenance recorded.
@@ -231,6 +255,8 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Critical or High findings without reciprocal remediation tasks.
 - Hand-edited computed scores, counters, MDX, or SARIF.
 - Silent module skipping or compact-prompt full audits without the domain modules.
+- A blast-radius merge pass whose safety facts or before-merge reproduction stopped below executable proof.
+- Executable or running-app change proof without recorded authority, environment, and isolation.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
 ## File map
@@ -240,16 +266,17 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `SKILL.md` | Orchestrator and operating contract |
 | `references/intake.md` | Mode, fingerprint interpretation, applicability, weights, ownership |
 | `references/audit-format.md` | AUDIT.json, evidence, finding, task, scoring, and rendering contract |
+| `references/change-safety.md` | CHANGE-REVIEW.json, impact resolvers, proof ladder, risks, clearances, and merge gate |
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
 | `guides/copy-signals.md` | Copy-signal scope, interpretation, and ownership |
 | `references/<domain>.md` | 18 domain modules |
 | `catalog/checks.json` | Generated 437-check machine catalog with scoring and standards metadata |
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
-| `schemas/*.json` | Audit, evidence, and benchmark schemas |
+| `schemas/*.json` | Audit, evidence, change-review, proof-results, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |
-| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, wayfinding, and evaluation engine |
+| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, change-safety, wayfinding, and evaluation engine |
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.17.0
+## Skill version: 2.18.0

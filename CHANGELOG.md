@@ -3,6 +3,66 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.18.0] - 2026-08-19
+
+Repository health and change safety are now separate evidence claims. A new
+diff-scoped workflow records the one or two facts a change depends on, follows
+contract and lifecycle edges beyond a caller search, imports proof produced by
+an authorized harness, and compiles whether the change is blocked, unproven, or
+ready to merge. A convincing source read cannot round itself up to executable
+proof.
+
+This is a minor feature release inside the 30-day window in
+`docs/RELEASE-POLICY.md`. It uses the security exception because change-proof
+imports add a new text-ingestion surface and the shared redactor now masks bare
+GitHub, OpenAI-style, and Google API credential forms wherever they occur, not
+only after a `token=` or `Authorization: Bearer` label. No audit check id,
+check count, dimension, weight, score, or AUDIT.json schema changes.
+
+### Added
+
+- `godaudits blast-radius plan`, `validate`, `apply`, `render`, and `evidence`.
+  Planning is static and reads only explicit Git revisions. Applying results
+  imports and redacts proof but never executes the recorded commands. Evidence
+  export creates source and runtime leads without creating findings or moving
+  scores.
+- A deterministic impact inventory for direct reverse references plus public
+  contracts, database schemas, dependency versions and local patches,
+  configuration and feature flags, serialized wire formats, cross-language
+  readers, asynchronous lifecycle ordering, cache invalidation, generated
+  artifacts, public entry points, and open audit findings whose evidence paths
+  changed.
+- One or two explicit safety facts and a five-level proof ledger: assertion,
+  source citation, failure path shown unreachable, executable proof against
+  shipped code, and running-app reproduction. Levels 4 and 5 require recorded
+  authority, environment, and isolation.
+- Proof-results files bind to the exact base, head, and patch hash under review;
+  executable proof must match its recorded authorization environment and
+  isolation boundary.
+- Confirmed risks with separate likelihood and consequence, cleared risks with
+  proof and an invalidation condition, an exact before-merge reproduction, and
+  a compiled gate which blocks refuted facts, failed reproductions, and open
+  High or Critical consequence risks.
+- `change-review.schema.json`, `change-review-results.schema.json`, the complete
+  `references/change-safety.md` operating contract, runtime and CLI regression
+  coverage, and MIT attribution for the pstack `blast-radius` concepts that
+  informed the workflow.
+
+### Changed
+
+- The compact and full portable prompts include the change-safety contract.
+  README, runtime architecture, threat model, package metadata, and the
+  canonical skill document the new artifact and capability boundary.
+- The shared credential redactor recognizes bare provider-token prefixes in
+  commands, quotes, and results while retaining one-way fingerprints.
+
+### Fixed
+
+- Runtime verification no longer looks for `finding.runtime_probe`, a property
+  the closed AUDIT.json finding schema never permitted. Custom diff probes now
+  live in the validated CHANGE-REVIEW.json sidecar instead of an unreachable
+  audit field.
+
 ## [2.17.0] - 2026-08-19
 
 Reader-facing prose now follows the same evidence boundary as code findings.
