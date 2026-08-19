@@ -54,6 +54,9 @@ remediation closure, and 95 percent clean-control rate.
 
 - Node API route plus quoted and extensionless environment secret redaction.
 - Python worker outbound-call and deferred-work signals.
+- Reader-facing copy candidates across eight categories, with clean controls
+  for precise technical terms, fenced examples, release history, and source
+  files that do not render copy.
 - Go CLI archetype detection.
 - Clean Rust library controls.
 - Web application form detection.

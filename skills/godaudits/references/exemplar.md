@@ -111,6 +111,25 @@ A strength is a finding with the sign flipped: same evidence standard, same file
 3. Make failure detectable: every claim carries the check, command, or cap rule that would catch its violation.
 4. End in a checkbox: every Critical and High finding traces to a GA task an agent can execute, verify, and flip.
 
+## The final prose pass
+
+Before rendering, read every authored title, impact, fix, strength, destination,
+and summary once without the evidence blocks. Ask what actor acts, what mechanism
+changes, and what observable result follows. Rewrite any sentence that answers
+none of those questions.
+
+Remove unsupported attribution, puffery, promotional formulas, filler, stacked
+hedging, chatbot residue, and generic conclusions. Inspect passive voice,
+contentless participial clauses, dense sentences, adverbs, formulaic contrasts,
+and synonym cycling in context. Those forms are review prompts, not automatic
+defects. Keep a technical term when it is the precise name of the thing, and keep
+the headings, colons, lists, and repeated vocabulary that make the report contract
+stable.
+
+Do not claim that a phrase establishes AI authorship. The defect is concrete:
+the sentence is unsupported, non-specific, difficult to parse, or addressed to
+the wrong reader. Name that defect and cite the source.
+
 Severity follows blast radius, not visibility. A defect trivial to spot but that no check covered is not a smaller finding for being obvious; it carries the severity its reach earns.
 
 Score any audit fragment against these four. A fragment that names nothing, quotes nothing, and checks nothing scores zero, no matter how alarming its warnings or how reassuring its praise.

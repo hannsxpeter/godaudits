@@ -18,6 +18,14 @@
       "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
     },
     {
+      "name": "reader-facing-copy-signals",
+      "repo": "fixtures/copy-signals",
+      "expected_archetype": "saas-dashboard",
+      "expected_project_form": "web-application",
+      "required_signals": ["copy-puffery", "copy-promotional", "copy-vague-attribution", "copy-formula", "copy-filler", "copy-hedging", "copy-chatbot-residue", "copy-generic-conclusion"],
+      "required_absences": ["continuous-integration", "test-suite", "dependency-lockfile"]
+    },
+    {
       "name": "go-cli",
       "repo": "fixtures/go-cli",
       "expected_archetype": "cli-tool",

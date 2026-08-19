@@ -11,6 +11,7 @@ test('fingerprint is deterministic, redacts secrets, and records absences', () =
   const first = fingerprintRepository(fixture);
   const second = fingerprintRepository(fixture);
   assert.deepEqual(first, second);
+  assert.equal(first.schema_version, '1.2');
   assert.equal(first.archetype.primary, 'api-service');
   assert.ok(first.files.some((file) => file.path === 'src/server.js'));
   const secret = first.signals.find((signal) => signal.kind === 'possible-secret');

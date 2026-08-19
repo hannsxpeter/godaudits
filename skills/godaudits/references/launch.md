@@ -4,7 +4,7 @@ Audits the launch surface of a codebase: positioning and copy honesty, the landi
 
 ## Lineage
 
-Descends from launch-ready, the shipping-tier ready-suite skill, via the godplans launch module that inverted its pass/fail gates into R-LAUNCH-1 through R-LAUNCH-21. The method DNA that carries over intact: the substitution test as a sentence-by-sentence discipline (a hero that stays plausible with a competitor's name swapped in is a defect, not a style note); the banned-word list as a grep-detectable AI-slop signature; the five-section landing anatomy with a single above-the-fold CTA; the five-channel OG preview rule driven by LinkedIn's 7-day card cache; per-venue etiquette encoded as have-nots (Show HN titles, PH 12:01 AM PT Tue-Thu, Reddit 9:1, LinkedIn founder voice); the paper-waitlist and silent-launch gates; and the runbook-as-calendar mechanic. launch-ready's have-nots list is this module's severity floor: its disqualifiers land High or Critical here regardless of how polished the rest of the surface is.
+Descends from launch-ready, the shipping-tier ready-suite skill, via the godplans launch module that inverted its pass/fail gates into R-LAUNCH-1 through R-LAUNCH-21. The method DNA that carries over intact: the substitution test as a sentence-by-sentence discipline (a hero that stays plausible with a competitor's name swapped in is a defect, not a style note); a low-specificity copy pass whose deterministic phrases remain leads until context confirms them; the five-section landing anatomy with a single above-the-fold CTA; the five-channel OG preview rule driven by LinkedIn's 7-day card cache; per-venue etiquette encoded as have-nots (Show HN titles, PH 12:01 AM PT Tue-Thu, Reddit 9:1, LinkedIn founder voice); the paper-waitlist and silent-launch gates; and the runbook-as-calendar mechanic. launch-ready's have-nots list is this module's severity floor: its disqualifiers land High or Critical here regardless of how polished the rest of the surface is.
 
 ## Surface map
 
@@ -39,12 +39,12 @@ Mirror boundary: A-LAUNCH-1..22 mirror R-LAUNCH-1..22 one to one; A-LAUNCH-23 an
 5. A-LAUNCH-5 Feature grid honesty: 3-6 tiles, each naming a product-specific capability that exists in the codebase; no category-label tiles (Fast, Secure, Scalable) and no tile promising a feature no route or module delivers.
    Look: feature-grid markup diffed against the intake fingerprint's route and module inventory.
    Fail: a tile promising vapor is High (cross-reference F-BUILD when the feature exists as a stub, per the ownership map); a grid over 6 tiles or built of category labels is Medium.
-6. A-LAUNCH-6 Banned-word audit: zero hits above the fold from the slop set (seamless, powerful, revolutionary, effortless, intelligent, cutting-edge, game-changing, unlock, supercharge, streamline, empower, elevate, robust, best-in-class, leading, enterprise-grade, world-class).
-   Look: case-insensitive grep across landing source, email templates, and channel post drafts.
-   Fail: three or more hits above the fold is High (the AI-slop signature); one or two is Medium; hits in email subject lines is Medium.
-7. A-LAUNCH-7 Copy voice: active voice, second person, named subjects, and no AI self-reference in the hero unless the product is an AI product whose differentiator is the AI itself.
-   Look: hero and sub-hero copy; grep `AI-powered|powered by AI` in the hero block.
-   Fail: AI self-reference in a non-AI product's hero is Medium; passive third-person hero copy is Low.
+6. A-LAUNCH-6 Low-specificity copy audit: above-the-fold copy has no confirmed puffery, promotional formula, vague attribution, filler, stacked hedge, chatbot residue, or generic conclusion; a broad adjective such as powerful, robust, intelligent, or leading passes when the same claim names its mechanism, evidence, or measured result.
+   Look: `copy-*` signals in EVIDENCE.json across landing source, email templates, and channel post drafts, followed by a source read; also inspect contentless participial clauses and formulaic contrasts that the conservative signal set leaves to judgment.
+   Fail: three or more confirmed low-specificity phrases above the fold is High; one or two is Medium; a confirmed hit in an email subject is Medium. A signal alone never fails the check, and a technical term is never a defect solely because it appears on a list.
+7. A-LAUNCH-7 Copy voice: active voice, second person, named subjects, concrete mechanisms or numbers instead of feelings, and no AI self-reference in the hero unless the product is an AI product whose differentiator is the AI itself; split a sentence when its actor, action, and outcome cannot be recovered on one read.
+   Look: hero and sub-hero copy; grep `AI-powered|powered by AI` in the hero block; identify the actor, mechanism, and observable result in each above-the-fold claim.
+   Fail: AI self-reference in a non-AI product's hero is Medium; an above-the-fold claim with no recoverable actor or mechanism is Medium; passive third-person hero copy or a dense sentence that hides the action is Low.
 8. A-LAUNCH-8 Brand tokens are real: a named brand color, two grays, one or two typefaces, and a real icon library on the landing surface; no library-default styling shipped as identity, no emoji UI markers, no stock abstract-people illustrations.
    Look: landing CSS and token files, tailwind config overrides, icon imports (lucide, heroicons, phosphor), hero image assets.
    Fail: emoji as UI markers is Medium; an unmodified template palette and typeface on every surface is Medium.
@@ -112,10 +112,10 @@ Floor findings from the ancestor's have-nots list (leftover noindex on the shipp
 
 At audit time the agent adds the `Fixes:` line with real finding ids; seeds omit it.
 
-- [ ] GA-xxx Rewrite the hero and above-the-fold copy to pass the substitution and banned-word audits
+- [ ] GA-xxx Rewrite the hero and above-the-fold copy to pass the substitution and specificity audits
   - Files: site/index.html, docs/launch/POSITIONING.md
-  - Acceptance: the hero names the audience and the replacement specifically enough that two named competitor swaps make it false; zero banned-word hits above the fold; first person with a named founder; no AI self-reference unless the AI is the differentiator
-  - Verify: `! grep -riE 'seamless|powerful|revolutionary|effortless|cutting-edge|game-changing|supercharge|streamline|empower|elevate|robust|best-in-class|world-class|enterprise-grade' site/index.html`
+  - Acceptance: the hero names the audience and the replacement specifically enough that two named competitor swaps make it false; every copy signal is removed or replaced with a named mechanism, source, or number; first person with a named founder; no AI self-reference unless the AI is the differentiator
+  - Verify: `godaudits evidence . --output .godaudits/EVIDENCE.json && node -e "const e=require('./.godaudits/EVIDENCE.json');process.exit(e.signals.some(s=>s.path==='site/index.html'&&s.kind.startsWith('copy-'))?1:0)"`
   - Checks: A-LAUNCH-1, A-LAUNCH-2, A-LAUNCH-6, A-LAUNCH-7
 - [ ] GA-xxx Restructure the landing page to the five-section anatomy with one CTA
   - Files: site/index.html, site/styles.css
@@ -150,7 +150,8 @@ At audit time the agent adds the `Fixes:` line with real finding ids; seeds omit
 
 ## Anti-patterns hunted
 
-- AI-slop landing: banned words above the fold, gradient hero, stock illustrations of abstract people pointing at charts. Hunt with the case-insensitive grep; three or more hits marks the surface as needing a rewrite, not a polish.
+- Low-specificity landing: multiple confirmed copy signals above the fold, a gradient hero, and stock illustrations of abstract people pointing at charts. Hunt from EVIDENCE.json, read every source line, and call it a writing defect rather than an authorship claim.
+- Copy-signal verdict: a regex hit treated as proof. Refused: signals are leads; broad technical words and quoted examples pass when the source sentence is concrete, while vague attribution can fail without using any promotional adjective.
 - Hero fatigue: a hero sentence that survives with a competitor's name swapped in. Run the swap against two named competitors before scoring positioning; plausibility under the swap is the finding.
 - Spec-sheet positioning: category-label tiles (Fast, Secure, Scalable) or a grid over six. Count the tiles and read each one for a product-specific capability.
 - Vapor landing: tiles promising features no route or module delivers. Diff the grid against the fingerprint's route inventory; a stubbed handler behind a tile cross-references F-BUILD per the ownership map.
@@ -161,4 +162,4 @@ At audit time the agent adds the `Fixes:` line with real finding ids; seeds omit
 - Channel etiquette violations: a Show HN title containing "launch" or all-caps, a PH slot on Friday through Sunday or without a confirmed hunter, a Reddit target with zero prior participation, a LinkedIn draft in press-release voice. Read the committed drafts, not the intent.
 - Silent fade: no D+1 through D+7 follow-up and no retrospective after a completed launch. Check the launch log against the sequence docs and retrospectives dir.
 - Same-infra status page: a status link resolving to the app's own domain and deployment. Resolve the footer link's host against the deploy config.
-- Auditor discipline: no vague findings ("improve the landing" is banned); no double-billing (CWV code signals belong to seo, stubbed features to build, transactional email to product, SLO definitions to observe, per the ownership map); no severity inflation (one banned word is never Critical); calibration holds (a Mode E repo draws no channel findings, and a weekend project with no runbook gets a note, not a High).
+- Auditor discipline: no vague findings ("improve the landing" is refused); no double-billing (CWV code signals belong to seo, stubbed features to build, transactional email to product, SLO definitions to observe, per the ownership map); no severity inflation (one confirmed phrase is never Critical); calibration holds (a Mode E repo draws no channel findings, and a weekend project with no runbook gets a note, not a High).

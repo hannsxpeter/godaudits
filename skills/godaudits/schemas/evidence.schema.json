@@ -21,7 +21,7 @@
     "fingerprint_sha256"
   ],
   "properties": {
-    "schema_version": { "const": "1.1" },
+    "schema_version": { "const": "1.2" },
     "mode": { "const": "static" },
     "root": { "$ref": "#/$defs/path" },
     "commit": { "type": "string", "minLength": 1 },
@@ -344,7 +344,7 @@
       "required": ["id", "kind", "path", "line", "quote", "sha256", "redacted"],
       "properties": {
         "id": { "type": "string", "pattern": "^S-[0-9]{4,}$" },
-        "kind": { "enum": ["possible-secret", "possible-private-key", "deferred-work", "empty-catch", "dangerous-eval", "unsafe-html", "shell-execution", "outbound-http", "database-access", "model-call", "api-surface"] },
+        "kind": { "enum": ["possible-secret", "possible-private-key", "deferred-work", "empty-catch", "dangerous-eval", "unsafe-html", "shell-execution", "outbound-http", "database-access", "model-call", "api-surface", "copy-puffery", "copy-promotional", "copy-vague-attribution", "copy-formula", "copy-filler", "copy-hedging", "copy-chatbot-residue", "copy-generic-conclusion"] },
         "path": { "$ref": "#/$defs/path" },
         "line": { "type": "integer", "minimum": 1 },
         "quote": { "type": "string", "maxLength": 240 },

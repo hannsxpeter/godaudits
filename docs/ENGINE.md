@@ -10,6 +10,7 @@ not lose it when they copy only the canonical skill directory.
 |---|---|
 | `lib/catalog.js` | Parse modules, checks, Look and Fail guidance, scoring dimensions, cost tiers, depth and escalation labels, routing checks, weights, risk profiles, version, and source hash |
 | `lib/evidence.js` | Deterministic file inventory, hashes, language counts, static signals, absence evidence, context composition, exclusions, and redaction |
+| `lib/copy-signals.js` | Path-scoped copy candidate detection with code, fixture, history, and generated-file exclusions |
 | `lib/project-context.js` | Validate six forms and 37 arc-ready profiles, detect overlays, and audit arc-ready artifact and ledger drift |
 | `lib/pillars.js` | Parse and validate Pillars 1.1 memory, nested scopes, portable routing, references, state, and budgets |
 | `lib/init.js` | Create complete applicability rows and unknown check ledgers from the catalog |
@@ -97,6 +98,9 @@ The static collector:
 - Detects text by content so extensionless environment and configuration files
   are not silently skipped.
 - Records high-signal locations as leads, never findings.
+- Records eight high-confidence copy candidate kinds on reader-facing paths,
+  while skipping code fences, fixtures, release history, licenses, notices, and
+  generated prompts.
 - Redacts credential-shaped values before serialization.
 - Records zero-hit searches for CI, tests, lockfiles, and agent instructions.
 - Detects primary and secondary project forms independently from product,
@@ -111,7 +115,9 @@ JSON Schema 2020-12 implementation against both Pillars-present and
 Pillars-absent evidence, then proves malformed nested state is rejected.
 
 The collector intentionally uses conservative regex signals. Domain evaluators
-must trace reachability, framework behavior, and compensating controls.
+must trace reachability, framework behavior, and compensating controls. Copy
+signals also require a source read and rendered-destination trace. They do not
+establish authorship or fail a writing check by themselves.
 
 `import-sarif` and `import-tool` provide the same trust separation for external
 scanners. Adapters cover SARIF, Semgrep, ast-grep, Gitleaks, and OSV-Scanner.

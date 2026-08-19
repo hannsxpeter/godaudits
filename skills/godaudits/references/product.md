@@ -4,7 +4,7 @@ Audits whether the codebase can still answer the questions a PRD exists to settl
 
 ## Lineage
 
-Descends from aihxp prd-ready, the top of the ready-suite planning tier, by way of the godplans product module that inverted it into R-PRD-1 through R-PRD-17. The disciplines that carry into audit time: the three-label test (every product sentence is a decision, a hypothesis, or an owned open question), the substitution test against two named competitors, the MoSCoW caps (at most 50% Must, hard cap 7), sourced metrics with named instrumentation, the ten-dimension NFR sweep, separate risk and assumption registers, the banned-phrase grep, and the have-nots list, which becomes this module's severity convention: a have-not that blocks a PRD at plan time is at least Medium when found live in a shipped codebase. prd-ready is not one of the seven hannsxpeter auditors, but it carries audit DNA in its Mode C protocol (quote the failing sentence, name the dominant failure mode, list the remediation); this module runs Mode C against the whole repo instead of one document.
+Descends from aihxp prd-ready, the top of the ready-suite planning tier, by way of the godplans product module that inverted it into R-PRD-1 through R-PRD-17. The disciplines that carry into audit time: the three-label test (every product sentence is a decision, a hypothesis, or an owned open question), the substitution test against two named competitors, the MoSCoW caps (at most 50% Must, hard cap 7), sourced metrics with named instrumentation, the ten-dimension NFR sweep, separate risk and assumption registers, the copy-specificity pass, and the have-nots list, which becomes this module's severity convention: a have-not that blocks a PRD at plan time is at least Medium when found live in a shipped codebase. prd-ready is not one of the seven hannsxpeter auditors, but it carries audit DNA in its Mode C protocol (quote the failing sentence, name the dominant failure mode, list the remediation); this module runs Mode C against the whole repo instead of one document.
 
 ## Surface map
 
@@ -55,9 +55,9 @@ Mirror boundary: A-PRD-1..17 mirror R-PRD-1..17 one to one; A-PRD-18 and up are 
 10. A-PRD-10 Verify every open product question carries owner, due date, blocking flag, and recommended default.
     Look: product record open-questions section; grep `TBD`, `TODO` across `docs/` product files (code-level TODO handlers belong to build).
     Fail: unowned TBD or TODO in product docs: Medium.
-11. A-PRD-11 Verify the product record passes the three-label test and contains none of the banned phrases.
-    Look: grep product docs and README for `seamless`, `best-in-class`, `world-class`, `cutting-edge`, `game-chang`, `revolutionary`, `industry-leading`, `enterprise-grade`, `AI-powered` on a non-AI product.
-    Fail: banned phrases in the product record or README: Low. Hits in landing copy cross-reference F-LAUNCH.
+11. A-PRD-11 Verify the product record passes the three-label test and uses concrete, attributable prose: no unsupported attribution, puffery, promotional formulas, filler, stacked hedging, chatbot residue, or generic conclusion; broad technical words fail only when the sentence names no mechanism, evidence, decision, or number.
+    Look: `copy-*` signals in EVIDENCE.json against product docs and README, then read each source line in context; also inspect contentless participial clauses, formulaic contrast, dense sentences, and synonym cycling that a conservative regex deliberately does not classify.
+    Fail: a confirmed low-specificity phrase or unsupported attribution in the product record or README: Low. Invented specifics route to A-PRD-1 or A-PRD-5 at their severity. Landing copy cross-references F-LAUNCH. A signal alone never fails the check.
 12. A-PRD-12 Verify a prior-art record: 3 comparables, each with honest status (thriving, stagnant, dead, pivoted) and a one-line lesson.
     Look: `docs/prior-art.md` or the product record's prior-art section, entries carrying `Status:`.
     Fail: absent at funded scale: Low.
@@ -129,10 +129,10 @@ Representative tasks in the audit-format grammar; at audit time the agent assign
   - Acceptance: every cap named in pricing copy has an enforcement branch; exceeding a cap returns a typed error the UI renders; a test covers each boundary value
   - Verify: `npm test -- tests/billing/limits.test.ts`
   - Checks: A-PRD-20
-- [ ] GA-xxx Own every TBD and strip banned phrases from the product docs
+- [ ] GA-xxx Own every TBD and replace low-specificity product prose
   - Files: docs/product.md, docs/metrics.md
-  - Acceptance: zero TBD or TODO without owner and due date; every open question carries owner, due date, blocking flag, and recommended default; banned marketing phrases removed
-  - Verify: `! grep -riE "seamless|best-in-class|world-class|cutting-edge|game-chang|revolutionary|industry-leading|enterprise-grade" docs/product.md`
+  - Acceptance: zero TBD or TODO without owner and due date; every open question carries owner, due date, blocking flag, and recommended default; every copy signal is removed or replaced with a named mechanism, source, decision, or number
+  - Verify: `godaudits evidence . --output .godaudits/EVIDENCE.json && node -e "const e=require('./.godaudits/EVIDENCE.json');process.exit(e.signals.some(s=>s.path==='docs/product.md'&&s.kind.startsWith('copy-'))?1:0)"`
   - Checks: A-PRD-10, A-PRD-11
 - [ ] GA-xxx Write the support runbook and rollback statement
   - Files: docs/runbook.md
@@ -152,6 +152,7 @@ Representative tasks in the audit-format grammar; at audit time the agent assign
 - Paper metrics: a polished `docs/metrics.md` with zero emitting call sites, the product domain's paper control. Hunt: cross-check every documented metric against the emit call-site inventory before crediting the doc.
 - Vanity telemetry: the only events in code are signups and pageviews. Hunt: read emitted event names; no activation or outcome event at funded scale is a finding, not a style note.
 - Promise theater: a README feature list running ahead of the code. Hunt: claims versus handlers; the stub evidence itself belongs to build, so cite the F-BUILD id and score only the broken promise here.
+- Copy-signal verdict: a regex hit reported as a writing defect without reading its sentence, source, and claim. Refused: copy signals are leads; a technical term with a concrete mechanism passes, while an unsupported attribution fails even when it uses no banned word.
 - Moving-target record: the PRD edited after approval with no changelog entry. Hunt: diff `git log --follow` on the product record against its changelog section.
 - Fabricated personas: narrative demographic paragraphs with no research citation. Hunt: persona fiction in the target-user section; decorative demographics are Evidence, the missing citation is the finding.
 - Vague findings, refused: every F-PRD block quotes a file:line or the exact failing sentence; "the PRD is weak" never ships.

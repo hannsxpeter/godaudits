@@ -15,6 +15,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SKILL="$REPO_DIR/skills/godaudits/SKILL.md"
 REFS="$REPO_DIR/skills/godaudits/references"
+GUIDES="$REPO_DIR/skills/godaudits/guides"
 TEMPLATE="$REPO_DIR/skills/godaudits/templates/AUDIT.template.mdx"
 COMPACT="$REPO_DIR/PROMPT.md"
 FULL="$REPO_DIR/PROMPT.full.md"
@@ -74,6 +75,8 @@ EOF
     printf '\n\n---\n\n# INLINED REFERENCE: references/%s.md\n\n' "$ref"
     cat "$REFS/$ref.md"
   done
+  printf '\n\n---\n\n# INLINED GUIDE: guides/copy-signals.md\n\n'
+  cat "$GUIDES/copy-signals.md"
 }
 
 generate_full() {
@@ -90,6 +93,8 @@ EOF
     printf '\n\n---\n\n# INLINED REFERENCE: references/%s.md\n\n' "$ref"
     cat "$REFS/$ref.md"
   done
+  printf '\n\n---\n\n# INLINED GUIDE: guides/copy-signals.md\n\n'
+  cat "$GUIDES/copy-signals.md"
   printf '\n\n---\n\n# INLINED TEMPLATE: templates/AUDIT.template.mdx\n\n'
   cat "$TEMPLATE"
 }
