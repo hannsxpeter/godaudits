@@ -3,7 +3,7 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.16.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.17.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![audit domains](https://img.shields.io/badge/audit%20domains-18-2f6fed)](#what-it-examines)
 [![checks](https://img.shields.io/badge/checks-437-2f6fed)](skills/godaudits/catalog/checks.json)
@@ -94,7 +94,7 @@ got better, what got worse, and what came back.
 |---|---|
 | `AUDIT.mdx` | The readable report and repair plan |
 | `AUDIT.json` | The source of truth: every check, finding, task, and score |
-| `EVIDENCE.json` | What was found in the repository, with hashes |
+| `EVIDENCE.json` | What was found in the repository, with hashes and review leads |
 | `AUDIT.sarif` | Optional output that annotates code on GitHub and similar hosts |
 | `TOOL-EVIDENCE.json` | Optional results imported from other scanners |
 | `archive/` | Previous audits, kept so re-audits can be compared |
@@ -325,6 +325,16 @@ godaudits import-tool gitleaks.json --tool gitleaks --tool-version VERSION --com
 godaudits import-tool osv.json --tool osv-scanner --tool-version VERSION --command "osv-scanner scan --format json ." --start 4000 --output .godaudits/TOOL-EVIDENCE.json
 ```
 
+### Copy signals
+
+The static fingerprint also records high-confidence phrase candidates on
+reader-facing paths. It skips code fences, fixtures, release history, licenses,
+notices, and generated prompts. Product, UX, and launch evaluators must reopen
+every candidate and read it in context. A signal does not establish AI
+authorship or a writing defect, and technical vocabulary does not fail merely
+because it appears on a list. See the
+[`copy-signals` guide](skills/godaudits/guides/copy-signals.md).
+
 ### Reading the repair plan as a route
 
 A list of phases and waves tells you what the audit decided. It does not tell
@@ -462,10 +472,12 @@ verify into one loop.
 | `docs/CHECK-MAP.md` | Every check, by domain |
 | `docs/EVALUATION.md` | Benchmark and accuracy methodology |
 | `docs/WAYFINDING.md` | Destination, frontier, claims, fog, and scope boundary |
+| `skills/godaudits/guides/copy-signals.md` | Copy-signal scope, interpretation, ownership, and provenance |
 | `docs/RELEASE-POLICY.md` | Release cadence and external audit publication contract |
 | `dogfood/` | Indexed external open-source audits; an empty index makes no track-record claim |
 | `docs/MIGRATION-2.0.md` | Version 1 to version 2 migration |
 | `docs/MIGRATION-2.1.md` | Version 2.0 to version 2.1 migration |
+| `docs/MIGRATION-2.17.md` | Evidence schema 1.1 to 1.2 migration |
 | `docs/THREAT-MODEL.md` | Auditor safety and evidence threat model |
 
 ## Development
@@ -488,3 +500,5 @@ notes are in [`CHANGELOG.md`](CHANGELOG.md); contribution rules are in
 ## License
 
 [MIT](LICENSE)
+
+Third-party attributions are recorded in [`NOTICE`](NOTICE).

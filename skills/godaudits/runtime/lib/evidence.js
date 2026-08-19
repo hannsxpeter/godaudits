@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
+const { scanCopySignals } = require('./copy-signals');
 const { analyzeProjectContext, isExcludedContextPath } = require('./project-context');
 const { analyzePillars } = require('./pillars');
 
@@ -153,6 +154,7 @@ function fingerprintRepository(root) {
         });
       }
     }
+    signals.push(...scanCopySignals(relative, lines, digest));
   }
 
   signals.sort((a, b) => a.path.localeCompare(b.path) || a.line - b.line || a.kind.localeCompare(b.kind));
@@ -183,7 +185,7 @@ function fingerprintRepository(root) {
     ? analyzePillars(absoluteRoot, { task: '', target: '.' })
     : { standard: 'Pillars', version: '1.1.0', present: false, compatible: null, scopes: [], routing: null, findings: [] };
   const result = {
-    schema_version: '1.1',
+    schema_version: '1.2',
     mode: 'static',
     root: path.basename(absoluteRoot),
     commit: gitCommit(absoluteRoot),
@@ -198,7 +200,8 @@ function fingerprintRepository(root) {
     absence_evidence: absenceEvidence,
     limitations: [
       'Static evidence only. No application code, tests, live systems, models, or network requests were executed.',
-      'Regex signals are inventory leads, not findings. A domain evaluator must trace and refute them.'
+      'Regex signals are inventory leads, not findings. A domain evaluator must trace and refute them.',
+      'Copy signals cover high-confidence phrases on reader-facing paths. They do not establish authorship or a writing defect without contextual review.'
     ]
   };
   return {

@@ -3,6 +3,52 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.17.0] - 2026-08-19
+
+Reader-facing prose now follows the same evidence boundary as code findings.
+The runtime narrows review to high-confidence copy candidates, then product, UX,
+and launch evaluators reopen the source and decide whether the complete sentence
+is specific, supported, and appropriate for its reader. A phrase match never
+establishes AI authorship and never becomes a finding by itself.
+
+This is a minor accuracy release inside the 30-day window in
+`docs/RELEASE-POLICY.md`. It uses the material-accuracy exception because newly
+generated evidence changes from schema 1.1 to 1.2 and the interpretation of
+A-PRD-11, A-UX-6, A-UX-7, A-LAUNCH-6, and A-LAUNCH-7 can change audit outcomes.
+No check id, check count, dimension, or weight changes.
+
+### Added
+
+- A zero-dependency `copy-signals` collector with eight candidate kinds for
+  puffery, promotional formulas, vague attribution, stock formulas, filler,
+  stacked hedging, chatbot residue, and generic conclusions.
+- Reader-facing path scope for Markdown, MDX, HTML, JSX, TSX, Vue, Svelte, and
+  message files under marketing, site, email, locale, message, and launch
+  directories. Test and fixture directories, release history, licenses,
+  notices, generated prompts, and Markdown code blocks are excluded.
+- A ninth deterministic benchmark case and direct unit coverage. Positive
+  fixtures exercise all eight signal kinds; clean controls cover precise
+  technical terms, fenced examples, release history, and non-rendered source.
+- `guides/copy-signals.md`, `docs/MIGRATION-2.17.md`, and a third-party NOTICE
+  recording the MIT-licensed pstack `unslop` concepts that informed the
+  taxonomy.
+
+### Changed
+
+- A-PRD-11, A-UX-6, A-UX-7, A-LAUNCH-6, and A-LAUNCH-7 now separate
+  deterministic phrase discovery from contextual judgment. Broad technical
+  vocabulary passes when it names a real mechanism, source, decision, or
+  measured result.
+- The ownership map routes product records and README copy to product, rendered
+  product and CLI messages to UX, and landing, email, and channel copy to
+  launch.
+- The audit-format contract and exemplar add a final prose pass for titles,
+  impacts, fixes, strengths, destinations, and summaries. Required technical
+  terms and structural headings remain intact.
+- EVIDENCE.json schema 1.2 extends `signals[].kind` with the eight `copy-*`
+  values and records the limit that each remains a review lead.
+- Compact and full portable prompts inline the copy-signal interpretation guide.
+
 ## [2.16.0] - 2026-08-04
 
 Two gates that could not fire, and the drift each one let through.

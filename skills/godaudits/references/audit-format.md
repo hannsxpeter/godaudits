@@ -188,6 +188,11 @@ Rules:
   include the weighted owner.
 - Status is open, resolved, accepted-risk, or superseded.
 - Finding and task remediation links are reciprocal.
+- Titles, impact, fixes, destination prose, and summaries name the actor,
+  mechanism, location, or observable result. Remove unsupported attribution,
+  puffery, promotional formulas, filler, stacked hedging, chatbot residue, and
+  generic conclusions. Do not weaken required technical terms or report
+  structure to satisfy a word list.
 
 ## Strength grammar
 

@@ -18,7 +18,7 @@ unknown, never pass. Run the deterministic CLI validation before presenting.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.16 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.17 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -39,6 +39,7 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+14. **Copy signals are leads.** Reader-facing phrase matches identify lines for product, UX, or launch review. They do not establish AI authorship or a writing defect without a source read, and broad technical words never fail by presence alone.
 
 ## Dynamic verification (opt-in)
 
@@ -101,7 +102,7 @@ Policy packs are versioned evidence, not timeless truth. On compliance-sensitive
 
 ### Phase 2: Deterministic intake and evidence
 
-Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
+Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. When any `copy-*` signal exists, read `guides/copy-signals.md` before routing it. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
 
 Complete the primary and secondary project forms, product and industry overlays, regulatory candidates, compatibility archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. A regulatory candidate never establishes legal applicability without verification. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
 
@@ -159,7 +160,7 @@ single read, record it as Firm or Tentative rather than Certain.
 
 ### Phase 5: Compile scores and coverage
 
-Read `references/exemplar.md`. Run `godaudits validate .godaudits/AUDIT.json --write`.
+Read `references/exemplar.md`, including its final prose pass. Run `godaudits validate .godaudits/AUDIT.json --write`.
 
 The compiler derives check coverage, per-domain scores, overall weighted score, verdict, finding counters, task counters, and caps. Failed checks receive deterministic severity factors. Unknown checks do not enter the quality numerator and lower coverage. Coverage below 95 prevents an audit-proof verdict; below 80 caps at needs-work territory; below 60 caps at 69. Active Critical findings, including accepted risks, cap their domain at 69 and the overall at 79. A domain below 50 caps the overall at 84.
 
@@ -205,7 +206,7 @@ frontier rather than trusting a rendered report older than the task state.
 
 ### Phase 7: Render and present
 
-Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
+Run the exemplar's final prose pass over authored AUDIT.json fields, validate again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
 
 Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. The artifacts are the deliverable.
 
@@ -238,7 +239,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.16.0
+## Skill version: 2.17.0
 
 
 ---
@@ -435,6 +436,11 @@ Rules:
   include the weighted owner.
 - Status is open, resolved, accepted-risk, or superseded.
 - Finding and task remediation links are reciprocal.
+- Titles, impact, fixes, destination prose, and summaries name the actor,
+  mechanism, location, or observable result. Remove unsupported attribution,
+  puffery, promotional formulas, filler, stacked hedging, chatbot residue, and
+  generic conclusions. Do not weaken required technical terms or report
+  structure to satisfy a word list.
 
 ## Strength grammar
 
@@ -792,6 +798,7 @@ Each concern is audited exactly once, by the domain that owns it. Findings elsew
 | deploy pipeline, rollback | deploy | |
 | SLOs, alerting, logging shape | observe | security owns log redaction |
 | landing, OG cards, launch SEO | launch | seo owns crawlability of the product itself |
+| reader-facing copy signals | product for product records and README; ux for rendered product and CLI messages; launch for landing, email, and channel copy | the runtime records leads only; other domains cross-reference the owning finding |
 
 ## The interview (rarely needed)
 
@@ -1036,6 +1043,25 @@ A strength is a finding with the sign flipped: same evidence standard, same file
 3. Make failure detectable: every claim carries the check, command, or cap rule that would catch its violation.
 4. End in a checkbox: every Critical and High finding traces to a GA task an agent can execute, verify, and flip.
 
+## The final prose pass
+
+Before rendering, read every authored title, impact, fix, strength, destination,
+and summary once without the evidence blocks. Ask what actor acts, what mechanism
+changes, and what observable result follows. Rewrite any sentence that answers
+none of those questions.
+
+Remove unsupported attribution, puffery, promotional formulas, filler, stacked
+hedging, chatbot residue, and generic conclusions. Inspect passive voice,
+contentless participial clauses, dense sentences, adverbs, formulaic contrasts,
+and synonym cycling in context. Those forms are review prompts, not automatic
+defects. Keep a technical term when it is the precise name of the thing, and keep
+the headings, colons, lists, and repeated vocabulary that make the report contract
+stable.
+
+Do not claim that a phrase establishes AI authorship. The defect is concrete:
+the sentence is unsupported, non-specific, difficult to parse, or addressed to
+the wrong reader. Name that defect and cite the source.
+
 Severity follows blast radius, not visibility. A defect trivial to spot but that no check covered is not a smaller finding for being obvious; it carries the severity its reach earns.
 
 Score any audit fragment against these four. A fragment that names nothing, quotes nothing, and checks nothing scores zero, no matter how alarming its warnings or how reassuring its praise.
@@ -1051,7 +1077,7 @@ Audits whether the codebase can still answer the questions a PRD exists to settl
 
 ## Lineage
 
-Descends from aihxp prd-ready, the top of the ready-suite planning tier, by way of the godplans product module that inverted it into R-PRD-1 through R-PRD-17. The disciplines that carry into audit time: the three-label test (every product sentence is a decision, a hypothesis, or an owned open question), the substitution test against two named competitors, the MoSCoW caps (at most 50% Must, hard cap 7), sourced metrics with named instrumentation, the ten-dimension NFR sweep, separate risk and assumption registers, the banned-phrase grep, and the have-nots list, which becomes this module's severity convention: a have-not that blocks a PRD at plan time is at least Medium when found live in a shipped codebase. prd-ready is not one of the seven hannsxpeter auditors, but it carries audit DNA in its Mode C protocol (quote the failing sentence, name the dominant failure mode, list the remediation); this module runs Mode C against the whole repo instead of one document.
+Descends from aihxp prd-ready, the top of the ready-suite planning tier, by way of the godplans product module that inverted it into R-PRD-1 through R-PRD-17. The disciplines that carry into audit time: the three-label test (every product sentence is a decision, a hypothesis, or an owned open question), the substitution test against two named competitors, the MoSCoW caps (at most 50% Must, hard cap 7), sourced metrics with named instrumentation, the ten-dimension NFR sweep, separate risk and assumption registers, the copy-specificity pass, and the have-nots list, which becomes this module's severity convention: a have-not that blocks a PRD at plan time is at least Medium when found live in a shipped codebase. prd-ready is not one of the seven hannsxpeter auditors, but it carries audit DNA in its Mode C protocol (quote the failing sentence, name the dominant failure mode, list the remediation); this module runs Mode C against the whole repo instead of one document.
 
 ## Surface map
 
@@ -1102,9 +1128,9 @@ Mirror boundary: A-PRD-1..17 mirror R-PRD-1..17 one to one; A-PRD-18 and up are 
 10. A-PRD-10 Verify every open product question carries owner, due date, blocking flag, and recommended default.
     Look: product record open-questions section; grep `TBD`, `TODO` across `docs/` product files (code-level TODO handlers belong to build).
     Fail: unowned TBD or TODO in product docs: Medium.
-11. A-PRD-11 Verify the product record passes the three-label test and contains none of the banned phrases.
-    Look: grep product docs and README for `seamless`, `best-in-class`, `world-class`, `cutting-edge`, `game-chang`, `revolutionary`, `industry-leading`, `enterprise-grade`, `AI-powered` on a non-AI product.
-    Fail: banned phrases in the product record or README: Low. Hits in landing copy cross-reference F-LAUNCH.
+11. A-PRD-11 Verify the product record passes the three-label test and uses concrete, attributable prose: no unsupported attribution, puffery, promotional formulas, filler, stacked hedging, chatbot residue, or generic conclusion; broad technical words fail only when the sentence names no mechanism, evidence, decision, or number.
+    Look: `copy-*` signals in EVIDENCE.json against product docs and README, then read each source line in context; also inspect contentless participial clauses, formulaic contrast, dense sentences, and synonym cycling that a conservative regex deliberately does not classify.
+    Fail: a confirmed low-specificity phrase or unsupported attribution in the product record or README: Low. Invented specifics route to A-PRD-1 or A-PRD-5 at their severity. Landing copy cross-references F-LAUNCH. A signal alone never fails the check.
 12. A-PRD-12 Verify a prior-art record: 3 comparables, each with honest status (thriving, stagnant, dead, pivoted) and a one-line lesson.
     Look: `docs/prior-art.md` or the product record's prior-art section, entries carrying `Status:`.
     Fail: absent at funded scale: Low.
@@ -1176,10 +1202,10 @@ Representative tasks in the audit-format grammar; at audit time the agent assign
   - Acceptance: every cap named in pricing copy has an enforcement branch; exceeding a cap returns a typed error the UI renders; a test covers each boundary value
   - Verify: `npm test -- tests/billing/limits.test.ts`
   - Checks: A-PRD-20
-- [ ] GA-xxx Own every TBD and strip banned phrases from the product docs
+- [ ] GA-xxx Own every TBD and replace low-specificity product prose
   - Files: docs/product.md, docs/metrics.md
-  - Acceptance: zero TBD or TODO without owner and due date; every open question carries owner, due date, blocking flag, and recommended default; banned marketing phrases removed
-  - Verify: `! grep -riE "seamless|best-in-class|world-class|cutting-edge|game-chang|revolutionary|industry-leading|enterprise-grade" docs/product.md`
+  - Acceptance: zero TBD or TODO without owner and due date; every open question carries owner, due date, blocking flag, and recommended default; every copy signal is removed or replaced with a named mechanism, source, decision, or number
+  - Verify: `godaudits evidence . --output .godaudits/EVIDENCE.json && node -e "const e=require('./.godaudits/EVIDENCE.json');process.exit(e.signals.some(s=>s.path==='docs/product.md'&&s.kind.startsWith('copy-'))?1:0)"`
   - Checks: A-PRD-10, A-PRD-11
 - [ ] GA-xxx Write the support runbook and rollback statement
   - Files: docs/runbook.md
@@ -1199,6 +1225,7 @@ Representative tasks in the audit-format grammar; at audit time the agent assign
 - Paper metrics: a polished `docs/metrics.md` with zero emitting call sites, the product domain's paper control. Hunt: cross-check every documented metric against the emit call-site inventory before crediting the doc.
 - Vanity telemetry: the only events in code are signups and pageviews. Hunt: read emitted event names; no activation or outcome event at funded scale is a finding, not a style note.
 - Promise theater: a README feature list running ahead of the code. Hunt: claims versus handlers; the stub evidence itself belongs to build, so cite the F-BUILD id and score only the broken promise here.
+- Copy-signal verdict: a regex hit reported as a writing defect without reading its sentence, source, and claim. Refused: copy signals are leads; a technical term with a concrete mechanism passes, while an unsupported attribution fails even when it uses no banned word.
 - Moving-target record: the PRD edited after approval with no changelog entry. Hunt: diff `git log --follow` on the product record against its changelog section.
 - Fabricated personas: narrative demographic paragraphs with no research citation. Hunt: persona fiction in the target-user section; decorative demographics are Evidence, the missing citation is the finding.
 - Vague findings, refused: every F-PRD block quotes a file:line or the exact failing sentence; "the PRD is weak" never ships.
@@ -2185,12 +2212,12 @@ Mirror boundary: A-UX-1..20 mirror R-UX-1..20 one to one; A-UX-21 and up are aud
 5. A-UX-5: Destructive actions carry undo or a recovery path, every state has a marked exit, no modal or wizard traps, confirmations guard only costly irreversible actions.
    Look: delete handlers, soft-delete or trash code, modals lacking close and escape handling, `confirm(` calls.
    Fail: hard delete with neither undo nor confirmation, High; confirmations on trivial actions, Low.
-6. A-UX-6: One term per concept and one label per action product-wide; buttons name the action or outcome, never "Submit", "OK", or "Click here".
-   Look: i18n catalogs and button strings; grep pairs like "Sign in" versus "Log in" for the same concept.
-   Fail: the same concept under two names, or generic labels on primary actions; Medium.
-7. A-UX-7: Errors state what happened, why, how to fix it, and what happens next, at the field, in plain language; raw codes and stack traces never render; user input survives the error.
-   Look: catch blocks rendering `err.message` or `error.code`, error catalogs, form reset calls inside error paths.
-   Fail: raw codes or stack traces reaching users, or a form cleared on error; High.
+6. A-UX-6: One term per concept and one label per action product-wide; buttons name the actor's action or outcome, never "Submit", "OK", or "Click here"; user-facing copy names a concrete action, mechanism, or result instead of puffery, filler, or chatbot residue.
+   Look: i18n catalogs and button strings; grep pairs like "Sign in" versus "Log in" for the same concept; review `copy-*` signals only where their path and source line render to a user.
+   Fail: the same concept under two names, generic labels on primary actions, or confirmed low-specificity copy on a primary journey: Medium. A signal in non-rendered code is ignored.
+7. A-UX-7: Errors state what happened, why, how to fix it, and what happens next, at the field, in plain language with a named actor and action; raw codes, vague apologies, and stack traces never render; user input survives the error.
+   Look: catch blocks rendering `err.message` or `error.code`, error catalogs, form reset calls inside error paths, vague strings such as "something went wrong" with no recovery action.
+   Fail: raw codes or stack traces reaching users, a form cleared on error, or an error that hides the recovery action on a core journey: High.
 8. A-UX-8: Flow accessibility holds against the stated or inferable conformance target: full keyboard operability with no traps, focus order following visual order, no redundant entry of provided data, paste and autofill never blocked in auth. Contrast tokens and focus visuals are ui's: cross-reference F-UI per the ownership map.
    Look: custom widgets without key handlers, paste handlers calling `preventDefault`, `autocomplete="off"` on credential fields, `tabIndex` abuse.
    Fail: a keyboard-unreachable core task, Critical; blocked paste or autofill in auth, High.
@@ -2299,6 +2326,7 @@ Representative tasks in the audit-format grammar; at audit time the agent adds t
 - Roach motel: subscribe in two clicks, cancel behind a support email; "Reject all" dimmed or an extra click away. Rule: confirmed instances are Critical, no negotiation (A-UX-17).
 - Wall-before-value: verification, card, or sales-call gates before the first taste of value, justified nowhere in repo or plan (A-UX-14).
 - Feature-tour onboarding: a tour library in the manifest and a first-run that walks the interface instead of driving the core action (A-UX-14).
+- Copy-signal verdict: a phrase hit in a source file that never renders, or a precise technical term treated as a UX defect. Refusal: trace each signal to the rendered message and judge the complete sentence before scoring A-UX-6 or A-UX-7.
 - Database-surgery recovery: workflows whose stuck items have no reassign, recall, or rollback path in the product, so the runbook says "ask an engineer" (A-UX-11).
 - Prediction-as-verdict: asserting CWV numbers, real contrast, or runtime focus order from static code. Refusal: such claims are Tentative, routed to the Verify-first phase with the confirming command named.
 - Platitude findings: "onboarding is confusing", "improve usability". Refusal: every finding passes the substitution test and cites a file:line, route, or named step; anything less is deleted, not softened.
@@ -4024,7 +4052,7 @@ Audits the launch surface of a codebase: positioning and copy honesty, the landi
 
 ## Lineage
 
-Descends from launch-ready, the shipping-tier ready-suite skill, via the godplans launch module that inverted its pass/fail gates into R-LAUNCH-1 through R-LAUNCH-21. The method DNA that carries over intact: the substitution test as a sentence-by-sentence discipline (a hero that stays plausible with a competitor's name swapped in is a defect, not a style note); the banned-word list as a grep-detectable AI-slop signature; the five-section landing anatomy with a single above-the-fold CTA; the five-channel OG preview rule driven by LinkedIn's 7-day card cache; per-venue etiquette encoded as have-nots (Show HN titles, PH 12:01 AM PT Tue-Thu, Reddit 9:1, LinkedIn founder voice); the paper-waitlist and silent-launch gates; and the runbook-as-calendar mechanic. launch-ready's have-nots list is this module's severity floor: its disqualifiers land High or Critical here regardless of how polished the rest of the surface is.
+Descends from launch-ready, the shipping-tier ready-suite skill, via the godplans launch module that inverted its pass/fail gates into R-LAUNCH-1 through R-LAUNCH-21. The method DNA that carries over intact: the substitution test as a sentence-by-sentence discipline (a hero that stays plausible with a competitor's name swapped in is a defect, not a style note); a low-specificity copy pass whose deterministic phrases remain leads until context confirms them; the five-section landing anatomy with a single above-the-fold CTA; the five-channel OG preview rule driven by LinkedIn's 7-day card cache; per-venue etiquette encoded as have-nots (Show HN titles, PH 12:01 AM PT Tue-Thu, Reddit 9:1, LinkedIn founder voice); the paper-waitlist and silent-launch gates; and the runbook-as-calendar mechanic. launch-ready's have-nots list is this module's severity floor: its disqualifiers land High or Critical here regardless of how polished the rest of the surface is.
 
 ## Surface map
 
@@ -4059,12 +4087,12 @@ Mirror boundary: A-LAUNCH-1..22 mirror R-LAUNCH-1..22 one to one; A-LAUNCH-23 an
 5. A-LAUNCH-5 Feature grid honesty: 3-6 tiles, each naming a product-specific capability that exists in the codebase; no category-label tiles (Fast, Secure, Scalable) and no tile promising a feature no route or module delivers.
    Look: feature-grid markup diffed against the intake fingerprint's route and module inventory.
    Fail: a tile promising vapor is High (cross-reference F-BUILD when the feature exists as a stub, per the ownership map); a grid over 6 tiles or built of category labels is Medium.
-6. A-LAUNCH-6 Banned-word audit: zero hits above the fold from the slop set (seamless, powerful, revolutionary, effortless, intelligent, cutting-edge, game-changing, unlock, supercharge, streamline, empower, elevate, robust, best-in-class, leading, enterprise-grade, world-class).
-   Look: case-insensitive grep across landing source, email templates, and channel post drafts.
-   Fail: three or more hits above the fold is High (the AI-slop signature); one or two is Medium; hits in email subject lines is Medium.
-7. A-LAUNCH-7 Copy voice: active voice, second person, named subjects, and no AI self-reference in the hero unless the product is an AI product whose differentiator is the AI itself.
-   Look: hero and sub-hero copy; grep `AI-powered|powered by AI` in the hero block.
-   Fail: AI self-reference in a non-AI product's hero is Medium; passive third-person hero copy is Low.
+6. A-LAUNCH-6 Low-specificity copy audit: above-the-fold copy has no confirmed puffery, promotional formula, vague attribution, filler, stacked hedge, chatbot residue, or generic conclusion; a broad adjective such as powerful, robust, intelligent, or leading passes when the same claim names its mechanism, evidence, or measured result.
+   Look: `copy-*` signals in EVIDENCE.json across landing source, email templates, and channel post drafts, followed by a source read; also inspect contentless participial clauses and formulaic contrasts that the conservative signal set leaves to judgment.
+   Fail: three or more confirmed low-specificity phrases above the fold is High; one or two is Medium; a confirmed hit in an email subject is Medium. A signal alone never fails the check, and a technical term is never a defect solely because it appears on a list.
+7. A-LAUNCH-7 Copy voice: active voice, second person, named subjects, concrete mechanisms or numbers instead of feelings, and no AI self-reference in the hero unless the product is an AI product whose differentiator is the AI itself; split a sentence when its actor, action, and outcome cannot be recovered on one read.
+   Look: hero and sub-hero copy; grep `AI-powered|powered by AI` in the hero block; identify the actor, mechanism, and observable result in each above-the-fold claim.
+   Fail: AI self-reference in a non-AI product's hero is Medium; an above-the-fold claim with no recoverable actor or mechanism is Medium; passive third-person hero copy or a dense sentence that hides the action is Low.
 8. A-LAUNCH-8 Brand tokens are real: a named brand color, two grays, one or two typefaces, and a real icon library on the landing surface; no library-default styling shipped as identity, no emoji UI markers, no stock abstract-people illustrations.
    Look: landing CSS and token files, tailwind config overrides, icon imports (lucide, heroicons, phosphor), hero image assets.
    Fail: emoji as UI markers is Medium; an unmodified template palette and typeface on every surface is Medium.
@@ -4132,10 +4160,10 @@ Floor findings from the ancestor's have-nots list (leftover noindex on the shipp
 
 At audit time the agent adds the `Fixes:` line with real finding ids; seeds omit it.
 
-- [ ] GA-xxx Rewrite the hero and above-the-fold copy to pass the substitution and banned-word audits
+- [ ] GA-xxx Rewrite the hero and above-the-fold copy to pass the substitution and specificity audits
   - Files: site/index.html, docs/launch/POSITIONING.md
-  - Acceptance: the hero names the audience and the replacement specifically enough that two named competitor swaps make it false; zero banned-word hits above the fold; first person with a named founder; no AI self-reference unless the AI is the differentiator
-  - Verify: `! grep -riE 'seamless|powerful|revolutionary|effortless|cutting-edge|game-changing|supercharge|streamline|empower|elevate|robust|best-in-class|world-class|enterprise-grade' site/index.html`
+  - Acceptance: the hero names the audience and the replacement specifically enough that two named competitor swaps make it false; every copy signal is removed or replaced with a named mechanism, source, or number; first person with a named founder; no AI self-reference unless the AI is the differentiator
+  - Verify: `godaudits evidence . --output .godaudits/EVIDENCE.json && node -e "const e=require('./.godaudits/EVIDENCE.json');process.exit(e.signals.some(s=>s.path==='site/index.html'&&s.kind.startsWith('copy-'))?1:0)"`
   - Checks: A-LAUNCH-1, A-LAUNCH-2, A-LAUNCH-6, A-LAUNCH-7
 - [ ] GA-xxx Restructure the landing page to the five-section anatomy with one CTA
   - Files: site/index.html, site/styles.css
@@ -4170,7 +4198,8 @@ At audit time the agent adds the `Fixes:` line with real finding ids; seeds omit
 
 ## Anti-patterns hunted
 
-- AI-slop landing: banned words above the fold, gradient hero, stock illustrations of abstract people pointing at charts. Hunt with the case-insensitive grep; three or more hits marks the surface as needing a rewrite, not a polish.
+- Low-specificity landing: multiple confirmed copy signals above the fold, a gradient hero, and stock illustrations of abstract people pointing at charts. Hunt from EVIDENCE.json, read every source line, and call it a writing defect rather than an authorship claim.
+- Copy-signal verdict: a regex hit treated as proof. Refused: signals are leads; broad technical words and quoted examples pass when the source sentence is concrete, while vague attribution can fail without using any promotional adjective.
 - Hero fatigue: a hero sentence that survives with a competitor's name swapped in. Run the swap against two named competitors before scoring positioning; plausibility under the swap is the finding.
 - Spec-sheet positioning: category-label tiles (Fast, Secure, Scalable) or a grid over six. Count the tiles and read each one for a product-specific capability.
 - Vapor landing: tiles promising features no route or module delivers. Diff the grid against the fingerprint's route inventory; a stubbed handler behind a tile cross-references F-BUILD per the ownership map.
@@ -4181,7 +4210,72 @@ At audit time the agent adds the `Fixes:` line with real finding ids; seeds omit
 - Channel etiquette violations: a Show HN title containing "launch" or all-caps, a PH slot on Friday through Sunday or without a confirmed hunter, a Reddit target with zero prior participation, a LinkedIn draft in press-release voice. Read the committed drafts, not the intent.
 - Silent fade: no D+1 through D+7 follow-up and no retrospective after a completed launch. Check the launch log against the sequence docs and retrospectives dir.
 - Same-infra status page: a status link resolving to the app's own domain and deployment. Resolve the footer link's host against the deploy config.
-- Auditor discipline: no vague findings ("improve the landing" is banned); no double-billing (CWV code signals belong to seo, stubbed features to build, transactional email to product, SLO definitions to observe, per the ownership map); no severity inflation (one banned word is never Critical); calibration holds (a Mode E repo draws no channel findings, and a weekend project with no runbook gets a note, not a High).
+- Auditor discipline: no vague findings ("improve the landing" is refused); no double-billing (CWV code signals belong to seo, stubbed features to build, transactional email to product, SLO definitions to observe, per the ownership map); no severity inflation (one confirmed phrase is never Critical); calibration holds (a Mode E repo draws no channel findings, and a weekend project with no runbook gets a note, not a High).
+
+
+---
+
+# INLINED GUIDE: guides/copy-signals.md
+
+# Copy signal interpretation
+
+Copy signals narrow the lines a domain evaluator must read. They are not an
+authorship detector, a style score, or an automatic finding. The source line,
+its rendered destination, its claim, and its evidence decide the outcome.
+
+## Signal set
+
+The static collector emits eight high-confidence kinds on reader-facing paths:
+
+| Kind | Candidate meaning |
+|---|---|
+| `copy-puffery` | ceremonial importance with no fact |
+| `copy-promotional` | broad marketing promise with no mechanism |
+| `copy-vague-attribution` | unnamed source presented as support |
+| `copy-formula` | stock contrast or challenge frame |
+| `copy-filler` | removable setup that adds no decision or fact |
+| `copy-hedging` | stacked uncertainty that hides the actual confidence |
+| `copy-chatbot-residue` | conversational wrapper addressed to a chat user |
+| `copy-generic-conclusion` | closing sentence with no next fact or action |
+
+The collector reads Markdown, MDX, HTML, JSX, TSX, Vue, and Svelte. It also
+reads message-oriented JavaScript, TypeScript, JSON, text, and YAML under
+marketing, site, email, locale, message, and launch directories. It excludes
+test and fixture directories, release history, licenses, notices, generated
+prompts, Markdown code fences, and indented Markdown code.
+
+## Judgment boundary
+
+For every signal:
+
+1. Re-open the path and line recorded in EVIDENCE.json.
+2. Confirm that the line reaches a reader-facing surface.
+3. Read the complete sentence and the evidence supporting its claim.
+4. Drop quoted examples, historical text, precise technical terms, and claims
+   that name their mechanism, source, or measured result.
+5. Route a survivor to its owning check and refute it like any other finding.
+
+The semantic pass also inspects patterns that a conservative regex cannot judge
+safely: passive voice, contentless participial clauses, dense sentences,
+adverbs, formulaic contrasts, synonym cycling, and false ranges. None fails on
+form alone.
+
+## Ownership
+
+- Product records and README promises belong to A-PRD-3 and A-PRD-11.
+- Rendered labels, errors, help, and CLI messages belong to A-UX-6, A-UX-7,
+  and A-UX-20.
+- Landing, email, and channel copy belongs to A-LAUNCH-1, A-LAUNCH-6,
+  A-LAUNCH-7, and A-LAUNCH-22.
+- Audit report prose belongs to the exemplar quality gate. It does not create a
+  finding against the target repository.
+
+## Provenance
+
+The taxonomy was informed by the pstack `unslop` skill by Lauren Tan. The
+implementation narrows its phrase categories into evidence leads and keeps
+contextual writing judgments out of the deterministic runtime. See the project
+NOTICE for license attribution.
 
 
 ---

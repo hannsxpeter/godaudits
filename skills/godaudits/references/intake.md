@@ -144,6 +144,7 @@ Each concern is audited exactly once, by the domain that owns it. Findings elsew
 | deploy pipeline, rollback | deploy | |
 | SLOs, alerting, logging shape | observe | security owns log redaction |
 | landing, OG cards, launch SEO | launch | seo owns crawlability of the product itself |
+| reader-facing copy signals | product for product records and README; ux for rendered product and CLI messages; launch for landing, email, and channel copy | the runtime records leads only; other domains cross-reference the owning finding |
 
 ## The interview (rarely needed)
 

@@ -52,6 +52,8 @@ The bundled runtime performs the operations where discretion is a liability:
 - Compile the authored modules into a versioned check catalog.
 - Fingerprint repository files, hashes, manifests, languages, signals, and
   absences without executing product code.
+- Narrow reader-facing prose review with high-confidence copy candidates while
+  leaving authorship, specificity, and support judgments to the domain pass.
 - Detect six project forms, secondary surfaces, 37 arc-ready profile
   candidates, and regulatory candidates without asserting that any law applies.
 - Validate Pillars 1.1 routing and arc-ready 1.1 artifact state.

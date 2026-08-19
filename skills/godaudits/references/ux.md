@@ -41,12 +41,12 @@ Mirror boundary: A-UX-1..20 mirror R-UX-1..20 one to one; A-UX-21 and up are aud
 5. A-UX-5: Destructive actions carry undo or a recovery path, every state has a marked exit, no modal or wizard traps, confirmations guard only costly irreversible actions.
    Look: delete handlers, soft-delete or trash code, modals lacking close and escape handling, `confirm(` calls.
    Fail: hard delete with neither undo nor confirmation, High; confirmations on trivial actions, Low.
-6. A-UX-6: One term per concept and one label per action product-wide; buttons name the action or outcome, never "Submit", "OK", or "Click here".
-   Look: i18n catalogs and button strings; grep pairs like "Sign in" versus "Log in" for the same concept.
-   Fail: the same concept under two names, or generic labels on primary actions; Medium.
-7. A-UX-7: Errors state what happened, why, how to fix it, and what happens next, at the field, in plain language; raw codes and stack traces never render; user input survives the error.
-   Look: catch blocks rendering `err.message` or `error.code`, error catalogs, form reset calls inside error paths.
-   Fail: raw codes or stack traces reaching users, or a form cleared on error; High.
+6. A-UX-6: One term per concept and one label per action product-wide; buttons name the actor's action or outcome, never "Submit", "OK", or "Click here"; user-facing copy names a concrete action, mechanism, or result instead of puffery, filler, or chatbot residue.
+   Look: i18n catalogs and button strings; grep pairs like "Sign in" versus "Log in" for the same concept; review `copy-*` signals only where their path and source line render to a user.
+   Fail: the same concept under two names, generic labels on primary actions, or confirmed low-specificity copy on a primary journey: Medium. A signal in non-rendered code is ignored.
+7. A-UX-7: Errors state what happened, why, how to fix it, and what happens next, at the field, in plain language with a named actor and action; raw codes, vague apologies, and stack traces never render; user input survives the error.
+   Look: catch blocks rendering `err.message` or `error.code`, error catalogs, form reset calls inside error paths, vague strings such as "something went wrong" with no recovery action.
+   Fail: raw codes or stack traces reaching users, a form cleared on error, or an error that hides the recovery action on a core journey: High.
 8. A-UX-8: Flow accessibility holds against the stated or inferable conformance target: full keyboard operability with no traps, focus order following visual order, no redundant entry of provided data, paste and autofill never blocked in auth. Contrast tokens and focus visuals are ui's: cross-reference F-UI per the ownership map.
    Look: custom widgets without key handlers, paste handlers calling `preventDefault`, `autocomplete="off"` on credential fields, `tabIndex` abuse.
    Fail: a keyboard-unreachable core task, Critical; blocked paste or autofill in auth, High.
@@ -155,6 +155,7 @@ Representative tasks in the audit-format grammar; at audit time the agent adds t
 - Roach motel: subscribe in two clicks, cancel behind a support email; "Reject all" dimmed or an extra click away. Rule: confirmed instances are Critical, no negotiation (A-UX-17).
 - Wall-before-value: verification, card, or sales-call gates before the first taste of value, justified nowhere in repo or plan (A-UX-14).
 - Feature-tour onboarding: a tour library in the manifest and a first-run that walks the interface instead of driving the core action (A-UX-14).
+- Copy-signal verdict: a phrase hit in a source file that never renders, or a precise technical term treated as a UX defect. Refusal: trace each signal to the rendered message and judge the complete sentence before scoring A-UX-6 or A-UX-7.
 - Database-surgery recovery: workflows whose stuck items have no reassign, recall, or rollback path in the product, so the runbook says "ask an engineer" (A-UX-11).
 - Prediction-as-verdict: asserting CWV numbers, real contrast, or runtime focus order from static code. Refusal: such claims are Tentative, routed to the Verify-first phase with the confirming command named.
 - Platitude findings: "onboarding is confusing", "improve usability". Refusal: every finding passes the substitution test and cites a file:line, route, or named step; anything less is deleted, not softened.

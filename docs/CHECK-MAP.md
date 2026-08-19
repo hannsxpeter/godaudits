@@ -36,7 +36,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-PRD-8 | weighted (Scope negative space) | - | Verify the negative-space record: 3 or more reasoned no-gos with reconsider conditions, a deferral,  |
 | A-PRD-9 | weighted (Registers and question hygiene) | - | Verify risks and assumptions live in two separate complete registers, and validation artifacts exist |
 | A-PRD-10 | weighted (Registers and question hygiene) | - | Verify every open product question carries owner, due date, blocking flag, and recommended default |
-| A-PRD-11 | weighted (Registers and question hygiene) | - | Verify the product record passes the three-label test and contains none of the banned phrases |
+| A-PRD-11 | weighted (Registers and question hygiene) | - | Verify the product record passes the three-label test and uses concrete, attributable prose: no unsu |
 | A-PRD-12 | weighted (Lifecycle, prior art, and closure) | - | Verify a prior-art record: 3 comparables, each with honest status (thriving, stagnant, dead, pivoted |
 | A-PRD-13 | weighted (Lifecycle, prior art, and closure) | - | Verify the downstream pre-fill is reconstructable and true: entities, flows with error paths, roles, |
 | A-PRD-14 | weighted (Lifecycle, prior art, and closure) | - | Verify a sign-off roster with specific attestations (problem, feasibility, flows, testability), neve |
@@ -229,7 +229,7 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-UX-3 | weighted (Usability and heuristics) | - | Every async action has loading, pending, disabled, and success states; every screen has an empty sta |
 | A-UX-4 | weighted (Usability and heuristics) | - | Waits get treatment where the roughly 100ms/400ms RAIL and Doherty budgets cannot hold: skeletons or |
 | A-UX-5 | weighted (Usability and heuristics) | - | Destructive actions carry undo or a recovery path, every state has a marked exit, no modal or wizard |
-| A-UX-6 | weighted (Content and UX writing) | - | One term per concept and one label per action product-wide; buttons name the action or outcome, neve |
+| A-UX-6 | weighted (Content and UX writing) | - | One term per concept and one label per action product-wide; buttons name the actor's action or outco |
 | A-UX-7 | weighted (Content and UX writing) | wcag-2.2-aa/understandable | Errors state what happened, why, how to fix it, and what happens next, at the field, in plain langua |
 | A-UX-8 | weighted (Flow accessibility) | wcag-2.2-aa/operable, aoda-on/web-content-accessibility, ada-508/web-content-accessibility | Flow accessibility holds against the stated or inferable conformance target: full keyboard operabili |
 | A-UX-9 | weighted (Forms and input (conditional: forms present)) | wcag-2.2-aa/understandable | Forms meet the Baymard standard: persistent visible labels, inline validation on blur, minimal field |
@@ -564,8 +564,8 @@ Generated from `catalog/checks.json` by `npm run check-map`. Do not edit by hand
 | A-LAUNCH-3 | weighted (Positioning discipline) | - | Launch mode and tier are declared and scope the assets: a mode (A pre-launch through E quiet-B2B) an |
 | A-LAUNCH-4 | weighted (Landing page and copy) | - | Landing anatomy: five sections in order (hero, social proof, feature grid, pricing if applicable, CT |
 | A-LAUNCH-5 | weighted (Landing page and copy) | - | Feature grid honesty: 3-6 tiles, each naming a product-specific capability that exists in the codeba |
-| A-LAUNCH-6 | weighted (Landing page and copy) | - | Banned-word audit: zero hits above the fold from the slop set (seamless, powerful, revolutionary, ef |
-| A-LAUNCH-7 | weighted (Landing page and copy) | - | Copy voice: active voice, second person, named subjects, and no AI self-reference in the hero unless |
+| A-LAUNCH-6 | weighted (Landing page and copy) | - | Low-specificity copy audit: above-the-fold copy has no confirmed puffery, promotional formula, vague |
+| A-LAUNCH-7 | weighted (Landing page and copy) | - | Copy voice: active voice, second person, named subjects, concrete mechanisms or numbers instead of f |
 | A-LAUNCH-8 | weighted (Landing page and copy) | - | Brand tokens are real: a named brand color, two grays, one or two typefaces, and a real icon library |
 | A-LAUNCH-9 | weighted (SEO and OG cards) | - | Launch-page SEO checklist: exactly one `<h1>`, `<title>` under 60 characters, meta description under |
 | A-LAUNCH-10 | weighted (SEO and OG cards) | - | OG card to spec: exactly 1200x630, under 300KB, product name plus a 6-10 word value prop legible at  |

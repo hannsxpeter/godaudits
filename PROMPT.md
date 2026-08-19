@@ -20,7 +20,7 @@ audit from memory. Use PROMPT.full.md for the complete 437-check pack.
 
 # godaudits
 
-Audit everything after anything. godaudits 2.16 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.17 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -41,6 +41,7 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+14. **Copy signals are leads.** Reader-facing phrase matches identify lines for product, UX, or launch review. They do not establish AI authorship or a writing defect without a source read, and broad technical words never fail by presence alone.
 
 ## Dynamic verification (opt-in)
 
@@ -103,7 +104,7 @@ Policy packs are versioned evidence, not timeless truth. On compliance-sensitive
 
 ### Phase 2: Deterministic intake and evidence
 
-Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
+Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. When any `copy-*` signal exists, read `guides/copy-signals.md` before routing it. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
 
 Complete the primary and secondary project forms, product and industry overlays, regulatory candidates, compatibility archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. A regulatory candidate never establishes legal applicability without verification. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
 
@@ -161,7 +162,7 @@ single read, record it as Firm or Tentative rather than Certain.
 
 ### Phase 5: Compile scores and coverage
 
-Read `references/exemplar.md`. Run `godaudits validate .godaudits/AUDIT.json --write`.
+Read `references/exemplar.md`, including its final prose pass. Run `godaudits validate .godaudits/AUDIT.json --write`.
 
 The compiler derives check coverage, per-domain scores, overall weighted score, verdict, finding counters, task counters, and caps. Failed checks receive deterministic severity factors. Unknown checks do not enter the quality numerator and lower coverage. Coverage below 95 prevents an audit-proof verdict; below 80 caps at needs-work territory; below 60 caps at 69. Active Critical findings, including accepted risks, cap their domain at 69 and the overall at 79. A domain below 50 caps the overall at 84.
 
@@ -207,7 +208,7 @@ frontier rather than trusting a rendered report older than the task state.
 
 ### Phase 7: Render and present
 
-Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
+Run the exemplar's final prose pass over authored AUDIT.json fields, validate again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
 
 Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. The artifacts are the deliverable.
 
@@ -240,7 +241,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Silent module skipping or compact-prompt full audits without the domain modules.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.16.0
+## Skill version: 2.17.0
 
 
 ---
@@ -437,6 +438,11 @@ Rules:
   include the weighted owner.
 - Status is open, resolved, accepted-risk, or superseded.
 - Finding and task remediation links are reciprocal.
+- Titles, impact, fixes, destination prose, and summaries name the actor,
+  mechanism, location, or observable result. Remove unsupported attribution,
+  puffery, promotional formulas, filler, stacked hedging, chatbot residue, and
+  generic conclusions. Do not weaken required technical terms or report
+  structure to satisfy a word list.
 
 ## Strength grammar
 
@@ -794,6 +800,7 @@ Each concern is audited exactly once, by the domain that owns it. Findings elsew
 | deploy pipeline, rollback | deploy | |
 | SLOs, alerting, logging shape | observe | security owns log redaction |
 | landing, OG cards, launch SEO | launch | seo owns crawlability of the product itself |
+| reader-facing copy signals | product for product records and README; ux for rendered product and CLI messages; launch for landing, email, and channel copy | the runtime records leads only; other domains cross-reference the owning finding |
 
 ## The interview (rarely needed)
 
@@ -1038,6 +1045,90 @@ A strength is a finding with the sign flipped: same evidence standard, same file
 3. Make failure detectable: every claim carries the check, command, or cap rule that would catch its violation.
 4. End in a checkbox: every Critical and High finding traces to a GA task an agent can execute, verify, and flip.
 
+## The final prose pass
+
+Before rendering, read every authored title, impact, fix, strength, destination,
+and summary once without the evidence blocks. Ask what actor acts, what mechanism
+changes, and what observable result follows. Rewrite any sentence that answers
+none of those questions.
+
+Remove unsupported attribution, puffery, promotional formulas, filler, stacked
+hedging, chatbot residue, and generic conclusions. Inspect passive voice,
+contentless participial clauses, dense sentences, adverbs, formulaic contrasts,
+and synonym cycling in context. Those forms are review prompts, not automatic
+defects. Keep a technical term when it is the precise name of the thing, and keep
+the headings, colons, lists, and repeated vocabulary that make the report contract
+stable.
+
+Do not claim that a phrase establishes AI authorship. The defect is concrete:
+the sentence is unsupported, non-specific, difficult to parse, or addressed to
+the wrong reader. Name that defect and cite the source.
+
 Severity follows blast radius, not visibility. A defect trivial to spot but that no check covered is not a smaller finding for being obvious; it carries the severity its reach earns.
 
 Score any audit fragment against these four. A fragment that names nothing, quotes nothing, and checks nothing scores zero, no matter how alarming its warnings or how reassuring its praise.
+
+
+---
+
+# INLINED GUIDE: guides/copy-signals.md
+
+# Copy signal interpretation
+
+Copy signals narrow the lines a domain evaluator must read. They are not an
+authorship detector, a style score, or an automatic finding. The source line,
+its rendered destination, its claim, and its evidence decide the outcome.
+
+## Signal set
+
+The static collector emits eight high-confidence kinds on reader-facing paths:
+
+| Kind | Candidate meaning |
+|---|---|
+| `copy-puffery` | ceremonial importance with no fact |
+| `copy-promotional` | broad marketing promise with no mechanism |
+| `copy-vague-attribution` | unnamed source presented as support |
+| `copy-formula` | stock contrast or challenge frame |
+| `copy-filler` | removable setup that adds no decision or fact |
+| `copy-hedging` | stacked uncertainty that hides the actual confidence |
+| `copy-chatbot-residue` | conversational wrapper addressed to a chat user |
+| `copy-generic-conclusion` | closing sentence with no next fact or action |
+
+The collector reads Markdown, MDX, HTML, JSX, TSX, Vue, and Svelte. It also
+reads message-oriented JavaScript, TypeScript, JSON, text, and YAML under
+marketing, site, email, locale, message, and launch directories. It excludes
+test and fixture directories, release history, licenses, notices, generated
+prompts, Markdown code fences, and indented Markdown code.
+
+## Judgment boundary
+
+For every signal:
+
+1. Re-open the path and line recorded in EVIDENCE.json.
+2. Confirm that the line reaches a reader-facing surface.
+3. Read the complete sentence and the evidence supporting its claim.
+4. Drop quoted examples, historical text, precise technical terms, and claims
+   that name their mechanism, source, or measured result.
+5. Route a survivor to its owning check and refute it like any other finding.
+
+The semantic pass also inspects patterns that a conservative regex cannot judge
+safely: passive voice, contentless participial clauses, dense sentences,
+adverbs, formulaic contrasts, synonym cycling, and false ranges. None fails on
+form alone.
+
+## Ownership
+
+- Product records and README promises belong to A-PRD-3 and A-PRD-11.
+- Rendered labels, errors, help, and CLI messages belong to A-UX-6, A-UX-7,
+  and A-UX-20.
+- Landing, email, and channel copy belongs to A-LAUNCH-1, A-LAUNCH-6,
+  A-LAUNCH-7, and A-LAUNCH-22.
+- Audit report prose belongs to the exemplar quality gate. It does not create a
+  finding against the target repository.
+
+## Provenance
+
+The taxonomy was informed by the pstack `unslop` skill by Lauren Tan. The
+implementation narrows its phrase categories into evidence leads and keeps
+contextual writing judgments out of the deterministic runtime. See the project
+NOTICE for license attribution.

@@ -3,7 +3,7 @@ name: godaudits
 description: "Audit an existing codebase end to end and emit validated machine state plus a standalone remediation report. godaudits fingerprints the repository, detects six project forms and conservative overlays, validates Pillars 1.1 and arc-ready artifacts, evaluates 437 checks across 18 domains in an explicit pass/fail/unknown/not-applicable ledger, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially verifies findings, computes scores with coverage and risk caps, and renders MDX plus optional SARIF from AUDIT.json. Includes deterministic validation, evaluations, focused and re-audit modes, and godplans conformance. Static mode is read-only and never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, re-audits, and remediation planning. Refuses stale evidence, unverifiable citations, unredacted secrets, unsupported regulatory claims, double-billing, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.16.0"
+  version: "2.17.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.16 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.17 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -33,6 +33,7 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 11. **Every Critical and High closes.** Each open Critical or High finding has a reciprocal remediation task with exact files, acceptance conditions, check ids, and a verification command.
 12. **The artifacts stand alone.** Another agent must be able to remediate from AUDIT.json and AUDIT.mdx without this chat.
 13. **Compliance is standing.** Load `references/compliance.md` and the applicable policy pack. Hard-stop only prohibited core purposes. Do not turn ambiguous intent into a refusal without one clarifying question.
+14. **Copy signals are leads.** Reader-facing phrase matches identify lines for product, UX, or launch review. They do not establish AI authorship or a writing defect without a source read, and broad technical words never fail by presence alone.
 
 ## Dynamic verification (opt-in)
 
@@ -95,7 +96,7 @@ Policy packs are versioned evidence, not timeless truth. On compliance-sensitive
 
 ### Phase 2: Deterministic intake and evidence
 
-Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
+Read `references/intake.md` fully. Run the static fingerprint command before domain judgment. Review `.godaudits/EVIDENCE.json`; it inventories manifests, lockfiles, languages, files and hashes, high-signal source locations, absence evidence, six-form routing, product and industry overlays, regulatory candidates, arc-ready artifacts, Pillars 1.1 state, compatibility archetype inference, and limitations. When any `copy-*` signal exists, read `guides/copy-signals.md` before routing it. Treat Pillars paths as repository-relative. Arc artifact freshness uses Git history when available and an explicit filesystem fallback otherwise; prepublication may bind hardening by content SHA-256 or Git revision.
 
 Complete the primary and secondary project forms, product and industry overlays, regulatory candidates, compatibility archetype, scale calibration, risk profile, applicability matrix, ownership map, and assumptions. A regulatory candidate never establishes legal applicability without verification. Use `balanced` by default, `security-critical` for regulated data, money, identity, privileged actions, or multi-tenancy, `growth` for public conversion and visibility surfaces, and `library` for libraries and developer tools. Ask at most one batch of 0 to 3 questions only when the repository cannot answer and the answer changes applicability or severity.
 
@@ -153,7 +154,7 @@ single read, record it as Firm or Tentative rather than Certain.
 
 ### Phase 5: Compile scores and coverage
 
-Read `references/exemplar.md`. Run `godaudits validate .godaudits/AUDIT.json --write`.
+Read `references/exemplar.md`, including its final prose pass. Run `godaudits validate .godaudits/AUDIT.json --write`.
 
 The compiler derives check coverage, per-domain scores, overall weighted score, verdict, finding counters, task counters, and caps. Failed checks receive deterministic severity factors. Unknown checks do not enter the quality numerator and lower coverage. Coverage below 95 prevents an audit-proof verdict; below 80 caps at needs-work territory; below 60 caps at 69. Active Critical findings, including accepted risks, cap their domain at 69 and the overall at 79. A domain below 50 caps the overall at 84.
 
@@ -199,7 +200,7 @@ frontier rather than trusting a rendered report older than the task state.
 
 ### Phase 7: Render and present
 
-Run validation again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
+Run the exemplar's final prose pass over authored AUDIT.json fields, validate again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
 
 Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. The artifacts are the deliverable.
 
@@ -241,6 +242,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `references/audit-format.md` | AUDIT.json, evidence, finding, task, scoring, and rendering contract |
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
+| `guides/copy-signals.md` | Copy-signal scope, interpretation, and ownership |
 | `references/<domain>.md` | 18 domain modules |
 | `catalog/checks.json` | Generated 437-check machine catalog with scoring and standards metadata |
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
@@ -250,4 +252,4 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.16.0
+## Skill version: 2.17.0
