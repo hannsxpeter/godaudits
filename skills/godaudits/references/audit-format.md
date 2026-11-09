@@ -50,7 +50,10 @@ coverage until evaluated.
 - Optional `evidence_fingerprint_sha256` and `evidence_commit` bind the audit to the evidence snapshot. Release and re-audit gates require them.
 - `engine_version` and `pack_version`.
 - `capabilities`: static, plus explicitly authorized sandbox or connected
-  evidence capabilities.
+  evidence capabilities. `council` records that the user authorized a
+  cross-harness council review of the finished audit, naming the seats; it sends
+  the audit and cited code to third-party providers and adds no evidence. Its
+  state lives in a separate COUNCIL.json, never in AUDIT.json.
 - `assumptions`: only facts the repository could not answer.
 - Optional `destination`: one or two sentences of prose naming what reaching
   the end of the remediation plan looks like. It fixes the scope, so a

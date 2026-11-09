@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hannsxpeter/godaudits/schemas/council.schema.json",
+  "title": "godaudits council ledger",
+  "description": "COUNCIL.json: the ledger of an opt-in cross-harness council review. Written only by `godaudits council apply` and `godaudits council triage`; status, remaining, and warnings are computed and must not be edited by hand. Scores are recorded per seat and never feed status.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "commit", "max_rounds", "min_seats", "audit_sha256", "status", "status_detail", "remaining", "warnings", "rounds"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "commit": { "type": "string" },
+    "max_rounds": { "const": 3 },
+    "min_seats": { "const": 3 },
+    "audit_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "The audit hash the latest round reviewed." },
+    "status": { "enum": ["needs-triage", "continue", "converged", "round-cap", "incomplete"] },
+    "status_detail": { "type": "string" },
+    "remaining": {
+      "type": "array",
+      "description": "Filled only at round-cap: what was still unresolved.",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "objection", "status", "kind", "target"],
+            "properties": {
+              "type": { "const": "objection" },
+              "objection": { "type": "string" },
+              "status": { "type": "string" },
+              "kind": { "type": "string" },
+              "target": { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "detail"],
+            "properties": {
+              "type": { "const": "incomplete" },
+              "detail": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["round", "code", "message"],
+        "properties": {
+          "round": { "type": "integer", "minimum": 1 },
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "rounds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/round" }
+    }
+  },
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "line", "quote", "sha256", "verified"],
+      "properties": {
+        "path": { "type": "string" },
+        "line": { "type": ["integer", "null"], "minimum": 1 },
+        "quote": { "type": "string" },
+        "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$", "description": "Hash of the cited file when it could be read." },
+        "verified": { "type": "boolean", "description": "True only when the file exists inside the repository and the quote appears within 3 lines of the cited line." }
+      }
+    },
+    "seat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["harness", "provider", "model", "effort", "score", "response_sha256", "verdicts", "objections", "warnings", "missing_verdicts", "complete"],
+      "properties": {
+        "harness": { "type": "string", "minLength": 1 },
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "effort": { "type": ["string", "null"] },
+        "score": { "type": ["integer", "null"], "minimum": 0, "maximum": 100, "description": "Audit quality as this seat judged it. null means no score. Never gates anything." },
+        "response_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "verdicts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["finding", "outcome", "guard", "guard_error", "note", "target_known"],
+            "properties": {
+              "finding": { "type": "string" },
+              "outcome": { "enum": ["refuted", "weakened", "no-refutation"] },
+              "guard": { "anyOf": [{ "$ref": "#/$defs/citation" }, { "type": "null" }] },
+              "guard_error": { "type": ["string", "null"] },
+              "note": { "type": "string" },
+              "target_known": { "type": "boolean" }
+            }
+          }
+        },
+        "objections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "target", "claim", "citation", "citation_error", "target_known", "target_type"],
+            "properties": {
+              "kind": { "enum": ["refute", "weaken", "missed", "evidence"] },
+              "target": { "type": "string" },
+              "claim": { "type": "string" },
+              "citation": { "anyOf": [{ "$ref": "#/$defs/citation" }, { "type": "null" }] },
+              "citation_error": { "type": ["string", "null"] },
+              "target_known": { "type": "boolean" },
+              "target_type": { "enum": ["finding", "check", null] }
+            }
+          }
+        },
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "missing_verdicts": { "type": "array", "items": { "type": "string" } },
+        "complete": { "type": "boolean", "description": "False when the seat has no verdict for some brief. Silence never counts as agreement." }
+      }
+    },
+    "tally": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding", "result", "seats", "unanswered_by", "confidence_ceiling"],
+      "properties": {
+        "finding": { "type": "string" },
+        "result": { "enum": ["standing", "contested", "challenged"] },
+        "seats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["harness", "outcome", "guard_verified"],
+            "properties": {
+              "harness": { "type": "string" },
+              "outcome": { "enum": ["refuted", "weakened", "no-refutation"] },
+              "guard_verified": { "type": ["boolean", "null"] }
+            }
+          }
+        },
+        "unanswered_by": { "type": "array", "items": { "type": "string" } },
+        "confidence_ceiling": { "enum": ["Firm", null], "description": "Firm for contested and challenged findings, for the next re-audit. The council never raises confidence." }
+      }
+    },
+    "objection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "fingerprint", "kind", "target", "claim", "claims", "citation", "citation_error", "raised_by", "status", "decision", "repeat_of"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^O-[1-3]-[0-9]+$" },
+        "fingerprint": { "type": "string", "description": "kind|target|path:line, or kind|target without a citation." },
+        "kind": { "enum": ["refute", "weaken", "missed", "evidence"] },
+        "target": { "type": "string" },
+        "claim": { "type": "string" },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["harness", "claim"],
+            "properties": { "harness": { "type": "string" }, "claim": { "type": "string" } }
+          }
+        },
+        "citation": { "anyOf": [{ "$ref": "#/$defs/citation" }, { "type": "null" }] },
+        "citation_error": { "type": ["string", "null"] },
+        "raised_by": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "status": { "enum": ["open", "accepted", "dismissed", "repeat-dismissed", "citation-failed", "rejected-target"] },
+        "decision": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "reason"],
+              "properties": {
+                "status": { "enum": ["accepted", "dismissed"] },
+                "reason": { "type": "string" }
+              }
+            },
+            { "type": "null" }
+          ]
+        },
+        "repeat_of": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["round", "objection", "reason"],
+              "properties": {
+                "round": { "type": "integer", "minimum": 1 },
+                "objection": { "type": "string" },
+                "reason": { "type": "string" }
+              }
+            },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "round": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["round", "audit_sha256", "required_findings", "triaged", "complete", "incomplete_reasons", "seats", "tally", "objections", "warnings"],
+      "properties": {
+        "round": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "audit_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "required_findings": { "type": "array", "items": { "type": "string" } },
+        "triaged": { "type": "boolean", "description": "True once triage closed the round." },
+        "complete": { "type": "boolean", "description": "True only with at least 3 distinct harnesses and a verdict from every seat for every brief." },
+        "incomplete_reasons": { "type": "array", "items": { "type": "string" } },
+        "seats": { "type": "array", "items": { "$ref": "#/$defs/seat" } },
+        "tally": { "type": "array", "items": { "$ref": "#/$defs/tally" } },
+        "objections": { "type": "array", "items": { "$ref": "#/$defs/objection" } },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "message"],
+            "properties": { "code": { "type": "string" }, "message": { "type": "string" } }
+          }
+        }
+      }
+    }
+  }
+}

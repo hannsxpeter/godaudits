@@ -19,6 +19,7 @@ const { validateProjectContextCatalog } = require('./lib/project-context');
 const { planProbes, applyResults } = require('./lib/verify-runtime');
 const { planRefutations, applyRefutations } = require('./lib/refute');
 const { planWayfinding, renderWayfinding } = require('./lib/wayfind');
+const { applyCouncil, planCouncil, renderCouncil, sha256Hex, triageCouncil } = require('./lib/council');
 const {
   applyBlastRadiusResults,
   exportChangeReviewEvidence,
@@ -46,6 +47,10 @@ godaudits verify-runtime plan <AUDIT.json> [--output PROBES.json]
 godaudits verify-runtime apply <AUDIT.json> <RESULTS.json> [--output VERIFICATION.json]
 godaudits refute plan <AUDIT.json> [--output REFUTATION-BRIEFS.json]
 godaudits refute apply <AUDIT.json> <RESULTS.json> [--output REFUTATION.json]
+godaudits council plan <AUDIT.json> [--ledger COUNCIL.json] [--output PACKET.json]
+godaudits council apply <AUDIT.json> <RESPONSE.json>... --repo DIR [--ledger COUNCIL.json] [--output COUNCIL.json]
+godaudits council triage <COUNCIL.json> <DECISIONS.json> [--output COUNCIL.json]
+godaudits council render <COUNCIL.json> [--output COUNCIL.mdx]
 godaudits blast-radius plan [repo] --base REV --head REV --fact "SAFETY FACT" [--fact "SECOND FACT"] --verify "COMMAND" [--audit AUDIT.json] [--output CHANGE-REVIEW.json]
 godaudits blast-radius validate <CHANGE-REVIEW.json>
 godaudits blast-radius apply <CHANGE-REVIEW.json> <RESULTS.json> [--output file]
@@ -76,6 +81,15 @@ function writeOrPrint(value, output) {
     fs.writeFileSync(output, text);
     process.stdout.write(`Wrote ${path.resolve(output)}\n`);
   } else process.stdout.write(text);
+}
+
+// Council commands only ever write a new file, or rewrite the ledger they were
+// given. Anything else that already exists is refused, so a run can neither
+// replace another ledger's history nor sidestep the round cap.
+function assertCouncilTarget(target, ledgerFile, hint) {
+  if (!fs.existsSync(target)) return;
+  if (ledgerFile && fs.existsSync(ledgerFile) && fs.realpathSync(target) === fs.realpathSync(ledgerFile)) return;
+  throw new Error(`${path.resolve(target)} already exists and is not the ledger being updated; ${hint}`);
 }
 
 function readJson(file) {
@@ -286,6 +300,71 @@ function main() {
       return 0;
     }
     throw new Error('refute requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESULTS.json>');
+  }
+  if (command === 'council') {
+    const mode = args[0];
+    // Positional operands are the arguments that are neither a flag nor a flag's
+    // value, so a response path is never mistaken for --repo or --ledger's value.
+    const valueFlags = new Set(['--ledger', '--output', '--repo']);
+    const operands = args.slice(1).filter((arg, index, all) => !arg.startsWith('--') && !valueFlags.has(all[index - 1]));
+    const ledgerFlag = option(args, '--ledger');
+    if (mode === 'plan' || mode === 'apply') {
+      if (!operands[0]) throw new Error(`council ${mode} requires AUDIT.json`);
+      const auditFile = path.resolve(operands[0]);
+      const auditBytes = fs.readFileSync(auditFile);
+      const audit = JSON.parse(auditBytes.toString('utf8'));
+      const defaultLedger = path.join(path.dirname(auditFile), 'COUNCIL.json');
+      // A ledger sitting next to the audit is never picked up silently: round
+      // sequencing depends on it.
+      if (!ledgerFlag && fs.existsSync(defaultLedger) && mode === 'plan') {
+        throw new Error(`${defaultLedger} already exists; pass --ledger ${defaultLedger} so the round is sequenced from it`);
+      }
+      const ledger = ledgerFlag ? readJson(ledgerFlag) : null;
+      const auditSha256 = sha256Hex(auditBytes);
+      let checkIds = [];
+      if (mode === 'apply') checkIds = buildCatalog(skillRoot).checks.map((check) => check.id);
+      if (mode === 'plan') {
+        const packet = planCouncil(audit, { auditSha256, ledger });
+        // PACKET-<round>.json, never ROUND-<round>-*.json: the packet must not
+        // match the glob that selects seat responses.
+        writeOrPrint(packet, option(args, '--output', path.join(path.dirname(auditFile), 'council', `PACKET-${packet.round}.json`)));
+        return 0;
+      }
+      const responseFiles = operands.slice(1);
+      if (responseFiles.length === 0) throw new Error('council apply requires at least one RESPONSE.json');
+      const repo = option(args, '--repo');
+      if (!repo) throw new Error('council apply requires --repo DIR so citations can be checked');
+      const outputFile = option(args, '--output', ledgerFlag || defaultLedger);
+      assertCouncilTarget(outputFile, ledgerFlag, ledgerFlag
+        ? 'pass --output naming the ledger itself or a new file'
+        : 'pass --ledger to continue it, or --output naming a new file');
+      const updated = applyCouncil(audit, responseFiles.map(readJson), {
+        auditSha256,
+        ledger,
+        repoRoot: repo,
+        checkIds,
+        sources: responseFiles
+      });
+      writeOrPrint(updated, outputFile);
+      const latest = updated.rounds[updated.rounds.length - 1];
+      process.stdout.write(`council round ${latest.round}: ${updated.status}. ${updated.status_detail}\n`);
+      return 0;
+    }
+    if (mode === 'triage') {
+      if (!operands[0] || !operands[1]) throw new Error('council triage requires COUNCIL.json and DECISIONS.json');
+      const triageOutput = option(args, '--output', operands[0]);
+      assertCouncilTarget(triageOutput, operands[0], 'pass --output naming the ledger itself or a new file');
+      const triaged = triageCouncil(readJson(operands[0]), readJson(operands[1]));
+      writeOrPrint(triaged, triageOutput);
+      process.stdout.write(`council status: ${triaged.status}. ${triaged.status_detail}\n`);
+      return 0;
+    }
+    if (mode === 'render') {
+      if (!operands[0]) throw new Error('council render requires COUNCIL.json');
+      writeOrPrint(renderCouncil(readJson(operands[0])), option(args, '--output', path.join(path.dirname(path.resolve(operands[0])), 'COUNCIL.mdx')));
+      return 0;
+    }
+    throw new Error('council requires a mode: plan <AUDIT.json> | apply <AUDIT.json> <RESPONSE.json>... | triage <COUNCIL.json> <DECISIONS.json> | render <COUNCIL.json>');
   }
   if (command === 'blast-radius') {
     const mode = args[0];

@@ -1,0 +1,3 @@
+[
+  { "objection": "O-1-1", "status": "dismissed", "reason": "The repository layer scopes the query, see src/repo.js." }
+]

@@ -3,7 +3,7 @@ name: godaudits
 description: "Audit a codebase end to end and emit validated JSON plus remediation MDX, or review one diff for non-obvious blast radius with explicit safety facts and a compiled merge proof gate. godaudits fingerprints the repository, detects six project forms, validates Pillars 1.1 and arc-ready artifacts, evaluates 437 checks across 18 domains with pass/fail/unknown/not-applicable outcomes, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially refutes findings, computes scores with coverage and risk caps, and renders optional SARIF. Includes focused, full, re-audit, plan-aware, and change-safety modes. Static mode never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, remediation, blast-radius reviews, and pre-merge safety. Refuses stale evidence, invented citations, secrets, unsupported regulatory claims, double-billing, unproven merge safety, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.18.0"
+  version: "2.19.0"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -12,7 +12,7 @@ metadata:
 
 # godaudits
 
-Audit everything after anything. godaudits 2.18 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
+Audit everything after anything. godaudits 2.19 is an evidence-first audit system, not only an audit prompt. The domain modules carry judgment. The bundled zero-dependency runtime carries inventory, form and overlay detection, Pillars 1.1 routing, arc-ready artifact validation, check-catalog compilation, state initialization, freshness validation, score computation, rendering, SARIF export, re-audit diffs, remediation wayfinding, and evaluation metrics.
 
 The machine source of truth is `.godaudits/AUDIT.json`. It records every applicable check, including clean and unknown checks. `.godaudits/AUDIT.mdx` is a generated standalone report and remediation handoff. `.godaudits/AUDIT.sarif` is optional integration output. Never hand-edit derived scores or counts.
 
@@ -20,8 +20,8 @@ godaudits remains the mirror of godplans. Audit check `A-SEC-3` verifies plan re
 
 ## Ground rules (non-negotiable)
 
-1. **Static is the safe default.** Static mode reads source and git metadata, writes only under `.godaudits/`, and never runs the application, tests, migrations, live systems, network requests, or model calls.
-2. **Stronger evidence requires explicit authority.** Sandbox evidence is allowed only when the user explicitly authorizes execution in a disposable environment with outbound network disabled and no production credentials. Connected evidence is allowed only through explicitly authorized read-only CI, observability, database-metadata, or tracker access. Record the capability in `audit.capabilities`.
+1. **Static is the safe default.** Static mode reads source and git metadata, writes only under `.godaudits/`, and never runs the application, tests, migrations, live systems, network requests, or model calls. A council review is never part of static mode.
+2. **Stronger evidence requires explicit authority.** Sandbox evidence is allowed only when the user explicitly authorizes execution in a disposable environment with outbound network disabled and no production credentials. Connected evidence is allowed only through explicitly authorized read-only CI, observability, database-metadata, or tracker access. Record the capability in `audit.capabilities`. Council review is a further explicit capability, never a default: it sends the audit and cited code to third-party providers, so it needs the user's authorization naming the seats, recorded as `council`.
 3. **Every check gets an outcome.** Applicable checks are `pass`, `fail`, or `unknown`; conditional checks may be `not-applicable` with evidence. Uninspected is `unknown`, never `pass`. Unknown checks reduce coverage and cap the verdict.
 4. **Evidence over assertion.** Every pass, failure, and strength references evidence. Source evidence carries path, line, quote, and content hash. Absence evidence carries the exact search, scope, and zero-hit result. Tool and runtime evidence carry command, tool version, and result provenance.
 5. **Secrets never enter the report.** Mask credential values and store only a one-way fingerprint. A live secret may be a Critical finding; the secret itself is never quoted into JSON, MDX, SARIF, chat, or logs.
@@ -48,6 +48,16 @@ The runtime serializes independent refutation (ground rule 9) the same way: `god
 
 Second opinion: the check catalog has a structural ceiling, it verifies control presence. To find what it would miss, an authorized run may add an unconstrained pass that reads the code fresh, without the catalog's framing, hunting behavioral defects (races, dead controls, early transitions, authorization gaps on non-primary paths) and feeding novel findings back as candidates. Verify each with the same evidence and refutation discipline before recording it. Apply the pass whole, never a sampled subset. Before recording a candidate as novel, search the catalog for a check that already owns the claim: if one exists the candidate is not a discovery but evidence against that check, and it updates that check's outcome in place. A surviving candidate must still route to a weighted owning check in its own domain. A survivor that maps to an already-failing check is a distinct root cause recorded under the ownership map, never a deletion of the existing finding.
 
+## Council review (opt-in)
+
+When the user explicitly authorizes a council and names the seats, read `guides/council.md` and run it after the Phase 7 render, before presenting. Three or more independent agents from distinct harnesses review the finished audit read-only, one agent per seat per round, in at most three rounds. The runtime plans the packet, validates and folds the responses into `COUNCIL.json`, and renders the table; it never calls a model.
+
+- The audit and the cited code leave the machine. Never use a council on private code without authorization naming the seats, and never substitute: fewer than three distinct harnesses is reported, not filled.
+- Seats are read-only. A before-and-after tree fingerprint of files outside `.godaudits/` must match, or that seat's response is void. The orchestrator writes each response's `seat` block from what it actually invoked; a seat's self-reported identity is never trusted.
+- The lead triages every objection and fixes accepted ones through the normal method. Accepted objections fix the audit and never widen its destination or scope.
+- Stop when a round yields no new accepted objections, or after three rounds.
+- Seat scores grade the audit and are shown, never used to gate a verdict, a compiled score, or convergence. A council can lower a finding's confidence and never raise it.
+
 ## Runtime commands
 
 Commands below use `godaudits`. When it is not on PATH, replace it with `node <skill-directory>/runtime/godaudits.js`.
@@ -69,6 +79,10 @@ godaudits blast-radius validate .godaudits/CHANGE-REVIEW.json
 godaudits blast-radius apply .godaudits/CHANGE-REVIEW.json .godaudits/CHANGE-RESULTS.json --output .godaudits/CHANGE-REVIEW.json
 godaudits blast-radius render .godaudits/CHANGE-REVIEW.json --output .godaudits/CHANGE-REVIEW.mdx
 godaudits blast-radius evidence .godaudits/CHANGE-REVIEW.json --start 1000 --output .godaudits/CHANGE-EVIDENCE.json
+godaudits council plan .godaudits/AUDIT.json [--ledger .godaudits/COUNCIL.json] --output .godaudits/council/PACKET-1.json
+godaudits council apply .godaudits/AUDIT.json .godaudits/council/ROUND-1-*.json --repo . [--ledger .godaudits/COUNCIL.json]
+godaudits council triage .godaudits/COUNCIL.json .godaudits/council/DECISIONS-1.json
+godaudits council render .godaudits/COUNCIL.json --output .godaudits/COUNCIL.mdx
 godaudits wayfind .godaudits/AUDIT.json
 ```
 
@@ -225,7 +239,7 @@ frontier rather than trusting a rendered report older than the task state.
 
 Run the exemplar's final prose pass over authored AUDIT.json fields, validate again, then render MDX and optional SARIF. Do not hand-edit the rendered files.
 
-Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. The artifacts are the deliverable.
+Present in chat: verdict, score and coverage, scorecard, top three risks, top three strengths, quick wins, finding and task counts, what is takeable now from the frontier, and the exact artifact paths. When a council ran, also present its table: rounds, seat scores, finding tally, objections with reasons, the stop status, and warnings. The artifacts are the deliverable.
 
 ### Phase 8: Evaluate the auditor when ground truth exists
 
@@ -243,6 +257,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - **Static capability**: default and always available.
 - **Sandbox capability**: explicit user authorization, disposable environment, no outbound network or production secrets.
 - **Connected capability**: explicitly authorized read-only external evidence with connector, query, timestamp, and provenance recorded.
+- **Council capability**: explicitly authorized cross-harness review of a finished audit by three or more read-only seats. It adds no evidence, may lower confidence, and never changes a compiled score.
 
 ## What godaudits refuses
 
@@ -255,6 +270,8 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Critical or High findings without reciprocal remediation tasks.
 - Hand-edited computed scores, counters, MDX, or SARIF.
 - Silent module skipping or compact-prompt full audits without the domain modules.
+- A council presented as converged with fewer than three distinct harnesses, or with an incomplete seat.
+- Council scores used to gate a verdict, a compiled score, or convergence.
 - A blast-radius merge pass whose safety facts or before-merge reproduction stopped below executable proof.
 - Executable or running-app change proof without recorded authority, environment, and isolation.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
@@ -270,13 +287,15 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `references/compliance.md` | Compliance gate and account-safety rules |
 | `references/exemplar.md` | Worked quality bar |
 | `guides/copy-signals.md` | Copy-signal scope, interpretation, and ownership |
+| `guides/council.md` | Opt-in council review: consent, seats, round loop, stop rule, and prompt |
 | `references/<domain>.md` | 18 domain modules |
 | `catalog/checks.json` | Generated 437-check machine catalog with scoring and standards metadata |
 | `catalog/project-context.json` | Six forms, 37 arc-ready profiles, overlays, and artifact paths |
-| `schemas/*.json` | Audit, evidence, change-review, proof-results, and benchmark schemas |
+| `schemas/*.json` | Audit, evidence, change-review, proof-results, council ledger, council response, and benchmark schemas |
 | `runtime/godaudits.js` | Self-contained zero-dependency CLI |
-| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, change-safety, wayfinding, and evaluation engine |
+| `runtime/lib/` | Catalog, evidence, compiler, renderer, SARIF, diff, change-safety, council, wayfinding, and evaluation engine |
+| `runtime/lib/council.js` | Council packet, response validation, citation checks, ledger, triage, and render |
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.18.0
+## Skill version: 2.19.0

@@ -88,6 +88,44 @@ the execution environment must match its authorization, and the before-merge
 proof command must exactly match the command selected during planning. A
 different passing command cannot satisfy the gate.
 
+### Council egress and reviewer influence
+
+A council sends the audit, the refutation briefs, and the cited code to each
+seat's provider, so it is the one workflow that deliberately discloses the
+repository to third parties. Controls:
+
+- Council is an explicit capability. The runtime refuses to plan or apply
+  unless `audit.capabilities` includes `council`, and the guide requires the
+  user's authorization naming the seats before that capability is recorded.
+  Free models are for public code only.
+- The runtime never starts a seat, never calls a model or the network, and never
+  mutates AUDIT.json. Sending is the orchestrating agent's act, under that
+  authorization.
+- Seats are read-only. The orchestrator fingerprints the tracked and untracked
+  non-ignored files outside `.godaudits/` (a tree id from a throwaway Git index)
+  before and after each seat; a mismatch or a failed command voids that seat's
+  response. A status listing would miss an edit to an already-modified file.
+  Ignored files, content that `.gitattributes` rules or clean filters normalize
+  before hashing, and submodule working trees are not covered; use a clean
+  disposable worktree when that matters.
+- Seat identity is set by the orchestrator, not the seat. It overwrites each
+  response's `seat` block from what it invoked, because the distinct-harness
+  rule would otherwise rest on a model's self-report. The runtime cannot verify
+  that step.
+- Seat output is untrusted text. It is bound to the audit by SHA-256, validated
+  field by field, and passed through the shared credential redactor before it
+  enters COUNCIL.json. A reviewer cannot plant a secret in the ledger.
+- A reviewer cannot invent evidence. Every citation is checked against the
+  repository: no absolute path, `..` escape, or symlink leaving the repo, and
+  the quote must appear within three lines of the cited line. A citation that
+  fails can never be accepted.
+- A reviewer cannot launder a verdict. Scores are recorded and shown but feed no
+  status, tally, or compiled score. A council can lower a finding's confidence
+  and never raise it, silence is not agreement, and fewer than three distinct
+  harnesses is incomplete rather than converged.
+- Residual: a seat that has already read the code has disclosed it, and the
+  runtime cannot recall that. Authorization is the control, not redaction.
+
 ### False pass and score laundering
 
 Every selected check starts unknown. Pass requires evidence. Unknown reduces

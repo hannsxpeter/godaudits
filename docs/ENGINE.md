@@ -24,6 +24,7 @@ not lose it when they copy only the canonical skill directory.
 | `lib/verify-runtime.js` | Plan runtime probes for behavioral findings and fold executed results into a verification report |
 | `lib/refute.js` | Plan independent refutation briefs for open Critical and High findings and fold verdicts into a disposition report |
 | `lib/blast-radius.js` | Plan static diff impact beyond direct callers, validate and apply proof results, compile the merge gate, render reviews, and export proof as audit evidence leads |
+| `lib/council.js` | Plan council packets, validate seat responses, verify citations against the repository, fold them into a ledger with a fixed stop rule, record triage, and render the council table |
 | `lib/wayfind.js` | Derive the destination, remediation frontier, claims, fog, and scope boundary from audit state on read |
 | `godaudits.js` | CLI command routing and file I/O |
 
@@ -102,6 +103,53 @@ open High or Critical consequence risk remains.
 `blast-radius evidence` converts level 2 and 3 proof into hashed source evidence
 and level 4 and 5 proof into runtime evidence. The export creates evidence
 leads only. It cannot create a finding, update a check outcome, or move a score.
+
+## Council state
+
+`COUNCIL.json` is separate from AUDIT.json and conforms to
+`schemas/council.schema.json`. Seat responses conform to
+`schemas/council-response.schema.json`, which is in strict structured-output
+shape. The council commands are static and offline: the runtime never starts a
+seat, never calls a model or the network, and never mutates AUDIT.json. It is
+available only when `audit.capabilities` includes `council`.
+
+- `council plan` emits the packet for the next round: the SHA-256 of the AUDIT.json
+  bytes, the refutation briefs from `refute plan`, earlier dismissals with their
+  fingerprints and reasons, and the response contract. It refuses a converged or
+  capped ledger and a ledger whose latest round has untriaged objections.
+- Council commands write only a new file or the ledger they were given: `apply`
+  and `triage` refuse an `--output` that names any other existing file, and
+  `plan` writes its packet to `council/PACKET-<round>.json`, a name the
+  `ROUND-<round>-*.json` response glob cannot match. The orchestrator, not the
+  seat, writes each response's `seat` block from what it actually invoked.
+- `council apply` rejects a response whose audit hash differs, whose round is not
+  the latest untriaged round or the next one, whose seat lacks a harness,
+  provider, or model, or whose harness repeats within the round.
+- Citations are checked against `--repo`: repository-relative paths only, no
+  absolute path, `..` segment, or symlink that resolves outside the repository,
+  an existing readable file, and a whitespace-normalized quote within three
+  lines of the cited line. The file hash is recorded. A failed citation is
+  `citation-failed`; a target that is not a finding in the audit or a check in
+  the audit ledger or catalog is `rejected-target`. Neither needs triage and
+  neither can be accepted.
+- Quotes, claims, notes, and decision reasons pass through the shared credential
+  redactor before they are stored.
+- An objection fingerprint is kind, target, and cited path and line. Equal
+  fingerprints from several seats merge with a `raised_by` list, and a
+  fingerprint dismissed in an earlier round is `repeat-dismissed`.
+- A round is complete only with three distinct harnesses and a verdict from every
+  seat for every brief. An incomplete round cannot converge. Fewer than three
+  distinct known providers adds a `reduced-decorrelation` warning.
+- Status is computed from completeness, open and accepted objections, triage, and
+  the round count, with a hard cap of three rounds. Seat scores are stored per
+  seat and per round and are read by nothing that computes status. The ledger's
+  stored status is recomputed on every load, so a hand edit is rejected.
+- Each finding's tally is `standing`, `contested`, or `challenged`. The last two
+  record a Firm confidence ceiling for the next re-audit; the council never
+  raises confidence. A seat challenges a finding with a refuted or weakened
+  verdict whose guard verified, or with a `refute` or `weaken` objection against
+  that finding whose citation verified, including findings with no required
+  verdict. Unverified challenges never count, and silent seats are unanswered.
 
 ## Catalog compilation
 

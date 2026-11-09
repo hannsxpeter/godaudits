@@ -29,3 +29,21 @@ If you are working on this repository:
   Do not renumber either side independently.
 - Version values in SKILL.md frontmatter and body, CHANGELOG.md, package.json,
   plugin.json, and marketplace.json must agree.
+
+## Checks
+
+Fast, while working, on the files you changed:
+
+- `node --test test/<changed>.test.js` for each test file the change touches
+  (for example `test/council.test.js`).
+- `bash scripts/lint.sh unicode-clean` for ASCII-only authored text, and
+  `bash scripts/lint.sh zero-dependency` after touching `runtime/lib/`.
+  `bash scripts/lint.sh schemas-valid` after touching a schema.
+
+Full, before handing work back:
+
+- `npm run check`
+- `~/.agents/bin/check-style`
+
+After editing the skill, guides, or `scripts/build-prompt.sh`, run
+`npm run build:prompt`; after changing the version, run `npm run version:sync`.
