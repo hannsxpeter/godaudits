@@ -101,9 +101,13 @@ repository to third parties. Controls:
 - The runtime never starts a seat, never calls a model or the network, and never
   mutates AUDIT.json. Sending is the orchestrating agent's act, under that
   authorization.
-- Seats are read-only. The orchestrator compares `git status --porcelain`
-  outside `.godaudits/` before and after each seat; a change voids that seat's
-  response.
+- Seats are read-only. The orchestrator fingerprints the tracked and untracked
+  non-ignored files outside `.godaudits/` (a tree id from a throwaway Git index)
+  before and after each seat; a mismatch or a failed command voids that seat's
+  response. A status listing would miss an edit to an already-modified file.
+  Ignored files, content that `.gitattributes` rules or clean filters normalize
+  before hashing, and submodule working trees are not covered; use a clean
+  disposable worktree when that matters.
 - Seat identity is set by the orchestrator, not the seat. It overwrites each
   response's `seat` block from what it invoked, because the distinct-harness
   rule would otherwise rest on a model's self-report. The runtime cannot verify

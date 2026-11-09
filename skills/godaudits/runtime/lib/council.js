@@ -306,7 +306,8 @@ function buildSeat(response, context, repository) {
       claim: clean(objection.claim, 600),
       citation: checked ? citationRecord(objection.citation, checked) : null,
       citation_error: citationError,
-      target_known: context.findingIds.has(objection.target) || context.checkIds.has(objection.target)
+      target_known: context.findingIds.has(objection.target) || context.checkIds.has(objection.target),
+      target_type: context.findingIds.has(objection.target) ? 'finding' : (context.checkIds.has(objection.target) ? 'check' : null)
     });
   }
   seat.missing_verdicts = context.required.filter((id) => !seat.verdicts.some((verdict) => verdict.finding === id));
@@ -398,22 +399,47 @@ function buildObjections(round, seats, repeats, previous) {
   }).sort((a, b) => Number(a.id.split('-')[2]) - Number(b.id.split('-')[2]));
 }
 
+// A seat challenges a finding when it returned a refuted or weakened verdict with
+// a verified guard, or raised a refute or weaken objection against that finding
+// with a verified citation. Unverified challenges never count, and a seat that
+// said nothing about a finding is unanswered, not agreeing.
+function verifiedObjection(seat, finding) {
+  const matches = seat.objections.filter((objection) => (objection.kind === 'refute' || objection.kind === 'weaken')
+    && objection.target_type === 'finding' && objection.target === finding
+    && objection.citation && objection.citation.verified === true && !objection.citation_error);
+  return matches.find((objection) => objection.kind === 'refute') || matches[0] || null;
+}
+
+function stanceOf(seat, finding) {
+  const verdict = seat.verdicts.find((entry) => entry.finding === finding) || null;
+  if (verdict && verdict.outcome !== 'no-refutation' && verdict.guard && verdict.guard.verified) {
+    return { outcome: verdict.outcome, guard_verified: true };
+  }
+  const objection = verifiedObjection(seat, finding);
+  if (objection) return { outcome: objection.kind === 'refute' ? 'refuted' : 'weakened', guard_verified: true };
+  if (verdict) {
+    return { outcome: verdict.outcome, guard_verified: verdict.outcome === 'no-refutation' ? null : Boolean(verdict.guard && verdict.guard.verified) };
+  }
+  return null;
+}
+
 function buildTally(seats, context) {
-  const ids = new Set();
-  for (const seat of seats) for (const verdict of seat.verdicts) if (context.findingIds.has(verdict.finding)) ids.add(verdict.finding);
-  for (const id of context.required) ids.add(id);
+  const ids = new Set(context.required);
+  for (const seat of seats) {
+    for (const verdict of seat.verdicts) if (context.findingIds.has(verdict.finding)) ids.add(verdict.finding);
+    for (const objection of seat.objections) {
+      if (objection.target_type === 'finding' && verifiedObjection(seat, objection.target)) ids.add(objection.target);
+    }
+  }
   return [...ids].sort().map((finding) => {
     const answered = [];
     const unanswered = [];
     for (const seat of seats) {
-      const verdict = seat.verdicts.find((entry) => entry.finding === finding);
-      if (verdict) answered.push({ harness: seat.harness, outcome: verdict.outcome, guard_verified: verdict.outcome === 'no-refutation' ? null : Boolean(verdict.guard && verdict.guard.verified) });
+      const stance = stanceOf(seat, finding);
+      if (stance) answered.push({ harness: seat.harness, ...stance });
       else unanswered.push(seat.harness);
     }
     if (answered.length === 0) return null;
-    // A challenge counts only when its guard verified against the repository. An
-    // unverified challenge stays visible in the seat list but is neither a
-    // challenge nor a result-changing disagreement.
     const challenges = answered.filter((entry) => entry.outcome !== 'no-refutation' && entry.guard_verified === true).length;
     const result = challenges === 0 ? 'standing' : (challenges === answered.length ? 'challenged' : 'contested');
     return {

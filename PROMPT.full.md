@@ -59,7 +59,7 @@ Second opinion: the check catalog has a structural ceiling, it verifies control 
 When the user explicitly authorizes a council and names the seats, read `guides/council.md` and run it after the Phase 7 render, before presenting. Three or more independent agents from distinct harnesses review the finished audit read-only, one agent per seat per round, in at most three rounds. The runtime plans the packet, validates and folds the responses into `COUNCIL.json`, and renders the table; it never calls a model.
 
 - The audit and the cited code leave the machine. Never use a council on private code without authorization naming the seats, and never substitute: fewer than three distinct harnesses is reported, not filled.
-- Seats are read-only. Any change outside `.godaudits/` voids that seat's response. The orchestrator writes each response's `seat` block from what it actually invoked; a seat's self-reported identity is never trusted.
+- Seats are read-only. A before-and-after tree fingerprint of files outside `.godaudits/` must match, or that seat's response is void. The orchestrator writes each response's `seat` block from what it actually invoked; a seat's self-reported identity is never trusted.
 - The lead triages every objection and fixes accepted ones through the normal method. Accepted objections fix the audit and never widen its destination or scope.
 - Stop when a round yields no new accepted objections, or after three rounds.
 - Seat scores grade the audit and are shown, never used to gate a verdict, a compiled score, or convergence. A council can lower a finding's confidence and never raise it.
@@ -4607,11 +4607,33 @@ round's completeness rule needs every seat to answer every brief.
 
 Seats read; they do not edit.
 
-1. Before each seat runs, record `git status --porcelain -- . ':(exclude).godaudits'`.
-2. After it runs, record it again. Any difference means the seat changed
-   something outside `.godaudits/`.
-3. Any such edit voids that seat's response. Revert nothing you did not make,
-   tell the user what changed, and rerun that seat only if the user agrees.
+1. Before each seat runs, from the repository root, take a content fingerprint of
+   every tracked and untracked non-ignored file outside `.godaudits/`:
+
+   ```bash
+   GIT_INDEX_FILE="$(mktemp -u)" sh -c 'git -c core.autocrlf=false read-tree HEAD && git -c core.autocrlf=false add -A -- . ":(exclude).godaudits" && git write-tree'
+   ```
+
+   The command prints a tree id. It uses a throwaway index, so the real index
+   and the working tree are untouched (it does write blobs to the object
+   database, and leaves a temp file in `$TMPDIR`).
+2. After the seat runs, take it again. The two commands must both succeed and
+   print the same tree id; otherwise the seat's response is void. Do not use
+   `git status --porcelain` for this: a seat that edits a file which was already
+   modified leaves ` M file` in both snapshots and goes unseen. The fingerprint
+   hashes content, so that edit, an edit to a clean file, a deletion, and a new
+   untracked file all change the id.
+3. A void response is not applied. Revert nothing you did not make, tell the
+   user what changed, and rerun that seat only if the user agrees.
+
+Limits: ignored files (for example `.env` and `node_modules`) are not covered,
+`core.autocrlf=false` stops line-ending conversion but a `.gitattributes` `text`
+or `eol` rule or a clean filter (such as Git LFS) still normalizes content
+before hashing, submodule working trees are recorded only as their commit, a
+repository with no commit has no `HEAD` to read so the check fails closed, and
+only the working tree is fingerprinted, not the rest of the machine. When any of
+that matters, run the seats in a clean, disposable worktree at `audit.commit`
+and discard it afterwards.
 
 The orchestrator, not the seat, writes the response file. A seat run in a plan
 or read-only mode returns its answer as text; extract the JSON object and save
@@ -4703,8 +4725,13 @@ block convergence.
 
 The finding tally records `standing` (all seats found no refutation),
 `contested` (seats split), or `challenged` (every seat refuted or weakened). Only
-a challenge whose guard citation verified counts: an unverified challenge stays
-listed with `guard_verified: false` and changes neither the result nor the
+a challenge whose citation verified counts. A seat challenges a finding with a
+refuted or weakened verdict whose guard verified, or with a `refute` or `weaken`
+objection that targets the finding and whose citation verified. That includes
+findings no verdict was required for, such as Medium and Low ones; they enter the
+tally, and seats that said nothing about them are listed as unanswered, never as
+agreeing. An unverified challenge stays listed with `guard_verified: false`
+(verdicts) or is dropped (objections) and changes neither the result nor the
 ceiling. A verified challenge keeps the ceiling even when the lead later
 dismisses its objection.
 Contested and challenged findings carry a `Firm` confidence ceiling for the

@@ -47,7 +47,8 @@ weight, or score changes.
   properties required, optional values nullable, no additional properties) so
   `codex exec --output-schema` can use it directly.
 - `guides/council.md`: when to run, egress consent, no substitution, one agent
-  per seat per round, read-only verification, the round loop, why scores never
+  per seat per round, read-only verification by a before-and-after tree
+  fingerprint, the round loop, why scores never
   gate, the scope guard, how to present results, default seats, and a seat
   prompt. The compact and full portable prompts include it.
 - MIT attribution in `NOTICE` for the tstack `council` concepts that informed

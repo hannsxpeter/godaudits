@@ -108,14 +108,15 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["kind", "target", "claim", "citation", "citation_error", "target_known"],
+            "required": ["kind", "target", "claim", "citation", "citation_error", "target_known", "target_type"],
             "properties": {
               "kind": { "enum": ["refute", "weaken", "missed", "evidence"] },
               "target": { "type": "string" },
               "claim": { "type": "string" },
               "citation": { "anyOf": [{ "$ref": "#/$defs/citation" }, { "type": "null" }] },
               "citation_error": { "type": ["string", "null"] },
-              "target_known": { "type": "boolean" }
+              "target_known": { "type": "boolean" },
+              "target_type": { "enum": ["finding", "check", null] }
             }
           }
         },

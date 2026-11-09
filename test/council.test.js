@@ -1063,3 +1063,52 @@ test('regression: the guide has the orchestrator write the seat block and forbid
   const schema = JSON.parse(fs.readFileSync(path.join(schemaDirectory, 'council-response.schema.json'), 'utf8'));
   assert.deepEqual(schema.properties.seat.required, ['harness', 'provider', 'model', 'effort']);
 });
+
+test('regression: a verified refute objection on a non-required finding sets a Firm ceiling that survives dismissal', (t) => {
+  const box = sandbox(t);
+  const objection = { kind: 'refute', target: 'F-PRD-1', claim: 'The framing is covered by the README.', citation: GUARD };
+  let ledger = apply(box, trio(box, { codex: { objections: [objection] } }));
+  // F-PRD-1 is Low, so no verdict was required of anyone.
+  assert.equal(latestOf(ledger).required_findings.includes('F-PRD-1'), false);
+  let entry = latestOf(ledger).tally.find((item) => item.finding === 'F-PRD-1');
+  assert.ok(entry, 'the challenged Low finding appears in the tally');
+  assert.equal(entry.result, 'challenged');
+  assert.equal(entry.confidence_ceiling, 'Firm');
+  assert.deepEqual(entry.seats, [{ harness: 'codex', outcome: 'refuted', guard_verified: true }]);
+  // Seats that said nothing are unanswered, not agreeing.
+  assert.deepEqual(entry.unanswered_by, ['antigravity', 'claude-code']);
+
+  ledger = triageCouncil(ledger, decide(ledger, 'dismissed', 'Out of the audit destination.'));
+  assert.equal(ledger.status, 'converged');
+  entry = latestOf(ledger).tally.find((item) => item.finding === 'F-PRD-1');
+  assert.equal(entry.confidence_ceiling, 'Firm');
+});
+
+test('regression: an unverified objection never reaches the tally or the ceiling', (t) => {
+  const box = sandbox(t);
+  const bad = { path: 'src/repo.js', line: 2, quote: 'not in the file' };
+  const ledger = apply(box, trio(box, {
+    codex: {
+      objections: [
+        { kind: 'refute', target: 'F-PRD-1', claim: 'Bad quote.', citation: bad },
+        { kind: 'weaken', target: 'F-PRD-1', claim: 'No citation at all.', citation: null },
+        { kind: 'evidence', target: 'F-PRD-1', claim: 'Evidence kinds are not challenges.', citation: GUARD },
+        { kind: 'refute', target: 'A-SEC-4', claim: 'A check id is not a finding.', citation: GUARD }
+      ]
+    }
+  }));
+  assert.equal(latestOf(ledger).tally.some((entry) => entry.finding === 'F-PRD-1'), false);
+  for (const entry of latestOf(ledger).tally) assert.equal(entry.confidence_ceiling, null, entry.finding);
+});
+
+test('regression: a verified weaken objection against a required finding contests it even beside a no-refutation verdict', (t) => {
+  const box = sandbox(t);
+  const ledger = apply(box, trio(box, {
+    codex: { objections: [{ kind: 'weaken', target: 'F-SEC-9', claim: 'Narrower than stated.', citation: GUARD }] }
+  }));
+  const entry = latestOf(ledger).tally.find((item) => item.finding === 'F-SEC-9');
+  assert.equal(entry.result, 'contested');
+  assert.equal(entry.confidence_ceiling, 'Firm');
+  assert.equal(entry.seats.find((seat) => seat.harness === 'codex').outcome, 'weakened');
+  assert.equal(latestOf(ledger).tally.find((item) => item.finding === 'F-SEC-1').result, 'standing');
+});

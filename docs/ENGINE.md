@@ -146,7 +146,10 @@ available only when `audit.capabilities` includes `council`.
   stored status is recomputed on every load, so a hand edit is rejected.
 - Each finding's tally is `standing`, `contested`, or `challenged`. The last two
   record a Firm confidence ceiling for the next re-audit; the council never
-  raises confidence.
+  raises confidence. A seat challenges a finding with a refuted or weakened
+  verdict whose guard verified, or with a `refute` or `weaken` objection against
+  that finding whose citation verified, including findings with no required
+  verdict. Unverified challenges never count, and silent seats are unanswered.
 
 ## Catalog compilation
 

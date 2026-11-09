@@ -53,7 +53,7 @@ Second opinion: the check catalog has a structural ceiling, it verifies control 
 When the user explicitly authorizes a council and names the seats, read `guides/council.md` and run it after the Phase 7 render, before presenting. Three or more independent agents from distinct harnesses review the finished audit read-only, one agent per seat per round, in at most three rounds. The runtime plans the packet, validates and folds the responses into `COUNCIL.json`, and renders the table; it never calls a model.
 
 - The audit and the cited code leave the machine. Never use a council on private code without authorization naming the seats, and never substitute: fewer than three distinct harnesses is reported, not filled.
-- Seats are read-only. Any change outside `.godaudits/` voids that seat's response. The orchestrator writes each response's `seat` block from what it actually invoked; a seat's self-reported identity is never trusted.
+- Seats are read-only. A before-and-after tree fingerprint of files outside `.godaudits/` must match, or that seat's response is void. The orchestrator writes each response's `seat` block from what it actually invoked; a seat's self-reported identity is never trusted.
 - The lead triages every objection and fixes accepted ones through the normal method. Accepted objections fix the audit and never widen its destination or scope.
 - Stop when a round yields no new accepted objections, or after three rounds.
 - Seat scores grade the audit and are shown, never used to gate a verdict, a compiled score, or convergence. A council can lower a finding's confidence and never raise it.
