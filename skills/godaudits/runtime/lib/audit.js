@@ -115,7 +115,7 @@ function validateAudit(audit, options = {}) {
   if (!Array.isArray(metadata.capabilities) || metadata.capabilities.length === 0) errors.push('audit.capabilities must be a non-empty array');
   if (duplicates(metadata.capabilities).length) errors.push('audit.capabilities must be unique');
   for (const capability of metadata.capabilities || []) {
-    if (!['static', 'sandbox', 'connected'].includes(capability)) errors.push(`invalid audit capability: ${capability}`);
+    if (!['static', 'sandbox', 'connected', 'council'].includes(capability)) errors.push(`invalid audit capability: ${capability}`);
   }
   if (!metadata.risk_profile) errors.push('audit.risk_profile is required');
   if (metadata.budget !== undefined && !['medium', 'full'].includes(metadata.budget)) errors.push(`invalid audit.budget: ${metadata.budget}`);

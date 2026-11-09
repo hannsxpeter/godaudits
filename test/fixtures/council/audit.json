@@ -1,0 +1,56 @@
+{
+  "schema_version": "2.0",
+  "audit": {
+    "name": "council-fixture",
+    "commit": "abc1234",
+    "capabilities": ["static", "council"]
+  },
+  "domains": [
+    {
+      "id": "security",
+      "status": "applicable",
+      "checks": [
+        { "id": "A-SEC-3", "outcome": "fail" },
+        { "id": "A-SEC-4", "outcome": "pass" }
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "E-1", "type": "source", "path": "src/boards.js", "line": 4, "quote": "db.boards.findOne({ id })", "sha256": "a", "redacted": false },
+    { "id": "E-2", "type": "source", "path": "src/router.js", "line": 5, "quote": "router.use(authorize);", "sha256": "b", "redacted": false }
+  ],
+  "findings": [
+    {
+      "id": "F-SEC-1",
+      "domain": "security",
+      "title": "Board lookup omits the tenant predicate",
+      "severity": "Critical",
+      "confidence": "Certain",
+      "evidence": ["E-1"],
+      "fix": "Add the tenant predicate inside the board query.",
+      "checks": ["A-SEC-3"],
+      "status": "open"
+    },
+    {
+      "id": "F-SEC-9",
+      "domain": "security",
+      "title": "Authorization is mounted only on the primary router",
+      "severity": "High",
+      "confidence": "Firm",
+      "evidence": ["E-2"],
+      "fix": "Mount authorization centrally.",
+      "checks": ["A-SEC-4"],
+      "status": "open"
+    },
+    {
+      "id": "F-PRD-1",
+      "domain": "product",
+      "title": "Product framing is thin",
+      "severity": "Low",
+      "confidence": "Tentative",
+      "evidence": [],
+      "checks": [],
+      "status": "open"
+    }
+  ]
+}

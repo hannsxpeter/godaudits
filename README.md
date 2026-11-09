@@ -3,7 +3,7 @@
 # godaudits
 
 [![verify](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml/badge.svg)](https://github.com/hannsxpeter/godaudits/actions/workflows/lint.yml)
-[![version](https://img.shields.io/badge/version-2.18.0-blue)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-2.19.0-blue)](CHANGELOG.md)
 [![agent skills](https://img.shields.io/badge/Agent%20Skills-compatible-2f6fed)](skills/godaudits/SKILL.md)
 [![audit domains](https://img.shields.io/badge/audit%20domains-18-2f6fed)](#what-it-examines)
 [![checks](https://img.shields.io/badge/checks-437-2f6fed)](skills/godaudits/catalog/checks.json)
@@ -299,6 +299,10 @@ godaudits render .godaudits/AUDIT.json --output .godaudits/AUDIT.mdx
 godaudits sarif .godaudits/AUDIT.json --output .godaudits/AUDIT.sarif
 godaudits wayfind .godaudits/AUDIT.json
 godaudits blast-radius validate .godaudits/CHANGE-REVIEW.json
+godaudits council plan .godaudits/AUDIT.json
+godaudits council apply .godaudits/AUDIT.json .godaudits/council/ROUND-1-*.json --repo .
+godaudits council triage .godaudits/COUNCIL.json .godaudits/council/DECISIONS-1.json
+godaudits council render .godaudits/COUNCIL.json --output .godaudits/COUNCIL.mdx
 ```
 
 The runtime is bundled inside the skill. Agents use the installed `godaudits`
@@ -342,13 +346,17 @@ Blast-radius planning is static too. Applying proof imports results produced by
 an authorized harness; the command recorded in a proof is never executed by
 the godaudits runtime.
 
-Two stronger modes require explicit authority:
+Three further modes require explicit authority:
 
 - **Sandbox**: commands run in a disposable environment with outbound network
   disabled and no production credentials.
 - **Connected**: explicitly authorized read-only evidence from CI,
   observability, database metadata, or trackers, with the query and provenance
   recorded.
+- **Council**: an opt-in review of a finished audit by three or more read-only
+  agents from distinct harnesses, in at most three rounds. It sends the audit and
+  cited code to each seat's provider, so it needs authorization naming the seats.
+  See [Council review](#council-review-opt-in).
 
 Static inference is never presented as runtime fact. Claims that need stronger
 evidence stay tentative or unknown. See
@@ -423,6 +431,25 @@ not-applicable check or an excluded area was ruled outside the destination, and
 never graduates inside this audit. Collapsing the two would let a coverage gap
 read as a deliberate boundary. See
 [`docs/WAYFINDING.md`](docs/WAYFINDING.md).
+
+### Council review (opt-in)
+
+When you explicitly ask for it, a finished audit can be read by a council: three
+or more independent agents from distinct harnesses, such as Claude Code, Codex,
+and Antigravity or Cursor. Each seat is read-only and tries to disprove the
+audit's claims from the cited code. You triage what they raise, accepted
+objections are fixed through the normal method, and the review stops when a
+round produces nothing new that you accept, or after three rounds.
+
+Three rules keep it honest. It sends your audit and cited code to the seats'
+providers, so it runs only on your authorization naming the seats, and the
+runtime refuses it without the `council` capability. Fewer than three distinct
+harnesses is reported as incomplete, never filled or called converged. Seats
+may score the audit out of 100, and the table shows those scores, but they gate
+nothing: a council can lower a finding's confidence and never raises it. The
+runtime validates and folds the responses, checks every citation against the
+repository, and never calls a model. See
+[`guides/council.md`](skills/godaudits/guides/council.md).
 
 ### Re-audits
 
@@ -540,6 +567,7 @@ verify into one loop.
 | `docs/WAYFINDING.md` | Destination, frontier, claims, fog, and scope boundary |
 | `skills/godaudits/references/change-safety.md` | Diff impact, safety facts, proof ladder, risks, clearances, and merge gate |
 | `skills/godaudits/guides/copy-signals.md` | Copy-signal scope, interpretation, ownership, and provenance |
+| `skills/godaudits/guides/council.md` | Opt-in council review: consent, seats, round loop, stop rule, and seat prompt |
 | `docs/RELEASE-POLICY.md` | Release cadence and external audit publication contract |
 | `dogfood/` | Indexed external open-source audits; an empty index makes no track-record claim |
 | `docs/MIGRATION-2.0.md` | Version 1 to version 2 migration |

@@ -77,6 +77,8 @@ EOF
   done
   printf '\n\n---\n\n# INLINED GUIDE: guides/copy-signals.md\n\n'
   cat "$GUIDES/copy-signals.md"
+  printf '\n\n---\n\n# INLINED GUIDE: guides/council.md\n\n'
+  cat "$GUIDES/council.md"
 }
 
 generate_full() {
@@ -95,6 +97,8 @@ EOF
   done
   printf '\n\n---\n\n# INLINED GUIDE: guides/copy-signals.md\n\n'
   cat "$GUIDES/copy-signals.md"
+  printf '\n\n---\n\n# INLINED GUIDE: guides/council.md\n\n'
+  cat "$GUIDES/council.md"
   printf '\n\n---\n\n# INLINED TEMPLATE: templates/AUDIT.template.mdx\n\n'
   cat "$TEMPLATE"
 }

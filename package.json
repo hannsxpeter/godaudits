@@ -1,6 +1,6 @@
 {
   "name": "godaudits",
-  "version": "2.18.0",
+  "version": "2.19.0",
   "description": "Evidence-first codebase auditing and change-safety review with validated state, computed scores, proof-gated blast radius, MDX reports, and SARIF output.",
   "keywords": [
     "agent-skills",

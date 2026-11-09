@@ -3,6 +3,64 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.19.0] - 2026-11-08
+
+A finished audit can now be reviewed by a council: three or more independent
+agents from distinct harnesses, read-only, in at most three rounds. Each seat
+tries to disprove the audit's claims from the cited code, the lead triages what
+comes back, and a deterministic runtime module keeps the ledger. The council can
+lower a finding's confidence and never raises it, and seat scores are recorded
+but never gate anything.
+
+This is a minor feature release outside the 30-day window of
+`docs/RELEASE-POLICY.md` (2.18.0 shipped 2026-08-19). The AUDIT.json
+`capabilities` enum gains `council`. No audit check id, check count, dimension,
+weight, or score changes.
+
+### Added
+
+- `godaudits council plan`, `apply`, `triage`, and `render`. Council is an
+  explicit opt-in capability: the audit and the cited code go to third-party
+  providers, so the runtime refuses to plan or apply unless
+  `audit.capabilities` includes `council`, and the guide requires the user's
+  authorization naming the seats.
+- `lib/council.js`, zero-dependency and offline. It emits one packet per round
+  (refutation briefs reused from `refute plan`, earlier dismissals, the response
+  contract), rejects responses with a stale audit hash, a wrong round, missing
+  seat fields, or a repeated harness, and checks every citation against the
+  repository: repository-relative paths only, no `..` or symlink escape, and a
+  whitespace-normalized quote within three lines of the cited line.
+- A ledger with a fixed stop rule: `needs-triage`, `continue`, `converged`,
+  `round-cap` at three rounds, and `incomplete` when a round has fewer than
+  three distinct harnesses or a seat omitted a verdict. Silence never counts as
+  agreement. Fewer than three distinct known providers adds a
+  `reduced-decorrelation` warning.
+- Objection merging by fingerprint across seats, `repeat-dismissed` for points
+  the lead already ruled on, `citation-failed` and `rejected-target` objections
+  that need no triage and can never be accepted, and a per-finding tally
+  (`standing`, `contested`, `challenged`) that records a Firm confidence ceiling
+  for the next re-audit.
+- Every quote, claim, note, and decision reason passes through the shared
+  credential redactor before it reaches COUNCIL.json.
+- `council.schema.json` for the ledger and `council-response.schema.json` for
+  seat responses. The response schema is in strict structured-output shape (all
+  properties required, optional values nullable, no additional properties) so
+  `codex exec --output-schema` can use it directly.
+- `guides/council.md`: when to run, egress consent, no substitution, one agent
+  per seat per round, read-only verification, the round loop, why scores never
+  gate, the scope guard, how to present results, default seats, and a seat
+  prompt. The compact and full portable prompts include it.
+- MIT attribution in `NOTICE` for the tstack `council` concepts that informed
+  the workflow. No text or code was copied.
+
+### Changed
+
+- SKILL.md ground rules 1 and 2 state that council review is an explicitly
+  authorized capability and never a default; the Modes and refusals sections
+  cover it. README, runtime architecture, threat model, and the audit format
+  document the new capability and its egress surface.
+- Project `AGENTS.md` carries a Checks block.
+
 ## [2.18.0] - 2026-08-19
 
 Repository health and change safety are now separate evidence claims. A new

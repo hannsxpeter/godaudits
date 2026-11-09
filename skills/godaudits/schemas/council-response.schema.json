@@ -1,0 +1,71 @@
+{
+  "title": "godaudits council seat response",
+  "description": "One seat's review of one audit in one council round. Shaped for strict structured-output modes such as codex exec --output-schema: every property is required, optional values are nullable, every object forbids additional properties, and only the keywords those modes accept are used. Limits that strict modes cannot express are stated in descriptions and enforced by `godaudits council apply`. The seat copies round and audit_sha256 from the packet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["round", "audit_sha256", "seat", "score", "verdicts", "objections"],
+  "properties": {
+    "round": { "type": "integer", "description": "The round number from the packet, 1 to 3." },
+    "audit_sha256": { "type": "string", "description": "Copy audit_sha256 from the packet exactly: 64 lowercase hex characters." },
+    "seat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["harness", "provider", "model", "effort"],
+      "properties": {
+        "harness": { "type": "string", "description": "Any non-empty placeholder. The orchestrator overwrites the whole seat block with the harness it actually invoked, for example claude-code, codex, antigravity, or cursor." },
+        "provider": { "type": "string", "description": "Any non-empty placeholder; overwritten by the orchestrator (unknown when the tool routes the model itself)." },
+        "model": { "type": "string", "description": "Any non-empty placeholder; overwritten by the orchestrator with the model id it passed (auto when the tool routes the model itself)." },
+        "effort": { "type": ["string", "null"], "description": "Any string or null; overwritten by the orchestrator." }
+      }
+    },
+    "score": { "type": ["integer", "null"], "description": "Optional grade of the audit's quality, not the codebase: an integer from 0 to 100, or null for no score. Recorded and shown; never used to gate anything." },
+    "verdicts": {
+      "type": "array",
+      "description": "Exactly one verdict per brief in the packet's required_verdicts. A missing verdict makes the seat incomplete.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding", "outcome", "guard", "note"],
+        "properties": {
+          "finding": { "type": "string", "description": "The finding id from the brief." },
+          "outcome": { "type": "string", "enum": ["refuted", "weakened", "no-refutation"] },
+          "guard": {
+            "description": "For refuted and weakened, the guard that defeats or narrows the claim. null for no-refutation.",
+            "anyOf": [{ "$ref": "#/$defs/citation" }, { "type": "null" }]
+          },
+          "note": { "type": ["string", "null"], "description": "One or two sentences of reasoning, or null." }
+        }
+      }
+    },
+    "objections": {
+      "type": "array",
+      "description": "Additional objections beyond the verdicts. Empty when there are none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "target", "claim", "citation"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["refute", "weaken", "missed", "evidence"] },
+          "target": { "type": "string", "description": "A finding id or a check id that exists in the audit." },
+          "claim": { "type": "string", "description": "What is wrong, in one or two sentences. Must be non-empty." },
+          "citation": {
+            "description": "Required for refute, weaken, and missed. null only for evidence objections.",
+            "anyOf": [{ "$ref": "#/$defs/citation" }, { "type": "null" }]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "line", "quote"],
+      "properties": {
+        "path": { "type": "string", "description": "Repository-relative path with forward slashes. No absolute path, no .. segment." },
+        "line": { "type": "integer", "description": "1-based line number." },
+        "quote": { "type": "string", "description": "A verbatim quote that appears within 3 lines of the cited line." }
+      }
+    }
+  }
+}
