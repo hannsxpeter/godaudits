@@ -4,7 +4,7 @@ description: "Audit a codebase end to end and emit validated JSON plus remediati
 license: MIT
 metadata:
   version: "2.20.1"
-  author: aihxp
+  author: hannsxpeter
   homepage: https://github.com/hannsxpeter/godaudits
 ---
 
