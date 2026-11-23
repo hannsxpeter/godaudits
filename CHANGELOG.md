@@ -1010,7 +1010,7 @@ Initial release.
 - 18 domain reference modules: the seven hannsxpeter auditors carried forward
   (security from secauditor and harden-ready, code-quality from
   codeauditor, database from dbauditor, llm from llmauditor, seo from
-  seoauditor, ui from uiauditor, ux from uxauditor) and the aihxp
+  seoauditor, ui from uiauditor, ux from uxauditor) and the hannsxpeter
   arc-ready and ready-suite tier disciplines audited as reality checks
   (product, architecture, roadmap, stack, repo, build, deploy, observe,
   launch), plus hannsxpeter/pillars (agent-memory) and hannsxpeter/codedna
