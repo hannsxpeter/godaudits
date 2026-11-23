@@ -25,7 +25,6 @@ const surfaces = [
   ['skills/godaudits/SKILL.md', /(godaudits )([0-9]+\.[0-9]+)( is an evidence-first)/, (m) => `${m[1]}${minor}${m[3]}`],
   ['plugins/godaudits/.claude-plugin/plugin.json', /^(\s+"version":\s*")([0-9]+\.[0-9]+\.[0-9]+)(")/m, (m) => `${m[1]}${version}${m[3]}`],
   ['.claude-plugin/marketplace.json', /^(\s+"version":\s*")([0-9]+\.[0-9]+\.[0-9]+)(")/m, (m) => `${m[1]}${version}${m[3]}`],
-  ['README.md', /(version-)([0-9]+\.[0-9]+\.[0-9]+)(-blue)/, (m) => `${m[1]}${version}${m[3]}`],
 ];
 
 const mismatches = [];

@@ -284,7 +284,7 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 - Executable or running-app change proof without recorded authority, environment, and isolation.
 - Source mutation during the audit, unless the user separately asks for remediation after the audit is complete.
 
-## Skill version: 2.20.0
+## Skill version: 2.20.1
 
 
 ---

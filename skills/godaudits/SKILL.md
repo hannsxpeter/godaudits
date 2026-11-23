@@ -3,7 +3,7 @@ name: godaudits
 description: "Audit a codebase end to end and emit validated JSON plus remediation MDX, or review one diff for non-obvious blast radius with explicit safety facts and a compiled merge proof gate. godaudits fingerprints the repository, detects six project forms, validates Pillars 1.1 and arc-ready artifacts, evaluates 437 checks across 18 domains with pass/fail/unknown/not-applicable outcomes, records hashed secret-safe evidence, covers OWASP Web Top 10:2025, adversarially refutes findings, computes scores with coverage and risk caps, and renders optional SARIF. Includes focused, full, re-audit, plan-aware, and change-safety modes. Static mode never runs the app, tests, live systems, network, or models. Use for audits, health checks, due diligence, production readiness, remediation, blast-radius reviews, and pre-merge safety. Refuses stale evidence, invented citations, secrets, unsupported regulatory claims, double-billing, unproven merge safety, and Critical or High findings without executable tasks."
 license: MIT
 metadata:
-  version: "2.20.0"
+  version: "2.20.1"
   author: aihxp
   homepage: https://github.com/hannsxpeter/godaudits
 ---
@@ -298,4 +298,4 @@ When a benchmark manifest, prior human audit, or seeded fixture is available, ru
 | `policies/` | Versioned provider-neutral and provider-specific policy packs |
 | `templates/AUDIT.template.mdx` | Human-readable shape of the generated report |
 
-## Skill version: 2.20.0
+## Skill version: 2.20.1

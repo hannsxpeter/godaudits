@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 96" width="320" height="96" role="img" aria-labelledby="t">
+  <title id="t">Achievement: Fingerprinted. The repository was inventoried and hashed before any judgment.</title>
+  <rect width="320" height="96" fill="#101722"/>
+  <rect x="2" y="2" width="316" height="92" fill="#182233" stroke="#4FD1A1" stroke-width="4"/>
+  <rect x="14" y="14" width="68" height="68" fill="#4FD1A1"/>
+  <path d="M42 26L36 70M60 26L54 70M28 40H70M26 56H68" fill="none" stroke="#101722" stroke-width="7"/>
+  <text x="98" y="38" font-family="Newsreader, Georgia, 'Times New Roman', serif" font-weight="600" font-size="26" fill="#F2EBDD">Fingerprinted</text>
+  <text x="98" y="60" font-family="Archivo, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#9AA7BD">Files inventoried and hashed</text>
+  <text x="98" y="78" font-family="Archivo, 'Helvetica Neue', Arial, sans-serif" font-size="13" fill="#9AA7BD">before any judgment.</text>
+</svg>

@@ -1,6 +1,6 @@
 {
   "name": "@hxp-tools/godaudits",
-  "version": "2.20.0",
+  "version": "2.20.1",
   "description": "Evidence-first codebase auditing for AI coding agents. Eighteen domains, 437 checks, computed scores, MDX repair plans, and proof-gated change safety.",
   "keywords": [
     "agent-skills",
@@ -34,7 +34,6 @@
   },
   "files": [
     "bin",
-    "assets",
     "benchmarks",
     "evals",
     "requirements",

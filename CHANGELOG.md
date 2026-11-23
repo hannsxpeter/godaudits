@@ -3,6 +3,31 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.20.1] - 2026-11-23
+
+Brand alignment with godpowers and goddesign. No audit check id, check count,
+dimension, weight, score, or runtime behavior changes.
+
+### Changed
+
+- README follows the shared hxp-tools quest layout: Press start, the quest map
+  (fingerprint, judge, refute, score, plan, with the verdict as the final boss),
+  a level-select board of the eighteen domains, achievements, the verdict caps,
+  the save file, CLI at a glance, Limits, and an Honest status section that
+  leads with the published null result and miss from `ACCURACY.md`.
+- Brand art moves to `docs/assets/` in the shared family style (navy grid board,
+  serif wordmark, mint stages, coral boss gate): `hero.svg`, `quest-map.svg`,
+  `domains.svg`, and four achievement badges (Fingerprinted, Graded,
+  Audit-proof, Merge-safe), each tied to an outcome the runtime computes.
+- README images use absolute `raw.githubusercontent.com` URLs so the npm page
+  renders them, and the package no longer ships the art.
+- `scripts/version-sync.js` no longer manages a README version badge; the npm
+  badge shows the published version.
+
+### Removed
+
+- `assets/` (the amber hero, quest map, and scorecard from 2.20.0).
+
 ## [2.20.0] - 2026-11-23
 
 Product refresh: gamified README and brand assets in the hxp-tools family style,
