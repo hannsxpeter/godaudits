@@ -3,6 +3,29 @@
 All notable changes to godaudits are documented here. The format follows
 Keep a Changelog; versioning follows SemVer.
 
+## [2.20.0] - 2026-11-23
+
+Product refresh: gamified README and brand assets in the hxp-tools family style,
+a shorter About, removal of drifted docs, and first publish under
+`@hxp-tools/godaudits`. No audit check id, check count, dimension, weight, or
+score changes.
+
+### Changed
+
+- README leads with Press start, a five-mode quest map, and the scorecard loop.
+  Brand SVGs live in `assets/` (hero, quest map, scorecard).
+- `docs/ABOUT.md` is shortened to the judgment vs determinism split and safety
+  defaults.
+- Package name is `@hxp-tools/godaudits` (public). Install via
+  `npx @hxp-tools/godaudits@latest doctor` or `npx skills add hannsxpeter/godaudits`.
+
+### Removed
+
+- `codeaudit.md` (dated self-audit snapshot).
+- `docs/MIGRATION-2.0.md` and `docs/MIGRATION-2.1.md` (superseded by CHANGELOG
+  and `docs/MIGRATION-2.17.md`).
+- `docs/brand/` raster and SVG banners replaced by `assets/`.
+
 ## [2.19.0] - 2026-11-08
 
 A finished audit can now be reviewed by a council: three or more independent

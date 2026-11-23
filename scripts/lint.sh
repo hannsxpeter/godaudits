@@ -181,9 +181,9 @@ check_catalog_claims() {
   # the catalog. This scans the claim itself against catalog/checks.json.
   #
   # Scope is every tracked authored file except CHANGELOG.md (a released entry
-  # records the count that was true then), codeaudit.md (dated audit output),
-  # and benchmarks/fixtures (seeded repositories standing in for other
-  # projects, whose prose is not a godaudits claim).
+  # records the count that was true then) and benchmarks/fixtures (seeded
+  # repositories standing in for other projects, whose prose is not a
+  # godaudits claim).
   #
   # Check claims require three or more digits so the per-domain counts in
   # docs/CHECK-MAP.md are not swept in. Domain claims exclude "domain score",
@@ -193,7 +193,7 @@ const fs = require("fs");
 const cp = require("child_process");
 const repo = process.argv[1];
 const cat = JSON.parse(fs.readFileSync(repo + "/skills/godaudits/catalog/checks.json", "utf8"));
-const skip = /^(CHANGELOG\.md|codeaudit\.md)$|^benchmarks\/fixtures\//;
+const skip = /^(CHANGELOG\.md)$|^benchmarks\/fixtures\//;
 const files = cp.execSync("git ls-files", { cwd: repo }).toString().split("\n")
   .filter((f) => /\.(md|mdx|json|js|sh|yml|yaml)$/.test(f))
   .filter((f) => !skip.test(f));

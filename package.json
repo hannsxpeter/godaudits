@@ -1,7 +1,7 @@
 {
-  "name": "godaudits",
-  "version": "2.19.0",
-  "description": "Evidence-first codebase auditing and change-safety review with validated state, computed scores, proof-gated blast radius, MDX reports, and SARIF output.",
+  "name": "@hxp-tools/godaudits",
+  "version": "2.20.0",
+  "description": "Evidence-first codebase auditing for AI coding agents. Eighteen domains, 437 checks, computed scores, MDX repair plans, and proof-gated change safety.",
   "keywords": [
     "agent-skills",
     "ai-agents",
@@ -19,16 +19,22 @@
     "remediation",
     "code-quality"
   ],
-  "homepage": "https://github.com/hannsxpeter/godaudits",
-  "bugs": "https://github.com/hannsxpeter/godaudits/issues",
+  "homepage": "https://github.com/hannsxpeter/godaudits#readme",
+  "bugs": {
+    "url": "https://github.com/hannsxpeter/godaudits/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hannsxpeter/godaudits.git"
   },
   "license": "MIT",
-  "author": "aihxp (https://github.com/hannsxpeter)",
+  "author": "hannsxpeter",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "bin",
+    "assets",
     "benchmarks",
     "evals",
     "requirements",
@@ -71,7 +77,7 @@
     "release:check": "bash scripts/release-check.sh",
     "install:skill": "sh install.sh",
     "prepack": "npm run check",
-    "postpack": "echo 'Install with: npx skills add hannsxpeter/godaudits, or run npx godaudits doctor'",
+    "postpack": "echo 'Install with: npx @hxp-tools/godaudits@latest doctor, or npx skills add hannsxpeter/godaudits'",
     "test:detectors": "node scripts/detector-gate.js",
     "accuracy:check": "node scripts/accuracy-check.js",
     "accuracy:run": "node scripts/run-paired-accuracy.js",

@@ -139,7 +139,8 @@ godaudits v$VERSION installed.
 Invoke: /godaudits (Claude Code, Cursor, VS Code, Zed, Factory)
         \$godaudits (Codex)   @godaudits (Windsurf)   auto-trigger elsewhere
 
-Alternative install: npx skills add hannsxpeter/godaudits
+Alternative install: npx @hxp-tools/godaudits@latest doctor
+Or: npx skills add hannsxpeter/godaudits
 
 No-skill-support tools:
   T3 Chat: use PROMPT.md for focused audits or attach PROMPT.full.md for all domains.
